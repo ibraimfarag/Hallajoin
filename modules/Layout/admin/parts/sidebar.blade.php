@@ -86,7 +86,7 @@ if(!empty($custom_modules)){
 
     }
 }
-
+// dd($custom_modules);
 // Plugins Menu
 $plugins_modules = \Plugins\ServiceProvider::getModules();
 if(!empty($plugins_modules)){
@@ -113,7 +113,7 @@ if(!empty($plugins_modules)){
         }
     }
 }
-
+// dd($plugins_modules);
 // Custom Menu
 $custom_modules = \Custom\ServiceProvider::getModules();
 if(!empty($custom_modules)){
@@ -145,29 +145,44 @@ if(!empty($custom_modules)){
 
     }
 }
+
+// dd($custom_modules);
+
+
 $typeManager = app()->make(\Modules\Type\TypeManager::class);
 $menuConfig = $typeManager->adminMenus();
 
 $menus = array_merge($menus,$menuConfig);
 
 
+
 $currentUrl = url(\Modules\Core\Walkers\MenuWalker::getActiveMenu());
 $user = \Illuminate\Support\Facades\Auth::user();
-if (!empty($menus)){
+if (!empty($menus)) {
     foreach ($menus as $k => $menuItem) {
 
-        if (!empty($menuItem['permission']) and !$user->hasPermission($menuItem['permission'])) {
+        // Check if the title is "Themes" or "User Plans" and skip these menu items
+        if (!empty($menuItem['title']) && ($menuItem['title'] === 'Themes' || $menuItem['url'] === 'http://core/admin/module/user/plan')) {
             unset($menus[$k]);
             continue;
         }
+
+        if (!empty($menuItem['permission']) && !$user->hasPermission($menuItem['permission'])) {
+            unset($menus[$k]);
+            continue;
+        }
+
         $menus[$k]['class'] = $currentUrl == url($menuItem['url']) ? 'active' : '';
+
         if (!empty($menuItem['children'])) {
             $menus[$k]['class'] .= ' has-children';
+
             foreach ($menuItem['children'] as $k2 => $menuItem2) {
-                if (!empty($menuItem2['permission']) and !$user->hasPermission($menuItem2['permission'])) {
+                if (!empty($menuItem2['permission']) && !$user->hasPermission($menuItem2['permission'])) {
                     unset($menus[$k]['children'][$k2]);
                     continue;
                 }
+
                 $menus[$k]['children'][$k2]['class'] = $currentUrl == url($menuItem2['url']) ? 'active' : '';
             }
         }
@@ -178,6 +193,9 @@ if (!empty($menus)){
         return $value['position'] ?? 100;
     }));
 }
+
+
+// dd($menus );
 ?>
 <ul class="main-menu pb-5">
     @foreach($menus as $menuItem)

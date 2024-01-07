@@ -1,0 +1,10 @@
+9999999999s:493:"<h3>Hello [vendor_name]</h3>
+                            <p>You get new inquiry request from [email]</p>
+                            <p>Name :[name]</p>
+                            <p>Emai:[email]</p>
+                            <p>Phone:[phone]</p>
+                            <p>Content:[note]</p>
+                            <p>Service:[service_link]</p>
+                            <p>Regards,</p>
+                            <p>Booking Core</p>
+                            </div>";

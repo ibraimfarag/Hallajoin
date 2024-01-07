@@ -27,28 +27,35 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     public static function getModules(){
         return array_keys(static::getActivatedModules());
+        
     }
-
     public static function getActivatedModules(){
         $res = [];
-
+    
         $class = \Modules\Theme\ThemeManager::currentProvider();
         if(class_exists($class)){
             $modules  = $class::getModules();
             $coreModules = static::getCoreModules();
-            foreach ($modules as $module=>$class){
+            foreach ($modules as $module => $class) {
+                // Exclude modules "flight" and "boat"
+                if ($module === 'flight' || $module === 'boat' || $module === 'car' || $module === 'hotel'|| $module === 'space'|| $module === 'theme') {
+                    continue;
+                }
+    
                 if(class_exists($class)) {
                     $res[$module] = [
-                        'id'=>$module,
-                        'class'=>$class,
-                        'parent'=>$coreModules[$module]['class'] ?? ''
+                        'id' => $module,
+                        'class' => $class,
+                        'parent' => $coreModules[$module]['class'] ?? ''
                     ];
                 }
             }
         }
-
+    
+        // dd(  $modules);
         return $res;
     }
+    
     public static function getCoreModules(){
         $res = [];
 
