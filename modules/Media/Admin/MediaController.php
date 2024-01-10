@@ -92,9 +92,9 @@ class MediaController extends Controller
         $file_type = $request->input('file_type', 'image');
         $s = $request->input('s');
         $model = MediaFile::query();
-        if (!Auth::user()->hasPermission("media_manage_others")) {
+        // if (!Auth::user()->hasPermission("media_manage_others")) {
              $model->where('author_id', Auth::id());
-        }
+        // }
         $uploadConfigs = config('bc.media.groups');
 
         if(!isset($uploadConfigs[$file_type])){
@@ -160,6 +160,7 @@ class MediaController extends Controller
      */
     private function hasPermissionMedia()
     {
+        
         if(Auth::id()){
             return true;
         }
