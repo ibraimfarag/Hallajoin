@@ -172,7 +172,7 @@ class UserController extends AdminController
         $rules = [
             'first_name'              => 'required|max:255',
             'last_name'              => 'required|max:255',
-            'business_name'              => 'required|max:255',
+            'business_name'              => 'max:255',
             'status'              => 'required|max:50',
             'role_id'              => 'required|max:11',
             'email'              =>[
