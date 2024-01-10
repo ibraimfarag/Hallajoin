@@ -162,7 +162,7 @@ if (!empty($menus)) {
     foreach ($menus as $k => $menuItem) {
 
         // Check if the title is "Themes" or "User Plans" and skip these menu items
-        if (!empty($menuItem['title']) && ($menuItem['title'] === 'Themes' || $menuItem['url'] === 'http://core/admin/module/user/plan')) {
+        if (!empty($menuItem['title']) && ($menuItem['title'] === 'Themes' || $menuItem['title'] === 'User Plans '||$menuItem['title'] === 'News'|| $menuItem['title'] === 'Payouts ')) {
             unset($menus[$k]);
             continue;
         }
