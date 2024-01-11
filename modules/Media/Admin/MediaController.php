@@ -89,48 +89,43 @@ class MediaController extends Controller
         if (!$this->hasPermissionMedia()) {
             return $this->sendError('There is no permission upload');
         }
-    
         $file_type = $request->input('file_type', 'image');
         $s = $request->input('s');
         $model = MediaFile::query();
-    
+        if (!Auth::user()->hasPermission("media_manage_others")) {
+             $model->where('author_id', Auth::id());
+        }
         $uploadConfigs = config('bc.media.groups');
-    
-        if (!isset($uploadConfigs[$file_type])) {
+
+        if(!isset($uploadConfigs[$file_type])){
             return $this->sendError('File type not found');
         }
-    
+
         $config = isset($uploadConfigs[$file_type]) ? $uploadConfigs[$file_type] : $uploadConfigs['default'];
-        $model->whereIn('file_extension', $config['ext']);
-    
-        if ($folder_id = $request->input('folder_id')) {
-            // Remove the restriction on the folder owner
-            // $model->where('folder_id', $folder_id); // Remove this line
-        } else {
-            $model->where('folder_id', 0);
+        $model->whereIn('file_extension',$config['ext']);
+
+        if($folder_id = $request->input('folder_id'))
+        {
+            $model->where('folder_id',$folder_id);
+        }else{
+            $model->where('folder_id',0);
         }
-    
         if ($s) {
             $model->where('file_name', 'like', '%' . ($s) . '%');
         }
-    
         $files = $model->orderBy('id', 'desc')->paginate(32);
         $res = [];
-        foreach ($files as $file) {
+        foreach ($files as $file){
             $res[] = new MediaResource($file);
         }
-        // dd(  $model);
-    
         return $this->sendSuccess([
             'data'      => $res,
             'total'     => $files->total(),
             'totalPage' => $files->lastPage(),
-            'accept'    => $this->getMimeFromType($file_type)
+            'accept' =>$this->getMimeFromType($file_type)
         ]);
-
     }
-      
-    
+
     protected function getMimeFromType($file_type){
         switch ($file_type){
             case 'video':
@@ -165,7 +160,6 @@ class MediaController extends Controller
      */
     private function hasPermissionMedia()
     {
-        
         if(Auth::id()){
             return true;
         }

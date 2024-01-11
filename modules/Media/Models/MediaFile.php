@@ -92,11 +92,9 @@ class MediaFile extends BaseModel
         return $result;
     }
 
-    // public function scopeInFolder($query,$folder_id){
-        // return $query->where('folder_id',$folder_id);
-
-    //     return $query;
-    // }
+    public function scopeInFolder($query,$folder_id){
+        return $query->where('folder_id',$folder_id);
+    }
 
     public function forceDelete()
     {
