@@ -20,7 +20,7 @@ class FolderController extends FrontendController
     }
 
     public function index(Request $request){
-        $folders = $this->mediaFolder::query()->ofMine();
+        $folders = $this->mediaFolder::query();
         if($s = $request->query('parent_id')){
             $folders->where('parent_id',$s);
         }else{

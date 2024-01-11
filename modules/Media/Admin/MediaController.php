@@ -92,7 +92,7 @@ class MediaController extends Controller
     
         $file_type = $request->input('file_type', 'image');
         $s = $request->input('s');
-        $model = MediaFile::query(); // Remove the where clause on author_id
+        $model = MediaFile::query();
     
         $uploadConfigs = config('bc.media.groups');
     
@@ -119,6 +119,7 @@ class MediaController extends Controller
         foreach ($files as $file) {
             $res[] = new MediaResource($file);
         }
+        // dd(  $model);
     
         return $this->sendSuccess([
             'data'      => $res,
@@ -126,8 +127,9 @@ class MediaController extends Controller
             'totalPage' => $files->lastPage(),
             'accept'    => $this->getMimeFromType($file_type)
         ]);
+
     }
-    
+      
     
     protected function getMimeFromType($file_type){
         switch ($file_type){
