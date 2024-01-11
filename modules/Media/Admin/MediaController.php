@@ -92,7 +92,7 @@ class MediaController extends Controller
     
         $file_type = $request->input('file_type', 'image');
         $s = $request->input('s');
-        $model = MediaFile::query()->where('author_id', Auth::id()); // Restrict to the current user's files
+        $model = MediaFile::query(); // Remove the where clause on author_id
     
         $uploadConfigs = config('bc.media.groups');
     
@@ -105,7 +105,7 @@ class MediaController extends Controller
     
         if ($folder_id = $request->input('folder_id')) {
             // Remove the restriction on the folder owner
-            $model->where('folder_id', $folder_id);
+            // $model->where('folder_id', $folder_id); // Remove this line
         } else {
             $model->where('folder_id', 0);
         }
@@ -127,6 +127,7 @@ class MediaController extends Controller
             'accept'    => $this->getMimeFromType($file_type)
         ]);
     }
+    
     
     protected function getMimeFromType($file_type){
         switch ($file_type){
