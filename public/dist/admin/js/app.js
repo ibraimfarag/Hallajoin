@@ -6387,10 +6387,14 @@
                                 // Logic to select all files
                                 // For example, you can update the selected array with all file IDs
                                 this.selected = this.files.map(file => file.id);
+                                this.selectedLists.push(...this.files);
+
                             } else {
                                 // Logic to unselect all files
                                 this.selected = [];
-                            }
+                                this.selectedLists = [];
+                                                    }
+                            
                         },
             
                     
