@@ -15,6 +15,12 @@
                             <div class="filter-item">
                                 <small><i>{{__("Total")}}: @{{total}} {{__("files")}}</i></small>
                             </div>
+                            <div class="filter-item">
+                                <!-- Add the "Select All" checkbox and its click event handler -->
+                                <input type="checkbox" v-model="selectAll" @click="selectAllFiles">
+                                <label>{{__("Select All")}}</label>
+                            </div>
+            
                         </div>
                         <div class="div">
                             <div class="btn-group" role="group" aria-label="Basic example">
