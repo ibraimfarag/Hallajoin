@@ -1,5 +1,6 @@
 @php
     $translation = $row->translate();
+
 @endphp
 <div class="item-tour {{$wrap_class ?? ''}}">
     @if($row->is_featured == "1")
@@ -14,9 +15,21 @@
         <a @if(!empty($blank)) target="_blank" @endif href="{{$row->getDetailUrl($include_param ?? true)}}">
             @if($row->image_url)
                 @if(!empty($disable_lazyload))
-                    <img src="{{$row->image_url}}" class="img-responsive" alt="{{$location->name ?? ''}}">
+                @php
+               
+                $url_check = $row->image_url;
+                // dd($url_check);
+            @endphp
+                    <img src="{{$url_check}}" class="img-responsive" alt="{{$location->name ?? ''}}">
+        
                 @else
-                    {!! get_image_tag($row->image_id,'medium',['class'=>'img-responsive','alt'=>$row->title]) !!}
+                @php
+               
+                $url_check = $row->image_url;
+                // dd($url_check);
+            @endphp
+                    {{-- {!! get_image_tag($row->image_id,'medium',['class'=>'img-responsive','alt'=>$row->title]) !!} --}}
+                    <img src="{{$url_check}}" class="img-responsive" alt="{{$location->name ?? ''}}">
                 @endif
             @endif
         </a>

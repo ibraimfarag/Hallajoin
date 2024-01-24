@@ -34,7 +34,14 @@
                                         @if(!empty($disable_lazyload))
                                             <img src="{{$row->image_url}}" class="img-responsive" alt="{{$location->name ?? ''}}">
                                         @else
-                                            {!! get_image_tag($row->image_id,'medium',['class'=>'img-responsive','alt'=>$row->title]) !!}
+                                            {{-- {!! get_image_tag($row->image_id,'medium',['class'=>'img-responsive','alt'=>$row->title]) !!} --}}
+                                            @php
+               
+                                            $url_check = $row->image_url;
+                                            // dd($url_check);
+                                        @endphp
+                                                            <img src="{{$url_check}}" class="img-responsive" alt="{{$location->name ?? ''}}">
+
                                         @endif
                                     @endif
                                 </a>

@@ -1,5 +1,6 @@
 <?php
     $translation = $row->translate();
+
 ?>
 <div class="item-tour <?php echo e($wrap_class ?? ''); ?>">
     <?php if($row->is_featured == "1"): ?>
@@ -15,10 +16,21 @@
         <a <?php if(!empty($blank)): ?> target="_blank" <?php endif; ?> href="<?php echo e($row->getDetailUrl($include_param ?? true)); ?>">
             <?php if($row->image_url): ?>
                 <?php if(!empty($disable_lazyload)): ?>
-                    <img src="<?php echo e($row->image_url); ?>" class="img-responsive" alt="<?php echo e($location->name ?? ''); ?>">
+                <?php
+               
+                $url_check = $row->image_url;
+                // dd($url_check);
+            ?>
+                    <img src="<?php echo e($url_check); ?>" class="img-responsive" alt="<?php echo e($location->name ?? ''); ?>">
+        
                 <?php else: ?>
-                    <?php echo get_image_tag($row->image_id,'medium',['class'=>'img-responsive','alt'=>$row->title]); ?>
-
+                <?php
+               
+                $url_check = $row->image_url;
+                // dd($url_check);
+            ?>
+                    
+                    <img src="<?php echo e($url_check); ?>" class="img-responsive" alt="<?php echo e($location->name ?? ''); ?>">
                 <?php endif; ?>
             <?php endif; ?>
         </a>
