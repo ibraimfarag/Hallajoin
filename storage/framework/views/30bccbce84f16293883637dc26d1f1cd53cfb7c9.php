@@ -2,10 +2,10 @@
 <?php $__env->startSection('content'); ?>
     <div class="container-fluid">
         <div class="d-flex justify-content-between mb20">
-            <h1 class="title-bar"><?php echo e(!empty($recovery) ? __('Recovery') : __("All Tour")); ?></h1>
+            <h1 class="title-bar"><?php echo e(!empty($recovery) ? __('Recovery') : __("All Activities")); ?></h1>
             <div class="title-actions">
                 <?php if(empty($recovery)): ?>
-                <a href="<?php echo e(route('tour.admin.create')); ?>" class="btn btn-primary"><?php echo e(__("Add new tour")); ?></a>
+                <a href="<?php echo e(route('tour.admin.create')); ?>" class="btn btn-primary"><?php echo e(__("Add new Activitie")); ?></a>
                 <?php endif; ?>
             </div>
         </div>

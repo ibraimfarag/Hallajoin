@@ -37,7 +37,13 @@
                                         <?php if(!empty($disable_lazyload)): ?>
                                             <img src="<?php echo e($row->image_url); ?>" class="img-responsive" alt="<?php echo e($location->name ?? ''); ?>">
                                         <?php else: ?>
-                                            <?php echo get_image_tag($row->image_id,'medium',['class'=>'img-responsive','alt'=>$row->title]); ?>
+                                            
+                                            <?php
+               
+                                            $url_check = $row->image_url;
+                                            // dd($url_check);
+                                        ?>
+                                                            <img src="<?php echo e($url_check); ?>" class="img-responsive" alt="<?php echo e($location->name ?? ''); ?>">
 
                                         <?php endif; ?>
                                     <?php endif; ?>

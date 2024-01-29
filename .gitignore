@@ -25,3 +25,6 @@ yarn-error.log
 storage/bc.php
 storage/installed
 public/themes/*/dist
+/storage/debugbar
+/storage/framework/views
+/storage/framework/sessions

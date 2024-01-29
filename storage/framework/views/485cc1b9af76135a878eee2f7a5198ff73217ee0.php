@@ -13,6 +13,8 @@
     ?>
     <title><?php echo e($page_title); ?></title>
     <meta name="description" content="<?php echo e($seo_meta['seo_desc'] ?? $seo_meta['service_desc'] ?? setting_item_with_lang("site_desc")); ?>"/>
+    <meta name="keywords" content="<?php echo e($seo_meta['seo_keywords'] ?? $seo_meta['service_keywords'] ?? setting_item_with_lang("site_keywords")); ?>" />
+
     
     <meta property="og:url" content="<?php echo e($seo_meta['full_url'] ?? ""); ?>"/>
     <meta property="og:type" content="article"/>
