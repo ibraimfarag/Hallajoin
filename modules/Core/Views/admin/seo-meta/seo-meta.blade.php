@@ -1,10 +1,10 @@
 <?php
 if(is_default_lang()){
     $meta_seo = $row->getSeoMeta();
+
 }else{
     $meta_seo = $translation->getSeoMeta(request()->query('lang'));
 }
-
 $seo_share = $meta_seo['seo_share'] ?? false;
 ?>
 <div class="panel">
@@ -43,6 +43,10 @@ $seo_share = $meta_seo['seo_share'] ?? false;
                 <div class="form-group">
                     <label class="control-label">{{__("Seo Description")}}</label>
                     <textarea name="seo_desc" rows="3" class="form-control" placeholder="{{$row->short_desc ?? __("Enter description...")}}">{{$meta_seo['seo_desc'] ?? ""}}</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">{{__("Seo keywords")}}</label>
+                    <textarea name="seo_keywords" rows="3" class="form-control" placeholder="">{{$meta_seo['seo_keywords'] ?? ""}}</textarea>
                 </div>
                 @if(is_default_lang())
                     <div class="form-group form-group-image">

@@ -13,6 +13,8 @@
     @endphp
     <title>{{ $page_title }}</title>
     <meta name="description" content="{{$seo_meta['seo_desc'] ?? $seo_meta['service_desc'] ?? setting_item_with_lang("site_desc")}}"/>
+    <meta name="keywords" content="{{$seo_meta['seo_keywords'] ?? $seo_meta['service_keywords'] ?? setting_item_with_lang("site_keywords")}}" />
+
     {{-- Facebook share --}}
     <meta property="og:url" content="{{$seo_meta['full_url'] ?? ""}}"/>
     <meta property="og:type" content="article"/>

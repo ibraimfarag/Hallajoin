@@ -10,6 +10,7 @@ class SEO extends BaseModel
         'seo_index',
         'seo_title',
         'seo_desc',
+        'seo_keywords',
         'seo_image',
         'seo_share',
     ];

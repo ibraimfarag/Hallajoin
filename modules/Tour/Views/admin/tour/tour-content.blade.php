@@ -1,9 +1,9 @@
 <div class="panel">
-    <div class="panel-title"><strong>{{__("Tour Content")}}</strong></div>
+    <div class="panel-title"><strong>{{__("Activitie Content")}}</strong></div>
     <div class="panel-body">
         <div class="form-group">
             <label>{{__("Title")}}</label>
-            <input type="text" value="{!! clean($translation->title) !!}" placeholder="{{__("Tour title")}}" name="title" class="form-control">
+            <input type="text" value="{!! clean($translation->title) !!}" placeholder="{{__("Activitie title")}}" name="title" class="form-control">
         </div>
         <div class="form-group">
             <label class="control-label">{{__("Content")}}</label>
@@ -70,14 +70,14 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label class="control-label">{{__("Tour Min People")}}</label>
-                        <input type="text" name="min_people" class="form-control" value="{{$row->min_people}}" placeholder="{{__("Tour Min People")}}">
+                        <label class="control-label">{{__("Activitie Min People")}}</label>
+                        <input type="text" name="min_people" class="form-control" value="{{$row->min_people}}" placeholder="{{__("Activitie Min People")}}">
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label class="control-label">{{__("Tour Max People")}}</label>
-                        <input type="text" name="max_people" class="form-control" value="{{$row->max_people}}" placeholder="{{__("Tour Max People")}}">
+                        <label class="control-label">{{__("Activitie Max People")}}</label>
+                        <input type="text" name="max_people" class="form-control" value="{{$row->max_people}}" placeholder="{{__("Activitie Max People")}}">
                     </div>
                 </div>
             </div>
@@ -100,7 +100,7 @@
                         <div class="item" data-number="{{$key}}">
                             <div class="row">
                                 <div class="col-md-5">
-                                    <input type="text" name="faqs[{{$key}}][title]" class="form-control" value="{{$faq['title']}}" placeholder="{{__('Eg: When and where does the tour end?')}}">
+                                    <input type="text" name="faqs[{{$key}}][title]" class="form-control" value="{{$faq['title']}}" placeholder="{{__('Eg: When and where does the Activitie end?')}}">
                                 </div>
                                 <div class="col-md-6">
                                     <textarea name="faqs[{{$key}}][content]" class="form-control full-h" placeholder="...">{{$faq['content']}}</textarea>
@@ -120,7 +120,7 @@
                 <div class="item" data-number="__number__">
                     <div class="row">
                         <div class="col-md-5">
-                            <input type="text" __name__="faqs[__number__][title]" class="form-control" placeholder="{{__('Eg: When and where does the tour end?')}}">
+                            <input type="text" __name__="faqs[__number__][title]" class="form-control" placeholder="{{__('Eg: When and where does the Activitie end?')}}">
                         </div>
                         <div class="col-md-6">
                             <textarea __name__="faqs[__number__][content]" class="form-control full-h" placeholder="..."></textarea>
@@ -133,6 +133,7 @@
             </div>
         </div>
         @include('Tour::admin/tour/include-exclude')
+        @include('Tour::admin/tour/add_section')
         @include('Tour::admin/tour/itinerary')
         @if(is_default_lang())
             <div class="form-group">

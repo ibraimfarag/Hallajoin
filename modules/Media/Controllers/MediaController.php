@@ -92,6 +92,7 @@ class MediaController extends Controller
             'xlsx',
             'txt',
             'doc',
+            'pdf', // Add PDF here
             'docx',
             'ppt',
             'pptx',
@@ -110,6 +111,7 @@ class MediaController extends Controller
             'bmp',
             'png',
             'gif',
+            'pdf'
         ];
         $allowedMimeTypes  = [];
         $uploadConfigs = [

@@ -1,4 +1,4 @@
-@if(!empty($location_category) and $location_category->count() > 0)
+{{-- @if(!empty($location_category) and $location_category->count() > 0)
     <div class="panel">
         <div class="panel-title"><strong>{{__("Surroundings")}}</strong></div>
         <div class="panel-body">
@@ -94,4 +94,4 @@
             @endif
         </div>
     </div>
-@endif
+@endif --}}

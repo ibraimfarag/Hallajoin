@@ -61,22 +61,35 @@
             <div class="form-group">
                 <label class="control-label">{{__("The geographic coordinate")}}</label>
                 <div class="control-map-group">
-                    <div id="map_content"></div>
-                    <input type="text" placeholder="{{__("Search by name...")}}" class="bravo_searchbox form-control" autocomplete="off" onkeydown="return event.key !== 'Enter';">
-                    <div class="g-control">
-                        <div class="form-group">
+                    {{-- <div id="map_content"></div> --}}
+                    {{-- <input type="text" placeholder="{{__("Search by name...")}}" class="bravo_searchbox form-control" autocomplete="off" onkeydown="return event.key !== 'Enter';"> --}}
+                    {{-- <div class="g-control"> --}}
+                        {{-- <div class="form-group">
                             <label>{{__("Map Latitude")}}:</label>
                             <input type="text" name="map_lat" class="form-control" value="{{$row->map_lat}}" onkeydown="return event.key !== 'Enter';">
                         </div>
                         <div class="form-group">
                             <label>{{__("Map Longitude")}}:</label>
                             <input type="text" name="map_lng" class="form-control" value="{{$row->map_lng}}" onkeydown="return event.key !== 'Enter';">
-                        </div>
-                        <div class="form-group">
+                        </div> --}}
+
+                        {{-- <div class="form-group">
                             <label>{{__("Map Zoom")}}:</label>
                             <input type="text" name="map_zoom" class="form-control" value="{{$row->map_zoom ?? "8"}}" onkeydown="return event.key !== 'Enter';">
+                        </div> --}}
+                    {{-- </div> --}}
+                    <div class="row ">
+                        <div class="form-group mx-3">
+                            <label>{{__("Map Latitude")}}:</label>
+                            <input type="text" name="map_lat" class="form-control" value="{{$row->map_lat}}" onkeydown="return event.key !== 'Enter';">
+                        </div>
+                        <div class="form-group mx-3">
+                            <label>{{__("Map Longitude")}}:</label>
+                            <input type="text" name="map_lng" class="form-control" value="{{$row->map_lng}}" onkeydown="return event.key !== 'Enter';">
                         </div>
                     </div>
+                   
+
                 </div>
             </div>
         @endif

@@ -13,6 +13,7 @@ class TourTranslation extends BaseModel
         'address',
         'faqs',
         'include',
+        'other',
         'exclude',
         'itinerary',
         'surrounding',
@@ -25,6 +26,7 @@ class TourTranslation extends BaseModel
     protected $casts = [
         'faqs' => 'array',
         'include' => 'array',
+        'other' => 'array',
         'exclude' => 'array',
         'itinerary' => 'array',
         'surrounding' => 'array',

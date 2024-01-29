@@ -42,6 +42,9 @@ class UpdateFrom130To140 extends Migration
             if (!Schema::hasColumn('bravo_tours', 'itinerary')) {
                 $table->text('itinerary')->nullable();
             }
+            if (!Schema::hasColumn('bravo_tours', 'other')) {
+                $table->text('other')->nullable();
+            }
         });
         Schema::table('bravo_tour_translations', function (Blueprint $table) {
             if (!Schema::hasColumn('bravo_tour_translations', 'include')) {
@@ -52,6 +55,9 @@ class UpdateFrom130To140 extends Migration
             }
             if (!Schema::hasColumn('bravo_tour_translations', 'itinerary')) {
                 $table->text('itinerary')->nullable();
+            }
+            if (!Schema::hasColumn('bravo_tour_translations', 'other')) {
+                $table->text('other')->nullable();
             }
         });
 

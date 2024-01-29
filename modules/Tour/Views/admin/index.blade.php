@@ -2,10 +2,10 @@
 @section('content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between mb20">
-            <h1 class="title-bar">{{!empty($recovery) ? __('Recovery') : __("All Tour")}}</h1>
+            <h1 class="title-bar">{{!empty($recovery) ? __('Recovery') : __("All Activities")}}</h1>
             <div class="title-actions">
                 @if(empty($recovery))
-                <a href="{{route('tour.admin.create')}}" class="btn btn-primary">{{__("Add new tour")}}</a>
+                <a href="{{route('tour.admin.create')}}" class="btn btn-primary">{{__("Add new Activitie")}}</a>
                 @endif
             </div>
         </div>

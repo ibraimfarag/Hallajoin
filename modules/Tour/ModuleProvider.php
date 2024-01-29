@@ -53,18 +53,18 @@ class ModuleProvider extends ModuleServiceProvider
             $res['tour'] = [
                 "position"=>40,
                 'url'        => route('tour.admin.index'),
-                'title'      => __("Tour"),
+                'title'      => __("Activities"),
                 'icon'       => 'icon ion-md-umbrella',
                 'permission' => 'tour_view',
                 'children'   => [
                     'tour_view'=>[
                         'url'        => route('tour.admin.index'),
-                        'title'      => __('All Tours'),
+                        'title'      => __('All Activities'),
                         'permission' => 'tour_view',
                     ],
                     'tour_create'=>[
                         'url'        => route('tour.admin.create'),
-                        'title'      => __("Add Tour"),
+                        'title'      => __("Add Activitie"),
                         'permission' => 'tour_create',
                     ],
                     'tour_category'=>[

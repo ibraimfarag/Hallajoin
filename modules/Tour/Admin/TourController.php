@@ -185,7 +185,7 @@ class TourController extends AdminController
                     'url'  => route('tour.admin.index')
                 ],
                 [
-                    'name'  => __('Edit Tour'),
+                    'name'  => __('Edit Activitie'),
                     'class' => 'active'
                 ],
             ],

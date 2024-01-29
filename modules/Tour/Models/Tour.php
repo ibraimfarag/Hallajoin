@@ -64,6 +64,7 @@ class Tour extends Bookable
         'include',
         'exclude',
         'itinerary',
+        'other',
         'surrounding',
         'min_day_before_booking',
         'enable_fixed_date',
@@ -84,6 +85,7 @@ class Tour extends Bookable
         'include'   => 'array',
         'exclude'   => 'array',
         'itinerary' => 'array',
+        'other' => 'array',
         'service_fee' => 'array',
         'surrounding' => 'array',
         'start_date'=> 'date',
@@ -1118,6 +1120,7 @@ class Tour extends Bookable
             $data['faqs'] = $this->faqs;
             $data['include'] = $this->include;
             $data['exclude'] = $this->exclude;
+            $data['other'] = $this->other;
             $data["itinerary"] = null;
             if (!empty($this->itinerary)) {
                 $itinerary = $this->itinerary;

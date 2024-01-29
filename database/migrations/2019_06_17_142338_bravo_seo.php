@@ -20,6 +20,7 @@ class BravoSeo extends Migration
             $table->tinyInteger('seo_index')->nullable();
             $table->string('seo_title', 255)->nullable();
             $table->text('seo_desc')->nullable();
+            $table->text('seo_keywords')->nullable();
             $table->integer('seo_image')->nullable();
             $table->text('seo_share')->nullable();
             $table->bigInteger('create_user')->nullable();
