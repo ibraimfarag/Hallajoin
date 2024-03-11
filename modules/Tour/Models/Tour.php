@@ -15,11 +15,12 @@ use Modules\Location\Models\Location;
 use Modules\Review\Models\Review;
 use Modules\Media\Helpers\FileHelper;
 use Illuminate\Support\Facades\Cache;
-use Validator;
+// use Validator;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Core\Models\SEO;
 use Modules\User\Models\UserWishList;
 use Modules\Core\Models\Attributes;
+use Illuminate\Support\Facades\Validator;
 
 class Tour extends Bookable
 {
