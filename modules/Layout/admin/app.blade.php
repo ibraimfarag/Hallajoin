@@ -33,6 +33,8 @@
     <link rel="stylesheet" href="{{url('libs/daterange/daterangepicker.css')}}"/>
     <link href="{{ asset('themes/admin/libs/bootstrap-4.6.2-dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('themes/admin/libs/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+
     <link href="{{ asset('dist/admin/css/app.css') }}" rel="stylesheet">
     {!! \App\Helpers\Assets::css() !!}
     {!! \App\Helpers\Assets::js() !!}

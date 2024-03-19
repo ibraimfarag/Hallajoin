@@ -1,57 +1,79 @@
-<!-- Blade file: add_multiple_sections.blade.php -->
-
-<div id="sections-container">
-    <!-- Section Template -->
-    <div class="section-template hide">
-        <div class="form-group-item">
-            <!-- Section Title Input -->
-            <label class="control-label">{{__('Section Title')}}</label>
-            <input type="text" class="form-control section-title" placeholder="{{__('Enter Section Title')}}">
-            
-            <!-- Section Items -->
+<div id="appid" style="margin-top: 40px; margin-bottom: 40px">
+    <!-- Use vuedraggable component to enable dragging and dropping of sections -->
+    <draggable v-model="sections" group="sections" @start="dragging = true" @end="dragging = false" class="dragArea">
+        <div v-for="(section, index) in sections" :key="index" class="form-group-item" style="margin-top: 40px; margin-bottom: 40px">
             <div class="g-items-header">
                 <div class="row">
-                    <div class="col-md-11 text-left">{{__("Item Title")}}</div>
-                    <div class="col-md-1"></div>
+                    <div class="col-md-1">
+                        <i class="fa fa-arrows-alt move-icon" style="cursor: move"></i>
+                    </div>
+                    <div class="col-md-10 text-left">
+                        <input type="text" class="form-control include-title" v-model="section.title" placeholder="{{__('Example Section title')}}" />
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-danger btn-sm" @click="removeSection(index)">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="g-items">
-                <!-- Existing Items -->
-                <div class="item" data-number="__number__">
+                <div class="item" v-for="(item, itemIndex) in section.items" :key="itemIndex" :data-number="itemIndex">
                     <div class="row">
                         <div class="col-md-11">
-                            <input type="text" __name__="items[__number__][title]" class="form-control item-title" placeholder="{{__('Eg: Specialized item')}}">
+                            <input type="text" v-model="item.title" class="form-control" placeholder="{{__('Eg: Specialized bilingual guide')}}">
                         </div>
                         <div class="col-md-1">
-                            <span class="btn btn-danger btn-sm btn-remove-item"><i class="fa fa-trash"></i></span>
+                            <button type="button" class="btn btn-danger btn-sm btn-remove-item" @click="removeItem(index, itemIndex)"><i class="fa fa-trash"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Add Item Button -->
             <div class="text-right">
-                <span class="btn btn-info btn-sm btn-add-item"><i class="icon ion-ios-add-circle-outline"></i> {{__('Add Item')}}</span>
-            </div>
-            
-            <!-- Template for Adding New Items (Hidden by Default) -->
-            <div class="g-more hide">
-                <div class="item" data-number="__number__">
-                    <div class="row">
-                        <div class="col-md-11">
-                            <input type="text" __name__="items[__number__][title]" class="form-control item-title" placeholder="{{__('Eg: Specialized item')}}">
-                        </div>
-                        <div class="col-md-1">
-                            <span class="btn btn-danger btn-sm btn-remove-item"><i class="fa fa-trash"></i></span>
-                        </div>
-                    </div>
-                </div>
+                <button type="button" class="btn btn-info btn-sm btn-add-item" @click="addItem(index)"><i class="icon ion-ios-add-circle-outline"></i> {{__('Add item')}}</button>
             </div>
         </div>
+    </draggable>
+    <div class="text-center mt-3">
+        <button type="button" class="btn btn-success" @click="addSection">Add Section</button>
     </div>
+    <input type="hidden" name="sections" :value="formatData(sections)">
 </div>
 
-<!-- Button to Add New Section -->
-<div class="text-center">
-    <button id="btn-add-section" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> {{__('Add Section')}}</button>
-</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.23.2/vuedraggable.umd.min.js"></script>
+<script>
+    new Vue({
+        el: '#appid',
+        data: {
+            sections: {!! $translation->sections ?? '[]' !!}, // Load sections from JSON data
+            dragging: false // Variable to track dragging state
+        },
+        methods: {
+            addItem(sectionIndex) {
+                this.sections[sectionIndex].items.push({ title: '' });
+            },
+            removeItem(sectionIndex, itemIndex) {
+                this.sections[sectionIndex].items.splice(itemIndex, 1);
+            },
+            addSection() {
+                this.sections.push({
+                    title: '',
+                    items: []
+                });
+            },
+            removeSection(sectionIndex) {
+                this.sections.splice(sectionIndex, 1);
+            },
+            formatData(sections) {
+                return JSON.stringify(sections);
+            }
+        },
+        computed: {
+            sortedSections() {
+                // Sort sections by their order in the array
+                return this.sections.slice().sort((a, b) => this.sections.indexOf(a) - this.sections.indexOf(b));
+            }
+        }
+    });
+</script>

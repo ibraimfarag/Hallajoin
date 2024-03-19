@@ -155,6 +155,8 @@
             <div class="" v-if="folder.onEdit">
                 <input ref="input" type="text" @blur="saveName" class="form-control" v-model="folder_name" >
             </div>
+            <a href="#" class="btn-dele btn btn-sm btn-danger position-absolute top-0 right-0 m-2"@click.prevent="deleteFolder"><i class="fa fa-trash"></i></a>
+
             <a href="#" class="btn-edit btn btn-sm btn-warning position-absolute top-0 right-0 m-2" @click.prevent="openEdit"><i class="fa fa-edit"></i></a>
         </div>
     </div>

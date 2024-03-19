@@ -48,6 +48,9 @@ class CreateBravoTours extends Migration
             $table->bigInteger('update_user')->nullable();
             $table->softDeletes();
 
+            //Sections 
+            $table->json('sections')->nullable();
+
             //Languages
             $table->bigInteger('origin_id')->nullable();
             $table->string('lang',10)->nullable();

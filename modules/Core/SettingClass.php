@@ -67,6 +67,18 @@
                         'page_contact_desc',
                     ]
                 ],
+                'share'=>[
+                    'id'   => 'share',
+                    'title' => __("share Settings"),
+                    'position'=>0,
+					'view'      => "Core::admin.settings.groups.shareformat",
+					"keys"      => [
+                        'whatsapp_fromat',
+                        'mail_fromat',
+    
+					],
+           
+                ],
                 'advance'=>[
                     'id'   => 'advance',
                     'title' => __("Advanced Settings"),

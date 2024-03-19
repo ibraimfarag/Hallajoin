@@ -65,11 +65,15 @@ class TourController extends AdminController
         } else {
             $query->where('author_id', Auth::id());
         }
+    
+        // Fetch WhatsApp format setting
+        $whatsappFormat = setting_item_with_lang('whatsapp_fromat', $request->query('lang'));
+    
+        $rows = $query->with(['author', 'category_tour'])->paginate(20);
+    
         $data = [
-            'rows'               => $query->with([
-                'author',
-                'category_tour'
-            ])->paginate(20),
+            'rows'               => $rows,
+            'whatsapp'           => $whatsappFormat,
             'tour_categories'    => $this->tourCategoryClass::where('status', 'publish')->get()->toTree(),
             'tour_manage_others' => $this->hasPermission('tour_manage_others'),
             'page_title'         => __("Tour Management"),
@@ -84,9 +88,11 @@ class TourController extends AdminController
                 ],
             ]
         ];
+    
+        // dd($data);
         return view('Tour::admin.index', $data);
     }
-
+    
     public function recovery(Request $request)
     {
         $this->checkPermission('tour_view');
