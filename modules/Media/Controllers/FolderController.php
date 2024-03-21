@@ -27,7 +27,8 @@ class FolderController extends FrontendController
             $folders->where('parent_id',0);
         }
 
-        return FolderResource::collection($folders->paginate(100));
+        // return FolderResource::collection($folders->paginate(100));
+        return FolderResource::collection($folders);
     }
     public function store(Request $request){
         $id = $request->input('id');
