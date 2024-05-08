@@ -26,7 +26,7 @@ class FolderController extends FrontendController
         }else{
             $folders->where('parent_id',0);
         }
-
+        $folders->orderBy('name', 'asc');
         // return FolderResource::collection($folders->paginate(100));
         return FolderResource::collection($folders->paginate(10000));
     }

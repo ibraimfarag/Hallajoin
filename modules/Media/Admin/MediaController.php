@@ -120,7 +120,7 @@ class MediaController extends Controller
         }
     
         // Execute the file query
-        $files = $filesQuery->orderBy('id', 'desc')->paginate(32);
+        $files = $filesQuery->orderBy('file_name', 'asc')->paginate(1000);
     
         // Initialize the folder query
         $foldersQuery = MediaFolder::query();
@@ -139,7 +139,7 @@ class MediaController extends Controller
         }
     
         // Execute the folder query
-        $folders = $foldersQuery->orderBy('id', 'desc')->paginate(32);
+        $folders = $foldersQuery->orderBy('name', 'asc')->paginate(1000);
     
         // Prepare the response
         $filesRes = $files->map(function ($file) {
