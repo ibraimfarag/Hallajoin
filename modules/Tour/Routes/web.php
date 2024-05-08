@@ -10,6 +10,8 @@
 |
 */
 use Illuminate\Support\Facades\Route;
+
+
 // Vendor Manage Tour
 Route::group(['prefix'=>'user/'.config('tour.tour_route_prefix'),'middleware' => ['auth','verified']],function(){
     Route::get('/','ManageTourController@manageTour')->name('tour.vendor.index');

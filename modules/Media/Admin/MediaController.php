@@ -13,6 +13,7 @@ use Modules\Media\Helpers\FileHelper;
 use Modules\Media\Models\MediaFile;
 use Modules\Media\Models\MediaFolder;
 use Modules\Media\Resources\MediaResource;
+use Modules\Media\Resources\FolderResource;
 use Modules\Media\Traits\HasUpload;
 
 class MediaController extends Controller
@@ -83,49 +84,83 @@ class MediaController extends Controller
             return $this->sendError($exception->getMessage());
         }
     }
-
     public function getLists(Request $request)
     {
         if (!$this->hasPermissionMedia()) {
             return $this->sendError('There is no permission upload');
         }
+    
         $file_type = $request->input('file_type', 'image');
         $s = $request->input('s');
-        $model = MediaFile::query();
+        $folder_id = $request->input('folder_id', 0);
+    
+        // Initialize the file query
+        $filesQuery = MediaFile::query();
+    
         if (!Auth::user()->hasPermission("media_manage_others")) {
-             $model->where('author_id', Auth::id());
+            $filesQuery->where('author_id', Auth::id());
         }
+    
         $uploadConfigs = config('bc.media.groups');
-
-        if(!isset($uploadConfigs[$file_type])){
+        if (!isset($uploadConfigs[$file_type])) {
             return $this->sendError('File type not found');
         }
-
-        $config = isset($uploadConfigs[$file_type]) ? $uploadConfigs[$file_type] : $uploadConfigs['default'];
-        $model->whereIn('file_extension',$config['ext']);
-
-        if($folder_id = $request->input('folder_id'))
-        {
-            $model->where('folder_id',$folder_id);
-        }else{
-            $model->where('folder_id',0);
+    
+        $config = $uploadConfigs[$file_type] ?? $uploadConfigs['default'];
+        $filesQuery->whereIn('file_extension', $config['ext']);
+    
+        if ($folder_id) {
+            $filesQuery->where('folder_id', $folder_id);
+        } else {
+            $filesQuery->where('folder_id', 0);
         }
+    
         if ($s) {
-            $model->where('file_name', 'like', '%' . ($s) . '%');
+            $filesQuery->where('file_name', 'like', '%' . $s . '%');
         }
-        $files = $model->orderBy('id', 'desc')->paginate(32);
-        $res = [];
-        foreach ($files as $file){
-            $res[] = new MediaResource($file);
+    
+        // Execute the file query
+        $files = $filesQuery->orderBy('id', 'desc')->paginate(32);
+    
+        // Initialize the folder query
+        $foldersQuery = MediaFolder::query();
+        if (!Auth::user()->hasPermission("media_manage_others")) {
+            $foldersQuery->where('author_id', Auth::id());
         }
+    
+        if ($folder_id) {
+            $foldersQuery->where('parent_id', $folder_id);
+        } else {
+            $foldersQuery->where('parent_id', 0);
+        }
+    
+        if ($s) {
+            $foldersQuery->where('name', 'like', '%' . $s . '%');
+        }
+    
+        // Execute the folder query
+        $folders = $foldersQuery->orderBy('id', 'desc')->paginate(32);
+    
+        // Prepare the response
+        $filesRes = $files->map(function ($file) {
+            return new MediaResource($file);
+        });
+    
+        $foldersRes = $folders->map(function ($folder) {
+            return new FolderResource($folder);  // Assume FolderResource exists
+        });
+    
         return $this->sendSuccess([
-            'data'      => $res,
-            'total'     => $files->total(),
-            'totalPage' => $files->lastPage(),
-            'accept' =>$this->getMimeFromType($file_type)
+            'files' => $filesRes,
+            'folders' => $foldersRes,
+            'totalFiles' => $files->total(),
+            'totalFolders' => $folders->total(),
+            'totalFilePages' => $files->lastPage(),
+            'totalFolderPages' => $folders->lastPage(),
+            'accept' => $this->getMimeFromType($file_type)
         ]);
     }
-
+    
     protected function getMimeFromType($file_type){
         switch ($file_type){
             case 'video':

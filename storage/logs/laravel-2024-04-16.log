@@ -1,0 +1,64 @@
+[2024-04-16 20:23:09] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "Hab Hot Air Balloon was updated to Publish by System Admin",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/images\/avatar.png\" alt=\"System Admin\">",
+    "link": "https:\/\/hallajoin\/admin\/module\/tour?id=462",
+    "idNotification": "9de4905a-8415-4092-a42f-e1c75937300d",
+    "socket": null
+}  
+[2024-04-16 20:24:43] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "Hab Hot Air Balloon was updated to Publish by System Admin",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/images\/avatar.png\" alt=\"System Admin\">",
+    "link": "https:\/\/hallajoin\/admin\/module\/tour?id=462",
+    "idNotification": "8a123c84-6472-4afe-85f3-bd0d1d79d8ca",
+    "socket": null
+}  
+[2024-04-16 20:25:39] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "Hab Hot Air Balloon was updated to Publish by System Admin",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/images\/avatar.png\" alt=\"System Admin\">",
+    "link": "https:\/\/hallajoin\/admin\/module\/tour?id=462",
+    "idNotification": "879390cd-ab87-42c0-a30d-a5f21a7f3de2",
+    "socket": null
+}  
+[2024-04-16 20:26:18] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "Hab Hot Air Balloon was updated to Publish by System Admin",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/images\/avatar.png\" alt=\"System Admin\">",
+    "link": "https:\/\/hallajoin\/admin\/module\/tour?id=462",
+    "idNotification": "38174d5b-8eac-4ed2-9dd9-8779d83b6062",
+    "socket": null
+}  
+[2024-04-16 20:30:50] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "Hab Hot Air Balloon was updated to Publish by System Admin",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/images\/avatar.png\" alt=\"System Admin\">",
+    "link": "https:\/\/hallajoin\/admin\/module\/tour?id=462",
+    "idNotification": "3f40c687-c040-4dd7-95de-c9c5115b5a67",
+    "socket": null
+}  
+[2024-04-16 20:32:01] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "Hab Hot Air Balloon was updated to Publish by System Admin",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/images\/avatar.png\" alt=\"System Admin\">",
+    "link": "https:\/\/hallajoin\/admin\/module\/tour?id=462",
+    "idNotification": "63edc9eb-9527-4265-8230-8765469019e7",
+    "socket": null
+}  
+[2024-04-16 20:32:02] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "Hab Hot Air Balloon was updated to Publish by System Admin",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/images\/avatar.png\" alt=\"System Admin\">",
+    "link": "https:\/\/hallajoin\/admin\/module\/tour?id=462",
+    "idNotification": "fe758bf3-4924-4f6a-9555-b9423e609778",
+    "socket": null
+}  
+[2024-04-16 20:32:40] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "Hab Hot Air Balloon was updated to Publish by System Admin",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/images\/avatar.png\" alt=\"System Admin\">",
+    "link": "https:\/\/hallajoin\/admin\/module\/tour?id=462",
+    "idNotification": "50342594-7f18-4189-9084-18474544140a",
+    "socket": null
+}  

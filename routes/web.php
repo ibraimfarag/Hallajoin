@@ -24,5 +24,28 @@ Route::get('social-callback/{provider}', 'Auth\LoginController@socialCallBack');
 // Logs
 Route::get(config('admin.admin_route_prefix').'/logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware(['auth', 'dashboard','system_log_view'])->name('admin.logs');
 
+
+use Illuminate\Support\Facades\Artisan;
+
+
+Route::get('/clear', function() {
+    
+    // Clear route cache
+    Artisan::call('cache:clear');
+    
+    // Clear application cache
+    Artisan::call('route:clear');
+    // Clear config cache
+
+    Artisan::call('config:clear');
+
+    // Clear view cache
+    Artisan::call('view:clear');
+
+    return 'All caches have been cleared!';
+});
+
+
+
 // Route::get('/install','InstallerController@redirectToRequirement')->name('LaravelInstaller::welcome');
 // Route::get('/install/environment','InstallerController@redirectToWizard')->name('LaravelInstaller::environment');

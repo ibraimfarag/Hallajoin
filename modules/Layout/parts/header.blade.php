@@ -1,4 +1,6 @@
-<div class="bravo_header">
+
+
+<div class="bravo_header"  id="bravo-header" >
     <div class="{{$container_class ?? 'container'}}">
         <div class="content">
             <div class="header-left">
@@ -132,3 +134,5 @@
         </div>
     </div>
 </div>
+
+

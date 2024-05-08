@@ -95,10 +95,10 @@ class Currency
                     return $s . ' ' . $currency['symbol'];
                     break;
                 case "left";
-                    return $currency['symbol'] . $s;
+                return $s . ' ' . $currency['symbol'];
                     break;
                 case "left_space";
-                    return $currency['symbol'] . ' ' . $s;
+                return $s . ' ' . $currency['symbol'];
                     break;
                 default:
                     return $s . $currency['symbol'];
@@ -244,7 +244,8 @@ class Currency
         'TUL'=>"Turkish Lira",
     );
     public static $currency_symbols = array(
-        'AED' => '&#1583;.&#1573;',
+        'AED' => 'AED',
+        // 'AED' => '&#1583;.&#1573;',
         // ?
         'AFN' => '&#65;&#102;',
         'ALL' => '&#76;&#101;&#107;',

@@ -9,13 +9,14 @@
     @php
         $favicon = setting_item('site_favicon');
     @endphp
+
     @if($favicon)
         @php
             $file = (new \Modules\Media\Models\MediaFile())->findById($favicon);
         @endphp
         @if(!empty($file))
             <link rel="icon" type="{{$file['file_type']}}" href="{{asset('uploads/'.$file['file_path'])}}" />
-        @else:
+        @else
             <link rel="icon" type="image/png" href="{{url('images/favicon.png')}}" />
         @endif
     @endif
@@ -69,6 +70,19 @@
         {!! setting_item('footer_scripts') !!}
         {!! setting_item_with_lang_raw('footer_scripts') !!}
     @endif
-
+    <script>
+        $(document).ready(function() {
+        var header = $("#bravo-header");
+        var headerOffset = header.offset().top;
+    
+        $(window).scroll(function() {
+            if ($(window).scrollTop() > headerOffset) {
+                header.addClass("fixed-header");
+            } else {
+                header.removeClass("fixed-header");
+            }
+        });
+    });
+    </script>
 </body>
 </html>

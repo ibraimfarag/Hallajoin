@@ -1812,7 +1812,7 @@ body .daterangepicker .tooltip .tooltip-inner {
 }
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour {
     border: 1px solid #dfdfdf;
-    border-radius: 3px;
+    border-radius: 20px;
     overflow: hidden;
     padding-bottom: 15px;
     position: relative;
@@ -7490,6 +7490,7 @@ ol {
 .bravo_wrap .bravo_header {
     background: #f4f5f9;
 }
+
 .bravo_wrap .bravo_header .content {
     background: #f4f5f9;
     display: flex;

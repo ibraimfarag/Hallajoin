@@ -5853,8 +5853,8 @@
                             },
                             reloadAll: function () {
                                 (this.filter.page = 1),
-                                    this.reloadLists(),
-                                    this.reloadFolder();
+                                    this.reloadLists();
+                                    //this.reloadFolder();
                             },
                             toFolderRoot: function () {
                                 (this.breadcrumbs = []),
@@ -5863,8 +5863,8 @@
                                         parent_id: 0,
                                     }),
                                     (this.filter.page = 1),
-                                    this.reloadLists(),
-                                    this.reloadFolder();
+                                    this.reloadLists();
+                                    //this.reloadFolder();
                             },
                             showFolder: function (e, t) {
                                 e.id !== this.currentFolder.id &&
@@ -5876,8 +5876,9 @@
                                         ),
                                     (this.currentFolder = e),
                                     (this.filter.page = 1),
-                                    this.reloadLists(),
-                                    this.reloadFolder());
+                                    this.reloadLists()
+                                    //this.reloadFolder()
+                                );
                             },
                             updateFolder: function (e, t) {
                                 this.$set(
@@ -6403,15 +6404,17 @@
                         },
                         reloadAll: function () {
                             (this.filter.page = 1),
-                                this.reloadLists(),
-                                this.reloadFolder();
+                                this.reloadLists()
+                                //this.reloadFolder()
+                                ;
                         },
                         toFolderRoot: function () {
                             (this.breadcrumbs = []),
                                 (this.currentFolder = { id: 0, parent_id: 0 }),
                                 (this.filter.page = 1),
-                                this.reloadLists(),
-                                this.reloadFolder();
+                                this.reloadLists()
+                                //this.reloadFolder()
+                                ;
                         },
                         showFolder: function (e, t) {
                             e.id !== this.currentFolder.id &&
@@ -6423,8 +6426,9 @@
                                     ),
                                 (this.currentFolder = e),
                                 (this.filter.page = 1),
-                                this.reloadLists(),
-                                this.reloadFolder());
+                                this.reloadLists()
+                                //this.reloadFolder()
+                            );
                         },
                         updateFolder: function (e, t) {
                             this.$set(this.folders, e, Object.assign({}, t));
@@ -6534,9 +6538,10 @@
                                     dataType: "json",
                                     success: function (e) {
                                         t.resetSelected(),
-                                            (t.files = e.data),
-                                            (t.total = e.total),
-                                            (t.totalPage = e.totalPage),
+                                        (t.files = e.files),
+                                        (t.folders = e.folders), // Update folders here
+                                        (t.total = e.totalFiles),
+                                        (t.totalPage = e.totalFilePages),
                                             (t.isLoading = !1),
                                             (t.apiFinished = !0);
                                     },

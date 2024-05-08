@@ -111,7 +111,7 @@
                     <i class="icofont-share"></i>
                 </span>
                 <ul class="share-wrapper">
-                    <li>
+                    {{-- <li>
                         <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u={{$row->getDetailUrl()}}&amp;title={{$translation->title}}" target="_blank" rel="noopener" original-title="{{__("Facebook")}}">
                             <i class="fa fa-facebook fa-lg"></i>
                         </a>
@@ -120,7 +120,19 @@
                         <a class="twitter" href="https://twitter.com/share?url={{$row->getDetailUrl()}}&amp;title={{$translation->title}}" target="_blank" rel="noopener" original-title="{{__("Twitter")}}">
                             <i class="fa fa-twitter fa-lg"></i>
                         </a>
+                    </li> --}}
+
+                    <li>
+                        <a class="whatsapp" href="whatsapp://send?text={{$translation->title}}: {{$row->getDetailUrl()}}" target="_blank" rel="noopener" original-title="{{__("WhatsApp")}}">
+                            <i class="fa fa-whatsapp fa-lg"></i>
+                        </a>
                     </li>
+                    <li>
+                        <a class="link" href="{{$row->getDetailUrl()}}" target="_blank" rel="noopener" original-title="{{__("Link")}}" onclick="copyToClipboard()">
+                            <i class="fa fa-link fa-lg"></i>
+                        </a>
+                    </li>
+                    
                 </ul>
             </div>
             <div class="service-wishlist {{$row->isWishList()}}" data-id="{{$row->id}}" data-type="{{$row->type}}">
@@ -147,16 +159,36 @@
 <div class="g-location">
     <div class="location-title">
         <h3>{{__("Tour Location")}}</h3>
-        @if($translation->address)
+        {{-- @if($translation->address)
             <div class="address">
                 <i class="icofont-location-arrow"></i>
                 {{$translation->address}}
+                {{$row->map_lat}}
+                {{$row->map_lng}}
             </div>
-        @endif
+        @endif --}}
     </div>
-
-    <div class="location-map">
+    <div class="coordinates">
+        {{-- <p>Latitude: {{$row->map_lat}}</p>
+        <p>Longitude: {{$row->map_lng}}</p> --}}
+        <p>
+            <a href="https://www.google.com/maps/search/?api=1&query={{$row->map_lat}},{{$row->map_lng}}" target="_blank">View on Google Maps</a>
+        </p>
+    </div>
+    {{-- <div class="location-map">
         <div id="map_content"></div>
-    </div>
+    </div> --}}
 </div>
 @endif
+<script>
+    function copyToClipboard() {
+        var link = "{{$row->getDetailUrl()}}";
+        var tempInput = document.createElement("input");
+        tempInput.value = link;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+        alert("Link copied to clipboard: " + link);
+    }
+</script>
