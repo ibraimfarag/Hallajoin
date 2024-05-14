@@ -32,15 +32,15 @@ class FolderController extends FrontendController
     }
     public function store(Request $request){
         $id = $request->input('id');
-        if(!$id){
+        // if(!$id){
             $folder = new MediaFolder();
             $folder->user_id = auth()->id();
-        }else{
-            $folder = MediaFolder::ofMine()->find($id);
-            if(!$folder){
-                return $this->sendError(__("You are not allowed to edit this folder"));
-            }
-        }
+        // }else{
+        //     $folder = MediaFolder::ofMine()->find($id);
+        //     if(!$folder){
+        //         return $this->sendError(__("You are not allowed to edit this folder"));
+        //     }
+        // }
 
         $request->validate([
             'name'=>[

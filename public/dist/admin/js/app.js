@@ -5852,9 +5852,8 @@
                                 this.$set(this.folders[e], "onEdit", t);
                             },
                             reloadAll: function () {
-                                (this.filter.page = 1),
-                                    this.reloadLists();
-                                    //this.reloadFolder();
+                                (this.filter.page = 1), this.reloadLists();
+                                //this.reloadFolder();
                             },
                             toFolderRoot: function () {
                                 (this.breadcrumbs = []),
@@ -5864,7 +5863,7 @@
                                     }),
                                     (this.filter.page = 1),
                                     this.reloadLists();
-                                    //this.reloadFolder();
+                                //this.reloadFolder();
                             },
                             showFolder: function (e, t) {
                                 e.id !== this.currentFolder.id &&
@@ -5876,9 +5875,9 @@
                                         ),
                                     (this.currentFolder = e),
                                     (this.filter.page = 1),
-                                    this.reloadLists()
+                                    this.reloadLists());
                                     //this.reloadFolder()
-                                );
+                                    this.filter.s = "";
                             },
                             updateFolder: function (e, t) {
                                 this.$set(
@@ -5995,9 +5994,10 @@
                                         dataType: "json",
                                         success: function (t) {
                                             e.resetSelected(),
-                                                (e.files = t.data),
-                                                (e.total = t.total),
-                                                (e.totalPage = t.totalPage),
+                                                (e.files = t.files),
+                                                (e.folders = t.folders),
+                                                (e.total = t.totalFiles),
+                                                (e.totalPage = t.totalFilePages),
                                                 (e.isLoading = !1),
                                                 (e.apiFinished = !0);
                                         },
@@ -6387,34 +6387,30 @@
                             if (!this.selectAll) {
                                 // Logic to select all files
                                 // For example, you can update the selected array with all file IDs
-                                this.selected = this.files.map(file => file.id);
+                                this.selected = this.files.map(
+                                    (file) => file.id
+                                );
                                 this.selectedLists.push(...this.files);
-
                             } else {
                                 // Logic to unselect all files
                                 this.selected = [];
                                 this.selectedLists = [];
-                                                    }
-                            
+                            }
                         },
-            
-                    
+
                         toggleEditFolder: function (e, t) {
                             this.$set(this.folders[e], "onEdit", t);
                         },
                         reloadAll: function () {
-                            (this.filter.page = 1),
-                                this.reloadLists()
-                                //this.reloadFolder()
-                                ;
+                            (this.filter.page = 1), this.reloadLists();
+                            //this.reloadFolder()
                         },
                         toFolderRoot: function () {
                             (this.breadcrumbs = []),
                                 (this.currentFolder = { id: 0, parent_id: 0 }),
                                 (this.filter.page = 1),
-                                this.reloadLists()
-                                //this.reloadFolder()
-                                ;
+                                this.reloadLists();
+                            //this.reloadFolder()
                         },
                         showFolder: function (e, t) {
                             e.id !== this.currentFolder.id &&
@@ -6426,9 +6422,9 @@
                                     ),
                                 (this.currentFolder = e),
                                 (this.filter.page = 1),
-                                this.reloadLists()
+                                this.reloadLists());
                                 //this.reloadFolder()
-                            );
+                            this.filter.s = "";
                         },
                         updateFolder: function (e, t) {
                             this.$set(this.folders, e, Object.assign({}, t));
@@ -6538,10 +6534,10 @@
                                     dataType: "json",
                                     success: function (e) {
                                         t.resetSelected(),
-                                        (t.files = e.files),
-                                        (t.folders = e.folders), // Update folders here
-                                        (t.total = e.totalFiles),
-                                        (t.totalPage = e.totalFilePages),
+                                            (t.files = e.files),
+                                            (t.folders = e.folders), // Update folders here
+                                            (t.total = e.totalFiles),
+                                            (t.totalPage = e.totalFilePages),
                                             (t.isLoading = !1),
                                             (t.apiFinished = !0);
                                     },

@@ -97,9 +97,9 @@ class MediaController extends Controller
         // Initialize the file query
         $filesQuery = MediaFile::query();
     
-        if (!Auth::user()->hasPermission("media_manage_others")) {
-            $filesQuery->where('author_id', Auth::id());
-        }
+        // if (!Auth::user()->hasPermission("media_manage_others")) {
+        //     $filesQuery->where('author_id', Auth::id());
+        // }
     
         $uploadConfigs = config('bc.media.groups');
         if (!isset($uploadConfigs[$file_type])) {
@@ -124,9 +124,9 @@ class MediaController extends Controller
     
         // Initialize the folder query
         $foldersQuery = MediaFolder::query();
-        if (!Auth::user()->hasPermission("media_manage_others")) {
-            $foldersQuery->where('author_id', Auth::id());
-        }
+        // if (!Auth::user()->hasPermission("media_manage_others")) {
+        //     $foldersQuery->where('author_id', Auth::id());
+        // }
     
         if ($folder_id) {
             $foldersQuery->where('parent_id', $folder_id);
@@ -149,7 +149,7 @@ class MediaController extends Controller
         $foldersRes = $folders->map(function ($folder) {
             return new FolderResource($folder);  // Assume FolderResource exists
         });
-    
+    // dd($filesRes,$foldersRes, $files,$folders);
         return $this->sendSuccess([
             'files' => $filesRes,
             'folders' => $foldersRes,
