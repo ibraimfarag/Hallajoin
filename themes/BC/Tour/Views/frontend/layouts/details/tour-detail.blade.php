@@ -141,6 +141,9 @@
         </div>
     </div>
 @endif
+
+@include('Tour::frontend.layouts.details.tour-option')
+
 @if($translation->content)
     <div class="g-overview">
         <h3>{{__("Overview")}}</h3>

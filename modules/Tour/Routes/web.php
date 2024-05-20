@@ -36,4 +36,8 @@ Route::group(['prefix'=>'user/'.config('tour.tour_route_prefix')],function(){
 Route::group(['prefix'=>config('tour.tour_route_prefix')],function(){
     Route::get('/','\Modules\Tour\Controllers\TourController@index')->name('tour.search'); // Search
     Route::get('/{slug}','\Modules\Tour\Controllers\TourController@detail');// Detail
+    
+    
 });
+
+Route::post('/searchTours','\Modules\Tour\Controllers\TourController@searchAjax')->name('tour.search.ajax');

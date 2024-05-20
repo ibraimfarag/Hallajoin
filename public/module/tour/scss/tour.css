@@ -1101,7 +1101,7 @@
           overflow: hidden; }
       .bravo_wrap .bravo_detail_tour .bravo-list-tour-related .item-tour .service-review .review {
         position: relative;
-        top: -2px;
+        /* top: -2px; */
         font-size: 13px;
         color: #768092;
         margin-left: 10px; }

@@ -635,6 +635,8 @@ ol {
   background-repeat: no-repeat !important;
   background-size: cover !important;
   position: relative;
+  width: 57.7vw;
+  margin: 0px 20.9%;
 }
 
 .bravo_wrap .bravo_detail_tour .bravo_banner .container {

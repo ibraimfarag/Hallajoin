@@ -10,8 +10,8 @@
             $translate_attribute = $attribute['parent']->translate();
             $parent_slug = $attribute['parent']->slug;
         @endphp
-        
-        @if(empty($attribute['parent']['hide_in_single']) && $parent_slug !== 'option-tour')
+
+        @if($parent_slug === 'option-tour')
             <div class="g-attributes {{$parent_slug}} attr-{{$attribute['parent']->id}}">
                 <h3>{{ $translate_attribute->name }}</h3>
                 @php $terms = $attribute['child'] @endphp

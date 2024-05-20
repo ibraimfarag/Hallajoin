@@ -1,13 +1,15 @@
+
 <div class="container">
     @if($title)
-        <div class="title">
+        <div class="title title-line">
             {{$title}}
-            @if(!empty($desc))
-                <div class="sub-title">
-                    {{$desc}}
-                </div>
-            @endif
+       
         </div>
+        @if(!empty($desc))
+        <div class="sub-title">
+            {{$desc}}
+        </div>
+    @endif
     @endif
     <div class="list-item">
         @if($style_list === "normal")

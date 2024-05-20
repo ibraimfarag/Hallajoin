@@ -131,7 +131,7 @@
     
     .container .item-left .sce .icon, .container .item-left .loc .icon {
         margin-right: 10px;
-        font-size: 20px;
+        /* font-size: 20px; */
         color: #666
     }
     

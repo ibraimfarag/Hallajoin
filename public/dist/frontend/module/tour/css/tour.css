@@ -438,7 +438,11 @@
     background-position: 50% !important;
     background-repeat: no-repeat !important;
     background-size: cover !important;
-    position: relative
+    position: relative;
+    width: 57.7vw;
+    margin: 50px 20.9%;
+    border-radius: 30px; /* Adjust the value as needed */
+  
 }
 
 .bravo_wrap .bravo_detail_tour .bravo_banner .container {
@@ -446,7 +450,7 @@
 }
 
 .bravo_wrap .bravo_detail_tour .bravo_banner .bravo_gallery {
-    height: 500px;
+    height: 350px;
     position: relative
 }
 
@@ -1289,7 +1293,7 @@
 
 .bravo_wrap .bravo_detail_tour .bravo-list-tour-related .item-tour {
     border: 1px solid #dfdfdf;
-    border-radius: 3px;
+    border-radius: 15px;
     margin-bottom: 30px;
     overflow: hidden;
     padding-bottom: 15px;
@@ -1437,7 +1441,7 @@
     font-size: 13px;
     margin-left: 10px;
     position: relative;
-    top: -2px
+    /* top: -2px */
 }
 
 .bravo_wrap .bravo_detail_tour .bravo-list-tour-related .item-tour .item-title {

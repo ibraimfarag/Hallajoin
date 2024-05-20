@@ -69,10 +69,9 @@ class FolderController extends FrontendController
         ]);
 
         $id = $request->input('id');
-        $folder = MediaFolder::ofMine()->find($id);
-        if(!$folder){
-            return $this->sendError(__("You are not allowed to delete this folder"));
-        }
+        // $folder = MediaFolder::ofMine()->find($id);
+        $folder = MediaFolder::find($id);
+    
 
         MediaFile::query()->inFolder($folder->id)->delete();
         $folder->delete();
