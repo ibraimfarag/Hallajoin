@@ -31,6 +31,7 @@ class CreateBravoTours extends Migration
             $table->tinyInteger('is_featured')->nullable();
             $table->string('gallery', 255)->nullable();
             $table->string('video', 255)->nullable();
+            $table->string('visitors', 255)->nullable();
             //Price
             $table->decimal('price', 12,2)->nullable();
             $table->decimal('sale_price', 12,2)->nullable();
