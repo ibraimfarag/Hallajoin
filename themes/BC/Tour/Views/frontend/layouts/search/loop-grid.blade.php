@@ -66,7 +66,7 @@
 
 
 
-    dd($hasId108 ); // Commented out the debug statement for production use
+    dd($attributes ); // Commented out the debug statement for production use
             // dd($row);
             
             @endphp
