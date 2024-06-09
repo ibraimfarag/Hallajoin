@@ -1,7 +1,8 @@
 <div class="g-header">
     <div class="left">
         @if($translation->address)
-            <p class="address"><i class="fa fa-map-marker"></i>
+            <p class="address"><i class="fas fa-location-arrow" style="font-size: 14px;"></i>
+
                 {{$translation->address}}
             </p>
         @endif
