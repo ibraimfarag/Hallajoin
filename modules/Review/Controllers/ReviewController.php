@@ -69,7 +69,7 @@ class ReviewController extends Controller
 
         $rules = [
             'review_title'   => 'required',
-            'review_content' => 'required|min:10'
+            'review_content' => 'required|min:4'
         ];
         $messages = [
             'review_title.required'   => __('Review Title is required field'),

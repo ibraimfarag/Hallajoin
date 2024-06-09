@@ -84,9 +84,7 @@
     <div class="service-review tour-review-{{$score_total}}">
         <div class="list-star">
             <i class="fa fa-star"></i>
-            <span class="rating-text">
-                {{$score_total}}
-            </span>
+            <span class="rating-text"> {{$score_total}}  </span>
         </div>
         <span class="review">
             @if($reviewData['total_review'] > 1)

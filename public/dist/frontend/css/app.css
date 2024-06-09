@@ -2006,7 +2006,7 @@ body .daterangepicker .full-book-event:before {
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .service-review .review {
     color: #768092;
     font-size: 13px;
-    margin-left: 10px;
+    /* margin-left: 10px; */
     position: relative;
     /* top: -2px */
 }
