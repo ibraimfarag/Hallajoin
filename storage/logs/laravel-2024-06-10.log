@@ -1553,3 +1553,11 @@
     "userId": 7,
     "socket": null
 }  
+[2024-06-10 02:39:18] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "System Admin has created a Review good on Museum of the Future",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/images\/avatar.png\" alt=\"System Admin\">",
+    "link": "https:\/\/hallajoin\/admin\/module\/review",
+    "idNotification": "e89d6417-6270-4f01-83d4-f5c6b5d9f269",
+    "socket": null
+}  

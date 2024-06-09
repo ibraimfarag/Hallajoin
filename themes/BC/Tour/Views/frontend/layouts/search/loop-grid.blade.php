@@ -70,8 +70,7 @@
             // dd($row);
             
             @endphp
-            <i class="icofont-paper-plane"></i>
-            {{$location->name ?? ''}}
+<i class="fas fa-location-arrow"></i>            {{$location->name ?? ''}}
 
         @endif
     </div>
