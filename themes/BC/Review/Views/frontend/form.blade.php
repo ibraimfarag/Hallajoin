@@ -144,7 +144,7 @@
                         <div class="row">
                             <div class="col-xs-12 col-md-8">
                                 <div class="form-group">
-                                    <textarea name="review_content" required class="form-control" placeholder="{{__("Review content")}}" minlength="10"></textarea>
+                                    <textarea name="review_content" required class="form-control" placeholder="{{__("Review content")}}" minlength="4"></textarea>
                                     <div class="invalid-feedback">
                                         {{__('Review content has at least 10 character')}}
                                     </div>
