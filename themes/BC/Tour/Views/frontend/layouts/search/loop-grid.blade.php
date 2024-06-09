@@ -53,7 +53,7 @@
     foreach ($attributes as $attribute) {
         if (isset($attribute['child'])) {
             foreach ($attribute['child'] as $child) {
-                if ($child['id'] == 111) {
+                if ($child['id'] == 113) {
                     $hasId108 = true;
                     $name = $child['name'];
                     $icon =$child['icon'];
@@ -66,7 +66,7 @@
 
 
 
-    dd($attributes ); // Commented out the debug statement for production use
+    // dd($attributes ); // Commented out the debug statement for production use
             // dd($row);
             
             @endphp
