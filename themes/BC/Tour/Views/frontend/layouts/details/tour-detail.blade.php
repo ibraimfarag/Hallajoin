@@ -6,7 +6,7 @@
             </p>
         @endif
         <h1>{{$translation->title}}</h1>
-        <span class="text-rating"><i class="fa fa-star star-red"></i>{{$review_score['score_total']}}&nbsp;({{__(" :number ",['number'=>$review_score['total_review']])}})</span>
+        <span class="text-rating"><i class="fa fa-star star-red"></i>&nbsp;{{$review_score['score_total']}}&nbsp;({{__(" :number ",['number'=>$review_score['total_review']])}})</span>
 
     </div>
     <div class="right">

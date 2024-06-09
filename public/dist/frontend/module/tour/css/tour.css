@@ -795,7 +795,9 @@
 
 .bravo_wrap .bravo_detail_tour .bravo_content .g-attributes .list-attributes {
     display: flex;
-    flex-wrap: wrap
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-content: flex-start;
 }
 
 .bravo_wrap .bravo_detail_tour .bravo_content .g-attributes .list-attributes .item {
