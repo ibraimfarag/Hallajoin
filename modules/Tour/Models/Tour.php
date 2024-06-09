@@ -1239,4 +1239,14 @@ class Tour extends Bookable
         if (!empty($this->enable_fixed_date) and $this->last_booking_date >= Carbon::today()) return    true;
         return false;
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'object_id');
+    }
+
+    public function getNumberReviewsInServiceAttribute()
+    {
+        return $this->reviews()->count();
+    }
 }

@@ -59,7 +59,6 @@ class ReviewController extends Controller
                 }
             }
         }
-
         if ($module->author_id == Auth::id()) {
             if($is_return){
                 return $this->sendError(__("You cannot review your service"));

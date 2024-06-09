@@ -578,7 +578,8 @@
 }
 
 .bravo_wrap .bravo_detail_tour .bravo_content .g-header .right {
-    min-width: 230px
+    min-width: 230px;
+    display: none;
 }
 
 @media (max-width:766px) {

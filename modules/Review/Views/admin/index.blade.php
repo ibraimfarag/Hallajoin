@@ -13,6 +13,8 @@
                         <select name="action" class="form-control">
                             <option value="">{{__(" Bulk Actions ")}}</option>
                             <option value="approved">{{__(" Approved ")}}</option>
+                            <option value="future">{{__(" future ")}}</option>
+                            <option value="unfuture">{{__(" un future ")}}</option>
                             <option value="pending">{{__(" Pending ")}}</option>
                             <option value="spam">{{__(" Spam ")}}</option>
                             <option value="trash">{{__(" Move to Trash ")}}</option>
@@ -60,6 +62,8 @@
                     <span>({{ \Modules\Review\Models\Review::countReviewByStatus("spam") }})</span></a> -
                 <a href="{{ route('review.admin.index',['status'=>'trash'])  }}">{{__("Trash")}}
                     <span>({{ \Modules\Review\Models\Review::countReviewByStatus("trash") }})</span></a>
+                <a href="{{ route('review.admin.index',['future'=>'1'])  }}">{{__("future")}}
+                    <span>({{ \Modules\Review\Models\Review::countFutureReviews("future") }})</span></a>
             </div>
             <p><i>{{__('Found :total items',['total'=>$rows->total()])}}</i></p>
         </div>

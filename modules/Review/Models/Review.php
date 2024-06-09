@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Review\Models;
 
 use App\BaseModel;
@@ -7,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Review\Models\ReviewMeta;
+use Modules\Tour\Models\Tour;
 
 class Review extends BaseModel
 {
@@ -20,6 +22,7 @@ class Review extends BaseModel
         'rate_number',
         'author_ip',
         'status',
+        'future',
         'vendor_id'
     ];
 
@@ -84,7 +87,7 @@ class Review extends BaseModel
         return $count->count("id");
     }
 
-    public static function countReviewByServiceID($service_id = false, $user_id = false, $status = false,$service_type = '')
+    public static function countReviewByServiceID($service_id = false, $user_id = false, $status = false, $service_type = '')
     {
         if (empty($service_id))
             return false;
@@ -93,8 +96,8 @@ class Review extends BaseModel
             $count->where("status", $status);
         }
 
-        if($service_type){
-            $count->where('object_model',$service_type);
+        if ($service_type) {
+            $count->where('object_model', $service_type);
         }
         if (!empty($user_id)) {
             $count->where("create_user", $user_id);
@@ -121,27 +124,25 @@ class Review extends BaseModel
                 "object_model" => $this->object_model,
                 "name"         => $key,
                 "val"          => $val,
-                'review_id'=>$this->id
+                'review_id' => $this->id
             ]);
             return $reviewMeta->save();
-
         } else {
             $old = ReviewMeta::query()->where([
-                    'review_id' => $this->id,
-                    'name'       => $key
-                ])->first();
+                'review_id' => $this->id,
+                'name'       => $key
+            ])->first();
 
             if ($old) {
                 $old->val = $val;
                 return $old->save();
-
             } else {
                 $reviewMeta = new ReviewMeta([
                     "object_id"    => $this->object_id,
                     "object_model" => $this->object_model,
                     "name"         => $key,
                     "val"          => $val,
-                    'review_id'=>$this->id
+                    'review_id' => $this->id
                 ]);
                 return $reviewMeta->save();
             }
@@ -150,6 +151,45 @@ class Review extends BaseModel
 
     public function author()
     {
-        return $this->belongsTo(User::class, "author_id")->select(['id','name','first_name','last_name','avatar_id'])->withDefault();
+        return $this->belongsTo(User::class, "author_id")->select(['id', 'name', 'first_name', 'last_name', 'avatar_id'])->withDefault();
     }
+    public function reviewer()
+    {
+        return $this->belongsTo(User::class, 'create_user');
+    }
+    public static function getFutureReviews()
+    {
+        return self::where('future', 1)->get();
+    }
+    public static function getFutureReviewsByService($serviceType)
+    {
+        return self::where('object_model', $serviceType)
+            ->where('future', 1)
+            ->get();
+    }
+    public function tour()
+    {
+        return $this->belongsTo(Tour::class, 'object_id');
+    }
+      /**
+     * Count the number of reviews associated with a tour
+     *
+     * @return int The number of reviews for the tour
+     */
+    public function countTourReviews()
+    {
+        return $this->tourReviews()->count();
+    
+    }
+
+    public function tourReviews()
+    {
+        return $this->belongsTo(Review::class, 'object_id');
+    }
+    public static function countFutureReviews()
+    {
+        return self::where('future', 1)->count();
+    }
+    
+    
 }

@@ -46,6 +46,7 @@
         @endif
         <div class="review-list">
             @if($review_list)
+  
                 @foreach($review_list as $item)
                     @php $userInfo = $item->author; $picture = $item->getReviewMetaPicture(); @endphp
                     <div class="review-item">
@@ -158,11 +159,11 @@
                                                 <label>{{$item->title}}</label>
                                                 <input class="review_stats" type="hidden" name="review_stats[{{$item->title}}]">
                                                 <div class="rates">
-                                                    <i class="fa fa-star-o grey"></i>
-                                                    <i class="fa fa-star-o grey"></i>
-                                                    <i class="fa fa-star-o grey"></i>
-                                                    <i class="fa fa-star-o grey"></i>
-                                                    <i class="fa fa-star-o grey"></i>
+                                                    <i class="fa fa-star grey"></i>
+                                                    <i class="fa fa-star grey"></i>
+                                                    <i class="fa fa-star grey"></i>
+                                                    <i class="fa fa-star grey"></i>
+                                                    <i class="fa fa-star grey"></i>
                                                 </div>
                                             </div>
                                         @endforeach
@@ -175,11 +176,11 @@
                                             <label>{{__("Review rate")}}</label>
                                             <input class="review_stats" type="hidden" name="review_rate">
                                             <div class="rates">
-                                                <i class="fa fa-star-o grey"></i>
-                                                <i class="fa fa-star-o grey"></i>
-                                                <i class="fa fa-star-o grey"></i>
-                                                <i class="fa fa-star-o grey"></i>
-                                                <i class="fa fa-star-o grey"></i>
+                                                <i class="fa fa-star grey"></i>
+                                                <i class="fa fa-star grey"></i>
+                                                <i class="fa fa-star grey"></i>
+                                                <i class="fa fa-star grey"></i>
+                                                <i class="fa fa-star grey"></i>
                                             </div>
                                         </div>
                                     </div>

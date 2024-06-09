@@ -1,11 +1,13 @@
 <div class="g-header">
     <div class="left">
-        <h1>{{$translation->title}}</h1>
         @if($translation->address)
             <p class="address"><i class="fa fa-map-marker"></i>
                 {{$translation->address}}
             </p>
         @endif
+        <h1>{{$translation->title}}</h1>
+        <span class="text-rating"><i class="fa fa-star star-red"></i>{{$review_score['score_total']}}&nbsp;({{__(" :number ",['number'=>$review_score['total_review']])}})</span>
+
     </div>
     <div class="right">
         @if(setting_item('tour_enable_review') and $review_score)
@@ -123,8 +125,11 @@
                     </li> --}}
 
                     <li>
-                        <a class="whatsapp" href="whatsapp://send?text={{$translation->title}}: {{$row->getDetailUrl()}}" target="_blank" rel="noopener" original-title="{{__("WhatsApp")}}">
-                            <i class="fa fa-whatsapp fa-lg"></i>
+                        <a class="link" href="whatsapp://send?text={{$translation->title}}: {{$row->getDetailUrl()}}" target="_blank" rel="noopener" original-title="{{__("WhatsApp")}}">
+                            
+ 
+                            <i class="fab fa-whatsapp-square"></i>
+                        
                         </a>
                     </li>
                     <li>
@@ -136,7 +141,7 @@
                 </ul>
             </div>
             <div class="service-wishlist {{$row->isWishList()}}" data-id="{{$row->id}}" data-type="{{$row->type}}">
-                <i class="fa fa-heart-o"></i>
+                <i class="fa fa-heart"></i>
             </div>
         </div>
     </div>
@@ -145,42 +150,48 @@
 @include('Tour::frontend.layouts.details.tour-option')
 
 @if($translation->content)
-    <div class="g-overview">
-        <h3>{{__("Overview")}}</h3>
-        <div class="description">
-            <?php echo $translation->content ?>
-        </div>
-    </div>
-@endif
+                <div class="card">
+                    <div class="card-header" id="headingOverview">
+                        <h2 class="mb-0">
+                            <button class="btn accordion-button collapsed" type="button" data-toggle="collapse" data-target="#collapseOverview" aria-expanded="false" aria-controls="collapseOverview">
+                                {{ __("Overview") }}
+                                <i class="fas fa-chevron-up arrow-icon"></i>
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapseOverview" class="collapse" aria-labelledby="headingOverview" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <div class="description">
+                                <?php echo $translation->content ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
 @include('Tour::frontend.layouts.details.tour-include-exclude')
 @include('Tour::frontend.layouts.details.tour-itinerary')
 @include('Tour::frontend.layouts.details.tour-attributes')
 @include('Tour::frontend.layouts.details.tour-faqs')
 @includeIf("Hotel::frontend.layouts.details.hotel-surrounding")
-
 @if($row->map_lat && $row->map_lng)
-<div class="g-location">
-    <div class="location-title">
-        <h3>{{__("Tour Location")}}</h3>
-        {{-- @if($translation->address)
-            <div class="address">
-                <i class="icofont-location-arrow"></i>
-                {{$translation->address}}
-                {{$row->map_lat}}
-                {{$row->map_lng}}
+<div class="card">
+    <div class="card-header" id="headingLocation">
+        <h2 class="mb-0">
+            <button class="btn accordion-button collapsed" type="button" data-toggle="collapse" data-target="#collapseLocation" aria-expanded="false" aria-controls="collapseLocation">
+                {{ __("Tour Location") }}
+                <i class="fas fa-chevron-up arrow-icon"></i>
+            </button>
+        </h2>
+    </div>
+    <div id="collapseLocation" class="collapse" aria-labelledby="headingLocation" data-parent="#accordionExample">
+        <div class="card-body">
+            <div class="coordinates">
+                <p>
+                    <a href="https://www.google.com/maps/search/?api=1&query={{$row->map_lat}},{{$row->map_lng}}" target="_blank">View on Google Maps</a>
+                </p>
             </div>
-        @endif --}}
+        </div>
     </div>
-    <div class="coordinates">
-        {{-- <p>Latitude: {{$row->map_lat}}</p>
-        <p>Longitude: {{$row->map_lng}}</p> --}}
-        <p>
-            <a href="https://www.google.com/maps/search/?api=1&query={{$row->map_lat}},{{$row->map_lng}}" target="_blank">View on Google Maps</a>
-        </p>
-    </div>
-    {{-- <div class="location-map">
-        <div id="map_content"></div>
-    </div> --}}
 </div>
 @endif
 <script>

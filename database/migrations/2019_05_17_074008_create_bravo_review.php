@@ -22,6 +22,7 @@ class CreateBravoReview extends Migration
             $table->text('content')->nullable();
             $table->integer('rate_number')->nullable();
             $table->string('author_ip',100)->nullable();
+            $table->boolean('future')->default(false); // Add the boolean 'future' field
 
             $table->string('status',50)->nullable();
             $table->dateTime('publish_date')->nullable();

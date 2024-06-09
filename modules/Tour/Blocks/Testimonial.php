@@ -3,6 +3,8 @@ namespace Modules\Tour\Blocks;
 
 use Modules\Media\Helpers\FileHelper;
 use Modules\Template\Blocks\BaseBlock;
+use Modules\Review\Models\Review;
+use Carbon\Carbon;
 
 class Testimonial extends BaseBlock
 {
@@ -43,6 +45,23 @@ class Testimonial extends BaseBlock
                             'type'  => 'uploader',
                             'label' => __('Avatar Image')
                         ],
+                        [
+                            'id'           => 'custom_ids',
+                            'type'         => 'select2',
+                            'label'        => __('List by IDs'),
+                            'select2'      => [
+                                'ajax'     => [
+                                    'url'      => route('tour.admin.getForSelect2'),
+                                    'dataType' => 'json'
+                                ],
+                                'width'    => '100%',
+                                'multiple' => "true",
+                                'placeholder' => __('-- Select --')
+                            ],
+                            'pre_selected' => route('tour.admin.getForSelect2', [
+                                'pre_selected' => 1
+                            ])
+                        ],
                     ]
                 ],
             ],
@@ -57,6 +76,22 @@ class Testimonial extends BaseBlock
 
     public function content($model = [])
     {
+
+
+        $reviews = Review::with(['tour' => function ($query) {
+            $query->withCount('reviews');
+        }, 'reviewer'])
+        ->where('future', 1)
+        ->get();
+        $formattedReviews = $reviews->map(function ($review) {
+            $review ['date']= Carbon::parse($review['created_at'])->format('F Y');
+            return $review;
+        });
+    
+        $model['reviews'] = $formattedReviews->toArray();
+    
+        // dd($model);
+        
         return view('Tour::frontend.blocks.testimonial.index', $model);
     }
 

@@ -126,6 +126,7 @@ class TourController extends Controller
             'class' => 'active'
         ];
         $this->setActiveMenu($row);
+        // dd($review_list,$row);
         return view('Tour::frontend.detail', $data);
     }
 /**

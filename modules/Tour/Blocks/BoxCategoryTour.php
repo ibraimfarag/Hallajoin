@@ -7,6 +7,8 @@ use Modules\Media\Helpers\FileHelper;
 
 use Modules\Tour\Models\TourCategory;
 
+use Modules\Core\Models\Terms;
+
 class BoxCategoryTour extends BaseBlock
 {
     public function getOptions(){
@@ -68,7 +70,12 @@ class BoxCategoryTour extends BaseBlock
             $ids = collect($model['list_item'])->pluck('category_id');
             $categories = TourCategory::query()->whereIn("id",$ids)->where('status','publish')->get();
             $model['categories'] = $categories;
+            $model['Terms'] = Terms::where("attr_id","1")->get();
+            // $model['activty'] = Terms::where("attr_id","1")->get();
+
         }
+        // dd($model);
+
         return view('Tour::frontend.blocks.box-category-tour.index', $model);
     }
 

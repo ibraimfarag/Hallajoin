@@ -39,18 +39,43 @@
             <i class="fa fa-heart"></i>
         </div>
     </div>
+    <div class="location-review-container">
+
     <div class="location">
         @if(!empty($row->location->name))
-            @php $location =  $row->location->translate() @endphp
+            @php $location =  $row->location->translate() ;
+               $terms_ids = $row->tour_term->pluck('term_id');
+    $attributes = \Modules\Core\Models\Terms::getTermsById($terms_ids);
+    $hasId108 = false;
+        $icon='';
+        $name='';
+
+    foreach ($attributes as $attribute) {
+        if (isset($attribute['child'])) {
+            foreach ($attribute['child'] as $child) {
+                if ($child['id'] == 108) {
+                    $hasId108 = true;
+                    $name = $child['name'];
+                    $icon =$child['icon'];
+
+                    break 2; // Break both loops if found
+                }
+            }
+        }
+    }
+
+
+
+    // dd($hasId108 ); // Commented out the debug statement for production use
+            // dd($row);
+            
+            @endphp
             <i class="icofont-paper-plane"></i>
             {{$location->name ?? ''}}
+
         @endif
     </div>
-    <div class="item-title">
-        <a @if(!empty($blank)) target="_blank" @endif href="{{$row->getDetailUrl($include_param ?? true)}}">
-            {{$translation->title}}
-        </a>
-    </div>
+
     @if(setting_item('tour_enable_review'))
     <?php
     $reviewData = $row->getScoreReview();
@@ -65,11 +90,25 @@
         </div>
         <span class="review">
             @if($reviewData['total_review'] > 1)
-                {{ __("(:number Reviews)",["number"=>$reviewData['total_review'] ]) }}
+                {{ __("(:number)",["number"=>$reviewData['total_review'] ]) }}
             @else
-                {{ __("(:number Reviews)",["number"=>$reviewData['total_review'] ]) }}
+                {{ __("(:number)",["number"=>$reviewData['total_review'] ]) }}
             @endif
         </span>
+    </div>
+@endif
+    </div>
+
+    <div class="item-title">
+        <a @if(!empty($blank)) target="_blank" @endif href="{{$row->getDetailUrl($include_param ?? true)}}">
+            {{$translation->title}}
+        </a>
+    </div>
+  
+    @if($hasId108)
+    <div class="additional-attributes">
+        <i class="{{$icon}}"></i>
+        <span>{{$name}}</span>
     </div>
 @endif
 

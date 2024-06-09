@@ -161,6 +161,7 @@ class ListTours extends BaseBlock
             'title'      => $model['title'] ?? "",
             'desc'      => $model['desc'] ?? "",
         ];
+
         return view('Tour::frontend.blocks.list-tour.index', $data);
     }
 

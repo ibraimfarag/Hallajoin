@@ -1,7 +1,7 @@
 @php
     $terms_ids = $row->tour_term->pluck('term_id');
     $attributes = \Modules\Core\Models\Terms::getTermsById($terms_ids);
-    // dd($attributes); // Commented out the debug statement for production use
+    // dd($terms_ids ); // Commented out the debug statement for production use
 @endphp
 
 @if(!empty($terms_ids) and !empty($attributes))

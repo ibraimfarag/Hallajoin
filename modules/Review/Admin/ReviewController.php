@@ -32,6 +32,9 @@ class ReviewController extends AdminController
         if (!empty($status = $request->input('status'))) {
             $model->where('status', $status);
         }
+        if (!empty($future = $request->input('future'))) {
+            $model->where('future', $future);
+        }
         if (!empty($service_type = $request->input('service'))) {
             $model->where('object_model', $service_type);
         }
@@ -77,6 +80,38 @@ class ReviewController extends AdminController
                         if(!empty($model_serivce)){
                             Cache::forget('review_' . $model_serivce->type . '_' . $review->object_id);
                             $model_serivce->update_service_rate();
+                        }
+                    }
+                }
+            }
+        } elseif ($action == "future") {
+            foreach ($ids as $id) {
+                $review = Review::where('id', $id)->first();
+                if (!empty($review)) {
+                    $review->future = 1; // Set future flag to 1
+                    $review->save();
+                    $module_class = $allServices[$review->object_model] ?? false;
+                    if (!empty($module_class)) {
+                        $model_service = $module_class::withTrashed()->find($review->object_id);
+                        if (!empty($model_service)) {
+                            Cache::forget('review_' . $model_service->type . '_' . $review->object_id);
+                            $model_service->update_service_rate();
+                        }
+                    }
+                }
+            }
+        } elseif ($action == "unfuture") {
+            foreach ($ids as $id) {
+                $review = Review::where('id', $id)->first();
+                if (!empty($review)) {
+                    $review->future = 0; // Set future flag to 0
+                    $review->save();
+                    $module_class = $allServices[$review->object_model] ?? false;
+                    if (!empty($module_class)) {
+                        $model_service = $module_class::withTrashed()->find($review->object_id);
+                        if (!empty($model_service)) {
+                            Cache::forget('review_' . $model_service->type . '_' . $review->object_id);
+                            $model_service->update_service_rate();
                         }
                     }
                 }
