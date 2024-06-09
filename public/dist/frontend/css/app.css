@@ -1941,7 +1941,7 @@ body .daterangepicker .full-book-event:before {
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .location {
     color: #5e6d77;
     font-size: 13px;
-    padding: 15px 15px 10px
+    padding: 15px 15px 12px
 }
 
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .location i {
@@ -9338,6 +9338,7 @@ ol, ul {
     margin-bottom: 30px;
     /* Adjust as necessary */
     margin-left: 8px;
+    margin-top: 20px;
 }
 
 .additional-attributes i {
