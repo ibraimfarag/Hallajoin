@@ -53,7 +53,7 @@
     foreach ($attributes as $attribute) {
         if (isset($attribute['child'])) {
             foreach ($attribute['child'] as $child) {
-                if ($child['id'] == 108) {
+                if ($child['id'] == 111) {
                     $hasId108 = true;
                     $name = $child['name'];
                     $icon =$child['icon'];
