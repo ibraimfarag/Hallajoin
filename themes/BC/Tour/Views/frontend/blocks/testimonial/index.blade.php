@@ -126,6 +126,9 @@
             left: 15px;
             font-size: 14px;
             font-weight: normal;
+            background: #0006;
+            padding: 5px 10px;
+            border-radius: 13px;
         }
 
         .rate-number {
