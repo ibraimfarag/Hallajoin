@@ -189,12 +189,10 @@
 }
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour {
-    border: 1px solid #dfdfdf;
-    border-radius: 15px;
     margin-bottom: 30px;
     overflow: hidden;
     padding-bottom: 15px;
-    position: relative
+    position: relative;
 }
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour a {
@@ -232,13 +230,15 @@
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .thumb-image {
     background: #ccc;
-    height: 170px;
-    overflow: hidden
+    height: 300px;
+    overflow: hidden;
+    border-radius: 12px;
 }
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .thumb-image a img {
     max-width: 100%;
-    transition: all .3s
+    transition: all .3s;
+    object-fit: cover;
 }
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .thumb-image a:hover img {
@@ -275,7 +275,7 @@
 }
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .location i {
-    font-size: 16px;
+    font-size: 11px;
     position: relative
 }
 
@@ -336,9 +336,9 @@
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .service-review .review {
     color: #768092;
     font-size: 13px;
-    margin-left: 10px;
+    /* margin-left: 10px; */
     position: relative;
-    top: -2px
+    top: 0px
 }
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .item-title {
