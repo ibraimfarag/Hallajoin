@@ -1561,3 +1561,410 @@
     "idNotification": "e89d6417-6270-4f01-83d4-f5c6b5d9f269",
     "socket": null
 }  
+[2024-06-10 18:38:30] production.DEBUG: From: Hallajoin <contact@halajoin.test>
+To: shemifazil17@gmail.com
+Subject: [HallaJoin] Verify Register
+MIME-Version: 1.0
+Date: Mon, 10 Jun 2024 18:38:30 +0400
+Message-ID: <177378ddca4385046edbb54cf50279b3@halajoin.test>
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!doctype html>
+<html xmlns=3D"http://www.w3.org/1999/xhtml" xmlns:v=3D"u=
+rn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-microsoft-com:office:o=
+ffice">
+    <head>
+        <title></title>
+        <meta http-equiv=
+=3D"X-UA-Compatible" content=3D"IE=3Dedge">
+        <!--<![endif]-->
+  =
+      <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3DUTF=
+-8">
+        <meta name=3D"viewport" content=3D"width=3Ddevice-width, ini=
+tial-scale=3D1">
+        <link rel=3D'stylesheet' id=3D'google-font-css-c=
+ss'  href=3D'https://fonts.googleapis.com/css?family=3DPoppins%3A400%2C500%=
+2C600' type=3D'text/css' media=3D'all' />
+        <style>
+            .=
+b-email-wrap{
+                background: #ebeef2;
+                padd=
+ing: 40px 0px;
+                color: #1A2B48;
+                font-siz=
+e: 14px;
+                font-family: 'Poppins', sans-serif !important;=
+
+                font-weight: normal;
+                line-height: 1.5;=
+
+                overflow-x: hidden;
+                margin: 0px;
+   =
+         }
+            .b-header{
+                background: #5291fa;=
+
+                padding: 30px;
+                color: white;
+       =
+     }
+            .b-header .site-title,
+            .b-header h1,
+ =
+           .b-header h2,
+            .b-header h3,
+            .b-heade=
+r h4,
+            .b-header h5,
+            .b-header p
+            {=
+
+                margin:0px;
+                display: block;
+        =
+        text-align: center;
+            }
+            .b-container{
+ =
+               max-width: 600px;
+                margin: 0px auto;
+    =
+        }
+
+            .b-panel{
+                border: 1px solid rg=
+ba(0, 0, 0, 0.1);
+                margin-bottom: 30px;
+                =
+padding: 30px;
+                background: white;
+            }
+     =
+       .b-panel .b-panel{
+                padding: 0px;
+               =
+ box-shadow: none;
+            }
+            .b-panel-title{
+        =
+        text-align: center;
+                margin-bottom: 30px;
+      =
+          font-size: 24px;
+                font-weight: 500;
+          =
+  }
+            .b-table-wrap{
+                overflow-x:auto;
+     =
+       }
+            .b-table{
+                width: 100%;
+         =
+   }
+            .b-table tr td,
+            .b-table .b-tr,
+        =
+    .b-table tr th{
+                padding: 10px;
+            }
+    =
+        .b-table .b-tr{
+                clear: both;
+                bo=
+rder-bottom: 1px solid #EAEEF3;
+            }
+            .b-table .b-t=
+r:after{
+                display: table;
+                clear: both;=
+
+                content:'';
+            }
+            .b-table tr td=
+{
+                border-bottom: 1px solid #EAEEF3;
+            }
+   =
+         .b-table tbody tr:nth-child(even) td{
+                /*backgrou=
+nd: #f5f7fd;*/
+            }
+            .b-table tbody tr td.label,
+=
+            .b-table .b-tr .label{
+                font-weight: 500;
+  =
+          }
+            .b-table tbody tr td.val,
+            .b-table =
+.b-tr .val{
+                text-align: right;
+            }
+
+     =
+       .b-table tbody tr td.val p,
+            .b-table .b-tr .val p{
+ =
+               padding: 0;
+                margin: 0;
+            }
+=
+
+            .b-table .b-tr .label,
+            .b-table .b-tr .val{
+=
+                float: left;
+                width: 50%;
+            }=
+
+            .pricing-list{
+                text-align: left;
+       =
+         margin: 0px;
+                padding: 0px;
+                lis=
+t-style: none;
+            }
+            .pricing-list td{
+          =
+      padding: 7px 0px;
+            }
+            .pricing-list td .val=
+{
+                text-align: right;
+            }
+            .prici=
+ng-list .no-flex{
+                display: block;
+            }
+     =
+       .email-headline{
+                margin-top: 0px;
+            }=
+
+
+            .text-center{
+                text-align: center;
+   =
+         }
+
+            .btn{
+                display: inline-block;=
+
+                color: #212529;
+                text-align: center;
+=
+                vertical-align: middle;
+                -webkit-user-sele=
+ct: none;
+                -moz-user-select: none;
+                -ms-u=
+ser-select: none;
+                user-select: none;
+                ba=
+ckground-color: #ebeef2;
+                line-height: 1.5;
+            =
+    border: none;
+                -webkit-box-shadow: none;
+           =
+     box-shadow: none;
+                border-radius: 3px;
+            =
+    padding: 7px 20px;
+                -webkit-transition: background .2s=
+, color .2s;
+                transition: background .2s, color .2s;
+   =
+             font-size: 14px;
+                font-weight: 500;
+       =
+         text-decoration: none;
+            }
+            .btn.btn-prim=
+ary{
+
+                background: #5191FA;
+                color: whi=
+te;
+            }
+            .mt20{
+                margin-top: 20px=
+;
+            }
+            .no-padding{
+                padding: 0px=
+;
+            }
+            .no-r-padding{
+                padding-ri=
+ght: 0px!important;
+            }
+            .fsz21{
+               =
+ font-size: 21px;
+            }
+            .no-b-border{
+           =
+     border-bottom: 0px!important;
+            }
+            @media scr=
+een and (max-width: 768px) {
+                .b-panel{
+                =
+    padding: 15px;
+                }
+                .b-table tr td,
+=
+                .b-table tr th{
+                    padding-right: 2px;=
+
+                    padding-left: 2px;
+                }
+           =
+     .b-panel-title{
+                    font-size: 18px;
+             =
+       font-weight: bold;
+                    margin-bottom: 15px;
+    =
+            }
+                .b-email-wrap{
+                    paddin=
+g: 0px;
+                }
+
+                .b-table .b-tr .label,
+ =
+               .b-table .b-tr .val{
+                    float:none;
+   =
+             }
+
+                .b-table .b-tr .val{
+                =
+    text-align: left;
+                }
+            }
+               =
+     </style>
+    </head>
+    <body>
+        <div class=3D"b-email-wr=
+ap">
+            <div class=3D"" style=3D"">
+    <div class=3D"b-contai=
+ner">
+        <div class=3D"b-header">
+                        <h1 clas=
+s=3D"site-title">HallaJoin</h1>
+        </div>
+    </div>
+</div>
+=
+
+                <div class=3D"b-container">
+        <div class=3D"b-pa=
+nel">
+           =20
+            <h1>Hello!</h1>
+            <p>Please =
+click the button to verify your email address!</p>
+            <p style=
+=3D"text-align: center"><a style=3D"border-radius: 3px;
+                c=
+olor: #fff;
+                display: inline-block;
+                text=
+-decoration: none;
+                background-color: #3490dc;
+         =
+       border-top: 10px solid #3490dc;
+                border-right: 18px=
+ solid #3490dc;
+                border-bottom: 10px solid #3490dc;
+    =
+            border-left: 18px solid #3490dc;" href=3D"https://beta.hallajoi=
+n.com/email/verify/12/c3af56313d54d0bba7fc62636f8612d74619bbfa?expires=3D17=
+18033910&signature=3D3f2bfdbd2ade41e9254c056507ba42b98f55b5b558e15174675dc5=
+ee2e7ea18f">Verify Email Address</a></p>
+            <p>If you did not cr=
+eate account, no further action is required.</p>
+            <p>Regards,<=
+br>HallaJoin</p>
+        </div>
+    </div>
+
+            <div class=
+=3D"b-footer" style=3D"margin-top: 0px;">
+    <div class=3D"b-container">=
+
+       =20
+    </div>
+</div>        </div>
+    </body>
+</html>
+  
+[2024-06-10 18:38:30] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "shemi fazil has been registered",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/beta.hallajoin.com\/images\/avatar.png\" alt=\"shemi fazil\">",
+    "link": "https:\/\/beta.hallajoin.com\/admin\/module\/user?s=12",
+    "idNotification": "dbf2c785-31dc-405e-b73c-c056fe0871f0",
+    "socket": null
+}  
+[2024-06-10 18:42:25] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "shemi fazil has created a Review Excellent! on Museum of the Future",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/beta.hallajoin.com\/images\/avatar.png\" alt=\"shemi fazil\">",
+    "link": "https:\/\/beta.hallajoin.com\/admin\/module\/review",
+    "idNotification": "6c562da0-11c9-4781-a046-f265b5ddd81f",
+    "socket": null
+}  
+[2024-06-10 19:08:39] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "Kayak in Abu Dhabi has been deleted by Karem Ahmed",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/beta.hallajoin.com\/images\/avatar.png\" alt=\"Karem Ahmed\">",
+    "link": "https:\/\/beta.hallajoin.com\/admin\/module\/tour?id=316",
+    "idNotification": "c6f1922f-6c4b-4239-879c-b1aeb9b4d355",
+    "socket": null
+}  
+[2024-06-10 19:08:39] production.INFO: Broadcasting [App\Events\PusherNotificationPrivateEvent] on channels [user-channel-1] with payload:
+{
+    "message": "Kayak in Abu Dhabi has been deleted by Karem Ahmed",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/beta.hallajoin.com\/images\/avatar.png\" alt=\"System Admin\">",
+    "link": "https:\/\/beta.hallajoin.com\/user\/tour?id=316",
+    "idNotification": "25d9bbbb-4add-4d34-a1af-b54e6d7573e3",
+    "userId": 1,
+    "socket": null
+}  
+[2024-06-10 19:08:50] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "Kayak in Abu Dhabi was updated to Publish by Karem Ahmed",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/beta.hallajoin.com\/images\/avatar.png\" alt=\"Karem Ahmed\">",
+    "link": "https:\/\/beta.hallajoin.com\/admin\/module\/tour?id=429",
+    "idNotification": "755db548-db5a-49c6-8a8b-10504801a5a1",
+    "socket": null
+}  
+[2024-06-10 19:10:55] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "Burj Khalifa Standard Prime was updated to Publish by Karem Ahmed",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/beta.hallajoin.com\/images\/avatar.png\" alt=\"Karem Ahmed\">",
+    "link": "https:\/\/beta.hallajoin.com\/admin\/module\/tour?id=268",
+    "idNotification": "2df83708-f423-4c63-9649-73f857b40489",
+    "socket": null
+}  
+[2024-06-10 19:10:55] production.INFO: Broadcasting [App\Events\PusherNotificationPrivateEvent] on channels [user-channel-1] with payload:
+{
+    "message": "Burj Khalifa Standard Prime was updated to Publish by Karem Ahmed",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/beta.hallajoin.com\/images\/avatar.png\" alt=\"System Admin\">",
+    "link": "https:\/\/beta.hallajoin.com\/user\/tour?id=268",
+    "idNotification": "ef5bf493-a30d-449f-9b78-ea03abad77fa",
+    "userId": 1,
+    "socket": null
+}  
