@@ -72,7 +72,8 @@
         </div>
         <div class="g-filter-item">
             <div class="item-title">
-                <h3>{{__("Tour Type")}}</h3>
+                {{-- <h3>{{__("Tour Type")}}</h3> --}}
+                <h3>{{__("Category")}}</h3>
                 <i class="fa fa-angle-up" aria-hidden="true"></i>
             </div>
             <div class="item-content">
@@ -112,7 +113,7 @@
                 @endif
             </div>
         </div>
-        @php
+        {{-- @php
             $selected = (array) Request::query('terms');
         @endphp
         @foreach ($attributes as $item)
@@ -145,7 +146,7 @@
                     </div>
                 </div>
             @endif
-        @endforeach
+        @endforeach --}}
     </form>
 </div>
 

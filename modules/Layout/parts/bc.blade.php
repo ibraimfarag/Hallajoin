@@ -1,4 +1,4 @@
-@if(!empty($breadcrumbs))
+{{-- @if(!empty($breadcrumbs))
     <div class="blog-breadcrumb hidden-xs">
         <div class="container">
             <ol class="ul" itemscope itemtype="https://schema.org/BreadcrumbList">
@@ -17,4 +17,4 @@
             </ol>
         </div>
     </div>
-@endif
+@endif --}}
