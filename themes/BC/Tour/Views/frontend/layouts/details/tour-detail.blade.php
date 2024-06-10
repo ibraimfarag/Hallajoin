@@ -171,7 +171,7 @@
             @endif
 @include('Tour::frontend.layouts.details.tour-include-exclude')
 @include('Tour::frontend.layouts.details.tour-itinerary')
-@include('Tour::frontend.layouts.details.tour-attributes')
+{{-- @include('Tour::frontend.layouts.details.tour-attributes') --}}
 @include('Tour::frontend.layouts.details.tour-faqs')
 @includeIf("Hotel::frontend.layouts.details.hotel-surrounding")
 @if($row->map_lat && $row->map_lng)
