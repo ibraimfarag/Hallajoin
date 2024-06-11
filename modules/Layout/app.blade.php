@@ -76,6 +76,22 @@
         {!! setting_item('footer_scripts') !!}
         {!! setting_item_with_lang_raw('footer_scripts') !!}
     @endif
+
+        <!-- WhatsApp Icon -->
+        <div class="whatsapp-icon" onclick="openWhatsApp()">
+            <i class="fab fa-whatsapp fa-2x"></i>
+        </div>
+    
+        <!-- Scripts -->
+        <script>
+            function openWhatsApp() {
+                var phoneNumber = "+201150529992"; // Replace with your WhatsApp phone number
+                var message = "Hello, I would like to inquire about..."; // Replace with your predefined message
+                var url = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(message);
+                window.open(url, "_blank");
+            }
+        </script>
+
     <script>
         $(document).ready(function() {
             var header = $("#bravo-header");

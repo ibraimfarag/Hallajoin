@@ -9388,3 +9388,17 @@ ol, ul {
         cursor: pointer;
         transition: background-color 0.3s ease;
     }
+
+    .whatsapp-icon {
+        position: fixed;
+        right: 15px;
+        bottom: 10%;
+        transform: translateY(50%);
+        background-color: #25d366;
+        color: white;
+        border-radius: 50%;
+        padding: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        cursor: pointer;
+    }
