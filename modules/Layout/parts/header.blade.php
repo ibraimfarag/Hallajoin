@@ -48,7 +48,17 @@
                                 </li>
                             @endif
                         @else
+
+
+
+                       
+
+                        
+
+                            @include('Layout::parts.wishlist')
                             @include('Layout::parts.notification')
+
+
                             <li class="login-item dropdown">
                                 <a href="#" data-toggle="dropdown" class="login">{{__("Hi, :name",['name'=>Auth::user()->getDisplayName()])}}
                                     <i class="fa fa-angle-down"></i>

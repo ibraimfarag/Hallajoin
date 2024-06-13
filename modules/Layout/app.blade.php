@@ -85,7 +85,7 @@
         <!-- Scripts -->
         <script>
             function openWhatsApp() {
-                var phoneNumber = "+201150529992"; // Replace with your WhatsApp phone number
+                var phoneNumber = "+971555506597"; // Replace with your WhatsApp phone number
                 var message = "Hello, I would like to inquire about..."; // Replace with your predefined message
                 var url = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(message);
                 window.open(url, "_blank");
@@ -247,6 +247,9 @@
                 }
             });
         });
+
+
+
     </script>
 
 

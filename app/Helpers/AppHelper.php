@@ -3,6 +3,9 @@ use Modules\Core\Models\Settings;
 use App\Currency;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 //include '../../custom/Helpers/CustomHelper.php';
 
@@ -1097,7 +1100,7 @@ function is_vendor(){
     }
 
 function get_link_detail_services($services, $id,$action='edit'){
-    if( \Route::has($services.'.admin.'.$action) ){
+    if( Route::has($services.'.admin.'.$action) ){
         return route($services.'.admin.'.$action, ['id' => $id]);
     }else{
         return '#';
@@ -1106,7 +1109,7 @@ function get_link_detail_services($services, $id,$action='edit'){
 }
 
 function get_link_vendor_detail_services($services, $id,$action='edit'){
-    if( \Route::has($services.'.vendor.'.$action) ){
+    if( Route::has($services.'.vendor.'.$action) ){
         return route($services.'.vendor.'.$action, ['id' => $id]);
     }else{
         return '#';
@@ -1198,9 +1201,32 @@ function generate_timezone_list()
         }
         $notifications = $checkNotify->orderBy('created_at', 'desc')->limit(5)->get();
         $countUnread = $checkNotify->where('read_at', null)->count();
+
         return [$notifications,$countUnread];
     }
+    function getWishlist()
+    {
+    
 
+        $checkwishlist = \Modules\User\Models\UserWishList::query();
+
+          $wishlistQuery=  $checkwishlist->where(function($query){
+            $query->where ("user_wishlist.user_id", Auth::id());
+            $query->orderBy('user_wishlist.id', 'desc');
+        });
+          
+         
+            
+        $wishlist = $wishlistQuery->with('service')->get(); 
+            // $wishlist->paginate(5);
+            $count = $wishlist->count();
+            // dd([$wishlist,$count]);
+            return [
+                'wishlist' => $wishlist,
+                'count' => $count
+            ];
+
+    }
     function is_enable_registration(){
         return !setting_item('user_disable_register');
     }

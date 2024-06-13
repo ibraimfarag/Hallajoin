@@ -14,7 +14,10 @@ class UserWishList extends BaseModel
     public function service()
     {
         $allServices = get_bookable_services();
-        $module = $allServices[$this->object_model];
+        $objectModel = $this->object_model ?: 'tour';
+
+        $module = $allServices[$objectModel];
+        // dd( $module);
         return $this->hasOne($module, "id", 'object_id')->where("deleted_at",null);
     }
 }

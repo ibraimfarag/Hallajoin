@@ -29,6 +29,8 @@ class UserWishListController extends FrontendController
             ],
             'page_title'         => __("Wishlist"),
         ];
+
+        // dd($data);
         return view('User::frontend.wishList.index', $data);
     }
     public function handleWishList(Request $request){

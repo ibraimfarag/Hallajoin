@@ -1,5 +1,7 @@
 <?php
 $service = $row->service;
+
+// dd($row);
 ?>
 @if(!empty($service))
     <div class="item-list">

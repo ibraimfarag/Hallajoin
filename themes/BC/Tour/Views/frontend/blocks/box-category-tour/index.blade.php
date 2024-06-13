@@ -45,6 +45,7 @@
 </div>
 @else
 
+
 <div class="bravo-box-category-tour">
     <div class="container">
         @if ($title)
@@ -57,7 +58,7 @@
             {{ $desc }}
         </div>
         @endif
-        <div class="list-item owl-carousel">
+        <div class="list-item owl-carousel locationowl">
             @foreach ($list_item as $k => $item)
             @php $image_url = get_file_url($item['image_id'], 'full'); @endphp
             @if (!empty(($item_cat = $categories->firstWhere('id', $item['category_id']))))

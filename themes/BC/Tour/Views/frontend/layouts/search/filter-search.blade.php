@@ -113,13 +113,17 @@
                 @endif
             </div>
         </div>
-        {{-- @php
+        @php
             $selected = (array) Request::query('terms');
+            
         @endphp
+
         @foreach ($attributes as $item)
-            @if(empty($item['hide_in_filter_search']))
-                @php
+        @if(empty($item['hide_in_filter_search']) && $item['slug'] == 'travel-styles')
+        @php
                     $translate = $item->translate();
+             
+
                 @endphp
                 <div class="g-filter-item">
                     <div class="item-title">
@@ -129,7 +133,9 @@
                     <div class="item-content">
                         <ul>
                             @foreach($item->terms as $key => $term)
-                                @php $translate = $term->translate(); @endphp
+                                @php $translate = $term->translate(); 
+                                
+                                @endphp
                                 <li @if($key > 2 and empty($selected)) class="hide" @endif>
                                     <div class="bravo-checkbox">
                                         <label>
@@ -146,7 +152,7 @@
                     </div>
                 </div>
             @endif
-        @endforeach --}}
+        @endforeach
     </form>
 </div>
 
