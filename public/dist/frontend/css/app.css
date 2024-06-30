@@ -9437,5 +9437,6 @@ ol, ul {
 
 .header-left img{
 
-    height: 58px;
+    width: 228px;
+    padding-bottom: 15px;
 }
