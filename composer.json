@@ -9,7 +9,6 @@
         "eluceo/ical": "^0.15.1",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
-        "intervention/image": "^3.7",
         "johngrogg/ics-parser": "^2.1",
         "kalnoy/nestedset": "^6",
         "laravel/fortify": "^1.10",
