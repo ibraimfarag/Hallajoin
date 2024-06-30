@@ -1,3 +1,8 @@
+@php
+ $meta = $row->meta;
+ $open_hours = $meta->open_hours;
+//  dd($open_hours);
+@endphp
 <div class="bravo_single_book_wrap @if(setting_item('tour_enable_inbox')) has-vendor-box @endif">
     <div class="bravo_single_book">
         <div id="bravo_tour_book_app" v-cloak>
@@ -46,9 +51,18 @@
                             <div class="check-in-wrapper">
                                 <label>{{__("Start Date")}}</label>
                                 <div class="render check-in-render">@{{start_date_html}}</div>
+                                <div v-if="timeRangeDisplay" class="render check-in-render">
+                                    <div>
+                                        <span>{{ __("Time:") }}</span>
+                                        <span>@{{ timeRangeDisplay }}</span>
+                                    </div>
+                                </div>
                             </div>
                             <i class="fa fa-angle-down arrow"></i>
+
                         </div>
+               
+                       
                         <input type="text" class="start_date" ref="start_date" style="height: 1px; visibility: hidden">
                     </div>
                     <div class="" v-if="person_types">
@@ -142,3 +156,6 @@
     </div>
 </div>
 @include("Booking::frontend.global.enquiry-form",['service_type'=>'tour'])
+<script>
+    var openHours = @json($open_hours);
+</script>

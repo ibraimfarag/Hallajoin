@@ -19,7 +19,7 @@
                     <div class="col-md-12 col-lg-3">
                         @include('Tour::frontend.layouts.details.vendor')
                         @include('Tour::frontend.layouts.details.tour-form-book')
-                        @include('Tour::frontend.layouts.details.open-hours')
+                        {{-- @include('Tour::frontend.layouts.details.open-hours') --}}
                     </div>
                 </div>
                 <div class="row end_tour_sticky">
@@ -49,19 +49,19 @@
                     <div class="service-review tour-review-{{$score_total}}">
                         <div class="list-star">
                             <ul class="booking-item-rating-stars">
-                                <li><i class="fa fa-star-o"></i></li>
-                                <li><i class="fa fa-star-o"></i></li>
-                                <li><i class="fa fa-star-o"></i></li>
-                                <li><i class="fa fa-star-o"></i></li>
-                                <li><i class="fa fa-star-o"></i></li>
+                                <li><i class="fa fa-star orange-o"></i></li>
+                                <li><i class="fa fa-star orange-o"></i></li>
+                                <li><i class="fa fa-star orange-o"></i></li>
+                                <li><i class="fa fa-star orange-o"></i></li>
+                                <li><i class="fa fa-star orange-o"></i></li>
                             </ul>
                             <div class="booking-item-rating-stars-active" style="width: {{  $score_total * 2 * 10 ?? 0  }}%">
                                 <ul class="booking-item-rating-stars">
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
-                                    <li><i class="fa fa-star"></i></li>
+                                    <li><i class="fa fa-star orange"></i></li>
+                                    <li><i class="fa fa-star orange"></i></li>
+                                    <li><i class="fa fa-star orange"></i></li>
+                                    <li><i class="fa fa-star orange"></i></li>
+                                    <li><i class="fa fa-star orange"></i></li>
                                 </ul>
                             </div>
                         </div>
@@ -122,4 +122,6 @@
     <script type="text/javascript" src="{{ asset("libs/fotorama/fotorama.js") }}"></script>
     <script type="text/javascript" src="{{ asset("libs/sticky/jquery.sticky.js") }}"></script>
     <script type="text/javascript" src="{{ asset('module/tour/js/single-tour.js?_ver='.config('app.asset_version')) }}"></script>
+  
+
 @endpush

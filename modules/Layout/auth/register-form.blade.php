@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css">
+
 <form class="form bravo-form-register" method="post" action="{{ route('auth.register.store') }}">
     @csrf
     <div class="row">
@@ -19,8 +21,11 @@
         </div>
     </div>
     <div class="form-group">
-        <input type="text" class="form-control" name="phone" autocomplete="off" placeholder="{{ __('Phone') }}">
-        <i class="input-icon field-icon icofont-ui-touch-phone"></i>
+        <div id="phoneInputContainer">
+            <input type="tel" id="phone" class="form-control" name="phone_number" autocomplete="off" placeholder="Phone">
+            <input type="hidden" id="full_phone" name="phone">
+            <i class="input-icon field-icon icofont-ui-touch-phone"></i>
+        </div>
         <span class="invalid-feedback error error-phone"></span>
     </div>
     <div class="form-group">
@@ -96,6 +101,7 @@
         <a href="#" data-target="#login" data-toggle="modal">{{ __('Log In') }}</a>
     </div>
 </form>
+
 <script>
     // JavaScript to toggle password visibility
     const passwordField = document.getElementById('passwordField');
@@ -113,4 +119,27 @@
             togglePassword.classList.add('icofont-eye-blocked');
         }
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize intl-tel-input
+        const phoneInputField = document.querySelector("#phone");
+        const fullPhoneInputField = document.querySelector("#full_phone");
+        const iti = window.intlTelInput(phoneInputField, {
+            initialCountry: "eg", // Sets initial country to Egypt
+            separateDialCode: true, // Display the country code separately
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js" // for formatting/validation etc.
+        });
+
+        // Format phone number with country code on form submit
+        const form = document.querySelector(".bravo-form-register");
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission to modify the value first
+
+            const phoneNumber = iti.getNumber(); // Get full formatted phone number
+            fullPhoneInputField.value = phoneNumber; // Update hidden input with formatted phone number
+            phoneInputField.value = phoneNumber; // Update visible input with formatted phone number
+            form.submit(); // Submit the form after updating the input fields
+        });
+    });
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>

@@ -4,7 +4,7 @@
 <div class="item-loop {{$wrap_class ?? ''}}">
     @if($row->is_featured == "1")
         <div class="featured">
-            {{__("Featured")}}
+            {{__("Top Seller")}}
         </div>
     @endif
     <div class="thumb-image ">

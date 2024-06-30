@@ -1,7 +1,7 @@
 @php($location_search_style = setting_item('tour_location_search_style'))
 <div class="filter-item">
     <div class="form-group">
-        <i class="field-icon fa icofont-map"></i>
+        <i class="field-icon fa icofont-map orange"></i>
         <div class="form-content">
             @if($location_search_style=='autocompletePlace')
                 <div class="g-map-place">

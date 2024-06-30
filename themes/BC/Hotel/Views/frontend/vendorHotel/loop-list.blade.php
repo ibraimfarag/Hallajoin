@@ -6,7 +6,7 @@
         <div class="col-md-3">
             @if($row->is_featured == "1")
                 <div class="featured">
-                    {{__("Featured")}}
+                    {{__("Top Seller")}}
                 </div>
             @endif
             <div class="thumb-image">
@@ -41,7 +41,7 @@
                 {{__("Status")}}: <span class="badge badge-{{ $row->status }}">{{ $row->status_text }}</span>
             </div>
             <div class="location">
-                <i class="icofont-wall-clock"></i>
+                <i class="icofont-wall-clock orange"></i>
                 {{__("Last Updated")}}: <span>{{ display_datetime($row->updated_at ?? $row->created_at) }}</span>
             </div>
             <div class="control-action">

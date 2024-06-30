@@ -123,7 +123,7 @@
     <li class="dropdown-notifications dropdown p-0">
         <a href="#" data-toggle="dropdown" class="is_login">
             <i class="fa fa-heart mr-2"></i>
-            <span class="badge badge-danger notification-icon">{{$countUnread}}</span>
+            <span class="badge badge-danger orange-bg notification-icon">{{$countUnread}}</span>
             <i class="fa fa-angle-down"></i>
         </a>
         <ul class="dropdown-menu editmenu overflow-auto notify-items dropdown-container dropdown-menu-right dropdown-large">
@@ -140,7 +140,7 @@
                             <div class="col-md-4">
                                 @if($service->is_featured == "1")
                                     <div class="featured">
-                                        {{__("Featured")}}
+                                        {{__("Top Seller")}}
                                     </div>
                                 @endif
                                 <div class="thumb-image">
@@ -200,7 +200,7 @@
     <li class="dropdown-notifications dropdown p-0">
         <a href="#" data-toggle="dropdown">
             <i class="fa fa-bell mr-2"></i>
-            <span class="badge badge-danger notification-icon">0</span>
+            <span class="badge badge-danger orange-bg notification-icon">0</span>
             <i class="fa fa-angle-down"></i>
         </a>
         <ul class="dropdown-menu dropdown-menu-right">

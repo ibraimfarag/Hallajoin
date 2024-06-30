@@ -25,7 +25,7 @@
                             @endif
                             @if($row->is_featured == "1")
                                 <div class="featured">
-                                    {{__("Featured")}}
+                                    {{__("Top SSeller")}}
                                 </div>
                             @endif
                             <div class="thumb-image">

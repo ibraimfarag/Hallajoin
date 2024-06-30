@@ -55,7 +55,7 @@
                 <div class="col-xs-6 col-lg-3 col-md-6">
                     <div class="item">
                         <div class="icon">
-                            <i class="icofont-wall-clock"></i>
+                            <i class="icofont-wall-clock orange"></i>
                         </div>
                         <div class="info">
                             <h4 class="name">{{__("Start Time")}}</h4>

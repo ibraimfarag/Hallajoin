@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Modules\Core\Events\CreateReviewEvent;
 use Modules\Review\Models\Review;
 use Modules\Review\Models\ReviewMeta;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
@@ -20,7 +20,7 @@ class ReviewController extends Controller
         $service_type = $request->input('review_service_type');
         $service_id = $request->input('review_service_id');
         $review_upload = $request->input('review_upload', []);
-
+        $auther_id = Auth::id();
         $allServices = get_reviewable_services();
 
         if (empty($allServices[$service_type])) {
@@ -68,7 +68,7 @@ class ReviewController extends Controller
         }
 
         $rules = [
-            'review_title'   => 'required',
+            // 'review_title'   => 'required',
             'review_content' => 'required|min:4'
         ];
         $messages = [
@@ -123,9 +123,12 @@ class ReviewController extends Controller
             "content"      => $request->input('review_content'),
             "rate_number"  => $rate ?? 0,
             "author_ip"    => $request->ip(),
-            "status"       => !$module->getReviewApproved() ? "approved" : "pending",
-            'vendor_id'     =>$module->author_id
+            "status"          => !$module->getReviewApproved() ? "approved" : "pending",
+            'vendor_id'     =>$module->author_id,
+            'author_id'     => $auther_id,
         ]);
+
+        // dd($review);
         if ($review->save()) {
             if (!empty($metaReview)) {
                 foreach ($metaReview as $meta) {

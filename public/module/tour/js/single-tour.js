@@ -23,7 +23,7 @@
             duration:0,
             allEvents:[],
 			buyer_fees:[],
-
+            timeRangeDisplay: '',
             is_form_enquiry_and_book:false,
             enquiry_type:'book',
             enquiry_is_submit:false,
@@ -31,6 +31,19 @@
             enquiry_email:"",
             enquiry_phone:"",
             enquiry_note:"",
+            selectedDate: '', // Store selected date
+            dayTimeSlots: {    // Example structure mapping days to time slots
+                1: [], // Monday
+                2: [], // Tuesday
+                3: [], // Wednesday
+                4: [], // Thursday
+                5: [], // Friday
+                6: [], // Saturday
+                7: [], // Sunday
+             },
+            displayedTimeSlots: [] ,
+            openHours: openHours 
+        
         },
         watch:{
             extra_price:{
@@ -204,42 +217,42 @@
                 this[k] = bravo_booking_data[k];
             }
         },
-        mounted(){
+        mounted() {
             var me = this;
             var options = {
                 singleDatePicker: true,
                 showCalendar: false,
                 sameDate: true,
-                autoApply           : true,
-                disabledPast        : true,
-                dateFormat          : bookingCore.date_format,
-                enableLoading       : true,
-                showEventTooltip    : true,
-                classNotAvailable   : ['disabled', 'off'],
+                autoApply: true,
+                disabledPast: true,
+                dateFormat: bookingCore.date_format,
+                enableLoading: true,
+                showEventTooltip: true,
+                classNotAvailable: ['disabled', 'off'],
                 disableHightLight: true,
-                minDate:this.minDate,
-                opens: bookingCore.rtl ? 'right':'left',
-                locale:{
-                    direction: bookingCore.rtl ? 'rtl':'ltr',
-                    firstDay:daterangepickerLocale.first_day_of_week
+                minDate: this.minDate,
+                opens: bookingCore.rtl ? 'right' : 'left',
+                locale: {
+                    direction: bookingCore.rtl ? 'rtl' : 'ltr',
+                    firstDay: daterangepickerLocale.first_day_of_week
                 },
-                isInvalidDate:function (date) {
-                    for(var k = 0 ; k < me.allEvents.length ; k++){
+                isInvalidDate: function(date) {
+                    for (var k = 0; k < me.allEvents.length; k++) {
                         var item = me.allEvents[k];
-                        if(item.start == date.format('YYYY-MM-DD')){
+                        if (item.start == date.format('YYYY-MM-DD')) {
                             return item.active ? false : true;
                         }
                     }
                     return false;
                 },
-                addClassCustom:function (date) {
-                    for(var k = 0 ; k < me.allEvents.length ; k++){
+                addClassCustom: function(date) {
+                    for (var k = 0; k < me.allEvents.length; k++) {
                         var item = me.allEvents[k];
-                        if(item.start == date.format('YYYY-MM-DD') && item.classNames !== undefined){
+                        if (item.start == date.format('YYYY-MM-DD') && item.classNames !== undefined) {
                             var class_names = "";
-                            for(var i = 0 ; i < item.classNames.length ; i++){
+                            for (var i = 0; i < item.classNames.length; i++) {
                                 var classItem = item.classNames[i];
-                                class_names += " "+classItem;
+                                class_names += " " + classItem;
                             }
                             return class_names;
                         }
@@ -247,23 +260,57 @@
                     return "";
                 }
             };
-
-            if (typeof  daterangepickerLocale == 'object') {
-                options.locale = _.merge(daterangepickerLocale,options.locale);
+    
+            if (typeof daterangepickerLocale == 'object') {
+                options.locale = _.merge(daterangepickerLocale, options.locale);
             }
-            this.$nextTick(function () {
-                $(this.$refs.start_date).daterangepicker(options).on('apply.daterangepicker',
-                    function (ev, picker) {
-                        me.start_date = picker.startDate.format('YYYY-MM-DD');
-                        me.start_date_html = picker.startDate.format(bookingCore.date_format);
-                    })
-                    .on('update-calendar',function (e,obj) {
-                        me.fetchEvents(obj.leftCalendar.calendar[0][0], obj.leftCalendar.calendar[5][6])
-                    });
+    
+            this.$nextTick(function() {
+                $(this.$refs.start_date).daterangepicker(options).on('apply.daterangepicker', function(ev, picker) {
+                    me.start_date = picker.startDate.format('YYYY-MM-DD');
+                    me.start_date_html = picker.startDate.format("dddd, MMMM Do, YYYY");
+                    me.updateTimeRange(picker.startDate); // Pass the selected date
+                }).on('update-calendar', function(e, obj) {
+                    me.fetchEvents(obj.leftCalendar.calendar[0][0], obj.leftCalendar.calendar[5][6])
+                });
             });
         },
+    
+        
+      
+                
         methods:{
             handleTotalPrice: function () {
+            },
+
+            handleDateChange() {
+                // Extract the day of the week from the selected date and update time slots accordingly
+                const selectedDate = new Date(this.selectedDate);
+                const selectedDay = selectedDate.getDay(); // getDay() returns 0 (Sunday) to 6 (Saturday)
+                
+                // Adjust the day to match your array indexing (1 = Monday, ..., 7 = Sunday)
+                const adjustedDay = (selectedDay === 0) ? 7 : selectedDay;
+        
+                this.displayedTimeSlots = this.dayTimeSlots[adjustedDay] || []; // Update time slots display
+            },
+
+            openStartDate() {
+                $(this.$refs.start_date).trigger('click');
+            },
+         
+            updateTimeRange(date) {
+        const dayOfWeek = date.day(); // Day of the week (1 = Monday, 7 = Sunday)
+        
+        // Adjust the day to match your array indexing (1 = Monday, ..., 7 = Sunday)
+        const adjustedDay = (dayOfWeek === 0) ? 7 : dayOfWeek;
+
+        const openHours = this.openHours[adjustedDay];
+
+        if (openHours && openHours.enable === "1") {
+            this.timeRangeDisplay = openHours.from + " - " + openHours.to;
+        } else {
+            this.timeRangeDisplay = "null";
+        }
             },
             fetchEvents(start,end){
                 var me = this;
@@ -486,6 +533,7 @@
             openStartDate(){
                 $(this.$refs.start_date).trigger('click');
             }
+            
         }
 
     });

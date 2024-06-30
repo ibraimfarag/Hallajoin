@@ -126,40 +126,64 @@ class TourController extends Controller
             'class' => 'active'
         ];
         $this->setActiveMenu($row);
-        // dd($review_list,$row);
+        // dd($data);
         return view('Tour::frontend.detail', $data);
     }
-/**
- * Perform AJAX search for tours.
- *
- * @param Request $request
- * @return \Illuminate\Http\JsonResponse
- */
-public function searchAjax(Request $request)
-{
-    $query = $request->input('query', ''); // Retrieve the 'query' parameter from the request
-    $queryResult = Tour::where('title', 'like', '%' . $query . '%'); // Search for tours where the title matches the query
-    $list = $queryResult->paginate($request->input('limit', 1000)); // Paginate the results
+    /**
+     * Perform AJAX search for tours.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function searchAjax(Request $request)
+    {
+        $query = $request->input('query', ''); // Retrieve the 'query' parameter from the request
+        $limit = $request->input('limit', 1000); // Default limit for pagination
 
-    $tours = [];
-    if (!empty($list)) {
-        foreach ($list as $row) {
-            $title = strlen($row->title) > 25 ? substr($row->title, 0, 25) . '...' : $row->title; // Limit title to 100 characters
+        // Search locations based on name
+        $locationQuery = Location::where('name', 'like', '%' . $query . '%')
+            ->whereNull('deleted_at')
+            ->paginate($limit);
+
+        // Search tours based on title
+        $tourQuery = Tour::where('title', 'like', '%' . $query . '%')
+            ->whereNull('deleted_at')
+            ->paginate($limit);
+
+
+
+        $tours = [];
+        foreach ($locationQuery as $row) {
+            $title = strlen($row->name) > 25 ? substr($row->name, 0, 25) . '...' : $row->name; // Limit title to 25 characters
+            $image_url = get_file_url($row->image_id, 'full'); // Get the full URL of the image
+            $tours[] = [
+                'title' => $title, // Assuming 'name' is the attribute representing the location name
+                'location' => '', // No location details for locations
+                'slug' => '?location_id=' . $row->id,
+                'image_url' => $image_url, // No image URL for locations
+                // 'info' => [$row],
+                'model' => 'location', //
+            ];
+        }
+        // Process tour results
+        foreach ($tourQuery as $row) {
+            $title = strlen($row->title) > 25 ? substr($row->title, 0, 25) . '...' : $row->title; // Limit title to 25 characters
             $image_url = get_file_url($row->image_id, 'full'); // Get the full URL of the image
 
             $tours[] = [
                 'title' => $title,
-                'location' => $row->location->name, // Assuming 'name' is the attribute representing the location name
+                'location' =>  $row->location ? ', ' . $row->location->name : '',
                 'slug' => $row->slug,
-              
-                'image_url' =>  $image_url,
+                'image_url' => $image_url,
+                'model' => 'tour',
             ];
         }
+
+        // Process location results
+
+        // dd( $tours);
+        return response()->json([
+            'tours' => $tours,
+        ]);
     }
-
-    return response()->json([
-        'tours' => $tours,
-    ]);
-}
-
 }

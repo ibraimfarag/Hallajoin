@@ -1,7 +1,7 @@
 @if (!empty($reviews))
 
-    <div id="testimonial-carousel" class="bravo-testimonial carousel slide">
-        <div class="container">
+<div id="testimonial-carousel" class="bravo-testimonial carousel slide" data-ride="carousel" data-interval="3000">
+    <div class="container">
             <h3>{{ $title }}</h3>
             <div class="carousel-inner">
                 @foreach (array_chunk($reviews, 3) as $index => $reviewGroup)
@@ -20,7 +20,7 @@
                                             <h6>{{ $review['tour']['title'] }}</h6>
                                             @if (!empty($review['rate_number']) && $review['rate_number'] >= 1)
                                                 <div class="rate-number">
-                                                    <span> <i class="fa fa-star star-red"></i>
+                                                    <span> <i class="fa fa-star orange"></i>
                                                         {{ $review['rate_number'] }}
                                                         ({{ $review['tour']['reviews_count'] }})
                                                     </span>
@@ -51,7 +51,7 @@
                                                             @if (!empty($review['rate_number']) && $review['rate_number'] >= 1)
                                                                 <div class="star">
                                                                     @for ($i = 0; $i < $review['rate_number']; $i++)
-                                                                        <i class="fa fa-star star-red"></i>
+                                                                        <i class="fa fa-star orange"></i>
                                                                     @endfor
                                                                     {{-- <span
                                                                         class="rating">{{ $review['rate_number'] }}</span> --}}

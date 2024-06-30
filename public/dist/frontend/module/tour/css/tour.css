@@ -217,15 +217,15 @@
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .featured {
     background: #5191fa;
-    border-radius: 0 3px 3px 0;
+    border-radius: 15px;
     color: #fff;
     font-size: 13px;
     font-weight: 500;
-    left: 0;
+    left: 5px;
     padding: 6px 10px;
     position: absolute;
     top: 20px;
-    z-index: 8
+    z-index: 8;
 }
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .thumb-image {
@@ -271,12 +271,13 @@
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .location {
     color: #5e6d77;
     font-size: 13px;
-    padding: 15px 15px 10px
+    padding: 15px 15px 14px
 }
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .location i {
     font-size: 11px;
-    position: relative
+    position: relative;
+    color:#f5793b;
 }
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .category {

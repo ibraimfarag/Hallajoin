@@ -28,6 +28,7 @@
     use Illuminate\Support\Facades\DB;
     use Illuminate\Database\Eloquent\SoftDeletes;
     use Illuminate\Support\Facades\Auth;
+    use Illuminate\Support\Facades\File;
 
     class User extends Authenticatable implements MustVerifyEmail
     {
@@ -195,8 +196,89 @@
             if(!empty($meta_avatar = $this->getMeta("social_meta_avatar",false))) {
                 return $meta_avatar;
             }
-            return asset('images/avatar.png');
+
+            return $this->generateAvatar($this->first_name );
+
         }
+        private function generateAvatar($name)
+        {
+
+
+            $initials = $this->getInitials($name);
+            $bgColor = $this->getRandomColor();
+        
+            // Create the image
+            $width = 200; // Adjust as needed
+            $height = 200; // Adjust as needed
+            $image = imagecreatetruecolor($width, $height);
+        
+            // Allocate colors
+            $bgColor = sscanf($bgColor, "#%02x%02x%02x");
+            $backgroundColor = imagecolorallocate($image, $bgColor[0], $bgColor[1], $bgColor[2]);
+            $textColor = imagecolorallocate($image, 255, 255, 255); // White color
+        
+            // Fill the background
+            imagefilledrectangle($image, 0, 0, $width, $height, $backgroundColor);
+        
+            // Set the font size in pixels
+            $fontSize = 80;
+        
+            // Set the path to your TrueType font file
+            $fontFile = public_path('fonts/CerebriSans-Light.ttf'); // Adjust the path and filename
+        
+            // Text position
+            $textX = 65; // Adjust text position
+            $textY = 135; // Adjust text position
+        
+            // Add the text using TrueType font
+            imagettftext($image, $fontSize, 0, $textX, $textY, $textColor, $fontFile, $initials);
+        
+            // Define the path to save the image in the public directory
+            $path = public_path('avatars/' . $this->id . '.png');
+        
+            // Ensure the avatars directory exists
+            if (!File::exists(public_path('avatars'))) {
+                File::makeDirectory(public_path('avatars'), 0755, true);
+            }
+        
+            // Save the image to the defined path
+            imagepng($image, $path);
+            imagedestroy($image); // Free up memory
+        
+            // Return the URL to the generated image
+            return asset('avatars/' . $this->id . '.png');
+        }
+        
+        private function getInitials($name)
+        {
+        
+            // Ensure $name is not empty or null
+            if (empty($name)) {
+                return '';
+            }
+        
+            $words = explode(' ', $name);
+            $initials = '';
+        
+            foreach ($words as $word) {
+                // Check if $word is not empty before accessing characters
+                if (!empty($word)) {
+                    $initials .= strtoupper($word[0]);
+                }
+            }
+        
+            return $initials;
+        }
+        
+            
+        private function getRandomColor()
+        {
+            $colors = ['#2C3E50'];
+            // $colors = ['#2C3E50', '#1A5276', '#2E4053', '#1B2631', '#4A235A', '#512E5F', '#154360', '#0E6655'];
+            return $colors[array_rand($colors)];
+        }
+    
+        // /* -------------------------------------------------------------------------- */
         public function getAvatarUrlAttribute()
         {
             return $this->getAvatarUrl();

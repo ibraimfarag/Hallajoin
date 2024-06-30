@@ -92,7 +92,7 @@
                         }
                         $traslate = $category->translate()
                         ?>
-                        <li @if($i > 2 and empty($current_category_ids)) class="hide" @endif>
+                        <li>
                             <div class="bravo-checkbox">
                                 <label>
                                     <input name="cat_id[]" {{$checked}} type="checkbox" value="{{$category->id}}"> {{$prefix}} {{$traslate->name}}
@@ -108,22 +108,15 @@
                     $traverse($tour_category);
                     ?>
                 </ul>
-                @if(count($tour_category) > 3 and empty($current_category_ids))
-                    <button type="button" class="btn btn-link btn-more-item">{{__("More")}} <i class="fa fa-caret-down"></i></button>
-                @endif
             </div>
         </div>
         @php
             $selected = (array) Request::query('terms');
-            
         @endphp
-
         @foreach ($attributes as $item)
         @if(empty($item['hide_in_filter_search']) && $item['slug'] == 'travel-styles')
         @php
                     $translate = $item->translate();
-             
-
                 @endphp
                 <div class="g-filter-item">
                     <div class="item-title">
@@ -133,10 +126,8 @@
                     <div class="item-content">
                         <ul>
                             @foreach($item->terms as $key => $term)
-                                @php $translate = $term->translate(); 
-                                
-                                @endphp
-                                <li @if($key > 2 and empty($selected)) class="hide" @endif>
+                                @php $translate = $term->translate(); @endphp
+                                <li>
                                     <div class="bravo-checkbox">
                                         <label>
                                             <input @if(in_array($term->id,$selected)) checked @endif type="checkbox" name="terms[]" value="{{$term->id}}"> {!! $translate->name !!}
@@ -146,14 +137,9 @@
                                 </li>
                             @endforeach
                         </ul>
-                        @if(count($item->terms) > 3 and empty($selected))
-                            <button type="button" class="btn btn-link btn-more-item">{{__("More")}} <i class="fa fa-caret-down"></i></button>
-                        @endif
                     </div>
                 </div>
             @endif
         @endforeach
     </form>
 </div>
-
-

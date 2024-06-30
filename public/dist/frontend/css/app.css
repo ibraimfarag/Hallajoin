@@ -1,5 +1,10 @@
 @charset "UTF-8";
 
+
+
+@import url('https://fonts.cdnfonts.com/css/helvetica-neue-5');
+
+
 .mb0 {
     margin-bottom: 0
 }
@@ -1546,7 +1551,7 @@ body .daterangepicker .full-book-event:before {
 }
 
 .bravo-reviews .review-list .review-item .review-item-head .media .media-body .date {
-    color: #aeb4c0
+    /* color: #aeb4c0 */
 }
 
 .bravo-reviews .review-list .review-item .review-item-body {
@@ -1670,11 +1675,14 @@ body .daterangepicker .full-book-event:before {
 .bravo-reviews .review-form .form-wrapper {
     background: #f9f9f9;
     border: 1px solid #d7dce3;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-    border-top: 4px solid #5191fa;
+    /* border-bottom-left-radius: 5px; */
+    /* border-bottom-right-radius: 5px; */
+    border: 4px solid #5191fa12;
     margin-top: 15px;
-    padding: 30px
+    padding: 30px;
+    border-radius: 25px;
+
+
 }
 
 @media (max-width:766px) {
@@ -1841,7 +1849,7 @@ body .daterangepicker .full-book-event:before {
 
 .bravo_wrap .page-template-content .bravo-list-tour .title {
     font-size: 28px;
-    /* margin-bottom: 20px */
+    margin-bottom: 20px
 }
 
 @media (max-width:766px) {
@@ -1888,15 +1896,16 @@ body .daterangepicker .full-book-event:before {
 
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .featured {
     background: #5191fa;
-    border-radius: 0 3px 3px 0;
+    border-radius: 12px;
     color: #fff;
     font-size: 13px;
     font-weight: 500;
-    left: 0;
+    left: 5px;
     padding: 6px 10px;
     position: absolute;
     top: 20px;
-    z-index: 8
+    z-index: 8;
+    /* height: 410px; */
 }
 
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .thumb-image {
@@ -1931,11 +1940,11 @@ body .daterangepicker .full-book-event:before {
 }
 
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .thumb-image .service-wishlist.loading i, .bravo_wrap .page-template-content .bravo-list-tour .item-tour .thumb-image .service-wishlist:hover i {
-    color: #ff9290
+    color: #f5793b
 }
 
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .thumb-image .service-wishlist.active i {
-    color: red
+    color: #f5793b
 }
 
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .location {
@@ -1946,7 +1955,8 @@ body .daterangepicker .full-book-event:before {
 
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .location i {
     font-size: 12px;
-    position: relative
+    position: relative;
+    margin-right: 1px;
 }
 
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .category {
@@ -2008,7 +2018,7 @@ body .daterangepicker .full-book-event:before {
     font-size: 13px;
     /* margin-left: 10px; */
     position: relative;
-    /* top: -2px */
+    top: 0px
 }
 
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .item-title {
@@ -2737,7 +2747,7 @@ body .daterangepicker .full-book-event:before {
 .bravo_wrap .page-template-content .bravo-testimonial h3 {
     font-size: 28px;
     font-weight: 400;
-    margin-bottom: 20px
+    margin-bottom: 25px
 }
 
 @media (max-width:766px) {
@@ -2776,11 +2786,13 @@ body .daterangepicker .full-book-event:before {
 
 .bravo_wrap .page-template-content .bravo-testimonial .item .author img {
     border-radius: 50%;
-    height: auto;
+    height: 100px;
     margin-right: 20px;
     width: 100px;
     margin-bottom: 20px;
+    margin-right: 1px;
 }
+
 .bravo_wrap .page-template-content .bravo-testimonial .item .author .tour-image-container img {
     border-radius: 10%;
     height: auto;
@@ -3041,13 +3053,13 @@ body .daterangepicker .full-book-event:before {
 
 .bravo_wrap .page-template-content .bravo-list-locations .list-item .destination-item .image .content .title,
 .bravo-box-category-tour .list-item .destination-item .image .content .title {
-    color: #000;
+    color: #fff;
     font-size: 18px;
     font-weight: 500;
     text-transform: uppercase;
     transition: all .3s;
     white-space: nowrap;
-    margin-bottom: 0
+    margin-bottom: -5px
 }
 
 @media (max-width:766px) {
@@ -3233,7 +3245,7 @@ body .daterangepicker .full-book-event:before {
 .bravo_wrap .page-template-content .bravo-list-locations.style_4 .title {
     font-size: 28px;
     font-weight: 500;
-    margin-bottom: 5px
+    margin-bottom: 15px;
 }
 
 @media (max-width:766px) {
@@ -3262,13 +3274,13 @@ body .daterangepicker .full-book-event:before {
     display: block;
     font-size: 18px;
     font-weight: 500;
-    margin-bottom: 5px;
+    margin-bottom: -5px;
     padding: 5px 15px;
     text-transform: uppercase;
     transition: all .3s;
     white-space: nowrap;
-    background: #fff;
-    color: #000;
+    background: #00000085;
+    color: #fff;
     border-radius: 12px;
 }
 
@@ -4250,7 +4262,7 @@ body .daterangepicker .full-book-event:before {
 }
 
 .bravo_wrap .page-template-content .bravo-offer {
-    margin: 50px 0 30px
+    margin: 50px 0 50px
 }
 
 .bravo_wrap .page-template-content .bravo-offer .item {
@@ -4262,12 +4274,14 @@ body .daterangepicker .full-book-event:before {
     position: relative;
     /* width: 58vw; */
 }
+
 .bravo_wrap .page-template-content .bravo-offer .item img {
     object-fit: cover;
     height: 100%;
-    width:100%;
+    width: 100%;
 }
-.bravo_wrap .page-template-content .bravo-offer .carousel  .carousel-inner {
+
+.bravo_wrap .page-template-content .bravo-offer .carousel .carousel-inner {
 
     width: 101% !important;
 }
@@ -5755,11 +5769,13 @@ body .daterangepicker .full-book-event:before {
 
 .bravo_wrap .bravo_form {
     background: #fff;
-    border-radius: 5px;
+    border-radius: 15px;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .2);
     display: flex;
     flex-wrap: wrap;
-    justify-content: center
+    /* justify-content: center; */
+    margin-left: 279px;
+    height: 60px;
 }
 
 .bravo_wrap .bravo_form .g-field-search {
@@ -5794,13 +5810,14 @@ body .daterangepicker .full-book-event:before {
 .bravo_wrap .bravo_form .g-button-submit button {
     background: #5191fa;
     border: none;
-    border-radius: 0 5px 5px 0;
+    border-radius: 0 15px 15px 0;
     cursor: pointer;
     font-weight: 500;
-    height: 100%;
+    height: 88%;
     padding: 0;
     text-transform: uppercase;
-    width: 100%
+    width: 100%;
+    margin-left: 1px;
 }
 
 @media (max-width:1023px) {
@@ -5863,7 +5880,7 @@ body .daterangepicker .full-book-event:before {
 }
 
 .bravo_wrap .bravo_form .form-content {
-    padding: 20px 0 10px 45px;
+    padding: 7px 0 10px 45px;
     position: relative;
     transition: all .3s
 }
@@ -7144,7 +7161,7 @@ body .daterangepicker .full-book-event:before {
 }
 
 .bravo_wrap .bravo-checkbox .fa-star {
-    color: #fa5636;
+    color: #f5793b;
     font-size: 15px;
     margin-right: 3px;
     position: relative;
@@ -8048,8 +8065,10 @@ body .daterangepicker .full-book-event:before {
 }
 
 body {
-    color: #1a2b48;
-    font-family: Poppins, sans-serif;
+    /* color: #1a2b48;
+     */
+    color: #000;
+    font-family: Helvetica Neue, sans-serif;
     font-size: 14px;
     font-weight: 400;
     line-height: 1.5;
@@ -9350,55 +9369,73 @@ ol, ul {
 
 .additional-attributes span {}
 
- .carousel-control-prev, .carousel-control-next {
-        display: none;
-    }
+.carousel-control-prev, .carousel-control-next {
+    display: none;
+}
 
-    .carousel-indicators {
-        bottom: 32px; /* Adjust as needed */
-    }
+.carousel-indicators {
+    bottom: 32px;
+    /* Adjust as needed */
+}
 
-    .carousel-indicators li {
-        background-color: #ccc;
-        border: none;
-        width: 10px;
-        height: 5px;
-        margin: 0 5px;
-        width: 40px;
-        border-radius: 15px;
-    }
+.carousel-indicators li {
+    background-color: #ccc;
+    border: none;
+    width: 10px;
+    height: 5px;
+    margin: 0 5px;
+    width: 40px;
+    border-radius: 15px;
+}
 
-    .carousel-indicators .active {
-        background-color: #fff; /* Active dot color */
-    }
-    .star-red {
-        color: #b72424e0 !important;
-    }
-    
-    .bravo-testimonial .carousel-indicators {
+.carousel-indicators .active {
+    background-color: #fff;
+    /* Active dot color */
+}
 
-        bottom: 1px;
-    }
-    .bravo-testimonial .carousel-indicators li {
-        background-color: rgb(171 171 171 / 50%); /* Default dot color */
-        border-radius: 20%; /* Make dots circular */
-        width: 30px;
-        height: 6px;
-        margin: 0 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
+.star-red {
+    color: #b72424e0 !important;
+}
 
-    .whatsapp-icon {
-        position: fixed;
-        right: 15px;
-        bottom: 10%;
-        transform: translateY(50%);
-        background-color: #25d366;
-        color: white;
-        border-radius: 50%;
-        padding: 15px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-        cursor: pointer;
-    }
+.bravo-testimonial .carousel-indicators {
+
+    bottom: 1px;
+}
+
+.bravo-testimonial .carousel-indicators li {
+    background-color: rgb(171 171 171 / 50%);
+    /* Default dot color */
+    border-radius: 20%;
+    /* Make dots circular */
+    width: 30px;
+    height: 6px;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.whatsapp-icon {
+    position: fixed;
+    right: 15px;
+    bottom: 10%;
+    transform: translateY(50%);
+    background-color: #25d366;
+    color: white;
+    border-radius: 50%;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    cursor: pointer;
+}
+
+.orange {
+    color: #f5793b !important;
+}
+.orange-bg {
+    background-color: #f5793b !important;
+}
+
+.header-left img{
+
+    height: 58px;
+}

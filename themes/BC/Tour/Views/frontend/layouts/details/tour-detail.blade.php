@@ -1,13 +1,13 @@
 <div class="g-header">
     <div class="left">
         @if($translation->address)
-            <p class="address"><i class="fas fa-location-arrow" style="font-size: 14px;"></i>
+            <p class="address"><i class="fas fa-location-arrow orange" style="font-size: 14px;"></i>
 
                 {{$translation->address}}
             </p>
         @endif
         <h1>{{$translation->title}}</h1>
-        <span class="text-rating"><i class="fa fa-star star-red"></i>&nbsp;{{$review_score['score_total']}}&nbsp;({{__(" :number ",['number'=>$review_score['total_review']])}})</span>
+        <span class="text-rating"><i class="fa fa-star orange"></i>&nbsp;{{$review_score['score_total']}}&nbsp;({{__(" :number ",['number'=>$review_score['total_review']])}})</span>
 
     </div>
     <div class="right">
@@ -36,7 +36,7 @@
             <div class="col-xs-6 col-lg-3 col-md-6">
                 <div class="item">
                     <div class="icon">
-                        <i class="icofont-wall-clock"></i>
+                        <i class="icofont-wall-clock orange"></i>
                     </div>
                     <div class="info">
                         <h4 class="name">{{__("Duration")}}</h4>

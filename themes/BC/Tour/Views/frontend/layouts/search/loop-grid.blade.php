@@ -7,7 +7,8 @@
 <div class="item-tour {{$wrap_class ?? ''}}">
     @if($row->is_featured == "1")
         <div class="featured">
-            {{__("Featured")}}
+            {{__("Top Seller")}}
+            
         </div>
     @endif
     <div class="thumb-image">
@@ -70,7 +71,7 @@
             // dd($row);
             
             @endphp
-<i class="fas fa-location-arrow"></i>            {{$location->name ?? ''}}
+<i class="fas fa-location-arrow orange"></i>            {{$location->name ?? ''}}
 
         @endif
     </div>
@@ -82,7 +83,7 @@
     ?>
     <div class="service-review tour-review-{{$score_total}}">
         <div class="list-star">
-            <i class="fa fa-star"></i>
+            <i class="fa fa-star orange"></i>
             <span class="rating-text"> {{$score_total}}  </span>
         </div>
         <span class="review">
@@ -111,7 +112,7 @@
 
     <div class="info">
         <div class="duration">
-            <i class="icofont-wall-clock"></i>
+            <i class="icofont-wall-clock orange"></i>
             {{duration_format($row->duration)}}
         </div>
         <div class="g-price">

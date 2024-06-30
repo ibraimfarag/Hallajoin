@@ -23,7 +23,8 @@ class Review extends BaseModel
         'author_ip',
         'status',
         'future',
-        'vendor_id'
+        'vendor_id',
+        'author_id'
     ];
 
     /**

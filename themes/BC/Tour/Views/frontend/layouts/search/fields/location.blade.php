@@ -1,6 +1,6 @@
 @php($location_search_style = setting_item('tour_location_search_style'))
 <div class="form-group">
-	<i class="field-icon fa icofont-map"></i>
+	<i class="field-icon fa icofont-map orange"></i>
 	<div class="form-content">
 		<label>{{ $field['title'] ?? "" }}</label>
 		@if($location_search_style=='autocompletePlace')

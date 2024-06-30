@@ -1,0 +1,239 @@
+[2024-06-27 20:33:05] production.ERROR: include(F:\MAMP\htdocs\hallajoin\vendor\composer/../intervention/image/src/Intervention/Image/ImageServiceProvider.php): Failed to open stream: No such file or directory {"exception":"[object] (ErrorException(code: 0): include(F:\\MAMP\\htdocs\\hallajoin\\vendor\\composer/../intervention/image/src/Intervention/Image/ImageServiceProvider.php): Failed to open stream: No such file or directory at F:\\MAMP\\htdocs\\hallajoin\\vendor\\composer\\ClassLoader.php:582)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(266): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'include(F:\\\\MAMP...', 'F:\\\\MAMP\\\\htdocs\\\\...', 582)
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\composer\\ClassLoader.php(582): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'include(F:\\\\MAMP...', 'F:\\\\MAMP\\\\htdocs\\\\...', 582)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\composer\\ClassLoader.php(582): include('F:\\\\MAMP\\\\htdocs\\\\...')
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\composer\\ClassLoader.php(433): Composer\\Autoload\\{closure}('F:\\\\MAMP\\\\htdocs\\\\...')
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(754): Composer\\Autoload\\ClassLoader->loadClass('Intervention\\\\Im...')
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(686): Illuminate\\Foundation\\Application->resolveProvider('Intervention\\\\Im...')
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(75): Illuminate\\Foundation\\Application->register('Intervention\\\\Im...')
+#7 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#8 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#9 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#10 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#11 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#12 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#13 {main}
+"} 
+[2024-06-27 20:33:05] production.ERROR: include(F:\MAMP\htdocs\hallajoin\vendor\composer/../intervention/image/src/Intervention/Image/ImageServiceProvider.php): Failed to open stream: No such file or directory {"exception":"[object] (ErrorException(code: 0): include(F:\\MAMP\\htdocs\\hallajoin\\vendor\\composer/../intervention/image/src/Intervention/Image/ImageServiceProvider.php): Failed to open stream: No such file or directory at F:\\MAMP\\htdocs\\hallajoin\\vendor\\composer\\ClassLoader.php:582)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(266): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'include(F:\\\\MAMP...', 'F:\\\\MAMP\\\\htdocs\\\\...', 582)
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\composer\\ClassLoader.php(582): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'include(F:\\\\MAMP...', 'F:\\\\MAMP\\\\htdocs\\\\...', 582)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\composer\\ClassLoader.php(582): include('F:\\\\MAMP\\\\htdocs\\\\...')
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\composer\\ClassLoader.php(433): Composer\\Autoload\\{closure}('F:\\\\MAMP\\\\htdocs\\\\...')
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(754): Composer\\Autoload\\ClassLoader->loadClass('Intervention\\\\Im...')
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(686): Illuminate\\Foundation\\Application->resolveProvider('Intervention\\\\Im...')
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(75): Illuminate\\Foundation\\Application->register('Intervention\\\\Im...')
+#7 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#8 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#9 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#10 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#11 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#12 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#13 {main}
+"} 
+[2024-06-27 20:33:21] production.ERROR: Class "Intervention\Image\ImageServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Intervention\\Image\\ImageServiceProvider\" not found at F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:208)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(144): Illuminate\\Foundation\\ProviderRepository->createProvider('Intervention\\\\Im...')
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 F:\\MAMP\\htdocs\\hallajoin\\artisan(38): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-06-27 20:34:05] production.ERROR: Class "Intervention\Image\ImageServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Intervention\\Image\\ImageServiceProvider\" not found at F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:208)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(144): Illuminate\\Foundation\\ProviderRepository->createProvider('Intervention\\\\Im...')
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-06-27 20:34:05] production.ERROR: Class "Intervention\Image\ImageServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Intervention\\Image\\ImageServiceProvider\" not found at F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:208)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(144): Illuminate\\Foundation\\ProviderRepository->createProvider('Intervention\\\\Im...')
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-06-27 20:35:03] production.ERROR: Class "Intervention\Image\ImageServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Intervention\\Image\\ImageServiceProvider\" not found at F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:208)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(144): Illuminate\\Foundation\\ProviderRepository->createProvider('Intervention\\\\Im...')
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-06-27 20:35:06] production.ERROR: Class "Intervention\Image\ImageServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Intervention\\Image\\ImageServiceProvider\" not found at F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:208)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(144): Illuminate\\Foundation\\ProviderRepository->createProvider('Intervention\\\\Im...')
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-06-27 20:35:06] production.ERROR: Class "Intervention\Image\ImageServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Intervention\\Image\\ImageServiceProvider\" not found at F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:208)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(144): Illuminate\\Foundation\\ProviderRepository->createProvider('Intervention\\\\Im...')
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-06-27 20:35:37] production.ERROR: Class "Intervention\Image\ImageServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Intervention\\Image\\ImageServiceProvider\" not found at F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:208)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(144): Illuminate\\Foundation\\ProviderRepository->createProvider('Intervention\\\\Im...')
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-06-27 20:35:39] production.ERROR: Class "Intervention\Image\ImageServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Intervention\\Image\\ImageServiceProvider\" not found at F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:208)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(144): Illuminate\\Foundation\\ProviderRepository->createProvider('Intervention\\\\Im...')
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 F:\\MAMP\\htdocs\\hallajoin\\artisan(38): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-06-27 20:49:02] production.ERROR: Class "Intervention\Image\ImageServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Intervention\\Image\\ImageServiceProvider\" not found at F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:208)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(144): Illuminate\\Foundation\\ProviderRepository->createProvider('Intervention\\\\Im...')
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(176): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(160): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#7 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(134): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#8 F:\\MAMP\\htdocs\\hallajoin\\public\\index.php(71): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#9 {main}
+"} 
+[2024-06-27 20:49:06] production.ERROR: Class "Intervention\Image\ImageServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Intervention\\Image\\ImageServiceProvider\" not found at F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:208)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(144): Illuminate\\Foundation\\ProviderRepository->createProvider('Intervention\\\\Im...')
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-06-27 20:49:06] production.ERROR: Class "Intervention\Image\ImageServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Intervention\\Image\\ImageServiceProvider\" not found at F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:208)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(144): Illuminate\\Foundation\\ProviderRepository->createProvider('Intervention\\\\Im...')
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-06-27 20:49:06] production.ERROR: Class "Intervention\Image\ImageServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Intervention\\Image\\ImageServiceProvider\" not found at F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:208)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(144): Illuminate\\Foundation\\ProviderRepository->createProvider('Intervention\\\\Im...')
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-06-27 20:50:06] production.ERROR: Class "Intervention\Image\ImageServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Intervention\\Image\\ImageServiceProvider\" not found at F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:208)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(144): Illuminate\\Foundation\\ProviderRepository->createProvider('Intervention\\\\Im...')
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-06-27 20:50:06] production.ERROR: Class "Intervention\Image\ImageServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Intervention\\Image\\ImageServiceProvider\" not found at F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:208)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(144): Illuminate\\Foundation\\ProviderRepository->createProvider('Intervention\\\\Im...')
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-06-27 20:50:41] production.ERROR: Class "Intervention\Image\ImageServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Intervention\\Image\\ImageServiceProvider\" not found at F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:208)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(144): Illuminate\\Foundation\\ProviderRepository->createProvider('Intervention\\\\Im...')
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-06-27 20:51:05] production.ERROR: Class "Intervention\Image\ImageServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Intervention\\Image\\ImageServiceProvider\" not found at F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:208)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(144): Illuminate\\Foundation\\ProviderRepository->createProvider('Intervention\\\\Im...')
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2024-06-27 20:51:06] production.ERROR: Class "Intervention\Image\ImageServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Intervention\\Image\\ImageServiceProvider\" not found at F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php:208)
+[stacktrace]
+#0 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(144): Illuminate\\Foundation\\ProviderRepository->createProvider('Intervention\\\\Im...')
+#1 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\ProviderRepository.php(61): Illuminate\\Foundation\\ProviderRepository->compileManifest(Array)
+#2 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(666): Illuminate\\Foundation\\ProviderRepository->load(Array)
+#3 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\RegisterProviders.php(17): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#4 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(242): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#5 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(383): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#6 F:\\MAMP\\htdocs\\hallajoin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(153): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#7 Command line code(1): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 

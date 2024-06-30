@@ -38,7 +38,7 @@
                 {{__("Status")}}: <span class="badge badge-{{ $row->status }}">{{ $row->status_text }}</span>
             </div>
             <div class="location">
-                <i class="icofont-wall-clock"></i>
+                <i class="icofont-wall-clock orange"></i>
                 {{__("Last Updated")}}: {{ display_datetime($row->updated_at ?? $row->created_at) }}
             </div>
             <div class="control-action">

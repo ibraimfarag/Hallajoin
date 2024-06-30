@@ -45,11 +45,7 @@
                 'password'   => [
                     'required',
                     'string',
-                    Password::min(8)
-                        ->mixedCase()
-                        ->numbers()
-                        ->symbols()
-                        ->uncompromised(),
+                    Password::min(8),
                 ],
                 'phone'       => ['required','unique:users'],
                 'term'       => ['required'],
@@ -80,7 +76,7 @@
                     'messages' => $validator->errors()
                 ], 200);
             } else {
-
+dd($request);
                 $user = \App\User::create([
                     'first_name' => $request->input('first_name'),
                     'last_name'  => $request->input('last_name'),
@@ -89,6 +85,7 @@
                     'status'    => $request->input('publish','publish'),
                     'phone'    => $request->input('phone'),
                 ]);
+
                 event(new Registered($user));
                 Auth::loginUsingId($user->id);
                 try {

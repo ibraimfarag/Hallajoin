@@ -12,7 +12,7 @@ $service = $row->service;
             <div class="col-md-3">
                 @if($service->is_featured == "1")
                     <div class="featured">
-                        {{__("Featured")}}
+                        {{__("Top Seller")}}
                     </div>
                 @endif
                 <div class="thumb-image">

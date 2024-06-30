@@ -1,11 +1,13 @@
 <div class="form-group">
-    <i class="field-icon icofont-wall-clock"></i>
+    <i class="field-icon icofont-wall-clock orange"></i>
     <div class="form-content">
         <div class="form-date-search">
             <div class="date-wrapper">
                 <div class="check-in-wrapper">
-                    <label>{{ $field['title'] ?? "" }}</label>
-                    <div class="render check-in-render">{{Request::query('start',display_date(strtotime("today")))}}</div>
+                    {{-- <label>{{ $field['title'] ?? "" }}</label> --}}
+                    <label>
+                        {{ __("from") }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;{{ __("to") }}
+                    </label>                    <div class="render check-in-render">{{Request::query('start',display_date(strtotime("today")))}}</div>
                     <span> - </span>
                     <div class="render check-out-render">{{Request::query('end',display_date(strtotime("+1 day")))}}</div>
                 </div>

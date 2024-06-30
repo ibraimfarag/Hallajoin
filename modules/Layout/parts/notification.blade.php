@@ -6,7 +6,7 @@ if(!auth()->check()) return;
 <li class="dropdown-notifications dropdown p-0">
     <a href="#" data-toggle="dropdown" class="is_login">
         <i class="fa fa-bell mr-2"></i>
-        <span class="badge badge-danger notification-icon">{{$countUnread}}</span>
+        <span class="badge badge-danger orange-bg notification-icon">{{$countUnread}}</span>
         <i class="fa fa-angle-down"></i>
     </a>
     <ul class="dropdown-menu overflow-auto notify-items dropdown-container dropdown-menu-right dropdown-large">

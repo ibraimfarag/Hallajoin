@@ -77,27 +77,27 @@
         {!! setting_item_with_lang_raw('footer_scripts') !!}
     @endif
 
-        <!-- WhatsApp Icon -->
-        <div class="whatsapp-icon" onclick="openWhatsApp()">
-            <i class="fab fa-whatsapp fa-2x"></i>
-        </div>
-    
-        <!-- Scripts -->
-        <script>
-            function openWhatsApp() {
-                var phoneNumber = "+971555506597"; // Replace with your WhatsApp phone number
-                var message = "Hello, I would like to inquire about..."; // Replace with your predefined message
-                var url = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(message);
-                window.open(url, "_blank");
-            }
-        </script>
+    <!-- WhatsApp Icon -->
+    <div class="whatsapp-icon" onclick="openWhatsApp()">
+        <i class="fab fa-whatsapp fa-2x"></i>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        function openWhatsApp() {
+            var phoneNumber = "+971555506597"; // Replace with your WhatsApp phone number
+            var message = "Hello, I would like to inquire about..."; // Replace with your predefined message
+            var url = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(message);
+            window.open(url, "_blank");
+        }
+    </script>
 
     <script>
         $(document).ready(function() {
             var header = $("#bravo-header");
             var headerOffset = header.offset().top;
             var searchResults = $(".search-results");
-    
+
             $(window).scroll(function() {
                 if ($(window).scrollTop() > headerOffset) {
                     header.addClass("fixed-header");
@@ -109,7 +109,7 @@
             });
         });
     </script>
-    
+
     <script>
         $(document).ready(function() {
             var inputEl = $('.search-input');
@@ -155,7 +155,8 @@
                                     var imageEl = $('<img>')
                                         .addClass('tour-image')
                                         .attr('src', tour
-                                        .image_url) // Set the source attribute to the tour's image URL
+                                            .image_url
+                                        ) // Set the source attribute to the tour's image URL
                                         .css({
                                             width: '70px', // Set image width to 70px
                                             borderRadius: '11px' // Set border radius to 11px
@@ -163,7 +164,8 @@
                                         });
 
                                     imageColumnEl.append(
-                                    imageEl); // Append the image element to the image column
+                                        imageEl
+                                    ); // Append the image element to the image column
 
                                     // Create a div for the text column
                                     var textColumnEl = $('<div>')
@@ -180,9 +182,9 @@
                                     var locationEl = $('<div>')
                                         .addClass('tour-location')
                                         .html(
-                                            '<i class="fas fa-flag"></i> United Emirates,' +
+                                            '<i class="fas fa-flag"></i> United Emirates' +
                                             tour.location
-                                            ) // Add UAE flag icon before location
+                                        ) // Add UAE flag icon before location
                                         .css({
                                             fontSize: '14px',
                                             color: '#555'
@@ -192,9 +194,11 @@
                                     textColumnEl.append(locationEl);
 
                                     resultEl.append(
-                                    imageColumnEl); // Append the image column to the result element
+                                        imageColumnEl
+                                    ); // Append the image column to the result element
                                     resultEl.append(
-                                    textColumnEl); // Append the text column to the result element
+                                        textColumnEl
+                                    ); // Append the text column to the result element
 
                                     resultsContainer.append(resultEl);
 
@@ -233,26 +237,44 @@
                 responsive: {
                     0: {
                         items: 1,
-                        nav: true
                     },
                     600: {
                         items: 3,
-                        nav: false
                     },
                     1000: {
                         items: 5,
-                        nav: true,
-                        loop: false
                     }
                 }
             });
         });
-
-
-
     </script>
 
 
+    <script>
+        $(document).ready(function() {
+            $(".bravo-box-category-tour").owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: true,
+                responsiveClass: true,
+
+                // autoplay: true,
+                // autoplayTimeout: 5000,
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    600: {
+                        items: 3
+                    },
+                    1000: {
+                        items: 5
+
+                    }
+                }
+            });
+        });
+    </script>
 
 
 </body>
