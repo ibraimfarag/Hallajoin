@@ -9615,4 +9615,8 @@ ol, ul {
         max-width:none !important;
     }
 
+    .bravo_wrap .page-template-content .bravo-list-locations.style_4 .owl-nav .owl-next, .bravo_wrap .page-template-content .bravo-box-category-tour .owl-nav .owl-next {
+        display: none;
+    }
+
 }
