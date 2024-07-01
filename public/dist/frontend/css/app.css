@@ -9579,7 +9579,7 @@ ol, ul {
 
 
     .container .item {
-        width: 50%;
+        width: 100%;
         margin-right: 10px;
     }
     .container .item-right .num {
