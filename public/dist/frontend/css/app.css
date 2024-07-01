@@ -9636,3 +9636,6 @@ ol, ul {
         display: none;
     }
 }
+.bravo_gallery .play-icon{
+    display: none;
+}
