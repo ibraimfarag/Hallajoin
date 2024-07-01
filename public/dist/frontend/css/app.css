@@ -8265,7 +8265,8 @@ ol, ul {
 
 .bravo_wrap .bravo_header .content {
     align-items: flex-end;
-        display: flex
+    display: flex;
+    margin-bottom: 10px;
 }
 
 .bravo_wrap .bravo_header .content .header-left {
@@ -9435,12 +9436,13 @@ ol, ul {
 .orange-bg {
     background-color: #f5793b !important;
 }
-@media only screen and (min-device-width: 844px) {
-.header-left img {
 
-    width: 150px;
-    padding-bottom: 0;
-}
+@media only screen and (min-device-width: 844px) {
+    .header-left img {
+
+        width: 150px;
+        padding-bottom: 0;
+    }
 }
 
 .header-center-mobile {
@@ -9500,17 +9502,20 @@ ol, ul {
 .bravo-box-category-tour .owl-carousel .owl-stage-outer {
     overflow: hidden;
 }
+
 .bravo-box-category-tour .destination-item {
-    width: 100%; /* Ensure the items take full width */
+    width: 100%;
+    /* Ensure the items take full width */
 }
 
 
 
-@media only screen and (min-device-width: 300px) and (max-device-width: 844px)  {
+@media only screen and (min-device-width: 300px) and (max-device-width: 844px) {
 
     .header-left img {
         width: 108px !important;
     }
+
     .header-center {
         display: none;
     }
@@ -9548,7 +9553,7 @@ ol, ul {
     .testimonial-container {
 
         min-height: 70vh;
-        }
+    }
 
     .bravo_wrap .page-template-content .bravo-list-tour .owl-nav .owl-next {
         display: none
@@ -9591,8 +9596,9 @@ ol, ul {
         width: 100%;
         margin-right: 10px;
     }
+
     .container .item-right .num {
-        font-size: 30px  !important;
+        font-size: 30px !important;
         text-align: center;
         color: #111;
     }
@@ -9603,6 +9609,7 @@ ol, ul {
         padding: 34px 0px 14px 9px !important;
         border-left: 3px dotted #999;
     }
+
     .container .item-left .title {
         color: #111;
         font-size: 16px !important;
@@ -9621,7 +9628,7 @@ ol, ul {
     .sce .col-5 {
         -ms-flex: none !important;
         flex: none !important;
-        max-width:none !important;
+        max-width: none !important;
     }
 
     .bravo_wrap .page-template-content .bravo-list-locations.style_4 .owl-nav .owl-next, .bravo_wrap .page-template-content .bravo-box-category-tour .owl-nav .owl-next {
@@ -9632,10 +9639,12 @@ ol, ul {
         /* border-bottom: 1px solid #eaeef3; */
         padding-top: 0;
     }
-    .bravo_gallery .play-icon{
+
+    .bravo_gallery .play-icon {
         display: none;
     }
 }
-.bravo_gallery .play-icon{
+
+.bravo_gallery .play-icon {
     display: none;
 }
