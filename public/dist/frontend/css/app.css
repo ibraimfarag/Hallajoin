@@ -9509,7 +9509,7 @@ ol, ul {
 @media only screen and (min-device-width: 300px) and (max-device-width: 844px)  {
 
     .header-left img {
-        width: 158px !important;
+        width: 108px !important;
     }
     .header-center {
         display: none;
