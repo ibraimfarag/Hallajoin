@@ -12,7 +12,7 @@
                     @endphp
                     <h3 class="service-name"><a href="{{ $service->getDetailUrl() }}">{!! clean($service_translation->title) !!}</a></h3>
                     @if ($service_translation->address)
-                        <p class="address"><i class="fa fa-map-marker"></i>
+                        <p class="address"><i class="fa fa-map-marker orange"></i>
                             {{ $service_translation->address }}
                         </p>
                     @endif
@@ -233,7 +233,7 @@
                         </div>
                         <div class="col-5">
                             <div class="icon">
-                                <i class="fa fa-map-marker"></i>
+                                <i class="fa fa-map-marker "></i>
                             </div>
                             @if ($service_translation->address)
                                 <p> {{ $service_translation->address }}</p>

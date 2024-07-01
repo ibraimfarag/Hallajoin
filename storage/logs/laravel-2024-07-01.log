@@ -1,0 +1,34 @@
+[2024-07-01 09:54:18] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "La Perle Dragone Show (Bronze) was updated to Publish by System Admin",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/avatars\/1.png\" alt=\"System Admin\">",
+    "link": "https:\/\/hallajoin\/admin\/module\/tour?id=396",
+    "idNotification": "0b586a61-3a86-4a93-9db2-9a63bd55be17",
+    "socket": null
+}  
+[2024-07-01 09:54:18] production.INFO: Broadcasting [App\Events\PusherNotificationPrivateEvent] on channels [user-channel-8] with payload:
+{
+    "message": "La Perle Dragone Show (Bronze) was updated to Publish by System Admin",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/avatars\/8.png\" alt=\"Karem Ahmed\">",
+    "link": "https:\/\/hallajoin\/user\/tour?id=396",
+    "idNotification": "d2108b57-1f03-4591-9d89-21b29f48cc65",
+    "userId": 8,
+    "socket": null
+}  
+[2024-07-01 09:56:34] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "La Perle Dragone Show (Bronze) was updated to Publish by System Admin",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/avatars\/1.png\" alt=\"System Admin\">",
+    "link": "https:\/\/hallajoin\/admin\/module\/tour?id=396",
+    "idNotification": "9922cb19-e081-49e7-846c-2efac0034dd8",
+    "socket": null
+}  
+[2024-07-01 09:56:34] production.INFO: Broadcasting [App\Events\PusherNotificationPrivateEvent] on channels [user-channel-8] with payload:
+{
+    "message": "La Perle Dragone Show (Bronze) was updated to Publish by System Admin",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/avatars\/8.png\" alt=\"Karem Ahmed\">",
+    "link": "https:\/\/hallajoin\/user\/tour?id=396",
+    "idNotification": "864557ae-02e1-437f-b3ee-8db42115a204",
+    "userId": 8,
+    "socket": null
+}  
