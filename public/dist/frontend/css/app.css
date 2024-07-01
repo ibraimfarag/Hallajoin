@@ -9632,5 +9632,7 @@ ol, ul {
         /* border-bottom: 1px solid #eaeef3; */
         padding-top: 0;
     }
-
+    .bravo_gallery .play-icon{
+        display: none;
+    }
 }
