@@ -140,7 +140,7 @@
 
         @media (min-width: 768px) {
             .carousel-inner .carousel-item {
-                display: flex;
+                /* display: flex; */
                 flex-wrap: wrap;
                 justify-content: center;
             }
