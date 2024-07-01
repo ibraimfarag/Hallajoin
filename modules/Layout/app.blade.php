@@ -250,75 +250,29 @@
     </script>
 
 
-    {{-- <script>
-        $(document).ready(function() {
-            $(".bravo-box-category-tour").owlCarousel({
-                loop: true,
-                margin: 10,
-                nav: true,
-                responsiveClass: true,
-
-                // autoplay: true,
-                // autoplayTimeout: 5000,
-                responsive: {
-                    0: {
-                        items: 1
-                    },
-                    600: {
-                        items: 3
-                    },
-                    1000: {
-                        items: 5
-
-                    }
-                }
-            });
-        });
-    </script> --}}
 
 
     <script>
-        $(document).ready(function() {
-            var items = $('.bravo-box-category-tour .destination-item').length;
-
-            if (items > 5) { // Adjust based on the maximum number of items you show at once
-                $(".bravo-box-category-tour .list-item").owlCarousel({
-                    loop: true,
-                    margin: 10,
-                    nav: true,
-                    responsiveClass: true,
-                    responsive: {
-                        0: {
-                            items: 1
-                        },
-                        600: {
-                            items: 3
-                        },
-                        1000: {
-                            items: 5
-                        }
-                    }
-                });
-            } else {
-                $(".bravo-box-category-tour .list-item").owlCarousel({
-                    loop: false, // Disable loop for fewer items
-                    margin: 10,
-                    nav: true,
-                    responsiveClass: true,
-                    responsive: {
-                        0: {
-                            items: 1
-                        },
-                        600: {
-                            items: 3
-                        },
-                        1000: {
-                            items: items // Show all items without looping
-                        }
-                    }
-                });
+    $(document).ready(function() {
+    $(".bravo-box-category-tour ").owlCarousel({
+        loop: true,
+        margin: 10,
+        nav: true,
+        responsiveClass: true,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 3
+            },
+            1000: {
+                items: 5
             }
-        });
+        }
+    });
+});
+
     </script>
 
     <script>
