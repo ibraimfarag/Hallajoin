@@ -8264,8 +8264,8 @@ ol, ul {
 }
 
 .bravo_wrap .bravo_header .content {
-    align-items: center;
-    display: flex
+    align-items: flex-end;
+        display: flex
 }
 
 .bravo_wrap .bravo_header .content .header-left {
@@ -9438,8 +9438,8 @@ ol, ul {
 @media only screen and (min-device-width: 844px) {
 .header-left img {
 
-    width: 228px;
-    padding-bottom: 15px;
+    width: 150px;
+    padding-bottom: 0;
 }
 }
 
