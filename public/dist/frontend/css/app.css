@@ -3066,7 +3066,7 @@ body .daterangepicker .full-book-event:before {
 
     .bravo_wrap .page-template-content .bravo-list-locations .list-item .destination-item .image .content .title,
     .bravo-box-category-tour .list-item .destination-item .image .content .title {
-        font-size: 22px
+        font-size: 16px
     }
 }
 
@@ -9435,13 +9435,13 @@ ol, ul {
 .orange-bg {
     background-color: #f5793b !important;
 }
-
+@media only screen and (min-device-width: 844px) {
 .header-left img {
 
     width: 228px;
     padding-bottom: 15px;
 }
-
+}
 
 .header-center-mobile {
     display: none;
@@ -9482,26 +9482,35 @@ ol, ul {
 
 
 .search-results-mobile {
-    isplay: none;
+    display: none;
     position: absolute;
     top: 100%;
     /* left: 0; */
-    right: 0;
+    right: -5px;
     max-height: 50vh;
     overflow-y: auto;
     background-color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     max-width: 200vw;
-    width: 81vw;
-    top: 12vh;
+    width: 79vw;
+    top: 18vh;
+}
+
+.bravo-box-category-tour .owl-carousel .owl-stage-outer {
+    overflow: hidden;
+}
+.bravo-box-category-tour .destination-item {
+    width: 100%; /* Ensure the items take full width */
 }
 
 
 
+@media only screen and (min-device-width: 300px) and (max-device-width: 844px)  {
 
-@media only screen and (min-device-width: 390px) and (max-device-width: 844px) and (-webkit-min-device-pixel-ratio: 3) {
-
+    .header-left img {
+        width: 158px !important;
+    }
     .header-center {
         display: none;
     }
@@ -9538,8 +9547,8 @@ ol, ul {
 
     .testimonial-container {
 
-        height: 50vh;
-    }
+        min-height: 70vh;
+        }
 
     .bravo_wrap .page-template-content .bravo-list-tour .owl-nav .owl-next {
         display: none
@@ -9617,6 +9626,11 @@ ol, ul {
 
     .bravo_wrap .page-template-content .bravo-list-locations.style_4 .owl-nav .owl-next, .bravo_wrap .page-template-content .bravo-box-category-tour .owl-nav .owl-next {
         display: none;
+    }
+
+    .bravo_wrap .bravo_header {
+        /* border-bottom: 1px solid #eaeef3; */
+        padding-top: 0;
     }
 
 }
