@@ -31,6 +31,18 @@
                 <div class="search-results" ></div>
                 
             </div>
+            <div class="header-center-mobile">
+                <button class="search-toggle-btn" id="search-toggle-btn">
+                    <i class="fa fa-search"></i>
+                </button>
+                <div class="typing-placeholder-mobile" id="typing-placeholder-mobile">
+                    <input type="text" name="query" class="search-input-mobile" placeholder="Search for tours...">
+                    <span class="placeholder-text-mobile"></span>
+                </div>
+                <div class="search-results-mobile"></div>
+            </div>
+
+            
             <div class="bravo_topbar">
             <div class="content">
                

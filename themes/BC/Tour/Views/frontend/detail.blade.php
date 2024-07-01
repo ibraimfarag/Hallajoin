@@ -48,29 +48,19 @@
                     ?>
                     <div class="service-review tour-review-{{$score_total}}">
                         <div class="list-star">
-                            <ul class="booking-item-rating-stars">
-                                <li><i class="fa fa-star orange-o"></i></li>
-                                <li><i class="fa fa-star orange-o"></i></li>
-                                <li><i class="fa fa-star orange-o"></i></li>
-                                <li><i class="fa fa-star orange-o"></i></li>
-                                <li><i class="fa fa-star orange-o"></i></li>
-                            </ul>
-                            <div class="booking-item-rating-stars-active" style="width: {{  $score_total * 2 * 10 ?? 0  }}%">
-                                <ul class="booking-item-rating-stars">
-                                    <li><i class="fa fa-star orange"></i></li>
-                                    <li><i class="fa fa-star orange"></i></li>
-                                    <li><i class="fa fa-star orange"></i></li>
-                                    <li><i class="fa fa-star orange"></i></li>
-                                    <li><i class="fa fa-star orange"></i></li>
-                                </ul>
+                            <div class="single-star-rating">
+                                <i class="fa fa-star orange"></i>
+                                <span class="score-number">{{ $score_total }}</span>
                             </div>
                         </div>
-                        <span class="review">
-                        @if($reviewData['total_review'] > 1)
-                                {{ __(":number Reviews",["number"=>$reviewData['total_review'] ]) }}
+
+                        <span class="review">(
+                            @if($reviewData['total_review'] > 1)
+                            {{ __(":number",["number"=>$reviewData['total_review'] ]) }}
                             @else
-                                {{ __(":number Review",["number"=>$reviewData['total_review'] ]) }}
+                            {{ __(":number",["number"=>$reviewData['total_review'] ]) }}
                             @endif
+                            )
                     </span>
                     </div>
                     @endif

@@ -277,7 +277,7 @@
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .location i {
     font-size: 11px;
     position: relative;
-    color:#f5793b;
+    color: #f5793b;
 }
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .category {
@@ -442,8 +442,9 @@
     position: relative;
     width: 57.7vw;
     margin: 50px 20.9%;
-    border-radius: 30px; /* Adjust the value as needed */
-  
+    border-radius: 30px;
+    /* Adjust the value as needed */
+
 }
 
 .bravo_wrap .bravo_detail_tour .bravo_banner .container {
@@ -469,8 +470,20 @@
 
 @media (max-width:766px) {
     .bravo_wrap .bravo_detail_tour .bravo_banner .bravo_gallery {
-        height: 200px
+        height: 360px
     }
+
+    .bravo_wrap .bravo_detail_tour .bravo_banner {
+        width: 87.7vw;
+        margin: 50px 5.9%;
+        border-radius: 30px;
+
+    }
+
+    .fotorama__wrap--css3 .fotorama__html, .fotorama__wrap--css3 .fotorama__stage .fotorama__img {
+        border-radius: 15px !important;
+    }
+
 }
 
 .bravo_wrap .bravo_detail_tour .bravo_banner .bravo_gallery .modal .modal-dialog {

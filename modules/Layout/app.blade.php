@@ -276,6 +276,92 @@
         });
     </script>
 
+<script>
+    $(document).ready(function() {
+        var inputEl = $('.search-input-mobile');
+        var resultsContainer = $('.search-results-mobile');
+
+        $('#search-toggle-btn').on('click', function() {
+            var searchInput = $('#typing-placeholder-mobile');
+            if (searchInput.css('display') === 'none') {
+                searchInput.css('display', 'block');
+            } else {
+                searchInput.css('display', 'none');
+                resultsContainer.hide();
+            }
+        });
+
+        inputEl.on('input', function() {
+            var query = $(this).val().trim();
+
+            // Clear previous results
+            resultsContainer.html('');
+
+            if (query.length > 0) {
+                $.ajax({
+                    url: '/searchTours',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        query: query
+                    }),
+                    success: function(response) {
+                        if (response.tours.length > 0) {
+                            response.tours.forEach(function(tour) {
+                                var resultEl = $('<a>')
+                                    .addClass('result-item')
+                                    .attr('href', '/tour/' + tour.slug);
+
+                                var imageColumnEl = $('<div>')
+                                    .addClass('image-column');
+
+                                var imageEl = $('<img>')
+                                    .addClass('tour-image')
+                                    .attr('src', tour.image_url);
+
+                                imageColumnEl.append(imageEl);
+
+                                var textColumnEl = $('<div>')
+                                    .addClass('text-column');
+
+                                var titleEl = $('<div>')
+                                    .addClass('tour-title')
+                                    .text(tour.title);
+
+                                var locationEl = $('<div>')
+                                    .addClass('tour-location')
+                                    .html('<i class="fas fa-flag"></i> ' + tour.location);
+
+                                textColumnEl.append(titleEl);
+                                textColumnEl.append(locationEl);
+
+                                resultEl.append(imageColumnEl);
+                                resultEl.append(textColumnEl);
+
+                                resultsContainer.append(resultEl);
+                            });
+                            resultsContainer.show();
+                        } else {
+                            resultsContainer.hide();
+                        }
+                    },
+                    error: function() {
+                        resultsContainer.hide();
+                    }
+                });
+            } else {
+                resultsContainer.hide();
+            }
+        });
+
+        $(document).on('click', function(event) {
+            if (!resultsContainer.is(event.target) && !inputEl.is(event.target) && resultsContainer.has(event.target).length === 0) {
+                resultsContainer.hide();
+            }
+        });
+    });
+</script>
+
 
 </body>
 

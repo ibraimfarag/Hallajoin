@@ -117,7 +117,7 @@
         </div>
         <div class="g-price">
             <div class="prefix">
-                <i class="icofont-flash"></i>
+                <i class="icofont-flash orange"></i>
                 <span class="fr_text">{{__("from")}}</span>
             </div>
             <div class="price">

@@ -1,76 +1,62 @@
 @if (!empty($reviews))
-
-<div id="testimonial-carousel" class="bravo-testimonial carousel slide" data-ride="carousel" data-interval="3000">
-    <div class="container">
+    <div id="testimonial-carousel" class="bravo-testimonial carousel slide" data-ride="carousel" data-interval="3000">
+        <div class="container">
             <h3>{{ $title }}</h3>
             <div class="carousel-inner">
-                @foreach (array_chunk($reviews, 3) as $index => $reviewGroup)
+                @foreach ($reviews as $index => $review)
                     <div class="carousel-item{{ $index == 0 ? ' active' : '' }}">
                         <div class="row justify-content-center">
-                            @foreach ($reviewGroup as $review)
-                                <?php
-                                $avatar_url = get_file_url($review['reviewer']['avatar_id'], 'full') ?? 'https://img.freepik.com/premium-vector/young-smiling-man-avatar-man-with-brown-beard-mustache-hair-wearing-yellow-sweater-sweatshirt-3d-vector-people-character-illustration-cartoon-minimal-style_365941-860.jpg';
-                                $tour_image_url = get_file_url($review['tour']['banner_image_id'], 'full') ?? 'https://img.freepik.com/premium-vector/young-smiling-man-avatar-man-with-brown-beard-mustache-hair-wearing-yellow-sweater-sweatshirt-3d-vector-people-character-illustration-cartoon-minimal-style_365941-860.jpg';
-                                $tour_link = '/tour/' . $review['tour']['slug'];
-                                ?>
-                                <div class="col-md-4">
-                                    <div class="testimonial-container">
-                                        <div class="testimonial-header"
-                                            style="background-image: url('{{ $tour_image_url }}'); position: relative; padding: 20px;">
-                                            <h6>{{ $review['tour']['title'] }}</h6>
-                                            @if (!empty($review['rate_number']) && $review['rate_number'] >= 1)
-                                                <div class="rate-number">
-                                                    <span> <i class="fa fa-star orange"></i>
-                                                        {{ $review['rate_number'] }}
-                                                        ({{ $review['tour']['reviews_count'] }})
-                                                    </span>
-                                                </div>
-                                            @endif
-                                            <a href="{{ $tour_link }}" class="tour-link">
-                                                <i class="fa fa-arrow-right"></i>
-                                            </a>
-                                        </div>
-                                        <div class="item has-matchHeight text-center justify-content-center">
-
-
-                                            <div class="authoor justify-content-center">
-                                                <div class="author justify-content-center">
-                                                    <div class="col">
-                                                        <div class="row justify-content-center">
-                                                            <img src="{{ $avatar_url }}"
-                                                                alt="{{ $review['reviewer']['name'] }}"
-                                                                class="rounded-circle">
-                                                        </div>
-                                                        <div class="row justify-content-center">
-                                                            <h4>{{ $review['reviewer']['name'] }}</h4>
-                                                        </div>
-                                                        <div class="row justify-content-center">
-                                                            <p>{{ $review['date'] }}</p>
-                                                        </div>
-                                                        <div class="row justify-content-center">
-                                                            @if (!empty($review['rate_number']) && $review['rate_number'] >= 1)
-                                                                <div class="star">
-                                                                    @for ($i = 0; $i < $review['rate_number']; $i++)
-                                                                        <i class="fa fa-star orange"></i>
-                                                                    @endfor
-                                                                    {{-- <span
-                                                                        class="rating">{{ $review['rate_number'] }}</span> --}}
-                                                                </div>
-                                                            @endif
-                                                        </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="testimonial-container">
+                                    <?php
+                                    $avatar_url = get_file_url($review['reviewer']['avatar_id'], 'full') ?? 'https://img.freepik.com/premium-vector/young-smiling-man-avatar-man-with-brown-beard-mustache-hair-wearing-yellow-sweater-sweatshirt-3d-vector-people-character-illustration-cartoon-minimal-style_365941-860.jpg';
+                                    $tour_image_url = get_file_url($review['tour']['banner_image_id'], 'full') ?? 'https://img.freepik.com/premium-vector/young-smiling-man-avatar-man-with-brown-beard-mustache-hair-wearing-yellow-sweater-sweatshirt-3d-vector-people-character-illustration-cartoon-minimal-style_365941-860.jpg';
+                                    $tour_link = '/tour/' . $review['tour']['slug'];
+                                    ?>
+                                    <div class="testimonial-header" style="background-image: url('{{ $tour_image_url }}'); position: relative; padding: 20px;">
+                                        <h6>{{ $review['tour']['title'] }}</h6>
+                                        @if (!empty($review['rate_number']) && $review['rate_number'] >= 1)
+                                            <div class="rate-number">
+                                                <span> <i class="fa fa-star orange"></i>
+                                                    {{ $review['rate_number'] }}
+                                                    ({{ $review['tour']['reviews_count'] }})
+                                                </span>
+                                            </div>
+                                        @endif
+                                        <a href="{{ $tour_link }}" class="tour-link">
+                                            <i class="fa fa-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                    <div class="item has-matchHeight text-center justify-content-center">
+                                        <div class="authoor justify-content-center">
+                                            <div class="author justify-content-center">
+                                                <div class="col">
+                                                    <div class="row justify-content-center">
+                                                        <img src="{{ $avatar_url }}" alt="{{ $review['reviewer']['name'] }}" class="rounded-circle">
+                                                    </div>
+                                                    <div class="row justify-content-center">
+                                                        <h4>{{ $review['reviewer']['name'] }}</h4>
+                                                    </div>
+                                                    <div class="row justify-content-center">
+                                                        <p>{{ $review['date'] }}</p>
+                                                    </div>
+                                                    <div class="row justify-content-center">
+                                                        @if (!empty($review['rate_number']) && $review['rate_number'] >= 1)
+                                                            <div class="star">
+                                                                @for ($i = 0; $i < $review['rate_number']; $i++)
+                                                                    <i class="fa fa-star orange"></i>
+                                                                @endfor
+                                                            </div>
+                                                        @endif
                                                     </div>
                                                 </div>
-                                                <i class="fa fa-quote-left"
-                                                    style="font-size: 25px; color: #8080807d;"></i>
-
-                                                <p>{{ $review['content'] }}</p>
-
-
                                             </div>
+                                            <i class="fa fa-quote-left" style="font-size: 25px; color: #8080807d;"></i>
+                                            <p>{{ $review['content'] }}</p>
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
+                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -83,13 +69,12 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
             </a>
+            <ol class="carousel-indicators">
+                @foreach ($reviews as $index => $indicator)
+                    <li data-target="#testimonial-carousel" data-slide-to="{{ $index }}" class="{{ $index == 0 ? 'active' : '' }}"></li>
+                @endforeach
+            </ol>
         </div>
-        <ol class="carousel-indicators">
-            @foreach (range(0, count(array_chunk($reviews, 3)) - 1) as $index => $indicator)
-                <li data-target="#testimonial-carousel" data-slide-to="{{ $index }}"
-                    class="{{ $index == 0 ? 'active' : '' }}"></li>
-            @endforeach
-        </ol>
     </div>
 
     <style>
@@ -152,6 +137,25 @@
             text-decoration: none;
             z-index: 99999;
         }
-    </style>
 
+        @media (min-width: 768px) {
+            .carousel-inner .carousel-item {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .carousel-inner .carousel-item .col-md-4 {
+                display: block;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .carousel-inner .carousel-item .col-md-4 {
+                display: none;
+            }
+            .carousel-inner .carousel-item .col-sm-12 {
+                display: block;
+            }
+        }
+    </style>
 @endif
