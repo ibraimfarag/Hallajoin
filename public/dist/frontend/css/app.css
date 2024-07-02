@@ -9636,6 +9636,10 @@ ol, ul {
     .bravo_wrap .page-template-content .bravo-list-locations.style_4 .owl-nav .owl-next, .bravo_wrap .page-template-content .bravo-box-category-tour .owl-nav .owl-next {
         display: none;
     }
+    .bravo_wrap .page-template-content .bravo-list-locations.style_4 .owl-nav .owl-prev, .bravo_wrap .page-template-content .bravo-box-category-tour .owl-nav .owl-prev {
+        
+        display: none;
+    }
 
     .bravo_wrap .bravo_header {
         /* border-bottom: 1px solid #eaeef3; */
