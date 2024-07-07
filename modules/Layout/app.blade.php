@@ -261,13 +261,13 @@
         responsiveClass: true,
         responsive: {
             0: {
-                items: 1
+                items: 5
             },
             600: {
-                items: 3
+                items: 9
             },
             1000: {
-                items: 5
+                items: 10
             }
         }
     });

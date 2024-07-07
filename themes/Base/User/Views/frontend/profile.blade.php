@@ -65,14 +65,15 @@
                         <div class="input-group">
                             <span class="input-group-btn">
                                 <span class="btn btn-default btn-file">
-                                    {{__("Browse")}}… <input type="file">
+                                    {{ __("Browse") }}… <input type="file">
                                 </span>
                             </span>
-                            <input type="text" data-error="{{__("Error upload...")}}" data-loading="{{__("Loading...")}}" class="form-control text-view" readonly value="{{ get_file_url( old('avatar_id',$dataUser->avatar_id) ) ?? $dataUser->getAvatarUrl()?? __("No Image")}}">
+                            <input type="text" data-error="{{ __("Error upload...") }}" data-loading="{{ __("Loading...") }}" class="form-control text-view" readonly value="{{ get_file_url(old('avatar_id', $dataUser->avatar_id)) ?? $dataUser->getAvatarUrl() ?? __("No Image") }}">
                         </div>
-                        <input type="hidden" class="form-control" name="avatar_id" value="{{ old('avatar_id',$dataUser->avatar_id)?? ""}}">
-                        <img class="image-demo" src="{{ get_file_url( old('avatar_id',$dataUser->avatar_id) ) ??  $dataUser->getAvatarUrl() ?? ""}}"/>
-                    </div>
+                        <input type="hidden" class="form-control" name="avatar_id" value="{{ old('avatar_id', $dataUser->avatar_id) ?? "" }}">
+                        <img class="image-demo" src="{{ get_file_url(old('avatar_id', $dataUser->avatar_id)) ?? $dataUser->getAvatarUrl() ?? "" }}"/>
+  <!-- Form to delete avatar -->
+                   </div>
                 </div>
             </div>
             <div class="col-md-6">
@@ -121,6 +122,11 @@
             </div>
         </div>
     </form>
+    <form method="POST" action="{{ route('user.avatar.delete') }}">
+        @csrf
+        <input type="hidden" name="user_id" value="{{ $dataUser->id }}">
+        <button type="submit" class="btn btn-danger">{{ __("Delete Image") }}</button>
+    </form> 
     @if(!empty(setting_item('user_enable_permanently_delete')) and !is_admin())
     <hr>
     <div class="row">
@@ -160,4 +166,5 @@
     </div>
     @endif
 
+    
 @endsection

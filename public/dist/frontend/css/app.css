@@ -2046,7 +2046,7 @@ body .daterangepicker .full-book-event:before {
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .info .duration {
     align-items: center;
     color: #5e6d77;
-    flex: auto;
+    /* flex: auto; */
     position: relative;
     top: 5px
 }
@@ -2058,8 +2058,7 @@ body .daterangepicker .full-book-event:before {
 
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .info .g-price {
     flex: auto;
-    text-align: right
-}
+    text-align: left}
 
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .info .g-price .prefix {
     color: #5e6d77;
@@ -2073,7 +2072,8 @@ body .daterangepicker .full-book-event:before {
 
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .info .g-price .price {
     display: inline-block;
-    position: relative
+    position: relative;
+    width: 190px;
 }
 
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .info .g-price .price .text-price {
@@ -2081,15 +2081,18 @@ body .daterangepicker .full-book-event:before {
     font-size: 18px;
     font-weight: 500
 }
-
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+ }
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .info .g-price .price .onsale {
-    color: #c03 !important;
+    color: gray !important;
     font-size: 14px;
     font-weight: 400;
     position: absolute;
-    right: 0;
+    left: -10px;
     text-decoration: line-through;
-    top: -15px
+    top: -20px;
 }
 
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour.infobox-item {
@@ -3056,7 +3059,7 @@ body .daterangepicker .full-book-event:before {
     color: #fff;
     font-size: 18px;
     font-weight: 500;
-    text-transform: uppercase;
+    text-transform: capitalize;
     transition: all .3s;
     white-space: nowrap;
     margin-bottom: -5px
@@ -3246,6 +3249,7 @@ body .daterangepicker .full-book-event:before {
     font-size: 28px;
     font-weight: 500;
     margin-bottom: 15px;
+    text-transform: uppercase;
 }
 
 @media (max-width:766px) {
@@ -3276,7 +3280,7 @@ body .daterangepicker .full-book-event:before {
     font-weight: 500;
     margin-bottom: -5px;
     padding: 5px 15px;
-    text-transform: uppercase;
+    text-transform: capitalize;
     transition: all .3s;
     white-space: nowrap;
     background: #00000085;
@@ -3399,7 +3403,8 @@ body .daterangepicker .full-book-event:before {
 }
 
 .bravo_wrap .page-template-content .bravo-box-category-tour .title {
-    font-size: 28px
+    font-size: 28px;
+    text-transform: uppercase;
 }
 
 @media (max-width:766px) {
@@ -8881,6 +8886,15 @@ ol, ul {
 .bravo_wrap .bravo_footer .main-footer {
     margin: 20px 0
 }
+.text-price-discount_percent{
+    color: #fff;
+    font-size: 12px;
+    background: #3a8036;
+    padding: 5px;
+    border-radius: 7px;
+    margin: 0 10px;
+
+}
 
 .bravo_wrap .bravo_footer .main-footer .nav-footer .title {
     font-weight: 500;
@@ -9395,7 +9409,7 @@ ol, ul {
 }
 
 .star-red {
-    color: #b72424e0 !important;
+    color: #f5793b  !important;
 }
 
 .bravo-testimonial .carousel-indicators {

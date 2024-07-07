@@ -24,6 +24,8 @@ use Modules\Booking\Models\Booking;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Modules\Booking\Models\Enquiry;
 use Illuminate\Support\Str;
+use App\User;
+use Illuminate\Support\Facades\File;
 
 class UserController extends FrontendController
 {
@@ -87,6 +89,7 @@ class UserController extends FrontendController
         return view('User::frontend.profile', $data);
     }
 
+
     public function profileUpdate(Request $request){
         if(is_demo_mode()){
             return back()->with('error',"Demo mode: disabled");
@@ -124,6 +127,26 @@ class UserController extends FrontendController
         $user->user_name = Str::slug( $request->input('user_name') ,"_");
         $user->save();
         return redirect()->back()->with('success', __('Update successfully'));
+    }
+
+    public function deleteAvatar(Request $request)
+    {
+
+        $userr = User::find(Auth::user());
+        $user = Auth::user();
+
+        if ($user) {
+            $avatarPath = public_path('avatars/' . $user->id . '.png');
+        if (File::exists($avatarPath)) {
+            File::delete($avatarPath);
+        }
+        // $newAvatarUrl =  $userr->generateAvatar($user->first_name);
+
+        return redirect()->back()->with('success', __('Avatar deleted and new one generated.'));
+
+        }
+
+        return response()->json(['success' => false]);
     }
 
     public function bookingHistory(Request $request)

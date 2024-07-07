@@ -200,6 +200,22 @@
             return $this->generateAvatar($this->first_name );
 
         }
+
+        public function deleteAndGenerateAvatar()
+        {
+            // Define the path to the avatar
+            $avatarPath = public_path('avatars/' . $this->id . '.png');
+            
+            // Delete the avatar if it exists
+            if (File::exists($avatarPath)) {
+                File::delete($avatarPath);
+            }
+    
+            // Generate a new avatar
+            return $this->generateAvatar($this->first_name);
+        }
+
+        
         private function generateAvatar($name)
         {
 

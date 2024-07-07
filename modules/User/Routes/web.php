@@ -9,6 +9,8 @@ Route::group(['prefix'=>'user','middleware' => ['auth','verified']],function(){
     Route::get('/permanently_delete','UserController@permanentlyDelete')->name("user.permanently.delete");
     Route::get('/profile','UserController@profile')->name("user.profile.index");
     Route::post('/profile','UserController@profileUpdate')->name("user.profile.update");
+    Route::post('/user/avatar/delete','UserController@deleteAvatar')->name("user.avatar.delete");
+
     Route::get('/profile/change-password','PasswordController@changePassword')->name("user.change_password");
     Route::post('/profile/change-password','PasswordController@changePasswordUpdate')->name("user.change_password.update");
     Route::get('/booking-history','UserController@bookingHistory')->name("user.booking_history");

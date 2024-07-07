@@ -1,6 +1,6 @@
 @if(!is_api())
 	<div class="bravo_footer">
-		<div class="mailchimp">
+		{{-- <div class="mailchimp">
 			<div class="container">
 				<div class="row">
 					<div class="col-xs-12 col-lg-10 col-lg-offset-1">
@@ -33,7 +33,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> --}}
 		<div class="main-footer">
 			<div class="container">
 				<div class="row">

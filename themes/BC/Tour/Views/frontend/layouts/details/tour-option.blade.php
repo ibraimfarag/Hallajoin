@@ -13,7 +13,7 @@
 
         @if($parent_slug === 'option-tour')
             <div class="g-attributes {{$parent_slug}} attr-{{$attribute['parent']->id}}">
-                <h3>{{ $translate_attribute->name }}</h3>
+                {{-- <h3>{{ $translate_attribute->name }}</h3> --}}
                 @php $terms = $attribute['child'] @endphp
                 <div class="list-attributes">
                     @foreach($terms as $term)
