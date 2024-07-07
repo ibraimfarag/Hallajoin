@@ -125,7 +125,7 @@
     <form method="POST" action="{{ route('user.avatar.delete') }}">
         @csrf
         <input type="hidden" name="user_id" value="{{ $dataUser->id }}">
-        <button type="submit" class="btn btn-danger">{{ __("Delete Image") }}</button>
+        <button type="submit" class="btn btn-danger delete-img-profile">{{ __("Delete Image") }}</button>
     </form> 
     @if(!empty(setting_item('user_enable_permanently_delete')) and !is_admin())
     <hr>

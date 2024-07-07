@@ -8895,6 +8895,10 @@ ol, ul {
     margin: 0 10px;
 
 }
+.delete-img-profile{
+    position: absolute;
+    bottom: 11vh;
+}
 
 .bravo_wrap .bravo_footer .main-footer .nav-footer .title {
     font-weight: 500;

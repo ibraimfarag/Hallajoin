@@ -131,25 +131,24 @@ class UserController extends FrontendController
 
     public function deleteAvatar(Request $request)
     {
-
-        $user = User::find(Auth::user());
-        $userr = Auth::user();
-
-        if ($user) {
-            $avatarPath = public_path('avatars/' . $userr->id . '.png');
-        if (File::exists($avatarPath)) {
-            File::delete($avatarPath);
+        // Retrieve the authenticated user instance
+        $id = Auth::user()->id;
+        $user = User::where('id', $id)->first();
+// dd(        $user);
+        if (!$user) {
+            return redirect()->back()->with('error', __('User not found.'));
         }
-        // $newAvatarUrl =  $userr->generateAvatar($user->first_name);
+
+        // Update the avatar_id to null
         $user->avatar_id = null;
-        $user->save();
-        return redirect()->back()->with('success', __('Avatar deleted and new one generated.'));
-
+        
+        // Save the changes to the user instance
+        if ($user->save()) {
+            return redirect()->back()->with('success', __('Avatar deleted successfully.'));
+        } else {
+            return redirect()->back()->with('error', __('Failed to delete avatar.'));
         }
-
-        return response()->json(['success' => false]);
     }
-
     public function bookingHistory(Request $request)
     {
         $user_id = Auth::id();
