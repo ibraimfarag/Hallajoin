@@ -132,8 +132,8 @@ class UserController extends FrontendController
     public function deleteAvatar(Request $request)
     {
 
-        $userr = User::find(Auth::user());
-        $user = Auth::user();
+        $user = User::find(Auth::user());
+        // $user = Auth::user();
 
         if ($user) {
             $avatarPath = public_path('avatars/' . $user->id . '.png');
@@ -141,7 +141,8 @@ class UserController extends FrontendController
             File::delete($avatarPath);
         }
         // $newAvatarUrl =  $userr->generateAvatar($user->first_name);
-
+        $user->avatar_id = null;
+        $user->save();
         return redirect()->back()->with('success', __('Avatar deleted and new one generated.'));
 
         }
