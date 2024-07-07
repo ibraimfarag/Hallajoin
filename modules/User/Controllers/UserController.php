@@ -133,10 +133,10 @@ class UserController extends FrontendController
     {
 
         $user = User::find(Auth::user());
-        // $user = Auth::user();
+        $userr = Auth::user();
 
         if ($user) {
-            $avatarPath = public_path('avatars/' . $user->id . '.png');
+            $avatarPath = public_path('avatars/' . $userr->id . '.png');
         if (File::exists($avatarPath)) {
             File::delete($avatarPath);
         }
