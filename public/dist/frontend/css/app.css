@@ -2048,7 +2048,8 @@ body .daterangepicker .full-book-event:before {
     color: #5e6d77;
     /* flex: auto; */
     position: relative;
-    top: 5px
+    top: 5px;
+    text-align: right;
 }
 
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .info .duration i {

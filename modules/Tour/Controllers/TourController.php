@@ -100,9 +100,12 @@ class TourController extends Controller
         }
         $translation = $row->translate();
         $tour_related = [];
+
+        // dd($row);
         $location_id = $row->location_id;
-        if (!empty($location_id)) {
-            $tour_related = $this->tourClass::where('location_id', $location_id)->where("status", "publish")->take(4)->whereNotIn('id', [$row->id])->with(['location', 'translation', 'hasWishList'])->get();
+        $category_id = $row->category_id;
+        if (!empty($category_id)) {
+            $tour_related = $this->tourClass::where('category_id', $category_id)->where("status", "publish")->take(4)->whereNotIn('id', [$row->id])->with(['location', 'translation', 'hasWishList'])->get();
         }
         $review_list = $row->getReviewList();
         $data = [

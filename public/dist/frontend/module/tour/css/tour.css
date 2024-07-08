@@ -1486,7 +1486,8 @@
     color: #5e6d77;
     flex: auto;
     position: relative;
-    top: 5px
+    top: 2px;
+    text-align: right;
 }
 
 .bravo_wrap .bravo_detail_tour .bravo-list-tour-related .item-tour .info .duration i {
@@ -1496,7 +1497,7 @@
 
 .bravo_wrap .bravo_detail_tour .bravo-list-tour-related .item-tour .info .g-price {
     flex: auto;
-    text-align: right
+    text-align: left
 }
 
 .bravo_wrap .bravo_detail_tour .bravo-list-tour-related .item-tour .info .g-price .prefix {
@@ -1521,13 +1522,13 @@
 }
 
 .bravo_wrap .bravo_detail_tour .bravo-list-tour-related .item-tour .info .g-price .price .onsale {
-    color: #c03 !important;
+    color: gray !important;
     font-size: 14px;
     font-weight: 400;
     position: absolute;
-    right: 0;
+    left: -10px;
     text-decoration: line-through;
-    top: -15px
+    top: -20px;
 }
 
 .bravo_wrap .bravo_detail_tour .bravo-list-tour-related .item-tour.infobox-item {
