@@ -591,7 +591,7 @@ class Tour extends Bookable
             'duration'                 => $this->duration,
             'buyer_fees'               => [],
             'start_date'               => request()->input('start') ?? "",
-            'start_date_html'          => request()->input('start') ? display_date(request()->input('start')) : __('Please select date!'),
+            'start_date_html'          => request()->input('start') ? display_date(request()->input('start')) : __('Please select date'),
             'end_date'                 => request()->input('end') ?? "",
             'end_date_html'            => request()->input('end') ? display_date(request()->input('end')) : "",
             'deposit'                  => $this->isDepositEnable(),

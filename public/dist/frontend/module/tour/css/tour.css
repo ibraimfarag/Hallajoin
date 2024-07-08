@@ -376,7 +376,7 @@
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .info .g-price {
     flex: auto;
-    text-align: right
+    text-align: left
 }
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .info .g-price .prefix {
@@ -401,13 +401,13 @@
 }
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .info .g-price .price .onsale {
-    color: #c03 !important;
+    color: gray !important;
     font-size: 14px;
     font-weight: 400;
     position: absolute;
-    right: 0;
+    left: -10px;
     text-decoration: line-through;
-    top: -15px
+    top: -20px;
 }
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour.infobox-item {
@@ -1702,7 +1702,7 @@
 }
 
 .bravo_wrap .bravo_detail_tour .bravo_single_book .form-head .price .value .onsale {
-    color: #c03 !important;
+    color: grey !important;
     display: block;
     font-size: 17px;
     font-weight: 400;
@@ -2868,4 +2868,30 @@
     right: 0;
     transform: rotate(45deg);
     width: 0
+}
+
+.date-box{
+    border: 1px solid #d7d7d7;
+    margin: 15px 20px;
+    padding: 8px 10px;
+    border-radius: 13px;
+}
+.button-persson{
+
+    width: 212px;
+    margin: 30px 21px;
+    background-color: #fff !important;
+    border: 1px solid #d7d7d7 !important;
+    border-radius: 13px !important;
+    height: 50px;
+
+    color: #5e6d77 !important;
+    font-size: 13px !important;
+
+    text-align: left !important;
+
+    display: flex !important;
+    justify-content: space-around;
+    align-items: center;
+
 }
