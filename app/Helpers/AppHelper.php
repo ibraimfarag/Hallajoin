@@ -973,39 +973,62 @@ function is_enable_language_route(){
     return (is_installed() and is_enable_multi_lang() and app()->getLocale() != setting_item('site_locale'));
 }
 
-function duration_format($hour,$is_full = false)
+function duration_format($duration, $duration_unit, $is_full = false)
 {
-    $day = floor($hour / 24) ;
-    $hour = $hour % 24;
+    $day = 0;
+    $hour = 0;
+    $minute = 0;
+
+    if ($duration_unit == 'hours') {
+        $day = floor($duration / 24);
+        $hour = $duration % 24;
+    } elseif ($duration_unit == 'minutes') {
+        $hour = floor($duration / 60);
+        $minute = $duration % 60;
+    }
+
     $tmp = '';
 
-    if($day) $tmp = $day.__('D');
+    if ($day) $tmp = $day . __('D');
 
-    if($hour)
-    $tmp .= $hour.__('H');
+    if ($hour) {
+        $tmp .= $hour . ($duration_unit == 'hours' ? __('H') : __('H'));
+    }
 
-    if($is_full){
+    if ($minute) {
+        $tmp .= $minute . __('M');
+    }
+
+    if ($is_full) {
         $tmp = [];
-        if($day){
-            if($day > 1){
-                $tmp[] = __(':count Days',['count'=>$day]);
-            }else{
-                $tmp[] = __(':count Day',['count'=>$day]);
+        if ($day) {
+            if ($day > 1) {
+                $tmp[] = __(':count Days', ['count' => $day]);
+            } else {
+                $tmp[] = __(':count Day', ['count' => $day]);
             }
         }
-        if($hour){
-            if($hour > 1){
-                $tmp[] = __(':count Hours',['count'=>$hour]);
-            }else{
-                $tmp[] = __(':count Hour',['count'=>$hour]);
+        if ($hour) {
+            if ($hour > 1) {
+                $tmp[] = __(':count Hours', ['count' => $hour]);
+            } else {
+                $tmp[] = __(':count Hour', ['count' => $hour]);
+            }
+        }
+        if ($minute) {
+            if ($minute > 1) {
+                $tmp[] = __(':count Minutes', ['count' => $minute]);
+            } else {
+                $tmp[] = __(':count Minute', ['count' => $minute]);
             }
         }
 
-        $tmp = implode(' ',$tmp);
+        $tmp = implode(' ', $tmp);
     }
 
     return $tmp;
 }
+
 function is_enable_guest_checkout(){
     return setting_item('booking_guest_checkout');
 }

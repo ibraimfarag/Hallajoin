@@ -58,6 +58,7 @@ class Tour extends Bookable
         'sale_price',
         //Tour type
         'duration',
+        'duration_unit',
         'max_people',
         'min_people',
         //Extra Info
@@ -1116,7 +1117,7 @@ class Tour extends Bookable
     public function dataForApi($forSingle = false)
     {
         $data = parent::dataForApi($forSingle);
-        $data['duration'] = duration_format($this->duration);
+        $data['duration'] = duration_format($this->duration,$this->duration_unit);
         if ($forSingle) {
             $data['review_score'] = $this->getReviewDataAttribute();
             $data['review_stats'] = $this->getReviewStats();

@@ -57,11 +57,15 @@
                         <div class="form-group">
                             <label class="control-label">{{__("Duration")}}</label>
                             <div class="input-group mb-3">
-                                <input type="text" name="duration" class="form-control" value="{{$row->duration}}" placeholder="{{__("Duration")}}"  aria-describedby="basic-addon2">
+                                <input type="text" name="duration" class="form-control" value="{{$row->duration}}" placeholder="{{__("Duration")}}" aria-describedby="basic-addon2">
                                 <div class="input-group-append">
-                                    <span class="input-group-text" id="basic-addon2">{{__('hours')}}</span>
+                                    <select name="duration_unit" class="form-control" aria-describedby="basic-addon2">
+                                        <option value="hours" {{$row->duration_unit == 'hours' ? 'selected' : ''}}>{{__('Hours')}}</option>
+                                        <option value="minutes" {{$row->duration_unit == 'minutes' ? 'selected' : ''}}>{{__('Minutes')}}</option>
+                                    </select>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                 </div>

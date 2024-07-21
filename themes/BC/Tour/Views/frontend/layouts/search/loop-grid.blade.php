@@ -146,8 +146,8 @@
             
         <div class="duration">
             <i class="icofont-wall-clock orange"></i>
-            {{ duration_format($row->duration) }}
-        </div>
+            {{ duration_format($row->duration, $row->duration_unit) }}
+                </div>
       
             
         @endif

@@ -1,0 +1,32 @@
+[2024-07-21 18:45:20] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "Museum of the Future was updated to Publish by System Admin",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/avatars\/1.png\" alt=\"System Admin\">",
+    "link": "https:\/\/hallajoin\/admin\/module\/tour?id=266",
+    "idNotification": "b1e37234-1f42-4e04-8cf8-b2f213285ecf",
+    "socket": null
+}  
+[2024-07-21 19:29:12] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "Museum of the Future was updated to Publish by System Admin",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/avatars\/1.png\" alt=\"System Admin\">",
+    "link": "https:\/\/hallajoin\/admin\/module\/tour?id=266",
+    "idNotification": "9c5731d9-3f8b-4af1-8801-a99c345ad935",
+    "socket": null
+}  
+[2024-07-21 19:43:41] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "Museum of the Future was updated to Publish by System Admin",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/avatars\/1.png\" alt=\"System Admin\">",
+    "link": "https:\/\/hallajoin\/admin\/module\/tour?id=266",
+    "idNotification": "fe89a90d-798a-4365-a7dd-ea0a5dd25d01",
+    "socket": null
+}  
+[2024-07-21 19:55:02] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
+{
+    "message": "Museum of the Future was updated to Publish by System Admin",
+    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/avatars\/1.png\" alt=\"System Admin\">",
+    "link": "https:\/\/hallajoin\/admin\/module\/tour?id=266",
+    "idNotification": "fca2e580-3d2b-4ae6-befd-5dd4e726b26a",
+    "socket": null
+}  

@@ -38,6 +38,8 @@ class CreateBravoTours extends Migration
 
             //Tour type
             $table->integer('duration')->nullable();
+            $table->enum('duration_unit', ['hours', 'minutes'])->default('hours'); // New column for duration unit
+
             $table->integer('min_people')->nullable();
             $table->integer('max_people')->nullable();
 
