@@ -23,12 +23,12 @@
                     <input type="text" name="end_date" id=" end_date"  class="form-control has-datepicker" value="{{ old('end_date',!empty($row->end_date)?$row->end_date->format("Y-m-d"):"")}}">
                 </div>
             </div>
-            <div class="col-lg-3">
+            {{-- <div class="col-lg-3">
                 <div class="form-group" >
                     <label for="">{{__("Last Booking Date")}}</label>
                     <input type="text" name="last_booking_date" id=" last_booking_date" class="form-control has-datepicker" value="{{ old('last_booking_date',!empty($row->last_booking_date)?$row->last_booking_date->format("Y-m-d"):"")}}">
                 </div>
-            </div>
+            </div> --}}
         </div>
 
 

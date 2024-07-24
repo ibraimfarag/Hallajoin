@@ -1,3 +1,6 @@
+
+
+
 <div class="form-checkout" id="form-checkout" >
     <input type="hidden" name="code" value="{{$booking->code}}">
     <div class="form-section">
@@ -31,12 +34,15 @@
                     <input type="email" placeholder="{{__("email@domain.com")}}" class="form-control" value="{{$user->email ?? ''}}" name="email">
                 </div>
             </div>
+       
+
             <div class="col-md-6">
                 <div class="form-group">
-                    <label >{{__("Phone")}} <span class="required">*</span></label>
-                    <input type="text" placeholder="{{__("Your Phone")}}" class="form-control" value="{{$user->phone ?? ''}}" name="phone">
+                    <label>{{ __("Phone") }} <span class="required">*</span></label>
+                    <input type="tel" id="phone" placeholder="{{ __("Your Phone") }}" class="form-control" value="{{ $user->phone ?? '' }}" name="phone">
                 </div>
             </div>
+            
 
             @if(is_enable_guest_checkout())
             <div class="col-12 d-none" id="confirmRegisterContent">

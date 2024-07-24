@@ -22,8 +22,7 @@
     </div>
     <div class="form-group">
         <div id="phoneInputContainer">
-            <input type="tel" id="phone" class="form-control" name="phone_number" autocomplete="off" placeholder="Phone">
-            <input type="hidden" id="full_phone" name="phone">
+            <input type="tel" id="phone" class="form-control" name="phone" autocomplete="off" placeholder="Phone">
             <i class="input-icon field-icon icofont-ui-touch-phone"></i>
         </div>
         <span class="invalid-feedback error error-phone"></span>

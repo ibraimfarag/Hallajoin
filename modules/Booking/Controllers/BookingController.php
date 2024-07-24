@@ -242,6 +242,8 @@ class BookingController extends \App\Http\Controllers\Controller
         if(empty(floatval($booking->deposit)) and !empty(floatval($oldDeposit))){
             $booking->deposit = $oldDeposit;
         }
+        $countryCode = $request->input('country_code');
+
 
         // Normal Checkout
         $booking->first_name = $request->input('first_name');

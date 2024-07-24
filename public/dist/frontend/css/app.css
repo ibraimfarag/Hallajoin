@@ -9673,3 +9673,25 @@ ol, ul {
 .bravo_gallery .play-icon {
     display: none;
 }
+
+
+.dash-list li::before {
+    content: "- ";
+    margin-right: 5px;
+}
+.dash-list li {
+    display: inline-flex !important ;
+}
+.dash-list {
+    margin-bottom: 13px;
+}
+.theme-color{
+    color: var(--main-color, #f5793b);
+}
+.theme-backcolor{
+    background-color: var(--main-color, #137ec6);
+}
+
+.iti__selected-dial-code{
+    display: none;
+}

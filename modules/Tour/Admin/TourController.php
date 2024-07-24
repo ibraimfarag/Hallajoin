@@ -221,7 +221,7 @@ class TourController extends AdminController
             $rules = [
                 'start_date'        =>'required|date',
                 'end_date'         =>'required|date|after_or_equal:start_date',
-                'last_booking_date' =>'required|date|before:start_date|after:'.now(),
+                // 'last_booking_date' =>'required|date|before:start_date|after:'.now(),
             ];
             $request->validate($rules);
         }

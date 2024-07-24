@@ -53,25 +53,25 @@
                                 <div class="font-weight-bold">{{ __('Tour End Date') }}</div>
                                 <span>@{{ end_date_html }}</span>
                             </div>
-                            <div class="w-100 py-3 flex-grow-1 border-top">
+                            {{-- <div class="w-100 py-3 flex-grow-1 border-top">
                                 <div class="font-weight-bold">{{ __('Last Booking Date') }}</div>
                                 <span>@{{ last_booking_date_html }}</span>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="date-wrapper clearfix date-box" @click="openStartDate" v-else>
+                            <i class="fas fa-calendar-alt mr-2"></i>
                             <div class="check-in-wrapper">
                                 {{-- <label>{{__("Start Date")}}</label> --}}
 
                                 <div class="render check-in-render">@{{ start_date_html }}</div>
-
                             </div>
                             <i class="fa fa-angle-down arrow"></i>
 
                         </div>
                         <div v-if="timeRangeDisplay && timeRangeDisplay.trim() !== ''" class="render check-in-render">
                             <div class="date-box">
-                                <div style="    color: grey !important;
-    font-size: 13px !important;">
+                                <div class="ml-3" style="color: grey !important;font-size: 13px !important;" >
+    <i class="far fa-clock"></i>
                                     <span>{{ __('Time:') }}</span>
                                     <span>@{{ timeRangeDisplay }}</span>
                                 </div>
@@ -96,6 +96,7 @@
                         <!-- Toggle Button -->
                         <button class="btn btn-secondary button-persson" type="button" data-toggle="collapse"
                             data-target="#personOptions" aria-expanded="false" aria-controls="personOptions">
+                            <i class="fas fa-user-friends"></i>
                             Select Persons <i class="fa fa-angle-down arrow"
                                 style="    font-size: 24px !important;
     color: #000;"></i>
@@ -117,7 +118,7 @@
                                                         <label>@{{ type.name }}</label>
                                                         <div class="render check-in-render">@{{ type.desc }}</div>
                                                         <div class="render check-in-render">@{{ type.display_price }}
-                                                            {{ __('per person') }}</div>
+                                                            {{ __('per ') }}@{{ type.name }}</div>
                                                     </div>
                                                     <div class="flex-shrink-0">
                                                         <div class="input-number-group">
@@ -209,7 +210,8 @@
             <div v-html="html"></div>
             <div class="submit-group">
                 <a class="btn btn-large" @click="doSubmit($event)"
-                    :class="{ 'disabled': onSubmit, 'btn-success': (step == 2), 'btn-primary': step == 1 }" name="submit">
+                    :class="{ 'disabled': onSubmit, 'btn-success': (step == 2), 'btn-primary': step == 1 }"
+                    name="submit">
                     <span>{{ __('BOOK NOW') }}</span>
                     <i v-show="onSubmit" class="fa fa-spinner fa-spin"></i>
                 </a>
@@ -217,14 +219,14 @@
                     :class="{ 'danger': !message.type, 'success': message.type }"></div>
             </div>
         </div>
-        <div class="form-send-enquiry" v-show="enquiry_type=='enquiry'">
+        {{-- <div class="form-send-enquiry" v-show="enquiry_type=='enquiry'">
             <button class="btn btn-primary" data-toggle="modal" data-target="#enquiry_form_modal">
                 {{ __('Contact Now') }}
             </button>
         </div>
-    </div>
+    </div> --}}
 </div>
-</div>
+
 @include('Booking::frontend.global.enquiry-form', ['service_type' => 'tour'])
 <script>
     var openHours = @json($open_hours);

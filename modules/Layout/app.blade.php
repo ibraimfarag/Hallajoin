@@ -32,6 +32,10 @@
     <link href="{{ asset('dist/frontend/css/notification.css') }}" rel="newest stylesheet">
     <link href="{{ asset('dist/frontend/css/app.css?_ver=' . config('app.asset_version')) }}" rel="stylesheet">
 
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.6.1/build/css/intlTelInput.css">
+
+
     <link rel="stylesheet" type="text/css" href="{{ asset('libs/daterange/daterangepicker.css') }}">
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -252,28 +256,6 @@
 
 
 
-    <script>
-    $(document).ready(function() {
-    $(".bravo-box-category-tour ").owlCarousel({
-        loop: true,
-        margin: 10,
-        nav: true,
-        responsiveClass: true,
-        responsive: {
-            0: {
-                items: 5
-            },
-            600: {
-                items: 9
-            },
-            1000: {
-                items: 10
-            }
-        }
-    });
-});
-
-    </script>
 
     <script>
         $(document).ready(function() {
@@ -363,6 +345,49 @@
             });
         });
     </script>
+
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.6.1/build/js/intlTelInput.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.6.1/build/js/utils.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const phoneInput = document.querySelector("#phone");
+
+        const iti = window.intlTelInput(phoneInput, {
+            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.6.1/build/js/utils.js",
+        });
+
+        // Set the default country to United Arab Emirates (AE)
+        iti.setCountry("AE");
+
+        // Function to update the input value with the country code and phone number
+        function updatePhoneNumber() {
+            const countryData = iti.getSelectedCountryData();
+            const countryCode = countryData.dialCode;
+            const phoneNumber = phoneInput.value.replace(/^\+\d+\s*/, ''); // Remove any existing country code
+            phoneInput.value = `+${countryCode} ${phoneNumber}`; // Update the input value with the new country code
+        }
+
+        // Initialize phone number display
+        updatePhoneNumber();
+
+        // Add event listener for input changes
+        phoneInput.addEventListener("input", function() {
+            updatePhoneNumber();
+        });
+
+        // Polling to detect country changes
+        let previousCountryCode = iti.getSelectedCountryData().dialCode;
+        setInterval(function() {
+            const currentCountryCode = iti.getSelectedCountryData().dialCode;
+            if (currentCountryCode !== previousCountryCode) {
+                previousCountryCode = currentCountryCode;
+                updatePhoneNumber();
+            }
+        }, 500); // Check every 500 milliseconds
+    });
+</script>
+
 
 
 </body>

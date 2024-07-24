@@ -6,51 +6,60 @@
 <style>
     
 
-    .container .item::before {
-        content: ''; /* Required for :before and :after elements to show */
-        position: absolute; /* Position absolutely relative to the parent .item */
+    /* .container .item::before {
+        content: ''; 
+        position: absolute; 
         top: 0;
         left: 0;
-        width: 100%; /* Match the width of the parent */
-        height: 100%; /* Match the height of the parent */
-        background: #00000024; /* Semi-transparent black background */
-        transform: rotate(-5deg); /* Rotate the background */
-        z-index: -1; /* Position behind the content */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.19); /* Adds shadow */
-        border-radius: 20px; /* Adds rounded corners */
+        width: 100%; 
+        height: 100%; 
+        background: #00000024; 
+        transform: rotate(-5deg); 
+        z-index: -1; 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.19); 
+        border-radius: 20px; 
     
     
     }
     
     .container .item::after {
-        content: ''; /* Required for :before and :after elements to show */
-        position: absolute; /* Position absolutely relative to the parent .item */
+        content: ''; 
+        position: absolute;
         top: 0;
         left: 0;
-        width: 100%; /* Match the width of the parent */
-        height: 100%; /* Match the height of the parent */
-        background: #00000030; /* Semi-transparent black background */
-        transform: rotate(10deg); /* Rotate the background */
-        z-index: -1; /* Position behind the content */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.19); /* Adds shadow */
-        border-radius: 20px; /* Adds rounded corners */
-    
-    
-    }
-    
-    .container .item {
-        position: relative; /* Needed to position the pseudo-element correctly */
-        /* overflow: hidden; Ensures nothing spills out of the item container */
         width: 100%;
-        float: left;
-        padding: 0 20px;
-        background: #DDD;
-        margin: 73px 0;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.19); /* Adds shadow */
-        border-radius: 20px; /* Adds rounded corners */
+        height: 100%; 
+        background: #00000030;
+        transform: rotate(10deg); 
+        z-index: -1; 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.19); 
+        border-radius: 20px; 
     
     
-    }
+    } */
+
+
+
+    
+   
+.container .item {
+    position: relative; /* Needed to position the pseudo-elements correctly */
+    width: 100%;
+    float: left;
+    padding: 0 20px;
+    background: #ffffff;
+    margin: 73px 0;
+
+    
+    background-image: url('/images/ticket-2.png'); /* Path to your background image */
+    background-size: cover; /* Cover the entire container */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent image repetition */
+
+
+    overflow: hidden; /* Ensures nothing spills out of the item container */
+}
+
     
     
     .container .item-right, .container .item-left {
@@ -59,16 +68,22 @@
     }
     
     .container .item-right {
-        padding: 84px 26px;
+        padding: 40px 10px;
         margin-right: 20px;
-        width: 25%;
+        width: 35%;
         position: relative;
         height: 286px;
-        background: #DDD; /* Ensure background is here for visibility */
-    
+        /* background: #DDD; Ensure background is here for visibility */
+        display: flex;
+        flex-direction: column;
     }
+    .fix-r {
+    flex-grow: 1; /* This will push .loc to the bottom */
+}
     
-    
+.loc-price {
+    text-align: right;
+}
     .container .item-right .up-border, .container .item-right .down-border {
         padding: 14px 15px;
         background-color: #fff;
@@ -92,6 +107,11 @@
         color: #111
     }
     
+    .container .item-right .loc-price span {
+
+        color: #111
+    }
+    
     .container .item-right .day, .container .item-left .event {
         color: #555;
         font-size: 20px;
@@ -104,14 +124,81 @@
     }
     
     .container .item-left {
-        width: 71%;
-        padding: 34px 0px 19px 46px;
-        border-left: 3px dotted #999;
+        width: 60%;
+        padding: 48px 0px 19px 46px;
+                /* border-right: 3px dotted #999; */
+                height: 250px;
+
+                display: flex;
+                flex-direction: column;
     }
     
+
+    .container .item-left::before,
+.container .item-left::after {
+    content: '';
+    position: absolute;
+    width: 50px; /* Diameter of the circle */
+    height: 50px; /* Diameter of the circle */
+    background-color: white; /* Matches the background of the container */
+    border-radius: 50%; /* Creates the circle */
+    z-index: 1;
+}
+
+.container .item-left::before {
+    top: -30px;
+    left: 65%;
+    transform: translateX(-50%);
+}
+
+.container .item-left::after {
+    bottom: -30px; /* Half of the circle's diameter to align it properly */
+    left: 65%; /* Center the circle horizontally */
+    transform: translateX(-50%);
+}
+
+.container .Tear {
+    position: absolute;
+    top: 50%; /* Center vertically */
+    left: 58%; /* Center horizontally */
+    transform: translate(-50%, -50%) rotate(90deg); /* Center and rotate 90 degrees */
+    /* background-color: white; Ensure background color matches your design */
+    padding: 0 10px; /* Add some padding around the label */
+    z-index: 2; /* Ensure the label is above the circles and dotted line */
+}
+
+
+/* Add dotted lines to the left and right of the .Tear element */
+.container .Tear::before,
+.container .Tear::after {
+    content: '';
+    position: absolute;
+    width: 85px; /* Length of the dotted line */
+    height: 3px; /* Thickness of the dotted line */
+    /* background-color: white; Background color of the line */
+    /* border: 3px dotted #999; Dotted line style */
+    border-top: 3px dotted #e7e7e7; /* Dotted line style */
+
+    z-index: 1;
+}
+
+.container .Tear::before {
+    top: 45%;
+    left: -80px; /* Position the line to the left */
+    transform: translateY(-50%); /* Center vertically */
+}
+
+.container .Tear::after {
+    top: 55%;
+    right: -80px; /* Position the line to the right */
+    transform: translateY(-50%); /* Center vertically */
+}
+
+
+
+
     .container .item-left .title {
-        color: #111;
-        font-size: 34px;
+        font-size: 18px;
         margin-bottom: 12px
     }
     
@@ -125,7 +212,7 @@
         float: left;
         word-spacing: 5px;
         letter-spacing: 1px;
-        color: #888;
+        color: #161616;
         margin-bottom: 10px;
     }
     
