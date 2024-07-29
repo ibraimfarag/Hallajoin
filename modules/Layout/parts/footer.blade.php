@@ -38,9 +38,12 @@
 			<div class="container">
 				<div class="row">
 					@if($list_widget_footers = setting_item_with_lang("list_widget_footer"))
-                        <?php $list_widget_footers = json_decode($list_widget_footers); ?>
+                        <?php $list_widget_footers = json_decode($list_widget_footers);
+						// dd($list_widget_footers);
+						?>
+						
 						@foreach($list_widget_footers as $key=>$item)
-							<div class="col-lg-{{$item->size ?? '3'}} col-md-6">
+							<div class="col-lg-{{$item->size ?? '2'}} col-md-6">
 								<div class="nav-footer">
 									<div class="title">
 										{{$item->title}}

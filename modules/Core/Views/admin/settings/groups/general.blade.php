@@ -195,6 +195,7 @@
                                                 </div>
                                                 <div class="col-md-2">
                                                     <select class="form-control" name="list_widget_footer[{{$key}}][size]">
+                                                        <option @if(!empty($item['size']) && $item['size']=='2') selected @endif value="2">1/6</option>
                                                         <option @if(!empty($item['size']) && $item['size']=='3') selected @endif value="3">1/4</option>
                                                         <option @if(!empty($item['size']) && $item['size']=='4') selected @endif value="4">1/3</option>
                                                         <option @if(!empty($item['size']) && $item['size']=='6') selected @endif value="6">1/2</option>
