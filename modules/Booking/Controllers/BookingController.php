@@ -650,15 +650,16 @@ class BookingController extends \App\Http\Controllers\Controller
             return $this->sendError(__('Booking not found'));
         }
 
-        $booking->pay_now = $remain;
-        $booking->paid = floatval($booking->total) - $remain;
+        $booking->pay_now = $booking->total - $remain;
+        $booking->paid =  $remain;
+        // $booking->paid = floatval($booking->total) - $remain;
         event(new SetPaidAmountEvent($booking));
         if($remain == 0){
             $booking->status = $booking::PAID;
 //            $booking->sendStatusUpdatedEmails();
             event(new BookingUpdatedEvent($booking));
         }
-
+        // dd($request, $booking);
         $booking->save();
 
         return $this->sendSuccess([

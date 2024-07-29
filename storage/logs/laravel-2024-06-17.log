@@ -1,8 +1,0 @@
-[2024-06-17 22:25:33] production.INFO: Broadcasting [App\Events\PusherNotificationAdminEvent] on channels [admin-channel] with payload:
-{
-    "message": "Morning red dunes safari was updated to Publish by System Admin",
-    "avatar": "<img class=\"image-responsive\" src=\"https:\/\/hallajoin\/images\/avatar.png\" alt=\"System Admin\">",
-    "link": "https:\/\/hallajoin\/admin\/module\/tour?id=463",
-    "idNotification": "b5e20a2c-a756-4fa2-a132-e7307c7bd8a2",
-    "socket": null
-}  

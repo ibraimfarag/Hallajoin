@@ -48,7 +48,7 @@
     float: left;
     padding: 0 20px;
     background: #ffffff;
-    margin: 73px 0;
+    margin: 0 0;
 
     
     background-image: url('/images/ticket-2.png'); /* Path to your background image */
@@ -68,7 +68,7 @@
     }
     
     .container .item-right {
-        padding: 40px 10px;
+        padding: 49px 10px;
         margin-right: 20px;
         width: 35%;
         position: relative;

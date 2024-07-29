@@ -268,7 +268,7 @@
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .location {
     color: #5e6d77;
     font-size: 13px;
-    padding: 15px 15px 14px
+    padding: 15px 1px 14px
 }
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .location i {
@@ -287,7 +287,7 @@
 }
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .service-review {
-    padding: 10px 15px 15px
+    padding: 10px 0px 15px
 }
 
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .service-review .list-star {
@@ -343,7 +343,7 @@
     font-size: 16px;
     line-height: 22px;
     min-height: 45px;
-    padding: 0 15px
+    padding: 0 
 }
 
 @media (max-width:766px) {
@@ -364,7 +364,7 @@
 .bravo_wrap .bravo_search_tour .bravo-list-item .list-item .item-tour .info .duration {
     align-items: center;
     color: #5e6d77;
-    flex: auto;
+    /* flex: auto; */
     position: relative;
     top: 5px
 }
@@ -1334,15 +1334,15 @@
 
 .bravo_wrap .bravo_detail_tour .bravo-list-tour-related .item-tour .featured {
     background: #5191fa;
-    border-radius: 0 3px 3px 0;
+    border-radius: 15px;
     color: #fff;
     font-size: 13px;
     font-weight: 500;
-    left: 0;
+    left: 5px;
     padding: 6px 10px;
     position: absolute;
     top: 20px;
-    z-index: 8
+    z-index: 8;
 }
 
 .bravo_wrap .bravo_detail_tour .bravo-list-tour-related .item-tour .thumb-image {
@@ -1389,7 +1389,7 @@
 .bravo_wrap .bravo_detail_tour .bravo-list-tour-related .item-tour .location {
     color: #5e6d77;
     font-size: 13px;
-    padding: 15px 15px 10px
+    padding: 15px 1px 10px
 }
 
 .bravo_wrap .bravo_detail_tour .bravo-list-tour-related .item-tour .location i {
@@ -1407,7 +1407,7 @@
 }
 
 .bravo_wrap .bravo_detail_tour .bravo-list-tour-related .item-tour .service-review {
-    padding: 10px 15px 15px
+    padding: 10px 0px 15px
 }
 
 .bravo_wrap .bravo_detail_tour .bravo-list-tour-related .item-tour .service-review .list-star {
@@ -1463,7 +1463,7 @@
     font-size: 16px;
     line-height: 22px;
     min-height: 68px;
-    padding: 0 15px
+    padding: 0
 }
 
 @media (max-width:766px) {

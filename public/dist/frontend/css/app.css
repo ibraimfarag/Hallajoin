@@ -82,11 +82,11 @@
 }
 
 .btn.btn-danger {
-    background: #fa5636
+    background: #f5793b
 }
 
 .btn.btn-danger:hover {
-    background: #e65335
+    background: #f5793b
 }
 
 .padding-content {
@@ -1969,7 +1969,7 @@ body .daterangepicker .full-book-event:before {
 }
 
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .service-review {
-    padding: 10px 15px 10px
+    padding: 10px 0px 10px
 }
 
 .bravo_wrap .page-template-content .bravo-list-tour .item-tour .service-review .list-star {
@@ -2025,7 +2025,7 @@ body .daterangepicker .full-book-event:before {
     font-size: 16px;
     line-height: 22px;
     min-height: 45px;
-    padding: 0 15px
+    padding: 0 3px
 }
 
 @media (max-width:766px) {
@@ -2048,7 +2048,7 @@ body .daterangepicker .full-book-event:before {
     color: #5e6d77;
     /* flex: auto; */
     position: relative;
-    top: 5px;
+    top: -8px;
     text-align: right;
 }
 
@@ -9376,7 +9376,7 @@ ol, ul {
     justify-content: flex-start;
     margin-bottom: 30px;
     /* Adjust as necessary */
-    margin-left: 8px;
+    /* margin-left: 8px; */
     margin-top: 20px;
 }
 
@@ -9454,6 +9454,9 @@ ol, ul {
 
 .orange-bg {
     background-color: #f5793b !important;
+}
+.orange-bgc {
+    background: #f5793b !important;
 }
 
 @media only screen and (min-device-width: 844px) {

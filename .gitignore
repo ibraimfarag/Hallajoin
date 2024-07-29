@@ -29,3 +29,4 @@ public/themes/*/dist
 /storage/framework/views
 /storage/framework/sessions
 /storage/framework/cache
+/storage/logs

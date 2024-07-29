@@ -4,7 +4,7 @@
             <div class="input-group group-form mb-3">
                 <input type="text" class="form-control" name="coupon_code" placeholder="{{ __("Coupon code") }}">
                 <div class="input-group-append">
-                    <button class="btn btn-primary bravo_apply_coupon" type="button">
+                    <button class="btn btn-primary bravo_apply_coupon orange-bgc" type="button">
                         {{__("Apply")}}
                         <i class="fa fa-spin fa-spinner d-none"></i>
                     </button>
