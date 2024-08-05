@@ -76,7 +76,7 @@
                     'messages' => $validator->errors()
                 ], 200);
             } else {
-
+// dd($request);
                 $user = \App\User::create([
                     'first_name' => $request->input('first_name'),
                     'last_name'  => $request->input('last_name'),
