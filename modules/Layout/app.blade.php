@@ -61,6 +61,7 @@
 </head>
 
 <body
+
     class="frontend-page {{ !empty($row->header_style) ? 'header-' . $row->header_style : 'header-normal' }} {{ $body_class ?? '' }} @if (setting_item_with_lang('enable_rtl')) is-rtl @endif @if (is_api()) is_api @endif">
     @if (!is_demo_mode())
         {!! setting_item('body_scripts') !!}
@@ -71,7 +72,7 @@
             {{-- @include('Layout::parts.topbar') --}}
             @include('Layout::parts.header')
         @endif
-
+   
         @yield('content')
 
         @include('Layout::parts.footer')

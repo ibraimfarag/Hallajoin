@@ -22,11 +22,11 @@
                         {{-- @include('Tour::frontend.layouts.details.open-hours') --}}
                     </div>
                 </div>
-                <div class="row end_tour_sticky">
+                {{-- <div class="row end_tour_sticky"> --}}
                     <div class="col-md-12">
                         @include('Tour::frontend.layouts.details.tour-related')
-                    </div>
-                </div>
+                    {{-- </div>
+                </div> --}}
             </div>
         </div>
         <div class="bravo-more-book-mobile">

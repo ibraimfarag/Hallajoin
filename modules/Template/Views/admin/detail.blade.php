@@ -103,4 +103,15 @@
             add_new: '{{__('Add New')}}',
         };
     </script>
+
+
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    tinymce.init({
+        selector: 'textarea.tinymce',
+        plugins: 'advlist autolink lists link image charmap preview anchor',
+        toolbar_mode: 'floating',
+        menubar: false
+    });
+</script>
 @endpush
