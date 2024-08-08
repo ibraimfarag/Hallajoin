@@ -389,7 +389,43 @@
     });
 </script>
 
+<script>
+    // JavaScript to toggle password visibility
+    const login_passwordField = document.getElementById('login_passwordField');
+    const login_togglePassword = document.getElementById('login_togglePassword');
 
+    
+    const register_passwordField = document.getElementById('register_passwordField');
+    const register_togglePassword = document.getElementById('register_togglePassword');
+
+    login_togglePassword.addEventListener('click', function() {
+        const type = login_passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        login_passwordField.setAttribute('type', type);
+        // Toggle eye icon
+        if (type === 'password') {
+            login_togglePassword.classList.add('icofont-eye');
+            login_togglePassword.classList.remove('icofont-eye-blocked');
+        } else {
+            login_togglePassword.classList.remove('icofont-eye');
+            login_togglePassword.classList.add('icofont-eye-blocked');
+        }
+    });
+
+    register_togglePassword.addEventListener('click', function() {
+        const type = register_passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        register_passwordField.setAttribute('type', type);
+        // Toggle eye icon
+        if (type === 'password') {
+            register_togglePassword.classList.add('icofont-eye');
+            register_togglePassword.classList.remove('icofont-eye-blocked');
+        } else {
+            register_togglePassword.classList.remove('icofont-eye');
+            register_togglePassword.classList.add('icofont-eye-blocked');
+        }
+    });
+
+    
+</script>
 
 </body>
 

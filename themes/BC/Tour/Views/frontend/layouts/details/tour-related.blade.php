@@ -5,7 +5,6 @@
     /* Add this to your CSS file */
 .blur-card {
     position: relative;
-    background: #f4f4f4; /* Adjust background color if needed */
     display: flex;
     align-items: center;
     justify-content: center;

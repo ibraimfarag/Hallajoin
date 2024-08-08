@@ -16,6 +16,7 @@ class TourTranslation extends BaseModel
         'other',
         'exclude',
         'sections',
+        'packages',
         'itinerary',
         'surrounding',
     ];
@@ -30,6 +31,7 @@ class TourTranslation extends BaseModel
         'other' => 'array',
         'exclude' => 'array',
         'sections' => 'array',
+        'packages' => 'array',
         'itinerary' => 'array',
         'surrounding' => 'array',
     ];

@@ -213,6 +213,7 @@ class ManageTourController extends FrontendController
             'exclude',
             'itinerary',
             'sections',
+            'packages',
             'other',
             'enable_service_fee',
             'service_fee',

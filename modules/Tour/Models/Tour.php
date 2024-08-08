@@ -67,6 +67,7 @@ class Tour extends Bookable
         'include',
         'exclude',
         'sections',
+        'packages',
         'itinerary',
         'other',
         'surrounding',
@@ -90,6 +91,7 @@ class Tour extends Bookable
         'include'   => 'array',
         'exclude'   => 'array',
         'sections'  => 'array',
+        'packages'  => 'array',
 
         'itinerary' => 'array',
         'other' => 'array',
@@ -1129,6 +1131,7 @@ class Tour extends Bookable
             $data['include'] = $this->include;
             $data['exclude'] = $this->exclude;
             $data['sections'] = $this->sections;
+            $data['packages'] = $this->packages;
             $data['other'] = $this->other;
             $data["itinerary"] = null;
             if (!empty($this->itinerary)) {

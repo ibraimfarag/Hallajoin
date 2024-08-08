@@ -188,8 +188,8 @@
     </div>
     <div class="form-group">
         <input type="password" class="form-control" name="password" autocomplete="off"
-            placeholder="{{ __('Password') }}" id="passwordField">
-        <i class="input-icon field-icon icofont-eye" id="togglePassword"></i>
+            placeholder="{{ __('Password') }}" id="register_passwordField">
+        <i class="input-icon field-icon icofont-eye" id="register_togglePassword"></i>
         <span class="invalid-feedback error error-password"></span>
     </div>
     <div class="form-group">

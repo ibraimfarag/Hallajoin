@@ -53,6 +53,7 @@ class CreateBravoTours extends Migration
 
             //Sections 
             $table->json('sections')->nullable();
+            $table->json('packages')->nullable();
 
             //Languages
             $table->bigInteger('origin_id')->nullable();

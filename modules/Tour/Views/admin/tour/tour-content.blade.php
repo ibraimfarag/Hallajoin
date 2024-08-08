@@ -136,7 +136,11 @@
                 </div>
             </div>
         </div>
+
+
+        @include('Tour::admin/tour/add_package')
         @include('Tour::admin/tour/include-exclude')
+     
         @include('Tour::admin/tour/add_section')
         @include('Tour::admin/tour/itinerary')
         @if(is_default_lang())

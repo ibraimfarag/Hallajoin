@@ -7,10 +7,17 @@
         <span class="invalid-feedback error error-email"></span>
     </div>
     <div class="form-group">
-        <input type="password" class="form-control" name="password" autocomplete="off"  placeholder="{{__('Password')}}">
-        <i class="input-icon icofont-ui-password"></i>
+        <input type="password" class="form-control" name="password" autocomplete="off"
+        placeholder="{{ __('Password') }}" id="login_passwordField">
+        <i class="input-icon field-icon icofont-eye" id="login_togglePassword"></i>
         <span class="invalid-feedback error error-password"></span>
     </div>
+
+
+
+
+
+
     <div class="form-group">
         <div class="d-flex justify-content-between">
             <label for="remember-me" class="mb0">
