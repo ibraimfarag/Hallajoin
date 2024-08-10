@@ -88,6 +88,12 @@
         <i class="fab fa-whatsapp fa-2x"></i>
     </div>
 
+        <!-- Call Icon -->
+        <div class="call-icon" onclick="openCall()">
+            <i class="fas fa-phone fa-2x"></i>
+        </div>
+    
+    
     <!-- Scripts -->
     <script>
         function openWhatsApp() {
@@ -95,6 +101,12 @@
             var message = "Hello, I would like to inquire about..."; // Replace with your predefined message
             var url = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(message);
             window.open(url, "_blank");
+        }
+
+        function openCall() {
+            var phoneNumber = "+971555506597"; // Replace with your phone number
+            var url = "tel:" + phoneNumber;
+            window.location.href = url;
         }
     </script>
 

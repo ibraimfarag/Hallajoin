@@ -141,7 +141,7 @@
             </div>
         </div>
 
-
+{{-- 
         @if ($row->duration)
             
         <div class="duration">
@@ -150,7 +150,7 @@
                 </div>
       
             
-        @endif
+        @endif --}}
 
 
 

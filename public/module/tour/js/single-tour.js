@@ -266,14 +266,18 @@
             }
     
             this.$nextTick(function() {
-                $(this.$refs.start_date).daterangepicker(options).on('apply.daterangepicker', function(ev, picker) {
-                    me.start_date = picker.startDate.format('YYYY-MM-DD');
-                    me.start_date_html = picker.startDate.format("dddd, MMMM Do, YYYY");
-                    me.updateTimeRange(picker.startDate); // Pass the selected date
-                }).on('update-calendar', function(e, obj) {
-                    me.fetchEvents(obj.leftCalendar.calendar[0][0], obj.leftCalendar.calendar[5][6])
-                });
+                $(this.$refs.start_date).daterangepicker(options)
+                    .on('apply.daterangepicker', function(ev, picker) {
+                        // Format the date to display as "Sat, 31 Aug 2024"
+                        me.start_date = picker.startDate.format('YYYY-MM-DD');
+                        me.start_date_html = picker.startDate.format('ddd, DD MMM YYYY'); // Adjust the format here
+                        me.updateTimeRange(picker.startDate); // Pass the selected date
+                    })
+                    .on('update-calendar', function(e, obj) {
+                        me.fetchEvents(obj.leftCalendar.calendar[0][0], obj.leftCalendar.calendar[5][6]);
+                    });
             });
+            
         },
     
         

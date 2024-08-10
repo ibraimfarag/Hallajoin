@@ -14,9 +14,9 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 260px;
-    height: 310px;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for overlay */
+    width: 255px;
+    height: 300px;
+    background: #f5793b; /* Semi-transparent background for overlay */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -27,7 +27,7 @@
 }
 
 .btn-view-all {
-    background-color: #007bff; /* Adjust button color */
+    background-color: #137ec6; /* Adjust button color */
     color: white;
     padding: 10px 20px;
     text-decoration: none;
@@ -35,9 +35,7 @@
     font-weight: bold;
 }
 
-.btn-view-all:hover {
-    background-color: #0056b3; /* Darker shade on hover */
-}
+
 
 </style>
     <div class="bravo-list-tour-related">

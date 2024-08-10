@@ -2,7 +2,7 @@
     <div class="bravo_banner" style="background-image: url('{{$row->getBannerImageUrlAttribute('full')}}')">
         <div class="container">
             <div class="bravo_gallery">
-                <div class="btn-group">
+                {{-- <div class="btn-group">
                     @if($row->video)
                         <a href="#" class="btn btn-transparent has-icon bravo-video-popup" data-toggle="modal" data-src="{{ handleVideoUrl($row->video) }}" data-target="#myModal">
                             <i class="input-icon field-icon fa">
@@ -24,7 +24,7 @@
                             </i>{{__("Tour Video")}}
                         </a>
                     @endif
-                </div>
+                </div> --}}
                 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">

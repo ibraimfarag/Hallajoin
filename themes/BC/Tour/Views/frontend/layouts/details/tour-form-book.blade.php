@@ -65,8 +65,7 @@
 
                                 <div class="render check-in-render">@{{ start_date_html }}</div>
                             </div>
-                            <i class="fa fa-angle-down arrow"></i>
-
+                            <i class="fa fa-angle-down arrow" style="margin: 6px 0 0 0;"></i>
                         </div>
                         <div v-if="timeRangeDisplay && timeRangeDisplay.trim() !== ''" class="render check-in-render">
                             <div class="date-box">

@@ -23,7 +23,8 @@ $main_color =setting_item('style_main_color','#5291fa')
                 margin: 0px;
             }
             .b-header{
-                background: {{$main_color}};
+                /* background: {{$main_color}}; */
+                background: #ffffff;
                 padding: 30px;
                 color: white;
             }
