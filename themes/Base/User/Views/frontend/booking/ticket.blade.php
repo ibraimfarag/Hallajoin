@@ -151,7 +151,7 @@
                 <div class="text-center">{{__("Show QR Code at the counter")}}</div>
 
                 <div class="qr-content text-center">
-                    {!! QrCode::size(200)->generate($booking->id.'.'.\Illuminate\Support\Facades\Hash::make($booking->id)); !!}
+                    {!! QrCode::size(200)->generate($booking->id.'.'.\Illuminate\Support\Facades\Hash::make($booking->id)) !!}
                 </div>
 
             </div>

@@ -143,13 +143,13 @@
                 <div class="form-group">
                     <label class="" >{{__("Subject")}}</label>
                     <div class="form-controls">
-                        <textarea name="wallet_new_deposit_admin_subject" class="form-control" cols="30" rows="2">{{setting_item_with_lang('wallet_new_deposit_admin_subject',request()->query('lang')) ?? '','New credit order' }}</textarea>
+                        <textarea name="wallet_new_deposit_admin_subject" class="form-control" cols="30" rows="2">{{ setting_item_with_lang('wallet_new_deposit_admin_subject', request()->query('lang')) ?? 'New credit order' }}</textarea>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="" >{{__("Content")}}</label>
                     <div class="form-controls">
-                        <textarea name="wallet_new_deposit_admin_content" class="d-none has-ckeditor" cols="30" rows="10">{{setting_item_with_lang('wallet_new_deposit_admin_content',request()->query('lang')) ?? '',\Modules\User\Emails\CreditPaymentEmail::defaultNewBody() }}</textarea>
+                        <textarea name="wallet_new_deposit_admin_content" class="d-none has-ckeditor" cols="30" rows="10">{{ setting_item_with_lang('wallet_new_deposit_admin_content', request()->query('lang')) ?: \Modules\User\Emails\CreditPaymentEmail::defaultNewBody() }}</textarea>
                     </div>
                 </div>
             </div>
@@ -160,13 +160,13 @@
                 <div class="form-group">
                     <label class="" >{{__("Subject")}}</label>
                     <div class="form-controls">
-                        <textarea name="wallet_new_deposit_customer_subject" class="form-control" cols="30" rows="2">{{setting_item_with_lang('wallet_new_deposit_customer_subject',request()->query('lang')) ?? '','Thank you for your purchasing' }}</textarea>
+                        <textarea name="wallet_new_deposit_customer_subject" class="form-control" cols="30" rows="2">{{ setting_item_with_lang('wallet_new_deposit_customer_subject', request()->query('lang')) ?: 'Thank you for your purchasing' }}</textarea>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="" >{{__("Content")}}</label>
                     <div class="form-controls">
-                        <textarea name="wallet_new_deposit_customer_content" class="d-none has-ckeditor" cols="30" rows="10">{{setting_item_with_lang('wallet_new_deposit_customer_content',request()->query('lang')) ?? '',\Modules\User\Emails\CreditPaymentEmail::defaultNewBody() }}</textarea>
+                        <textarea name="wallet_new_deposit_customer_content" class="d-none has-ckeditor" cols="30" rows="10">{{ setting_item_with_lang('wallet_new_deposit_customer_content', request()->query('lang')) ?: \Modules\User\Emails\CreditPaymentEmail::defaultNewBody() }}</textarea>
                     </div>
                 </div>
             </div>
