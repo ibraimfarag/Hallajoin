@@ -1,197 +1,148 @@
-@extends('admin.layouts.app')
+﻿@extends('admin.layouts.app')
 
 @section('content')
-    <div class="container-fluid">
-        <div class="dashboard-page">
-            <h4 class="welcome-title text-uppercase">{{__('Welcome :name!',['name'=>Auth::user()->nameOrEmail])}}</h4>
+    <div class="container-fluid dashboard-modern">
+        <!-- Welcome Header -->
+        <div class="welcome-header">
+            <h1 class="welcome-title">{{__('Welcome to Admin Panel!')}}</h1>
         </div>
-        <br>
-        <div class="row">
-            @if(!empty($top_cards))
-                @foreach($top_cards as $card)
-                    <div class="col-sm-{{$card['size']}} col-md-{{$card['size_md']}}">
-                        <div class="dashboard-report-card card {{$card['class']}}">
-                            <div class="card-content">
-                                <span class="card-title">{{$card['title']}}</span>
-                                <span class="card-amount">{{$card['amount']}}</span>
-                                <span class="card-desc">{{$card['desc']}}</span>
-                            </div>
-                            <div class="card-media">
-                                <i class="{{$card['icon']}}"></i>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            @endif
-        </div>
-        <div class="row">
-            <div class="col-md-12 col-lg-6 mb-3">
-                <div class="panel">
-                    <div class="panel-title d-flex justify-content-between align-items-center">
-                        <strong>{{__('Earning statistics')}}</strong>
-                        <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
-                            <i class="fa fa-calendar"></i>&nbsp;
-                            <span></span> <i class="fa fa-caret-down"></i>
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <canvas id="earning_chart"></canvas>
-                        <script>
-                            var earning_chart_data = {!! json_encode($earning_chart_data) !!};
-                        </script>
+
+        <!-- Top Row Stats -->
+        <div class="row dashboard-stats-row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <h3 class="stat-title">{{__('Total Users')}}</h3>
+                        <div class="stat-value">{{ \App\User::count() }}</div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 col-lg-6 ">
-                <div class="panel">
-                    <div class="panel-title d-flex justify-content-between">
-                        <strong>{{__('Recent Bookings')}}</strong>
-                        <a href="{{route('report.admin.booking')}}" class="btn-link">{{__("More")}}
-                            <i class="icon ion-ios-arrow-forward"></i></a>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <h3 class="stat-title">{{__('Today Registrations')}}</h3>
+                        <div class="stat-value">{{ \App\User::whereDate('created_at', today())->count() }}</div>
                     </div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                <tr>
-                                    <th width="60px">#</th>
-                                    <th>{{__('Item')}}</th>
-                                    <th width="100px">{{__("Total")}}</th>
-                                    <th width="100px">{{__("Paid")}}</th>
-                                    <th width="100px">{{__("Status")}}</th>
-                                    <th width="100px">{{__("Created At")}}</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @if(count($recent_bookings) > 0)
-                                    @foreach($recent_bookings as $booking)
-                                        <tr>
-                                            <td>#{{$booking->id}}</td>
-                                            <td>
-                                                @if(get_bookable_service_by_id($booking->object_model) and $service = $booking->service)
-                                                    <a href="{{$service->getDetailUrl()}}" target="_blank">{{$service->title}}</a>
-                                                @else
-                                                    {{__("[Deleted]")}}
-                                                @endif
-                                            </td>
-                                            <td>{{format_money_main($booking->total)}}</td>
-                                            <td>{{format_money_main($booking->paid)}}</td>
-                                            <td>
-                                                <span class="badge badge-{{$booking->status_class}}">{{$booking->status_name}}</span>
-                                            </td>
-                                            <td>{{display_datetime($booking->created_at)}}</td>
-                                        </tr>
-                                    @endforeach
-                                @else
-                                    <tr>
-                                        <td colspan="5">{{__("No data")}}</td>
-                                    </tr>
-                                @endif
-                                </tbody>
-                            </table>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <h3 class="stat-title">{{__('Total Services')}}</h3>
+                        <div class="stat-value">{{ 
+                                    \DB::table('bravo_tours')->where('status', 'publish')->count() +
+        \DB::table('bravo_hotels')->where('status', 'publish')->count() +
+        \DB::table('bravo_cars')->where('status', 'publish')->count() +
+        \DB::table('bravo_spaces')->where('status', 'publish')->count() +
+        \DB::table('bravo_boats')->where('status', 'publish')->count() +
+        \DB::table('bravo_events')->where('status', 'publish')->count() +
+        \DB::table('bravo_flight')->where('status', 'publish')->count()
+                                }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <h3 class="stat-title">{{__('Pending Orders')}}</h3>
+                        <div class="stat-value">
+                            {{ \Modules\Booking\Models\Booking::whereIn('status', ['draft', 'processing'])->count() }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <br>
-        <div class="row">
+
+        <!-- Sales Stats Row -->
+        <div class="row dashboard-stats-row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <h3 class="stat-title">{{__('Yesterday Sales')}}</h3>
+                        <div class="stat-amount">
+                            {{ number_format(\Modules\Booking\Models\Booking::whereDate('created_at', now()->subDay())->whereIn('status', ['processing', 'draft'])->sum('total'), 2) }}
+                            <span class="stat-currency">AED</span>
+                        </div>
+                        <div class="stat-desc">{{__('from orders')}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <h3 class="stat-title">{{__('Today Sales')}}</h3>
+                        <div class="stat-amount">
+                            {{ number_format(\Modules\Booking\Models\Booking::whereDate('created_at', today())->whereIn('status', ['processing', 'draft'])->sum('total'), 2) }}
+                            <span class="stat-currency">AED</span>
+                        </div>
+                        <div class="stat-desc">{{__('from orders')}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <h3 class="stat-title">{{__('Month Sales')}}</h3>
+                        <div class="stat-amount">
+                            {{ number_format(\Modules\Booking\Models\Booking::whereMonth('created_at', now()->month)->whereIn('status', ['processing', 'draft'])->sum('total'), 2) }}
+                            <span class="stat-currency">AED</span>
+                        </div>
+                        <div class="stat-desc">{{__('from orders')}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <h3 class="stat-title">{{__('Last Month Sales')}}</h3>
+                        <div class="stat-amount">
+                            {{ number_format(\Modules\Booking\Models\Booking::whereMonth('created_at', now()->subMonth()->month)->whereIn('status', ['processing', 'draft'])->sum('total'), 2) }}
+                            <span class="stat-currency">AED</span>
+                        </div>
+                        <div class="stat-desc">{{__('from orders')}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- B2B Sales Stats Row -->
+        <div class="row dashboard-stats-row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <h3 class="stat-title">{{__('B2B Yesterday Sales')}}</h3>
+                        <div class="stat-amount">0.00 <span class="stat-currency">AED</span></div>
+                        <div class="stat-desc">{{__('from orders')}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <h3 class="stat-title">{{__('B2B Today Sales')}}</h3>
+                        <div class="stat-amount">0.00 <span class="stat-currency">AED</span></div>
+                        <div class="stat-desc">{{__('from orders')}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <h3 class="stat-title">{{__('B2B Month Sales')}}</h3>
+                        <div class="stat-amount">0.00 <span class="stat-currency">AED</span></div>
+                        <div class="stat-desc">{{__('from orders')}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <h3 class="stat-title">{{__('B2B Last Month Sales')}}</h3>
+                        <div class="stat-amount">0.00 <span class="stat-currency">AED</span></div>
+                        <div class="stat-desc">{{__('from orders')}}</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
-
-@push('js')
-    <script src="{{url('libs/chart_js/Chart.min.js')}}"></script>
-    <script src="{{url('libs/daterange/moment.min.js')}}"></script>
-    <script src="{{url('libs/daterange/daterangepicker.min.js?_ver='.config('app.asset_version'))}}"></script>
-    <link rel="stylesheet" href="{{url('libs/daterange/daterangepicker.css')}}"/>
-    <script>
-        var ctx = document.getElementById('earning_chart').getContext('2d');
-        window.myMixedChart = new Chart(ctx, {
-            type: 'bar',
-            data: earning_chart_data,
-            options: {
-                responsive: true,
-                tooltips: {
-                    mode: 'index',
-                    intersect: true
-                },
-                scales: {
-                    xAxes: [{
-                        stacked: true,
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: '{{__("Timeline")}}'
-                        }
-                    }],
-                    yAxes: [{
-                        stacked: true,
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: '{{__("Currency: :currency_main",['currency_main'=>setting_item('currency_main')])}}'
-                        },
-                        ticks: {
-                            beginAtZero: true,
-                        }
-                    }]
-                },
-                tooltips: {
-                    callbacks: {
-                        label: function (tooltipItem, data) {
-                            var label = data.datasets[tooltipItem.datasetIndex].label || '';
-                            if (label) {
-                                label += ': ';
-                            }
-                            label += tooltipItem.yLabel + " ({{setting_item('currency_main')}})";
-                            return label;
-                        }
-                    }
-                }
-            }
-        });
-
-        var start = moment().startOf('week');
-        var end = moment();
-        function cb(start, end) {
-            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-        }
-        $('#reportrange').daterangepicker({
-            startDate: start,
-            endDate: end,
-            "alwaysShowCalendars": true,
-            "opens": "left",
-            "showDropdowns": true,
-            ranges: {
-                '{{__("Today")}}': [moment(), moment()],
-                '{{__("Yesterday")}}': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                '{{__("Last 7 Days")}}': [moment().subtract(6, 'days'), moment()],
-                '{{__("Last 30 Days")}}': [moment().subtract(29, 'days'), moment()],
-                '{{__("This Month")}}': [moment().startOf('month'), moment().endOf('month')],
-                '{{__("Last Month")}}': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-                '{{__("This Year")}}': [moment().startOf('year'), moment().endOf('year')],
-                '{{__('This Week')}}': [moment().startOf('week'), end]
-            }
-        }, cb).on('apply.daterangepicker', function (ev, picker) {
-            // Reload Earning JS
-            $.ajax({
-                url: '{{route('report.admin.statistic.reloadChart')}}',
-                data: {
-                    chart: 'earning',
-                    from: picker.startDate.format('YYYY-MM-DD'),
-                    to: picker.endDate.format('YYYY-MM-DD'),
-                },
-                dataType: 'json',
-                type: 'post',
-                success: function (res) {
-                    if (res.status) {
-                        window.myMixedChart.data = res.data;
-                        window.myMixedChart.update();
-                    }
-                }
-            })
-        });
-        cb(start, end);
-    </script>
-@endpush
