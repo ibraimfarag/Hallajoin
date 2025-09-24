@@ -126,9 +126,10 @@
                                                 <td>
                                                     @php
                                                         if (!function_exists('flattenValue')) {
-                                                            function flattenValue($val) {
+                                                            function flattenValue($val)
+                                                            {
                                                                 if (is_array($val)) {
-                                                                    return implode(', ', array_map(function($v) {
+                                                                    return implode(', ', array_map(function ($v) {
                                                                         return is_array($v) ? flattenValue($v) : $v;
                                                                     }, $val));
                                                                 }
@@ -138,7 +139,8 @@
                                                     @endphp
                                                     @if($item->booking_data)
                                                         @foreach($item->booking_data as $key => $value)
-                                                            <small><strong>{{ ucfirst($key) }}:</strong> {{ flattenValue($value) }}</small><br>
+                                                            <small><strong>{{ ucfirst($key) }}:</strong>
+                                                                {{ flattenValue($value) }}</small><br>
                                                         @endforeach
                                                     @else
                                                         <span class="text-muted">{{__('No additional data')}}</span>
