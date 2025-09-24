@@ -10,7 +10,7 @@
         {{ __("Sort by:") }}
     </div>
     <div class="dropdown">
-        <span class=" dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class=" dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             @switch($orderby)
                 @case("price_low_high")
                 {{ __("Price (Low to high)") }}

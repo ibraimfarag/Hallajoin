@@ -1,36 +1,36 @@
 (function ($) {
     new Vue({
-        el:'#bravo_tour_book_app',
-        data:{
-            id:'',
-            extra_price:[],
-            person_types:[],
-            message:{
-                content:'',
-                type:false
+        el: '#bravo_tour_book_app',
+        data: {
+            id: '',
+            extra_price: [],
+            person_types: [],
+            message: {
+                content: '',
+                type: false
             },
-            html:'',
-            onSubmit:false,
-            start_date:'',
-            start_date_html:'',
-            step:1,
-            guests:1,
-            price:0,
-            total_price_before_fee:0,
-            total_price_fee:0,
-            max_guests:1,
-            start_date_obj:'',
-            duration:0,
-            allEvents:[],
-			buyer_fees:[],
+            html: '',
+            onSubmit: false,
+            start_date: '',
+            start_date_html: '',
+            step: 1,
+            guests: 1,
+            price: 0,
+            total_price_before_fee: 0,
+            total_price_fee: 0,
+            max_guests: 1,
+            start_date_obj: '',
+            duration: 0,
+            allEvents: [],
+            buyer_fees: [],
             timeRangeDisplay: '',
-            is_form_enquiry_and_book:false,
-            enquiry_type:'book',
-            enquiry_is_submit:false,
-            enquiry_name:"",
-            enquiry_email:"",
-            enquiry_phone:"",
-            enquiry_note:"",
+            is_form_enquiry_and_book: false,
+            enquiry_type: 'book',
+            enquiry_is_submit: false,
+            enquiry_name: "",
+            enquiry_email: "",
+            enquiry_phone: "",
+            enquiry_note: "",
             selectedDate: '', // Store selected date
             dayTimeSlots: {    // Example structure mapping days to time slots
                 1: [], // Monday
@@ -40,31 +40,34 @@
                 5: [], // Friday
                 6: [], // Saturday
                 7: [], // Sunday
-             },
-            displayedTimeSlots: [] ,
-            openHours: openHours 
-        
+            },
+            displayedTimeSlots: [],
+            openHours: openHours
+            ,
+            // Popup control when adding to cart from single page
+            showCartPopup: false,
+            cartPopupTimeout: null
         },
-        watch:{
-            extra_price:{
-                handler:function f() {
+        watch: {
+            extra_price: {
+                handler: function f() {
                     this.step = 1;
                 },
-                deep:true
+                deep: true
             },
-            start_date(){
+            start_date() {
                 this.step = 1;
             },
-            guests(){
+            guests() {
                 this.step = 1;
             },
-            person_types:{
-                handler:function f() {
+            person_types: {
+                handler: function f() {
                     this.step = 1;
                 },
-                deep:true
+                deep: true
             },
-            start_date(){
+            start_date() {
                 this.step = 1;
                 var me = this;
                 var startDate = new Date(me.start_date).getTime();
@@ -83,8 +86,8 @@
                 }
             },
         },
-        computed:{
-            total_price:function(){
+        computed: {
+            total_price: function () {
                 var me = this;
                 if (me.start_date !== "") {
                     var total = 0;
@@ -97,7 +100,7 @@
                             total += parseFloat(person_type.price) * parseInt(person_type.number);
                             total_guests += parseInt(person_type.number);
                         }
-                    }else{
+                    } else {
                         // for default
                         total_guests = me.guests;
                         total += me.guests * me.price;
@@ -105,7 +108,7 @@
 
                     for (var ix in me.extra_price) {
                         var item = me.extra_price[ix];
-                        if(!item.price) continue;
+                        if (!item.price) continue;
                         var type_total = 0;
                         if (item.enable == 1) {
                             switch (item.type) {
@@ -136,14 +139,14 @@
                     for (var ix in me.buyer_fees) {
                         var item = me.buyer_fees[ix];
 
-                        if(!item.price) continue;
+                        if (!item.price) continue;
 
                         //for Fixed
                         var fee_price = parseFloat(item.price);
 
                         //for Percent
-                        if (typeof item.unit !== "undefined" && item.unit === "percent" ) {
-                            fee_price = ( total / 100 ) * fee_price;
+                        if (typeof item.unit !== "undefined" && item.unit === "percent") {
+                            fee_price = (total / 100) * fee_price;
                         }
 
                         if (typeof item.per_person !== "undefined") {
@@ -158,20 +161,19 @@
                 }
                 return 0;
             },
-            total_price_html:function(){
-                if(!this.total_price) return '';
+            total_price_html: function () {
+                if (!this.total_price) return '';
                 return window.bravo_format_money(this.total_price);
             },
-            daysOfWeekDisabled(){
+            daysOfWeekDisabled() {
                 var res = [];
 
-                for(var k in this.open_hours)
-                {
-                    if(typeof this.open_hours[k].enable == 'undefined' || this.open_hours[k].enable !=1 ){
+                for (var k in this.open_hours) {
+                    if (typeof this.open_hours[k].enable == 'undefined' || this.open_hours[k].enable != 1) {
 
-                        if(k == 7){
+                        if (k == 7) {
                             res.push(0);
-                        }else{
+                        } else {
                             res.push(k);
                         }
                     }
@@ -179,41 +181,53 @@
 
                 return res;
             },
-            pay_now_price:function(){
-                if(this.is_deposit_ready){
+            pay_now_price: function () {
+                if (this.is_deposit_ready) {
                     var total_price_depossit = 0;
 
                     var tmp_total_price = this.total_price;
                     var deposit_fomular = this.deposit_fomular;
-                    if(deposit_fomular === "deposit_and_fee"){
+                    if (deposit_fomular === "deposit_and_fee") {
                         tmp_total_price = this.total_price_before_fee;
                     }
 
                     switch (this.deposit_type) {
                         case "percent":
-                            total_price_depossit =  tmp_total_price * this.deposit_amount / 100;
+                            total_price_depossit = tmp_total_price * this.deposit_amount / 100;
                             break;
                         default:
-                            total_price_depossit =  this.deposit_amount;
+                            total_price_depossit = this.deposit_amount;
                     }
-                    if(deposit_fomular === "deposit_and_fee"){
+                    if (deposit_fomular === "deposit_and_fee") {
                         total_price_depossit = total_price_depossit + this.total_price_fee;
                     }
 
-                    return  total_price_depossit
+                    return total_price_depossit
                 }
                 return this.total_price;
             },
-            pay_now_price_html:function(){
+            pay_now_price_html: function () {
                 return window.bravo_format_money(this.pay_now_price);
             },
-            is_deposit_ready:function () {
-                if(this.deposit && this.deposit_amount) return true;
+            is_deposit_ready: function () {
+                if (this.deposit && this.deposit_amount) return true;
                 return false;
             }
+            ,
+            // List of person types that have a positive number (for popup display)
+            selectedPersonTypes: function () {
+                if (!this.person_types) return [];
+                try {
+                    return this.person_types.filter(function (t) {
+                        return parseInt(t.number) > 0;
+                    });
+                } catch (e) {
+                    return [];
+                }
+            }
         },
-        created:function(){
-            for(var k in bravo_booking_data){
+        created: function () {
+            for (var k in bravo_booking_data) {
                 this[k] = bravo_booking_data[k];
             }
         },
@@ -236,7 +250,7 @@
                     direction: bookingCore.rtl ? 'rtl' : 'ltr',
                     firstDay: daterangepickerLocale.first_day_of_week
                 },
-                isInvalidDate: function(date) {
+                isInvalidDate: function (date) {
                     for (var k = 0; k < me.allEvents.length; k++) {
                         var item = me.allEvents[k];
                         if (item.start == date.format('YYYY-MM-DD')) {
@@ -245,7 +259,7 @@
                     }
                     return false;
                 },
-                addClassCustom: function(date) {
+                addClassCustom: function (date) {
                     for (var k = 0; k < me.allEvents.length; k++) {
                         var item = me.allEvents[k];
                         if (item.start == date.format('YYYY-MM-DD') && item.classNames !== undefined) {
@@ -260,30 +274,30 @@
                     return "";
                 }
             };
-    
+
             if (typeof daterangepickerLocale == 'object') {
                 options.locale = _.merge(daterangepickerLocale, options.locale);
             }
-    
-            this.$nextTick(function() {
+
+            this.$nextTick(function () {
                 $(this.$refs.start_date).daterangepicker(options)
-                    .on('apply.daterangepicker', function(ev, picker) {
+                    .on('apply.daterangepicker', function (ev, picker) {
                         // Format the date to display as "Sat, 31 Aug 2024"
                         me.start_date = picker.startDate.format('YYYY-MM-DD');
                         me.start_date_html = picker.startDate.format('ddd, DD MMM YYYY'); // Adjust the format here
                         me.updateTimeRange(picker.startDate); // Pass the selected date
                     })
-                    .on('update-calendar', function(e, obj) {
+                    .on('update-calendar', function (e, obj) {
                         me.fetchEvents(obj.leftCalendar.calendar[0][0], obj.leftCalendar.calendar[5][6]);
                     });
             });
-            
+
         },
-    
-        
-      
-                
-        methods:{
+
+
+
+
+        methods: {
             handleTotalPrice: function () {
             },
 
@@ -291,50 +305,50 @@
                 // Extract the day of the week from the selected date and update time slots accordingly
                 const selectedDate = new Date(this.selectedDate);
                 const selectedDay = selectedDate.getDay(); // getDay() returns 0 (Sunday) to 6 (Saturday)
-                
+
                 // Adjust the day to match your array indexing (1 = Monday, ..., 7 = Sunday)
                 const adjustedDay = (selectedDay === 0) ? 7 : selectedDay;
-        
+
                 this.displayedTimeSlots = this.dayTimeSlots[adjustedDay] || []; // Update time slots display
             },
 
             openStartDate() {
                 $(this.$refs.start_date).trigger('click');
             },
-         
+
             updateTimeRange(date) {
-        const dayOfWeek = date.day(); // Day of the week (1 = Monday, 7 = Sunday)
-        
-        // Adjust the day to match your array indexing (1 = Monday, ..., 7 = Sunday)
-        const adjustedDay = (dayOfWeek === 0) ? 7 : dayOfWeek;
+                const dayOfWeek = date.day(); // Day of the week (1 = Monday, 7 = Sunday)
 
-        const openHours = this.openHours[adjustedDay];
+                // Adjust the day to match your array indexing (1 = Monday, ..., 7 = Sunday)
+                const adjustedDay = (dayOfWeek === 0) ? 7 : dayOfWeek;
 
-        if (openHours && openHours.enable === "1") {
-            this.timeRangeDisplay = openHours.from + " - " + openHours.to;
-        } else {
-            this.timeRangeDisplay = "null";
-        }
+                const openHours = this.openHours[adjustedDay];
+
+                if (openHours && openHours.enable === "1") {
+                    this.timeRangeDisplay = openHours.from + " - " + openHours.to;
+                } else {
+                    this.timeRangeDisplay = "null";
+                }
             },
-            fetchEvents(start,end){
+            fetchEvents(start, end) {
                 var me = this;
                 var data = {
                     start: start.format('YYYY-MM-DD'),
                     end: end.format('YYYY-MM-DD'),
-                    id:bravo_booking_data.id,
-                    for_single:1
+                    id: bravo_booking_data.id,
+                    for_single: 1
                 };
                 console.log(data);
 
                 $.ajax({
                     url: bravo_booking_i18n.load_dates_url,
-                    dataType:"json",
-                    type:'get',
-                    data:data,
-                    beforeSend: function() {
+                    dataType: "json",
+                    type: 'get',
+                    data: data,
+                    beforeSend: function () {
                         $('.daterangepicker').addClass("loading");
                     },
-                    success:function (json) {
+                    success: function (json) {
                         me.allEvents = json;
                         var drp = $(me.$refs.start_date).data('daterangepicker');
                         drp.allEvents = json;
@@ -344,7 +358,7 @@
                         }
                         $('.daterangepicker').removeClass("loading");
                     },
-                    error:function (e) {
+                    error: function (e) {
                         console.log(e);
                         console.log("Can not get availability");
                     }
@@ -353,108 +367,105 @@
             formatMoney: function (m) {
                 return window.bravo_format_money(m);
             },
-            validate(){
-                if(!this.start_date)
-                {
+            validate() {
+                if (!this.start_date) {
                     this.message.status = false;
                     this.message.content = bravo_booking_i18n.no_date_select;
                     return false;
                 }
                 return true;
             },
-            addPersonType(type){
+            addPersonType(type) {
                 type.number = parseInt(type.number);
-                if(type.number < parseInt(type.max) || !type.max) type.number +=1;
+                if (type.number < parseInt(type.max) || !type.max) type.number += 1;
             },
-            minusPersonType(type){
+            minusPersonType(type) {
                 type.number = parseInt(type.number);
-                if(type.number > type.min) type.number -=1;
+                if (type.number > type.min) type.number -= 1;
             },
-            changePersonType(type){
+            changePersonType(type) {
                 type.number = parseInt(type.number);
-                if(type.number > parseInt(type.max)){
+                if (type.number > parseInt(type.max)) {
                     type.number = type.max;
                 }
-                if(type.number < type.min){
+                if (type.number < type.min) {
                     type.number = type.min
                 }
             },
-            addGuestsType(){
+            addGuestsType() {
                 var me = this;
-                if(me.guests < parseInt(me.max_guests) || !me.max_guests) me.guests +=1;
+                if (me.guests < parseInt(me.max_guests) || !me.max_guests) me.guests += 1;
             },
-            minusGuestsType(){
+            minusGuestsType() {
                 var me = this;
-                if(me.guests > 1) me.guests -=1;
+                if (me.guests > 1) me.guests -= 1;
             },
-            doSubmit:function (e) {
+            doSubmit: function (e) {
                 e.preventDefault();
-                if(this.onSubmit) return false;
+                if (this.onSubmit) return false;
 
-                if(!this.validate()) return false;
+                if (!this.validate()) return false;
 
                 this.onSubmit = true;
                 var me = this;
 
                 this.message.content = '';
 
-                if(this.step == 1){
+                if (this.step == 1) {
                     this.html = '';
                 }
                 $.ajax({
-                    url:bookingCore.url+'/booking/addToCart',
-                    data:{
-                        service_id:this.id,
-                        service_type:'tour',
-                        start_date:this.start_date,
-                        person_types:this.person_types,
-                        extra_price:this.extra_price,
-                        guests:this.guests
+                    url: bookingCore.url + '/booking/addToCart',
+                    data: {
+                        service_id: this.id,
+                        service_type: 'tour',
+                        start_date: this.start_date,
+                        person_types: this.person_types,
+                        extra_price: this.extra_price,
+                        guests: this.guests
                     },
-                    dataType:'json',
-                    type:'post',
-                    success:function(res){
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (res) {
 
-                        if(!res.status){
+                        if (!res.status) {
                             me.onSubmit = false;
                         }
-                        if(res.message)
-                        {
+                        if (res.message) {
                             me.message.content = res.message;
                             me.message.type = res.status;
                         }
 
-                        if(res.step){
+                        if (res.step) {
                             me.step = res.step;
                         }
-                        if(res.html){
+                        if (res.html) {
                             me.html = res.html
                         }
 
-                        if(res.url){
+                        if (res.url) {
                             window.location.href = res.url
                         }
 
-                        if(res.errors && typeof res.errors == 'object')
-                        {
+                        if (res.errors && typeof res.errors == 'object') {
                             var html = '';
-                            for(var i in res.errors){
-                                html += res.errors[i]+'<br>';
+                            for (var i in res.errors) {
+                                html += res.errors[i] + '<br>';
                             }
                             me.message.content = html;
                         }
                     },
-                    error:function (e) {
+                    error: function (e) {
                         console.log(e);
                         me.onSubmit = false;
 
                         bravo_handle_error_response(e);
 
-                        if(e.status == 401){
+                        if (e.status == 401) {
                             $('.bravo_single_book_wrap').modal('hide');
                         }
 
-                        if(e.status != 401 && e.responseJSON){
+                        if (e.status != 401 && e.responseJSON) {
                             me.message.content = e.responseJSON.message ? e.responseJSON.message : 'Can not booking';
                             me.message.type = false;
 
@@ -462,41 +473,39 @@
                     }
                 })
             },
-            doEnquirySubmit:function(e){
+            doEnquirySubmit: function (e) {
                 e.preventDefault();
-                if(this.onSubmit) return false;
-                if(!this.validateenquiry()) return false;
+                if (this.onSubmit) return false;
+                if (!this.validateenquiry()) return false;
                 this.onSubmit = true;
                 var me = this;
                 this.message.content = '';
 
                 $.ajax({
-                    url:bookingCore.url+'/booking/addEnquiry',
-                    data:{
-                        service_id:this.id,
-                        service_type:'tour',
-                        name:this.enquiry_name,
-                        email:this.enquiry_email,
-                        phone:this.enquiry_phone,
-                        note:this.enquiry_note,
+                    url: bookingCore.url + '/booking/addEnquiry',
+                    data: {
+                        service_id: this.id,
+                        service_type: 'tour',
+                        name: this.enquiry_name,
+                        email: this.enquiry_email,
+                        phone: this.enquiry_phone,
+                        note: this.enquiry_note,
                     },
-                    dataType:'json',
-                    type:'post',
-                    success:function(res){
-                        if(res.message)
-                        {
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (res) {
+                        if (res.message) {
                             me.message.content = res.message;
                             me.message.type = res.status;
                         }
-                        if(res.errors && typeof res.errors == 'object')
-                        {
+                        if (res.errors && typeof res.errors == 'object') {
                             var html = '';
-                            for(var i in res.errors){
-                                html += res.errors[i]+'<br>';
+                            for (var i in res.errors) {
+                                html += res.errors[i] + '<br>';
                             }
                             me.message.content = html;
                         }
-                        if(res.status){
+                        if (res.status) {
                             me.enquiry_is_submit = true;
                             me.enquiry_name = "";
                             me.enquiry_email = "";
@@ -506,38 +515,165 @@
                         me.onSubmit = false;
 
                     },
-                    error:function (e) {
+                    error: function (e) {
                         me.onSubmit = false;
                         bravo_handle_error_response(e);
-                        if(e.status == 401){
+                        if (e.status == 401) {
                             $('.bravo_single_book_wrap').modal('hide');
                         }
-                        if(e.status != 401 && e.responseJSON){
+                        if (e.status != 401 && e.responseJSON) {
                             me.message.content = e.responseJSON.message ? e.responseJSON.message : 'Can not booking';
                             me.message.type = false;
                         }
                     }
                 })
             },
-            validateenquiry(){
-                if(!this.enquiry_name)
-                {
+            validateenquiry() {
+                if (!this.enquiry_name) {
                     this.message.status = false;
                     this.message.content = bravo_booking_i18n.name_required;
                     return false;
                 }
-                if(!this.enquiry_email)
-                {
+                if (!this.enquiry_email) {
                     this.message.status = false;
                     this.message.content = bravo_booking_i18n.email_required;
                     return false;
                 }
                 return true;
             },
-            openStartDate(){
+            openStartDate() {
                 $(this.$refs.start_date).trigger('click');
+            },
+            addToCart() {
+                const me = this;
+                if (!me.validate()) {
+                    return false;
+                }
+
+                // استخدام نفس البيانات المستخدمة في الحجز العادي
+                const cartData = {
+                    service_id: me.id,
+                    service_type: 'tour',
+                    start_date: me.start_date,
+                    person_types: me.person_types,
+                    extra_price: me.extra_price,
+                    guests: me.guests
+                };
+
+                me.onSubmit = true;
+
+                $.ajax({
+                    url: bookingCore.url + '/booking/addToCart',
+                    data: cartData,
+                    method: 'post',
+                    success: function (res) {
+                        if (res.status) {
+                            me.message.content = res.message || 'تمت إضافة الرحلة إلى العربة بنجاح';
+                            me.message.type = true;
+
+                            // إعادة توجيه للعربة بعد ثانيتين
+                            setTimeout(() => {
+                                if (res.cart_url) {
+                                    window.location.href = res.cart_url;
+                                }
+                            }, 2000);
+                        } else {
+                            me.message.content = res.message || 'حدث خطأ أثناء الإضافة للعربة';
+                            me.message.type = false;
+
+                            if (res.errors && typeof res.errors === 'object') {
+                                let errorHtml = '';
+                                for (let field in res.errors) {
+                                    errorHtml += res.errors[field].join('<br>') + '<br>';
+                                }
+                                me.message.content = errorHtml;
+                            }
+                        }
+                        me.onSubmit = false;
+                    },
+                    error: function (e) {
+                        me.onSubmit = false;
+                        console.error('Error:', e);
+                        me.message.content = 'حدث خطأ أثناء الإضافة للعربة';
+                        me.message.type = false;
+                    }
+                });
             }
-            
+
+            ,
+            // Add to cart and show popup for 10 seconds (used by template)
+            addToCartWithPopup() {
+                const me = this;
+                if (!me.validate()) {
+                    return false;
+                }
+
+                const cartData = {
+                    service_id: me.id,
+                    service_type: 'tour',
+                    start_date: me.start_date,
+                    person_types: me.person_types,
+                    extra_price: me.extra_price,
+                    guests: me.guests
+                };
+
+                me.onSubmit = true;
+
+                $.ajax({
+                    url: bookingCore.url + '/booking/addToCart',
+                    data: cartData,
+                    method: 'post',
+                    success: function (res) {
+                        if (res.status) {
+                            me.message.content = res.message || 'تمت إضافة الرحلة إلى العربة بنجاح';
+                            me.message.type = true;
+
+                            // show popup
+                            me.showCartPopup = true;
+                            if (me.cartPopupTimeout) clearTimeout(me.cartPopupTimeout);
+                            me.cartPopupTimeout = setTimeout(function () {
+                                me.showCartPopup = false;
+                            }, 10000);
+
+                            // update cart icon count if provided
+                            if (res.count !== undefined) {
+                                try {
+                                    document.getElementById('cart-icon-count').textContent = res.count;
+                                } catch (e) {
+                                    // ignore
+                                }
+                            }
+
+                        } else {
+                            me.message.content = res.message || 'حدث خطأ أثناء الإضافة للعربة';
+                            me.message.type = false;
+                            if (res.errors && typeof res.errors === 'object') {
+                                let errorHtml = '';
+                                for (let field in res.errors) {
+                                    errorHtml += res.errors[field].join('<br>') + '<br>';
+                                }
+                                me.message.content = errorHtml;
+                            }
+                        }
+                        me.onSubmit = false;
+                    },
+                    error: function (e) {
+                        me.onSubmit = false;
+                        console.error('Error:', e);
+                        me.message.content = 'حدث خطأ أثناء الإضافة للعربة';
+                        me.message.type = false;
+                    }
+                });
+            },
+
+            closeCartPopup() {
+                this.showCartPopup = false;
+                if (this.cartPopupTimeout) {
+                    clearTimeout(this.cartPopupTimeout);
+                    this.cartPopupTimeout = null;
+                }
+            }
+
         }
 
     });
@@ -545,9 +681,9 @@
 
     $(window).on("load", function () {
         var urlHash = window.location.href.split("#")[1];
-        if (urlHash &&  $('.' + urlHash).length ){
+        if (urlHash && $('.' + urlHash).length) {
             var offset_other = 70
-            if(urlHash === "review-list"){
+            if (urlHash === "review-list") {
                 offset_other = 330;
             }
             $('html,body').animate({

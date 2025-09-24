@@ -24,7 +24,9 @@
 
     @include('Layout::parts.seo-meta')
     <link href="{{ asset('libs/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
     <link href="{{ asset('libs/ionicons/css/ionicons.min.css') }}" rel="stylesheet">
@@ -33,7 +35,7 @@
     <link href="{{ asset('dist/frontend/css/notification.css') }}" rel="newest stylesheet">
     <link href="{{ asset('dist/frontend/css/app.css?_ver=' . config('app.asset_version')) }}" rel="stylesheet">
 
-    
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.6.1/build/css/intlTelInput.css">
 
 
@@ -62,7 +64,6 @@
 </head>
 
 <body
-
     class="frontend-page {{ !empty($row->header_style) ? 'header-' . $row->header_style : 'header-normal' }} {{ $body_class ?? '' }} @if (setting_item_with_lang('enable_rtl')) is-rtl @endif @if (is_api()) is_api @endif">
     @if (!is_demo_mode())
         {!! setting_item('body_scripts') !!}
@@ -73,7 +74,7 @@
             {{-- @include('Layout::parts.topbar') --}}
             @include('Layout::parts.header')
         @endif
-   
+
         @yield('content')
 
         @include('Layout::parts.footer')
@@ -88,12 +89,12 @@
         <i class="fab fa-whatsapp fa-2x"></i>
     </div>
 
-        <!-- Call Icon -->
-        <div class="call-icon" onclick="openCall()">
-            <i class="fas fa-phone fa-2x"></i>
-        </div>
-    
-    
+    <!-- Call Icon -->
+    <div class="call-icon" onclick="openCall()">
+        <i class="fas fa-phone fa-2x"></i>
+    </div>
+
+
     <!-- Scripts -->
     <script>
         function openWhatsApp() {
@@ -111,12 +112,12 @@
     </script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             var header = $("#bravo-header");
             var headerOffset = header.offset().top;
             var searchResults = $(".search-results");
 
-            $(window).scroll(function() {
+            $(window).scroll(function () {
                 if ($(window).scrollTop() > headerOffset) {
                     header.addClass("fixed-header");
                     searchResults.css("top", "8vh");
@@ -129,11 +130,11 @@
     </script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             var inputEl = $('.search-input');
             var resultsContainer = $('.search-results');
 
-            inputEl.on('input', function() {
+            inputEl.on('input', function () {
                 var query = $(this).val().trim();
 
                 // Clear previous results
@@ -147,9 +148,9 @@
                         data: JSON.stringify({
                             query: query
                         }),
-                        success: function(response) {
+                        success: function (response) {
                             if (response.tours.length > 0) {
-                                response.tours.forEach(function(tour) {
+                                response.tours.forEach(function (tour) {
                                     var resultEl = $('<a>')
                                         .addClass('result-item')
                                         .attr('href', '/tour/' + tour.slug)
@@ -226,7 +227,7 @@
                                 resultsContainer.hide();
                             }
                         },
-                        error: function() {
+                        error: function () {
                             resultsContainer.hide();
                         }
                     });
@@ -236,9 +237,9 @@
             });
 
             // Hide results container when clicking outside of it
-            $(document).on('click', function(event) {
+            $(document).on('click', function (event) {
                 if (!resultsContainer.is(event.target) && !inputEl.is(event.target) && resultsContainer.has(
-                        event.target).length === 0) {
+                    event.target).length === 0) {
                     resultsContainer.hide();
                 }
             });
@@ -247,7 +248,7 @@
 
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('.locationowl').owlCarousel({
                 loop: true,
                 margin: 10,
@@ -272,11 +273,11 @@
 
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             var inputEl = $('.search-input-mobile');
             var resultsContainer = $('.search-results-mobile');
 
-            $('#search-toggle-btn').on('click', function() {
+            $('#search-toggle-btn').on('click', function () {
                 var searchInput = $('#typing-placeholder-mobile');
                 if (searchInput.css('display') === 'none') {
                     searchInput.css('display', 'block');
@@ -286,7 +287,7 @@
                 }
             });
 
-            inputEl.on('input', function() {
+            inputEl.on('input', function () {
                 var query = $(this).val().trim();
 
                 // Clear previous results
@@ -300,9 +301,9 @@
                         data: JSON.stringify({
                             query: query
                         }),
-                        success: function(response) {
+                        success: function (response) {
                             if (response.tours.length > 0) {
-                                response.tours.forEach(function(tour) {
+                                response.tours.forEach(function (tour) {
                                     var resultEl = $('<a>')
                                         .addClass('result-item')
                                         .attr('href', '/tour/' + tour.slug);
@@ -342,7 +343,7 @@
                                 resultsContainer.hide();
                             }
                         },
-                        error: function() {
+                        error: function () {
                             resultsContainer.hide();
                         }
                     });
@@ -351,94 +352,103 @@
                 }
             });
 
-            $(document).on('click', function(event) {
+            $(document).on('click', function (event) {
                 if (!resultsContainer.is(event.target) && !inputEl.is(event.target) && resultsContainer.has(
-                        event.target).length === 0) {
+                    event.target).length === 0) {
                     resultsContainer.hide();
                 }
             });
         });
     </script>
 
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.6.1/build/js/intlTelInput.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.6.1/build/js/utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.6.1/build/js/intlTelInput.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.6.1/build/js/utils.js"></script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const phoneInput = document.querySelector("#phone");
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const phoneInput = document.querySelector("#phone");
 
-        const iti = window.intlTelInput(phoneInput, {
-            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.6.1/build/js/utils.js",
-        });
+            // Check if phone input exists before initializing
+            if (phoneInput) {
+                const iti = window.intlTelInput(phoneInput, {
+                    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.6.1/build/js/utils.js",
+                });
 
-        // Set the default country to United Arab Emirates (AE)
-        iti.setCountry("AE");
+                // Set the default country to United Arab Emirates (AE)
+                iti.setCountry("AE");
 
-        // Function to update the input value with the country code and phone number
-        function updatePhoneNumber() {
-            const countryData = iti.getSelectedCountryData();
-            const countryCode = countryData.dialCode;
-            const phoneNumber = phoneInput.value.replace(/^\+\d+\s*/, ''); // Remove any existing country code
-            phoneInput.value = `+${countryCode} ${phoneNumber}`; // Update the input value with the new country code
-        }
+                // Function to update the input value with the country code and phone number
+                function updatePhoneNumber() {
+                    const countryData = iti.getSelectedCountryData();
+                    const countryCode = countryData.dialCode;
+                    const phoneNumber = phoneInput.value.replace(/^\+\d+\s*/, ''); // Remove any existing country code
+                    phoneInput.value = `+${countryCode} ${phoneNumber}`; // Update the input value with the new country code
+                }
 
-        // Initialize phone number display
-        updatePhoneNumber();
-
-        // Add event listener for input changes
-        phoneInput.addEventListener("input", function() {
-            updatePhoneNumber();
-        });
-
-        // Polling to detect country changes
-        let previousCountryCode = iti.getSelectedCountryData().dialCode;
-        setInterval(function() {
-            const currentCountryCode = iti.getSelectedCountryData().dialCode;
-            if (currentCountryCode !== previousCountryCode) {
-                previousCountryCode = currentCountryCode;
+                // Initialize phone number display
                 updatePhoneNumber();
-            }
-        }, 500); // Check every 500 milliseconds
-    });
-</script>
 
-<script>
-    // JavaScript to toggle password visibility
-    const login_passwordField = document.getElementById('login_passwordField');
-    const login_togglePassword = document.getElementById('login_togglePassword');
+                // Add event listener for input changes
+                phoneInput.addEventListener("input", function () {
+                    updatePhoneNumber();
+                });
 
-    
-    const register_passwordField = document.getElementById('register_passwordField');
-    const register_togglePassword = document.getElementById('register_togglePassword');
+                // Polling to detect country changes
+                let previousCountryCode = iti.getSelectedCountryData().dialCode;
+                setInterval(function () {
+                    const currentCountryCode = iti.getSelectedCountryData().dialCode;
+                    if (currentCountryCode !== previousCountryCode) {
+                        previousCountryCode = currentCountryCode;
+                        updatePhoneNumber();
+                    }
+                }, 500); // Check every 500 milliseconds
+            } // End of if (phoneInput) check
+        });
+    </script>
 
-    login_togglePassword.addEventListener('click', function() {
-        const type = login_passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-        login_passwordField.setAttribute('type', type);
-        // Toggle eye icon
-        if (type === 'password') {
-            login_togglePassword.classList.add('icofont-eye');
-            login_togglePassword.classList.remove('icofont-eye-blocked');
-        } else {
-            login_togglePassword.classList.remove('icofont-eye');
-            login_togglePassword.classList.add('icofont-eye-blocked');
+    <script>
+        // JavaScript to toggle password visibility
+        const login_passwordField = document.getElementById('login_passwordField');
+        const login_togglePassword = document.getElementById('login_togglePassword');
+
+
+        const register_passwordField = document.getElementById('register_passwordField');
+        const register_togglePassword = document.getElementById('register_togglePassword');
+
+        // Check if login elements exist before adding event listeners
+        if (login_passwordField && login_togglePassword) {
+            login_togglePassword.addEventListener('click', function () {
+                const type = login_passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                login_passwordField.setAttribute('type', type);
+                // Toggle eye icon
+                if (type === 'password') {
+                    login_togglePassword.classList.add('icofont-eye');
+                    login_togglePassword.classList.remove('icofont-eye-blocked');
+                } else {
+                    login_togglePassword.classList.remove('icofont-eye');
+                    login_togglePassword.classList.add('icofont-eye-blocked');
+                }
+            });
         }
-    });
 
-    register_togglePassword.addEventListener('click', function() {
-        const type = register_passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-        register_passwordField.setAttribute('type', type);
-        // Toggle eye icon
-        if (type === 'password') {
-            register_togglePassword.classList.add('icofont-eye');
-            register_togglePassword.classList.remove('icofont-eye-blocked');
-        } else {
-            register_togglePassword.classList.remove('icofont-eye');
-            register_togglePassword.classList.add('icofont-eye-blocked');
+        // Check if register elements exist before adding event listeners
+        if (register_passwordField && register_togglePassword) {
+            register_togglePassword.addEventListener('click', function () {
+                const type = register_passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                register_passwordField.setAttribute('type', type);
+                // Toggle eye icon
+                if (type === 'password') {
+                    register_togglePassword.classList.add('icofont-eye');
+                    register_togglePassword.classList.remove('icofont-eye-blocked');
+                } else {
+                    register_togglePassword.classList.remove('icofont-eye');
+                    register_togglePassword.classList.add('icofont-eye-blocked');
+                }
+            });
         }
-    });
 
-    
-</script>
+
+    </script>
 
 </body>
 

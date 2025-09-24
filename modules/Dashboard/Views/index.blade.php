@@ -30,14 +30,14 @@
                     <div class="stat-content">
                         <h3 class="stat-title">{{__('Total Services')}}</h3>
                         <div class="stat-value">{{ 
-                                    \DB::table('bravo_tours')->where('status', 'publish')->count() +
+                                        \DB::table('bravo_tours')->where('status', 'publish')->count() +
         \DB::table('bravo_hotels')->where('status', 'publish')->count() +
         \DB::table('bravo_cars')->where('status', 'publish')->count() +
         \DB::table('bravo_spaces')->where('status', 'publish')->count() +
         \DB::table('bravo_boats')->where('status', 'publish')->count() +
         \DB::table('bravo_events')->where('status', 'publish')->count() +
         \DB::table('bravo_flight')->where('status', 'publish')->count()
-                                }}</div>
+                                    }}</div>
                     </div>
                 </div>
             </div>
@@ -47,6 +47,44 @@
                         <h3 class="stat-title">{{__('Pending Orders')}}</h3>
                         <div class="stat-value">
                             {{ \Modules\Booking\Models\Booking::whereIn('status', ['draft', 'processing'])->count() }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Stats Row -->
+        <div class="row dashboard-stats-row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <h3 class="stat-title">{{__('Total Carts')}}</h3>
+                        <div class="stat-value">{{ \App\Models\Cart::count() }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <h3 class="stat-title">{{__('Active Carts')}}</h3>
+                        <div class="stat-value">{{ \App\Models\Cart::where('status', 'active')->count() }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <h3 class="stat-title">{{__('Abandoned Carts')}}</h3>
+                        <div class="stat-value">{{ \App\Models\Cart::where('status', 'abandoned')->count() }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <h3 class="stat-title">{{__('Cart Total Value')}}</h3>
+                        <div class="stat-value">
+                            {{ number_format(\App\Models\Cart::where('status', 'active')->sum('total_amount'), 2) }} AED
                         </div>
                     </div>
                 </div>

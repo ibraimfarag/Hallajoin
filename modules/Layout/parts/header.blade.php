@@ -67,11 +67,13 @@
 
                         
 
+
                             @include('Layout::parts.wishlist')
                             @include('Layout::parts.notification')
+                            @include('Layout::parts.cart')
 
 
-                            <li class="login-item dropdown">
+                            <li class="login-item dropdown ml-4">
                                 <a href="#" data-toggle="dropdown" class="login">{{__("Hi, :name",['name'=>Auth::user()->getDisplayName()])}}
                                     <i class="fa fa-angle-down"></i>
                                 </a>

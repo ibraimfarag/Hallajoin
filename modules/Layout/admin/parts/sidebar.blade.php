@@ -1,48 +1,55 @@
 <?php
 $menus = [
-    'admin'=>[
-        'url'   => route('admin.index'),
+    'admin' => [
+        'url' => route('admin.index'),
         'title' => __("Dashboard"),
-        'icon'  => 'icon ion-ios-desktop',
-        "position"=>0
+        'icon' => 'icon ion-ios-desktop',
+        "position" => 0
     ],
-    'menu'=>[
-        "position"=>60,
-        'url'        => route('core.admin.menu.index'),
-        'title'      => __("Menu"),
-        'icon'       => 'icon ion-ios-apps',
+    'carts' => [
+        "position" => 20,
+        'url' => route('admin.carts.index'),
+        'title' => __("Shopping Carts"),
+        'icon' => 'icon ion-ios-basket',
+        'permission' => 'dashboard_access',
+    ],
+    'menu' => [
+        "position" => 60,
+        'url' => route('core.admin.menu.index'),
+        'title' => __("Menu"),
+        'icon' => 'icon ion-ios-apps',
         'permission' => 'menu_view',
     ],
-    'general'=>[
-        "position"=>80,
-        'url'        => route('core.admin.settings.index',['group'=>'general']),
-        'title'      => __('Setting'),
-        'icon'       => 'icon ion-ios-cog',
+    'general' => [
+        "position" => 80,
+        'url' => route('core.admin.settings.index', ['group' => 'general']),
+        'title' => __('Setting'),
+        'icon' => 'icon ion-ios-cog',
         'permission' => 'setting_update',
-        'children'   => \Modules\Core\Models\Settings::getSettingPages(true)
+        'children' => \Modules\Core\Models\Settings::getSettingPages(true)
     ],
-    'tools'=>[
-        "position"=>90,
-        'url'      => route('core.admin.tool.index'),
-        'title'    => __("Tools"),
-        'icon'     => 'icon ion-ios-hammer',
+    'tools' => [
+        "position" => 90,
+        'url' => route('core.admin.tool.index'),
+        'title' => __("Tools"),
+        'icon' => 'icon ion-ios-hammer',
         'children' => [
-            'language'=>[
-                'url'        => route('language.admin.index'),
-                'title'      => __('Languages'),
-                'icon'       => 'icon ion-ios-globe',
+            'language' => [
+                'url' => route('language.admin.index'),
+                'title' => __('Languages'),
+                'icon' => 'icon ion-ios-globe',
                 'permission' => 'language_manage',
             ],
-            'translation'=>[
-                'url'        => route('language.admin.translations.index'),
-                'title'      => __("Translation Manager"),
-                'icon'       => 'icon ion-ios-globe',
+            'translation' => [
+                'url' => route('language.admin.translations.index'),
+                'title' => __("Translation Manager"),
+                'icon' => 'icon ion-ios-globe',
                 'permission' => 'language_translation',
             ],
-            'logs'=>[
-                'url'        => route('admin.logs'),
-                'title'      => __("System Logs"),
-                'icon'       => 'icon ion-ios-nuclear',
+            'logs' => [
+                'url' => route('admin.logs'),
+                'title' => __("System Logs"),
+                'icon' => 'icon ion-ios-nuclear',
                 'permission' => 'system_log_view',
             ],
         ]
@@ -51,29 +58,28 @@ $menus = [
 
 // Modules
 $custom_modules = \Modules\ServiceProvider::getActivatedModules();
-if(!empty($custom_modules)){
+if (!empty($custom_modules)) {
     $custom_modules[] = [
-        'id'=>'theme',
-        'class'=>\Modules\Theme\ModuleProvider::class
+        'id' => 'theme',
+        'class' => \Modules\Theme\ModuleProvider::class
     ];
-    foreach($custom_modules as $moduleData){
+    foreach ($custom_modules as $moduleData) {
         $module = $moduleData['id'];
         $moduleClass = $moduleData['class'];
-        if(class_exists($moduleClass))
-        {
-            $menuConfig = call_user_func([$moduleClass,'getAdminMenu']);
+        if (class_exists($moduleClass)) {
+            $menuConfig = call_user_func([$moduleClass, 'getAdminMenu']);
 
-            if(!empty($menuConfig)){
-                $menus = array_merge($menus,$menuConfig);
+            if (!empty($menuConfig)) {
+                $menus = array_merge($menus, $menuConfig);
             }
 
-            $menuSubMenu = call_user_func([$moduleClass,'getAdminSubMenu']);
+            $menuSubMenu = call_user_func([$moduleClass, 'getAdminSubMenu']);
 
-            if(!empty($menuSubMenu)){
-                foreach($menuSubMenu as $k=>$submenu){
-                    $submenu['id'] = $submenu['id'] ?? '_'.$k;
+            if (!empty($menuSubMenu)) {
+                foreach ($menuSubMenu as $k => $submenu) {
+                    $submenu['id'] = $submenu['id'] ?? '_' . $k;
 
-                    if(!empty($submenu['parent']) and isset($menus[$submenu['parent']])){
+                    if (!empty($submenu['parent']) and isset($menus[$submenu['parent']])) {
                         $menus[$submenu['parent']]['children'][$submenu['id']] = $submenu;
                         $menus[$submenu['parent']]['children'] = array_values(\Illuminate\Support\Arr::sort($menus[$submenu['parent']]['children'], function ($value) {
                             return $value['position'] ?? 100;
@@ -89,20 +95,19 @@ if(!empty($custom_modules)){
 // dd($custom_modules);
 // Plugins Menu
 $plugins_modules = \Plugins\ServiceProvider::getModules();
-if(!empty($plugins_modules)){
-    foreach($plugins_modules as $module){
-        $moduleClass = "\\Plugins\\".ucfirst($module)."\\ModuleProvider";
-        if(class_exists($moduleClass))
-        {
-            $menuConfig = call_user_func([$moduleClass,'getAdminMenu']);
-            if(!empty($menuConfig)){
-                $menus = array_merge($menus,$menuConfig);
+if (!empty($plugins_modules)) {
+    foreach ($plugins_modules as $module) {
+        $moduleClass = "\\Plugins\\" . ucfirst($module) . "\\ModuleProvider";
+        if (class_exists($moduleClass)) {
+            $menuConfig = call_user_func([$moduleClass, 'getAdminMenu']);
+            if (!empty($menuConfig)) {
+                $menus = array_merge($menus, $menuConfig);
             }
-            $menuSubMenu = call_user_func([$moduleClass,'getAdminSubMenu']);
-            if(!empty($menuSubMenu)){
-                foreach($menuSubMenu as $k=>$submenu){
-                    $submenu['id'] = $submenu['id'] ?? '_'.$k;
-                    if(!empty($submenu['parent']) and isset($menus[$submenu['parent']])){
+            $menuSubMenu = call_user_func([$moduleClass, 'getAdminSubMenu']);
+            if (!empty($menuSubMenu)) {
+                foreach ($menuSubMenu as $k => $submenu) {
+                    $submenu['id'] = $submenu['id'] ?? '_' . $k;
+                    if (!empty($submenu['parent']) and isset($menus[$submenu['parent']])) {
                         $menus[$submenu['parent']]['children'][$submenu['id']] = $submenu;
                         $menus[$submenu['parent']]['children'] = array_values(\Illuminate\Support\Arr::sort($menus[$submenu['parent']]['children'], function ($value) {
                             return $value['position'] ?? 100;
@@ -116,23 +121,22 @@ if(!empty($plugins_modules)){
 // dd($plugins_modules);
 // Custom Menu
 $custom_modules = \Custom\ServiceProvider::getModules();
-if(!empty($custom_modules)){
-    foreach($custom_modules as $module){
-        $moduleClass = "\\Custom\\".ucfirst($module)."\\ModuleProvider";
-        if(class_exists($moduleClass))
-        {
-            $menuConfig = call_user_func([$moduleClass,'getAdminMenu']);
+if (!empty($custom_modules)) {
+    foreach ($custom_modules as $module) {
+        $moduleClass = "\\Custom\\" . ucfirst($module) . "\\ModuleProvider";
+        if (class_exists($moduleClass)) {
+            $menuConfig = call_user_func([$moduleClass, 'getAdminMenu']);
 
-            if(!empty($menuConfig)){
-                $menus = array_merge($menus,$menuConfig);
+            if (!empty($menuConfig)) {
+                $menus = array_merge($menus, $menuConfig);
             }
 
-            $menuSubMenu = call_user_func([$moduleClass,'getAdminSubMenu']);
+            $menuSubMenu = call_user_func([$moduleClass, 'getAdminSubMenu']);
 
-            if(!empty($menuSubMenu)){
-                foreach($menuSubMenu as $k=>$submenu){
-                    $submenu['id'] = $submenu['id'] ?? '_'.$k;
-                    if(!empty($submenu['parent']) and isset($menus[$submenu['parent']])){
+            if (!empty($menuSubMenu)) {
+                foreach ($menuSubMenu as $k => $submenu) {
+                    $submenu['id'] = $submenu['id'] ?? '_' . $k;
+                    if (!empty($submenu['parent']) and isset($menus[$submenu['parent']])) {
                         $menus[$submenu['parent']]['children'][$submenu['id']] = $submenu;
                         $menus[$submenu['parent']]['children'] = array_values(\Illuminate\Support\Arr::sort($menus[$submenu['parent']]['children'], function ($value) {
                             return $value['position'] ?? 100;
@@ -152,7 +156,7 @@ if(!empty($custom_modules)){
 $typeManager = app()->make(\Modules\Type\TypeManager::class);
 $menuConfig = $typeManager->adminMenus();
 
-$menus = array_merge($menus,$menuConfig);
+$menus = array_merge($menus, $menuConfig);
 
 
 
@@ -162,7 +166,7 @@ if (!empty($menus)) {
     foreach ($menus as $k => $menuItem) {
 
         // Check if the title is "Themes" or "User Plans" and skip these menu items
-        if (!empty($menuItem['title']) && ($menuItem['title'] === 'Themes' || $menuItem['title'] === 'User Plans '||$menuItem['title'] === 'News'|| $menuItem['title'] === 'Payouts ')) {
+        if (!empty($menuItem['title']) && ($menuItem['title'] === 'Themes' || $menuItem['title'] === 'User Plans ' || $menuItem['title'] === 'News' || $menuItem['title'] === 'Payouts ')) {
             unset($menus[$k]);
             continue;
         }
@@ -199,14 +203,14 @@ if (!empty($menus)) {
 ?>
 <ul class="main-menu pb-5">
     @foreach($menus as $menuItem)
-        @php $menuItem['class'] .= " ".str_ireplace("/","_",$menuItem['url']) @endphp
+        @php $menuItem['class'] .= " " . str_ireplace("/", "_", $menuItem['url']) @endphp
         <li class="{{$menuItem['class']}}"><a href="{{ url($menuItem['url']) }}">
                 @if(!empty($menuItem['icon']))
                     <span class="icon text-center"><i class="{{$menuItem['icon']}}"></i></span>
                 @endif
-                {!! clean($menuItem['title'],[
-                    'Attr.AllowedClasses'=>null
-                ]) !!}
+                {!! clean($menuItem['title'], [
+            'Attr.AllowedClasses' => null
+        ]) !!}
             </a>
             @if(!empty($menuItem['children']))
                 <span class="btn-toggle"><i class="fa fa-angle-left pull-right"></i></span>
@@ -216,9 +220,9 @@ if (!empty($menus)) {
                                 @if(!empty($menuItem2['icon']))
                                     <i class="{{$menuItem2['icon']}}"></i>
                                 @endif
-                                {!! clean($menuItem2['title'],[
-                                    'Attr.AllowedClasses'=>null
-                                ]) !!}</a>
+                                {!! clean($menuItem2['title'], [
+                            'Attr.AllowedClasses' => null
+                        ]) !!}</a>
                         </li>
                     @endforeach
                 </ul>

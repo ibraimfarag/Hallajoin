@@ -84,10 +84,11 @@
     </div>
 </div>
 @if (
-    !empty($row->duration) or
+        !empty($row->duration) or
         !empty($row->category_tour->name) or
         !empty($row->max_people) or
-        !empty($row->location->name))
+        !empty($row->location->name)
+    )
     <div class="g-tour-feature">
         <div class="row">
             @if ($row->duration)
@@ -106,7 +107,7 @@
                 </div>
             @endif
             @if (!empty($row->category_tour->name))
-                @php $cat =  $row->category_tour->translate() @endphp
+                @php $cat = $row->category_tour->translate() @endphp
                 <div class="col-xs-6 col-lg-3 col-md-6">
                     <div class="item">
                         <div class="icon">
@@ -141,7 +142,7 @@
                 </div>
             @endif
             @if (!empty($row->location->name))
-                @php $location =  $row->location->translate() @endphp
+                @php $location = $row->location->translate() @endphp
                 <div class="col-xs-6 col-lg-3 col-md-6">
                     <div class="item">
                         <div class="icon">
@@ -162,15 +163,17 @@
 
 @php
     // Function to extract YouTube video ID from various URL formats
-    function getYouTubeVideoID($url)
-    {
-        // Extract video ID from different YouTube URL formats
-        preg_match(
-            '/(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^\"&?\/\s]{11})/',
-            $url,
-            $matches,
-        );
-        return $matches[1] ?? null;
+    if (!function_exists('getYouTubeVideoID')) {
+        function getYouTubeVideoID($url)
+        {
+            // Extract video ID from different YouTube URL formats
+            preg_match(
+                '/(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^\"&?\/\s]{11})/',
+                $url,
+                $matches,
+            );
+            return $matches[1] ?? null;
+        }
     }
 
     // Extract video URL and ID
@@ -186,8 +189,7 @@
             @if ($row->video)
                 <!-- Static Video Slide -->
                 @if ($thumbnailURL)
-                    <a href="#" class="video-thumbnail" data-video="{{ $videoURL }}"
-                        data-title="{{ __('YouTube Video') }}">
+                    <a href="#" class="video-thumbnail" data-video="{{ $videoURL }}" data-title="{{ __('YouTube Video') }}">
                         <img src="{{ $thumbnailURL }}" alt="{{ __('YouTube Video Thumbnail') }}">
                     </a>
                 @endif
@@ -204,19 +206,22 @@
                 </span>
                 <ul class="share-wrapper">
                     {{-- <li>
-                        <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u={{$row->getDetailUrl()}}&amp;title={{$translation->title}}" target="_blank" rel="noopener" original-title="{{__("Facebook")}}">
+                        <a class="facebook"
+                            href="https://www.facebook.com/sharer/sharer.php?u={{$row->getDetailUrl()}}&amp;title={{$translation->title}}"
+                            target="_blank" rel="noopener" original-title="{{__(" Facebook")}}">
                             <i class="fa fa-facebook fa-lg"></i>
                         </a>
                     </li>
                     <li>
-                        <a class="twitter" href="https://twitter.com/share?url={{$row->getDetailUrl()}}&amp;title={{$translation->title}}" target="_blank" rel="noopener" original-title="{{__("Twitter")}}">
+                        <a class="twitter"
+                            href="https://twitter.com/share?url={{$row->getDetailUrl()}}&amp;title={{$translation->title}}"
+                            target="_blank" rel="noopener" original-title="{{__(" Twitter")}}">
                             <i class="fa fa-twitter fa-lg"></i>
                         </a>
                     </li> --}}
 
                     <li>
-                        <a class="link"
-                            href="whatsapp://send?text={{ $translation->title }}: {{ $row->getDetailUrl() }}"
+                        <a class="link" href="whatsapp://send?text={{ $translation->title }}: {{ $row->getDetailUrl() }}"
                             target="_blank" rel="noopener" original-title="{{ __('WhatsApp') }}">
                             <i class="fab fa-whatsapp-square"></i>
                         </a>
@@ -230,8 +235,7 @@
 
                 </ul>
             </div>
-            <div class="service-wishlist {{ $row->isWishList() }}" data-id="{{ $row->id }}"
-                data-type="{{ $row->type }}">
+            <div class="service-wishlist {{ $row->isWishList() }}" data-id="{{ $row->id }}" data-type="{{ $row->type }}">
                 <i class="fa fa-heart"></i>
             </div>
         </div>
@@ -255,7 +259,7 @@
         <div id="collapseOverview" class="collapse" aria-labelledby="headingOverview" data-parent="#accordionExample">
             <div class="card-body">
                 <div class="description">
-                    <?php echo $translation->content; ?>
+                    <?php    echo $translation->content; ?>
                 </div>
             </div>
         </div>
@@ -277,8 +281,7 @@
                 </button>
             </h2>
         </div>
-        <div id="collapseLocation" class="collapse" aria-labelledby="headingLocation"
-            data-parent="#accordionExample">
+        <div id="collapseLocation" class="collapse" aria-labelledby="headingLocation" data-parent="#accordionExample">
             <div class="card-body">
                 <div class="coordinates">
                     <p>
@@ -303,13 +306,13 @@
     }
 </script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Function to extract YouTube video ID from URL
         function getYouTubeVideoID(url) {
             var videoID = null;
             var match = url.match(
                 /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^\"&?\/\s]{11})/
-                );
+            );
             if (match) {
                 videoID = match[1];
             }
@@ -327,29 +330,29 @@
         }
 
         var modal = document.getElementById("videoModal");
-    var videoContainer = document.getElementById("videoContainer");
-    var span = document.getElementsByClassName("close")[0];
+        var videoContainer = document.getElementById("videoContainer");
+        var span = document.getElementsByClassName("close")[0];
 
-    document.querySelectorAll('.video-thumbnail').forEach(function(element) {
-        element.addEventListener('click', function(event) {
-            event.preventDefault();
-            var videoUrl = this.getAttribute('data-video');
-            var iframe = '<iframe src="' + videoUrl + '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-            videoContainer.innerHTML = iframe;
-            modal.style.display = "block";
+        document.querySelectorAll('.video-thumbnail').forEach(function (element) {
+            element.addEventListener('click', function (event) {
+                event.preventDefault();
+                var videoUrl = this.getAttribute('data-video');
+                var iframe = '<iframe src="' + videoUrl + '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+                videoContainer.innerHTML = iframe;
+                modal.style.display = "block";
+            });
         });
-    });
 
-    span.onclick = function() {
-        modal.style.display = "none";
-        videoContainer.innerHTML = ''; // Clear video when modal is closed
-    }
-
-    window.onclick = function(event) {
-        if (event.target === modal) {
+        span.onclick = function () {
             modal.style.display = "none";
             videoContainer.innerHTML = ''; // Clear video when modal is closed
         }
-    }
-        });
+
+        window.onclick = function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+                videoContainer.innerHTML = ''; // Clear video when modal is closed
+            }
+        }
+    });
 </script>

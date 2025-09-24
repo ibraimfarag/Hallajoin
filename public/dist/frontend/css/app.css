@@ -8222,7 +8222,7 @@ ol, ul {
 
 .bravo_wrap .bravo_topbar .content .topbar-right .dropdown-menu {
     border-radius: 0;
-    left: auto !important;
+    left: auto ;
     min-width: 200px;
     right: 0;
     top: 15px !important

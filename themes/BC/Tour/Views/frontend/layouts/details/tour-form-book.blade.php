@@ -7,9 +7,9 @@
     <div class="bravo_single_book">
         <div id="bravo_tour_book_app" v-cloak>
             {{-- @if ($row->discount_percent)
-                <div class="tour-sale-box">
-                    <span class="sale_class box_sale sale_small">{{$row->discount_percent}}</span>
-                </div>
+            <div class="tour-sale-box">
+                <span class="sale_class box_sale sale_small">{{$row->discount_percent}}</span>
+            </div>
             @endif --}}
             <div class="form-head">
                 <div class="price">
@@ -27,13 +27,12 @@
                         <div class="tour-sale-box">
                             {{-- <span class="sale_class box_sale sale_small">{{$row->discount_percent}}</span> --}}
                         </div>
-                        <span
-                            class="text-price-discount_percent">{{ __('Save up to ') }}{{ $row->discount_percent }}</span>
+                        <span class="text-price-discount_percent">{{ __('Save up to ') }}{{ $row->discount_percent }}</span>
                     @endif
                 </div>
             </div>
             {{-- <div class="nav-enquiry" v-if="is_form_enquiry_and_book">
-                <div class="enquiry-item active" >
+                <div class="enquiry-item active">
                     <span>{{ __("Book") }}</span>
                 </div>
                 <div class="enquiry-item" data-toggle="modal" data-target="#enquiry_form_modal">
@@ -69,8 +68,8 @@
                         </div>
                         <div v-if="timeRangeDisplay && timeRangeDisplay.trim() !== ''" class="render check-in-render">
                             <div class="date-box">
-                                <div class="ml-3" style="color: grey !important;font-size: 13px !important;" >
-    <i class="far fa-clock"></i>
+                                <div class="ml-3" style="color: grey !important;font-size: 13px !important;">
+                                    <i class="far fa-clock"></i>
                                     <span>{{ __('Time:') }}</span>
                                     <span>@{{ timeRangeDisplay }}</span>
                                 </div>
@@ -79,8 +78,7 @@
 
 
 
-                        <input type="text" class="start_date" ref="start_date"
-                            style="height: 1px; visibility: hidden">
+                        <input type="text" class="start_date" ref="start_date" style="height: 1px; visibility: hidden">
                     </div>
 
 
@@ -96,8 +94,7 @@
                         <button class="btn btn-secondary button-persson" type="button" data-toggle="collapse"
                             data-target="#personOptions" aria-expanded="false" aria-controls="personOptions">
                             <i class="fas fa-user-friends"></i>
-                            Select Persons <i class="fa fa-angle-down arrow"
-                                style="    font-size: 24px !important;
+                            Select Persons <i class="fa fa-angle-down arrow" style="    font-size: 24px !important;
     color: #000;"></i>
                         </button>
 
@@ -117,7 +114,8 @@
                                                         <label>@{{ type.name }}</label>
                                                         <div class="render check-in-render">@{{ type.desc }}</div>
                                                         <div class="render check-in-render">@{{ type.display_price }}
-                                                            {{ __('per ') }}@{{ type.name }}</div>
+                                                            {{ __('per ') }}@{{ type.name }}
+                                                        </div>
                                                     </div>
                                                     <div class="flex-shrink-0">
                                                         <div class="input-number-group">
@@ -207,23 +205,58 @@
                 </li>
             </ul>
             <div v-html="html"></div>
-            <div class="submit-group">
-                <a class="btn btn-large" @click="doSubmit($event)"
-                    :class="{ 'disabled': onSubmit, 'btn-success': (step == 2), 'btn-primary': step == 1 }"
-                    name="submit">
-                    <span>{{ __('BOOK NOW') }}</span>
-                    <i v-show="onSubmit" class="fa fa-spinner fa-spin"></i>
+            <div class="submit-group d-flex gap-2">
+                <a class="btn btn-success btn-large w-100" href="#" @click.prevent="addToCartWithPopup">
+                    <span><i class="fa fa-shopping-cart"></i> {{ __('Add to Cart') }}</span>
                 </a>
-                <div class="alert-text mt10" v-show="message.content" v-html="message.content"
-                    :class="{ 'danger': !message.type, 'success': message.type }"></div>
+
+            </div>
+
+            <!-- Popup Modal -->
+            <div v-if="showCartPopup" class="modal fade show" tabindex="-1"
+                style="display:block; background:rgba(0,0,0,0.3);" @click.self="closeCartPopup">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title"><i class="fa fa-check-circle"></i> {{ __('Added to Cart!') }}</h5>
+                            <button type="button" class="close text-white"
+                                @click="closeCartPopup"><span>&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <h6>{{ $row->title }}</h6>
+                            <div class="mb-2">
+                                <span class="font-weight-bold">{{ __('Date:') }}</span>
+                                <span v-if="is_fixed_date">@{{ start_date_html }} - @{{ end_date_html }}</span>
+                                <span v-else>@{{ start_date_html }}</span>
+                            </div>
+                            <div class="mb-2" v-if="person_types && person_types.length">
+                                <span class="font-weight-bold">{{ __('Persons:') }}</span>
+                                <span v-for="(type, idx) in selectedPersonTypes" v-if="type.number > 0">
+                                    @{{ type.name }}: @{{ type.number }}<span
+                                        v-if="idx < selectedPersonTypes.length - 1">, </span>
+                                </span>
+                            </div>
+                            <div class="mb-2" v-else>
+                                <span class="font-weight-bold">{{ __('Guests:') }}</span> @{{ guests }}
+                            </div>
+                            <div class="mb-2">
+                                <span class="font-weight-bold">{{ __('Total:') }}</span> <span class="text-success">@{{
+                                    total_price_html }}</span>
+                            </div>
+                            <div class="alert alert-success mb-0">
+                                {{ __('The tour has been added to your cart successfully!') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         {{-- <div class="form-send-enquiry" v-show="enquiry_type=='enquiry'">
             <button class="btn btn-primary" data-toggle="modal" data-target="#enquiry_form_modal">
                 {{ __('Contact Now') }}
             </button>
-        </div>
-    </div> --}}
+        </div> --}}
+    </div>
 </div>
 
 @include('Booking::frontend.global.enquiry-form', ['service_type' => 'tour'])
