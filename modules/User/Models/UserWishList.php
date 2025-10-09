@@ -18,6 +18,11 @@ class UserWishList extends BaseModel
 
         $module = $allServices[$objectModel];
         // dd( $module);
-        return $this->hasOne($module, "id", 'object_id')->where("deleted_at",null);
+        return $this->hasOne($module, "id", 'object_id')->where("deleted_at", null);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(\App\User::class, 'user_id');
     }
 }

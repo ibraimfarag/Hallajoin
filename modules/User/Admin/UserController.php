@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -14,6 +15,7 @@ use Modules\User\Models\Role;
 use Modules\User\Models\User;
 use Modules\Vendor\Models\VendorRequest;
 use Modules\User\Exports\UserExport;
+use Modules\Booking\Models\Booking;
 
 class UserController extends AdminController
 {
@@ -25,26 +27,88 @@ class UserController extends AdminController
     public function index(Request $request)
     {
         $this->checkPermission('user_view');
+
+        $listUser = User::query()->orderBy('id', 'desc');
+
+        // Search filter
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $listUser->where(function ($query) use ($search) {
+                $query->where('first_name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('business_name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('id', $search)
+                    ->orWhere('phone', 'LIKE', '%' . $search . '%')
+                    ->orWhere('email', 'LIKE', '%' . $search . '%')
+                    ->orWhere('last_name', 'LIKE', '%' . $search . '%')
+                    ->orWhere(DB::raw("CONCAT(first_name,' ',last_name)"), 'LIKE', '%' . $search . '%');
+            });
+        }
+
+        // Date range filters
+        if ($request->filled('from')) {
+            $listUser->whereDate('created_at', '>=', $request->get('from'));
+        }
+
+        if ($request->filled('to')) {
+            $listUser->whereDate('created_at', '<=', $request->get('to'));
+        }
+
+        // Country filter
+        if ($request->filled('country')) {
+            $listUser->where('country', $request->get('country'));
+        }
+
+        // Role filter
+        if ($request->filled('role')) {
+            $listUser->role($request->get('role'));
+        }
+
+        // Language filter
+        if ($request->filled('language')) {
+            $listUser->where('language', $request->get('language'));
+        }
+
+        // Checkbox filters
+        if ($request->has('any_role') && !$request->filled('role')) {
+            // Show users with any role (has at least one role)
+            $listUser->whereNotNull('role_id');
+        }
+
+        if ($request->has('blocked')) {
+            $listUser->where('blocked', 1);
+        }
+
+        if ($request->has('order_blocked')) {
+            $listUser->where('order_blocked', 1);
+        }
+
+        // Support legacy search parameter
         $username = $request->query('s');
-        $listUser = User::query()->orderBy('id','desc');
         if (!empty($username)) {
-             $listUser->where(function($query) use($username){
-                 $query->where('first_name', 'LIKE', '%' . $username . '%');
-                 $query->orWhere('business_name', 'LIKE', '%' . $username . '%');
-                 $query->orWhere('id',  $username);
-                 $query->orWhere('phone',  $username);
-                 $query->orWhere('email', 'LIKE', '%' . $username . '%');
-                 $query->orWhere('last_name', 'LIKE', '%' . $username . '%');
-                 $query->orWhere(DB::raw("CONCAT(first_name,' ',last_name)"), 'LIKE', '%' . $username . '%');
-             });
+            $listUser->where(function ($query) use ($username) {
+                $query->where('first_name', 'LIKE', '%' . $username . '%');
+                $query->orWhere('business_name', 'LIKE', '%' . $username . '%');
+                $query->orWhere('id', $username);
+                $query->orWhere('phone', $username);
+                $query->orWhere('email', 'LIKE', '%' . $username . '%');
+                $query->orWhere('last_name', 'LIKE', '%' . $username . '%');
+                $query->orWhere(DB::raw("CONCAT(first_name,' ',last_name)"), 'LIKE', '%' . $username . '%');
+            });
         }
-        if($request->query('role')){
-            $listUser->role($request->query('role'));
-        }
+
         //$listUser->with(['wallet']);
+        $countries = User::query()
+            ->whereNotNull('country')
+            ->where('country', '!=', '')
+            ->distinct('country')
+            ->pluck('country')
+            ->toArray();
+        sort($countries);
+
         $data = [
             'rows' => $listUser->paginate(20),
-            'roles' => Role::all()
+            'roles' => Role::all(),
+            'countries' => $countries,
         ];
         return view('User::admin.index', $data);
     }
@@ -56,10 +120,10 @@ class UserController extends AdminController
         $data = [
             'row' => $row,
             'roles' => Role::all(),
-            'breadcrumbs'=>[
+            'breadcrumbs' => [
                 [
-                    'name'=>__("Users"),
-                    'url'=>route('user.admin.index')
+                    'name' => __("Users"),
+                    'url' => route('user.admin.index')
                 ]
             ]
         ];
@@ -72,19 +136,19 @@ class UserController extends AdminController
         if (empty($row)) {
             return redirect(route('user.admin.index'));
         }
-        if ($row->id != Auth::user()->id and !Auth::user()->hasPermission('user_update')) {
+        if ($row->id != Auth::user()->id and !$this->checkPermission('user_update', false)) {
             abort(403);
         }
         $data = [
-            'row'   => $row,
+            'row' => $row,
             'roles' => Role::all(),
-            'breadcrumbs'=>[
+            'breadcrumbs' => [
                 [
-                    'name'=>__("Users"),
-                    'url'=>route('user.admin.index')
+                    'name' => __("Users"),
+                    'url' => route('user.admin.index')
                 ],
                 [
-                    'name'=>__("Edit User: #:id",['id'=>$row->id]),
+                    'name' => __("Edit User: #:id", ['id' => $row->id]),
                     'class' => 'active'
                 ],
             ]
@@ -92,37 +156,38 @@ class UserController extends AdminController
         return view('User::admin.detail', $data);
     }
 
-    public function password(Request $request,$id){
+    public function password(Request $request, $id)
+    {
 
         $row = User::find($id);
-        $data  = [
-            'row'=>$row,
-            'currentUser'=>Auth::user()
+        $data = [
+            'row' => $row,
+            'currentUser' => Auth::user()
         ];
         if (empty($row)) {
             return redirect(route('user.admin.index'));
         }
-        if ($row->id != Auth::user()->id and !Auth::user()->hasPermission('user_update')) {
+        if ($row->id != Auth::user()->id and !$this->checkPermission('user_update', false)) {
             abort(403);
         }
-        return view('User::admin.password',$data);
+        return view('User::admin.password', $data);
     }
 
     public function changepass(Request $request, $id)
     {
-        if(is_demo_mode()){
+        if (is_demo_mode()) {
             return redirect()->back()->with("error", __("DEMO MODE: You can not change password!"));
         }
         $rules = [];
         $urow = User::find($id);
-        if ($urow->id != Auth::user()->id and !Auth::user()->hasPermission('user_update')) {
+        if ($urow->id != Auth::user()->id and !$this->checkPermission('user_update', false)) {
             abort(403);
         }
         $request->validate([
-            'password'              => 'required|min:6|max:255|confirmed',
+            'password' => 'required|min:6|max:255|confirmed',
         ]);
         $password = $request->input('password');
-        if ($urow->id != Auth::user()->id and !Auth::user()->hasPermission('user_update')) {
+        if ($urow->id != Auth::user()->id and !$this->checkPermission('user_update', false)) {
             if ($password) {
                 if ($urow->id != Auth::user()->id) {
                     $rules['old_password'] = 'required';
@@ -150,32 +215,32 @@ class UserController extends AdminController
 
     public function store(Request $request, $id)
     {
-        if(is_demo_mode()){
-            return back()->with('danger',  __('DEMO Mode: You can not do this') );
+        if (is_demo_mode()) {
+            return back()->with('danger', __('DEMO Mode: You can not do this'));
         }
 
-        if($id and $id>0){
+        if ($id and $id > 0) {
             $this->checkPermission('user_update');
             $row = User::find($id);
-            if(empty($row)){
+            if (empty($row)) {
                 abort(404);
             }
-            if ($row->id != Auth::user()->id and !Auth::user()->hasPermission('user_update')) {
+            if ($row->id != Auth::user()->id and !$this->checkPermission('user_update', false)) {
                 abort(403);
             }
 
-        }else{
+        } else {
             $this->checkPermission('user_create');
             $row = new User();
         }
 
         $rules = [
-            'first_name'              => 'required|max:255',
-            'last_name'              => 'required|max:255',
-            'business_name'              => 'max:255',
-            'status'              => 'required|max:50',
-            'role_id'              => 'required|max:11',
-            'email'              =>[
+            'first_name' => 'required|max:255',
+            'last_name' => 'required|max:255',
+            'business_name' => 'max:255',
+            'status' => 'required|max:50',
+            'role_id' => 'required|max:11',
+            'email' => [
                 'required',
                 'email',
                 'max:255',
@@ -183,52 +248,53 @@ class UserController extends AdminController
             ],
         ];
 
-        $request->validate($rules,[
-            'business_name.required'=>__("Display name is a required field")
+        $request->validate($rules, [
+            'business_name.required' => __("Display name is a required field")
         ]);
 
         $data = [
-            'first_name'=>$request->input('first_name'),
-            'last_name'=>$request->input('last_name'),
-            'user_name'=>$request->input('user_name'),
-            'phone'=>$request->input('phone'),
-            'birthday'=>$request->input('birthday') ? date("Y-m-d", strtotime($request->input('birthday'))) : null,
-            'bio'=>$request->input('bio'),
-            'status'=>$request->input('status'),
-            'avatar_id'=>$request->input('avatar_id'),
-            'email'=>$request->input('email'),
-            'business_name'=>$request->input('business_name'),
-            'name'=>$request->input('name'),
-            'address'=>$request->input('address'),
-            'address2'=>$request->input('address2'),
-            'country'=>$request->input('country'),
-            'city'=>$request->input('city'),
-            'state'=>$request->input('state'),
-            'zip_code'=>$request->input('zip_code'),
-            'vendor_commission_type'=>$request->input('vendor_commission_type'),
-            'vendor_commission_amount'=>$request->input('vendor_commission_amount'),
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'user_name' => $request->input('user_name'),
+            'phone' => $request->input('phone'),
+            'birthday' => $request->input('birthday') ? date("Y-m-d", strtotime($request->input('birthday'))) : null,
+            'bio' => $request->input('bio'),
+            'status' => $request->input('status'),
+            'avatar_id' => $request->input('avatar_id'),
+            'email' => $request->input('email'),
+            'business_name' => $request->input('business_name'),
+            'name' => $request->input('name'),
+            'address' => $request->input('address'),
+            'address2' => $request->input('address2'),
+            'country' => $request->input('country'),
+            'city' => $request->input('city'),
+            'state' => $request->input('state'),
+            'zip_code' => $request->input('zip_code'),
+            'vendor_commission_type' => $request->input('vendor_commission_type'),
+            'vendor_commission_amount' => $request->input('vendor_commission_amount'),
         ];
         $row->role_id = $request->input('role_id');
-        if($request->input('is_email_verified')){
-            if(!$row->email_verified_at) $row->email_verified_at = date('Y-m-d H:i:s');
-        }else{
+        if ($request->input('is_email_verified')) {
+            if (!$row->email_verified_at)
+                $row->email_verified_at = date('Y-m-d H:i:s');
+        } else {
             $row->email_verified_at = null;
         }
 
-        $row->fillByAttr(array_keys($data),$data);
+        $row->fillByAttr(array_keys($data), $data);
 
         //Block all service when user is block
-        if($row->status == "blocked"){
+        if ($row->status == "blocked") {
             $services = get_bookable_services();
-            if(!empty($services)){
-                foreach ($services as $service){
-                    $service::query()->where("create_user",$row->id)->update(['status' => "draft"]);
+            if (!empty($services)) {
+                foreach ($services as $service) {
+                    $service::query()->where("create_user", $row->id)->update(['status' => "draft"]);
                 }
             }
         }
 
         if ($row->save()) {
-            return back()->with('success', ($id and $id>0) ? __('User updated'):__("User created"));
+            return back()->with('success', ($id and $id > 0) ? __('User updated') : __("User created"));
         }
     }
 
@@ -240,11 +306,11 @@ class UserController extends AdminController
             if (is_array($selected)) {
                 $res = User::whereIn('id', $selected)->take(50)->get();
                 $items = [];
-                if(!empty($res)){
-                    foreach ($res as $item){
+                if (!empty($res)) {
+                    foreach ($res as $item) {
                         $items[] = [
-                            'id'=>$item->id,
-                            'text'=>$item->getDisplayName() ? $item->getDisplayName() . ' (#' . $item->id . ')' : $item->email . ' (#' . $item->id . ')'
+                            'id' => $item->id,
+                            'text' => $item->getDisplayName() ? $item->getDisplayName() . ' (#' . $item->id . ')' : $item->email . ' (#' . $item->id . ')'
                         ];
                     }
                 }
@@ -253,7 +319,7 @@ class UserController extends AdminController
                 ]);
             } else {
                 $item = User::find($selected);
-                if(!empty($item)){
+                if (!empty($item)) {
                     return $this->sendSuccess([
                         'text' => $item->getDisplayName() ? $item->getDisplayName() . ' (#' . $item->id . ')' : $item->email . ' (#' . $item->id . ')'
                     ]);
@@ -274,21 +340,21 @@ class UserController extends AdminController
         $res = $query->orderBy('id', 'desc')->orderBy('first_name', 'asc')->limit(100)->get();
         $data = [];
         if (!empty($res)) {
-            if($request->query("user_type") == "vendor"){
+            if ($request->query("user_type") == "vendor") {
                 //for only vendor
                 foreach ($res as $item) {
-                    if($item->hasPermission("dashboard_vendor_access")){
+                    if ($item->hasPermission("dashboard_vendor_access")) {
                         $data[] = [
-                            'id'   => $item->id,
+                            'id' => $item->id,
                             'text' => $item->getDisplayName() ? $item->getDisplayName() . ' (#' . $item->id . ')' : $item->email . ' (#' . $item->id . ')',
                         ];
                     }
                 }
-            }else{
+            } else {
                 //for all
                 foreach ($res as $item) {
                     $data[] = [
-                        'id'   => $item->id,
+                        'id' => $item->id,
                         'text' => $item->getDisplayName() ? $item->getDisplayName() . ' (#' . $item->id . ')' : $item->email . ' (#' . $item->id . ')',
                     ];
                 }
@@ -301,8 +367,8 @@ class UserController extends AdminController
 
     public function bulkEdit(Request $request)
     {
-        if(is_demo_mode()){
-            return redirect()->back()->with("error","DEMO MODE: You are not allowed to do it");
+        if (is_demo_mode()) {
+            return redirect()->back()->with("error", "DEMO MODE: You are not allowed to do it");
         }
         $ids = $request->input('ids');
         $action = $request->input('action');
@@ -312,10 +378,11 @@ class UserController extends AdminController
             return redirect()->back()->with('error', __('Select an Action!'));
         if ($action == 'delete') {
             foreach ($ids as $id) {
-                if($id == Auth::id()) continue;
+                if ($id == Auth::id())
+                    continue;
                 $query = User::where("id", $id)->first();
-                if(!empty($query)){
-                    $query->email.='_d_'.uniqid().rand(0,99999);
+                if (!empty($query)) {
+                    $query->email .= '_d_' . uniqid() . rand(0, 99999);
                     $query->save();
                     $query->delete();
                 }
@@ -332,7 +399,7 @@ class UserController extends AdminController
         $this->checkPermission('user_view');
         $listUser = VendorRequest::query();
         $data = [
-            'rows' => $listUser->whereHas('user')->with(['user','role','approvedBy'])->orderBy('id','desc')->paginate(20),
+            'rows' => $listUser->whereHas('user')->with(['user', 'role', 'approvedBy'])->orderBy('id', 'desc')->paginate(20),
             'roles' => Role::all(),
 
         ];
@@ -348,11 +415,11 @@ class UserController extends AdminController
         if (empty($action))
             return redirect()->back()->with('error', __('Select an Action!'));
 
-        switch ($action){
+        switch ($action) {
             case "delete":
                 foreach ($ids as $id) {
-                    $query = VendorRequest::find( $id);
-                    if(!empty($query)){
+                    $query = VendorRequest::find($id);
+                    if (!empty($query)) {
                         $query->delete();
                     }
                 }
@@ -360,14 +427,14 @@ class UserController extends AdminController
                 break;
             default:
                 foreach ($ids as $id) {
-                    $vendorRequest = VendorRequest::find( $id);
-                    if(!empty($vendorRequest)){
-                        $vendorRequest->update(['status' => $action,'approved_time'=>now(),'approved_by'=>Auth::id()]);
+                    $vendorRequest = VendorRequest::find($id);
+                    if (!empty($vendorRequest)) {
+                        $vendorRequest->update(['status' => $action, 'approved_time' => now(), 'approved_by' => Auth::id()]);
                         $user = User::find($vendorRequest->user_id);
-                        if(!empty($user)){
+                        if (!empty($user)) {
                             $user->assignRole($vendorRequest->role_request);
                         }
-                        event(new VendorApproved($user,$vendorRequest));
+                        event(new VendorApproved($user, $vendorRequest));
                     }
                 }
                 return redirect()->back()->with('success', __('Updated successfully!'));
@@ -380,15 +447,15 @@ class UserController extends AdminController
         if (empty($id))
             return redirect()->back()->with('error', __('Select at least 1 item!'));
 
-        $vendorRequest = VendorRequest::find( $id);
-        if(!empty($vendorRequest)){
-            $vendorRequest->update(['status' => 'approved','approved_time'=>now(),'approved_by'=>Auth::id()]);
+        $vendorRequest = VendorRequest::find($id);
+        if (!empty($vendorRequest)) {
+            $vendorRequest->update(['status' => 'approved', 'approved_time' => now(), 'approved_by' => Auth::id()]);
             $user = User::find($vendorRequest->user_id);
-            if(!empty($user)){
+            if (!empty($user)) {
                 $user->assignRole($vendorRequest->role_request);
             }
 
-            event(new VendorApproved($user,$vendorRequest));
+            event(new VendorApproved($user, $vendorRequest));
         }
         return redirect()->back()->with('success', __('Updated successfully!'));
     }
@@ -398,15 +465,214 @@ class UserController extends AdminController
         $this->checkPermission('user_view');
         return (new UserExport())->download('user-' . date('M-d-Y') . '.xlsx');
     }
-    public function verifyEmail(Request $request,$id)
+    public function verifyEmail(Request $request, $id)
     {
         $user = User::find($id);
-        if(!empty($user)){
+        if (!empty($user)) {
             $user->email_verified_at = now();
             $user->save();
             return redirect()->back()->with('success', __('Verify email successfully!'));
-        }else{
+        } else {
             return redirect()->back()->with('error', __('Verify email cancel!'));
+        }
+    }
+
+    public function profile($id)
+    {
+        $this->checkPermission('user_view');
+        $user = User::findOrFail($id);
+
+        // Get user bookings/orders
+        $orders = Booking::where('customer_id', $user->id)->orderBy('created_at', 'desc')->get();
+        $totalOrders = $orders->count();
+        $totalAmount = $orders->sum('total');
+        $totalRefunded = $orders->where('status', 'cancelled')->sum('total');
+        $lastOrder = $orders->first();
+
+        // Get user balance from meta
+        $balance = $user->getMeta('balance', '0.00');
+        $points = $user->getMeta('points', '0');
+        $pointsValue = $user->getMeta('points_value', '0.00');
+
+        // Get user sessions from user_sessions table
+        $sessions = \App\Models\UserSession::where('user_id', $user->id)
+            ->orderBy('last_activity', 'desc')
+            ->limit(10)
+            ->get();
+
+        // Get wallet transactions (orders serve as transactions)
+        $transactions = $orders;
+
+        $data = [
+            'user' => $user,
+            'balance' => $balance,
+            'points' => $points,
+            'pointsValue' => $pointsValue,
+            'orders' => $orders,
+            'totalOrders' => $totalOrders,
+            'totalAmount' => $totalAmount,
+            'totalRefunded' => $totalRefunded,
+            'lastOrder' => $lastOrder,
+            'sessions' => $sessions,
+            'transactions' => $transactions,
+            'page_title' => __("User Profile - :name", ['name' => $user->getDisplayName()]),
+            'breadcrumbs' => [
+                [
+                    'name' => __('Users'),
+                    'url' => route('user.admin.index')
+                ],
+                [
+                    'name' => __('User Profile'),
+                    'class' => 'active'
+                ]
+            ]
+        ];
+        return view('User::admin.profile', $data);
+    }
+
+    /**
+     * Delete user session
+     *
+     * @param Request $request
+     * @param int $id Session ID
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteSession(Request $request, $id)
+    {
+        try {
+            // Check permission (or allow admin user access)
+            try {
+                $this->checkPermission('user_view');
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('You do not have permission to perform this action')
+                ], 403);
+            }
+
+            // Find the session
+            $session = \App\Models\UserSession::find($id);
+
+            if (!$session) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('Session not found')
+                ], 404);
+            }
+
+            // Delete the session
+            $session->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => __('Session deleted successfully')
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error deleting user session: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => __('An error occurred while deleting the session')
+            ], 500);
+        }
+    }
+
+    /**
+     * Toggle user block status
+     */
+    public function toggleBlock(Request $request, $id)
+    {
+        try {
+            // Check permission
+            try {
+                $this->checkPermission('user_update');
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('You do not have permission to perform this action')
+                ], 403);
+            }
+
+            // Find the user
+            $user = User::find($id);
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('User not found')
+                ], 404);
+            }
+
+            // Update block status
+            $user->blocked = $request->blocked;
+            $user->save();
+
+            $message = $request->blocked
+                ? __('User has been blocked successfully')
+                : __('User has been unblocked successfully');
+
+            return response()->json([
+                'success' => true,
+                'message' => $message
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error toggling user block: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => __('An error occurred while updating block status')
+            ], 500);
+        }
+    }
+
+    /**
+     * Toggle user order block status
+     */
+    public function toggleOrderBlock(Request $request, $id)
+    {
+        try {
+            // Check permission
+            try {
+                $this->checkPermission('user_update');
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('You do not have permission to perform this action')
+                ], 403);
+            }
+
+            // Find the user
+            $user = User::find($id);
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('User not found')
+                ], 404);
+            }
+
+            // Update order block status
+            $user->order_blocked = $request->order_blocked;
+            $user->save();
+
+            $message = $request->order_blocked
+                ? __('User orders have been blocked successfully')
+                : __('User orders have been unblocked successfully');
+
+            return response()->json([
+                'success' => true,
+                'message' => $message
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error toggling user order block: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => __('An error occurred while updating order block status')
+            ], 500);
         }
     }
 

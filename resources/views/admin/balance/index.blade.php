@@ -1,0 +1,245 @@
+@extends('admin.layouts.app')
+
+@section('content')
+    <div class="container-fluid">
+       
+        @include('admin.message')
+
+        <style>
+            .balance-container {
+                background: #0f1c2e;
+                min-height: 100vh;
+                padding: 24px;
+                padding-right: 20vw;
+            }
+
+            .balance-card {
+                background: #1a2942;
+                border-radius: 12px;
+                padding: 24px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            }
+
+            .balance-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 24px;
+                padding-bottom: 16px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .balance-title {
+                font-size: 24px;
+                font-weight: 600;
+                color: #ffffff;
+                margin: 0;
+            }
+
+            .balance-table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+
+            .balance-table thead th {
+                background: rgba(99, 179, 237, 0.1);
+                color: #8b92a7;
+                font-size: 12px;
+                font-weight: 600;
+                text-transform: uppercase;
+                padding: 16px;
+                text-align: left;
+                border: none;
+                white-space: nowrap;
+            }
+
+            .balance-table thead th:first-child {
+                border-radius: 8px 0 0 0;
+            }
+
+            .balance-table thead th:last-child {
+                border-radius: 0 8px 0 0;
+                text-align: right;
+            }
+
+            .balance-table tbody tr {
+                background: transparent;
+                transition: background 0.2s;
+            }
+
+            .balance-table tbody tr:hover {
+                background: rgba(99, 179, 237, 0.05);
+            }
+
+            .balance-table tbody td {
+                padding: 16px;
+                color: #ffffff;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            }
+
+            .balance-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+            .user-info {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .user-avatar {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid rgba(99, 179, 237, 0.3);
+            }
+
+            .user-avatar-placeholder {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+                font-weight: 600;
+                color: #ffffff;
+                border: 2px solid rgba(99, 179, 237, 0.3);
+                flex-shrink: 0;
+            }
+
+            .user-details {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .user-name {
+                font-size: 14px;
+                font-weight: 500;
+                color: #ffffff;
+                margin-bottom: 4px;
+            }
+
+            .user-phone {
+                font-size: 12px;
+                color: #8b92a7;
+            }
+
+            .balance-amount {
+                font-size: 14px;
+                font-weight: 500;
+                color: #ffffff;
+            }
+
+            .balance-points {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 4px 12px;
+                background: rgba(99, 179, 237, 0.15);
+                border-radius: 20px;
+                font-size: 13px;
+                font-weight: 500;
+                color: #63b3ed;
+            }
+
+            .total-balance {
+                font-size: 16px;
+                font-weight: 600;
+                text-align: right;
+            }
+
+            .sort-icon {
+                display: inline-block;
+                margin-left: 4px;
+                vertical-align: middle;
+            }
+
+            .empty-state {
+                text-align: center;
+                padding: 80px 20px;
+                color: #8b92a7;
+            }
+
+            .empty-state svg {
+                margin: 0 auto 16px;
+                opacity: 0.5;
+            }
+
+            .empty-state div {
+                font-size: 16px;
+                margin-top: 12px;
+            }
+        </style>
+
+        <div class="balance-container">
+            <div class="balance-card">
+                <div class="balance-header">
+                    <h2 class="balance-title">{{ __('Balance') }}</h2>
+                </div>
+
+                @if($users->count() > 0)
+                    <table class="balance-table">
+                        <thead>
+                            <tr>
+                                <th>{{ __('User') }}</th>
+                                <th>{{ __('Wallet') }}</th>
+                                <th>{{ __('Points') }}</th>
+                                <th style="text-align: right;">
+                                    {{ __('Total Balance') }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="sort-icon" style="width: 12px; height: 12px;"
+                                        fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M8 12l-4-4h8l-4 4z" />
+                                    </svg>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($users as $user)
+                                <tr>
+                                    <td>
+                                        <div class="user-info">
+                                            @if($user['has_avatar'])
+                                                <img src="{{ $user['avatar'] }}" alt="{{ $user['name'] }}" class="user-avatar">
+                                            @else
+                                                <div class="user-avatar-placeholder">{{ $user['first_letter'] }}</div>
+                                            @endif
+                                            <div class="user-details">
+                                                <div class="user-name">{{ $user['name'] }}</div>
+                                                @if($user['phone'])
+                                                    <div class="user-phone">{{ $user['phone'] }}</div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="balance-amount">AED {{ $user['wallet'] }}</div>
+                                    </td>
+                                    <td>
+                                        <span class="balance-points">{{ $user['points'] }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="total-balance">AED {{ $user['total_balance'] }}</div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @else
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" style="width: 64px; height: 64px;" fill="currentColor"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5z" />
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                        </svg>
+                        <div>{{ __('No users found') }}</div>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+@endsection

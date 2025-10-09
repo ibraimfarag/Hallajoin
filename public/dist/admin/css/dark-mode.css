@@ -104,7 +104,7 @@ body.dark-mode {
 body.dark-mode *,
 body.dark-mode *::before,
 body.dark-mode *::after {
-    border-color: transparent !important;
+    /* border-color: transparent !important; */
 }
 
 body.dark-mode .dashboard-modern *,
@@ -117,8 +117,8 @@ body.dark-mode .dashboard-modern *::after {
 /* Header */
 body.dark-mode .main-header {
     background: var(--dark-sidebar-bg);
-    border-bottom: 1px solid var(--dark-border);
-    box-shadow: 0 2px 12px var(--dark-shadow);
+    /* border-bottom: 1px solid var(--dark-border); */
+    /* box-shadow: 0 2px 12px var(--dark-shadow); */
 }
 
 /* Logo Background and Text */
@@ -248,7 +248,7 @@ body.dark-mode .dashboard-report-card:hover .card-media i {
 body.dark-mode .card,
 body.dark-mode .panel {
     background: linear-gradient(145deg, var(--dark-card-bg) 0%, #1a2332 100%);
-    border: 1px solid var(--dark-border);
+    /* border: 1px solid var(--dark-border); */
     border-radius: 12px;
     color: var(--dark-text-primary);
     box-shadow: 0 4px 16px var(--dark-shadow);
@@ -277,8 +277,9 @@ body.dark-mode .table {
 }
 
 body.dark-mode .table thead th {
-    background: linear-gradient(135deg, var(--dark-bg-tertiary) 0%, var(--dark-card-bg) 100%);
-    border-bottom: 2px solid var(--dark-accent-blue);
+    background: transparent;
+        border: 0 transparent;
+    /* border-bottom: 2px solid var(--dark-accent-blue); */
     color: var(--dark-text-primary);
     font-weight: 600;
     text-transform: uppercase;
@@ -301,7 +302,7 @@ body.dark-mode .table-hover tbody tr:hover {
 
 /* Forms */
 body.dark-mode .form-control {
-    background: var(--dark-bg-secondary);
+    background: #122438;
     border: 1px solid var(--dark-border);
     color: var(--dark-text-primary);
     border-radius: 8px;

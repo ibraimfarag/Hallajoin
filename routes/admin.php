@@ -1,4 +1,8 @@
 <?php
+
+use Illuminate\Support\Facades\Route;
+use Modules\User\Admin\UserController;
+
 // Admin Route
 /*Route::group(['prefix'=>'admin','middleware' => ['auth','dashboard']], function() {
     Route::match(['get','post'],'/',function (){
@@ -31,3 +35,18 @@
         abort(404);
     });
 });*/
+
+Route::group(['prefix' => config('admin.admin_route_prefix'), 'middleware' => ['auth', 'dashboard']], function () {
+    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+    Route::delete('/user/session/{id}', [UserController::class, 'deleteSession'])->name('admin.user.session.delete');
+    Route::post('/user/{id}/toggle-block', [UserController::class, 'toggleBlock'])->name('admin.user.toggle.block');
+    Route::post('/user/{id}/toggle-order-block', [UserController::class, 'toggleOrderBlock'])->name('admin.user.toggle.order.block');
+
+    // Favourites routes
+    Route::get('/favourites', [\App\Http\Controllers\Admin\FavouriteAdminController::class, 'index'])->name('admin.favourites.index');
+    Route::get('/favourites/{favourite}', [\App\Http\Controllers\Admin\FavouriteAdminController::class, 'show'])->name('admin.favourites.show');
+    Route::delete('/favourites/{favourite}', [\App\Http\Controllers\Admin\FavouriteAdminController::class, 'destroy'])->name('admin.favourites.destroy');
+
+    // Balance route
+    Route::get('/balance', [\App\Http\Controllers\Admin\BalanceAdminController::class, 'index'])->name('admin.balance.index');
+});

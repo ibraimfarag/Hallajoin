@@ -3,15 +3,37 @@ $menus = [
     'admin' => [
         'url' => route('admin.index'),
         'title' => __("Dashboard"),
-        'icon' => 'icon ion-ios-desktop',
+        'icon' => 'icon ion-md-home',
         "position" => 0
     ],
-    'carts' => [
-        "position" => 20,
-        'url' => route('admin.carts.index'),
-        'title' => __("Shopping Carts"),
-        'icon' => 'icon ion-ios-basket',
-        'permission' => 'dashboard_access',
+    'members' => [
+        'url' => '#',
+        'title' => __("Members"),
+        'icon' => 'icon ion-ios-people',
+        'position' => 12,
+        'children' => [
+            'users_list' => [
+                'url' => route('admin.users.index'),
+                'title' => __('List'),
+                'icon' => 'fa fa-list',
+            ],
+            'users_cart' => [
+                'url' => route('admin.carts.index'),
+                'title' => __('Cart'),
+                'icon' => 'fa fa-shopping-cart',
+            ],
+            'users_favourites' => [
+                'url' => route('admin.favourites.index'),
+                'title' => __('Bookmarks'),
+                'icon' => 'fa fa-heart',
+            ],
+            'users_balance' => [
+                'url' => route('admin.balance.index'),
+                'title' => __('Balance'),
+                'icon' => 'fa fa-money',
+            ],
+
+        ]
     ],
     'menu' => [
         "position" => 60,

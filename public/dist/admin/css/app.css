@@ -1,4 +1,7 @@
 @charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
 .mb40 {
     margin-bottom: 40px;
 }
@@ -4046,8 +4049,10 @@ html {
 body {
     background: #f4f6f8;
     color: #212b35;
-    font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI,
-        Roboto, Helvetica Neue, sans-serif;
+    /* font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI,
+        Roboto, Helvetica Neue, sans-serif; */
+          font-family: "Nunito Sans", sans-serif;
+
     font-size: 14px;
     font-weight: 400;
     letter-spacing: normal;
@@ -4206,7 +4211,7 @@ h6 {
     color: #fff;
 }
 .main-header .header-widgets {
-    border-bottom: 1px solid #dddee0;
+    /* border-bottom: 1px solid #dddee0; */
     padding: 10px 30px;
 }
 .main-header .header-widgets .btn-toggle-admin-menu {
@@ -4217,14 +4222,14 @@ h6 {
     font-size: 23px;
 }
 .main-header .header-widgets .widget-user {
-    border-left: 1px solid #dddee0;
+    /* border-left: 1px solid #dddee0; */
     margin-bottom: -10px;
     margin-top: -10px;
     max-width: 240px;
     min-width: 190px;
 }
 .main-header .header-widgets .widget-user:last-child {
-    border-right: 1px solid #dddee0;
+    /* border-right: 1px solid #dddee0; */
 }
 .main-header .header-widgets .widget-user.show,
 .main-header .header-widgets .widget-user:hover {
