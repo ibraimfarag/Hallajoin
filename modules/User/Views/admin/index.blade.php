@@ -218,6 +218,14 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    <div class="col-md-2">
+                                        <select name="email_verified" class="form-control"
+                                            style="border-radius:20px; font-size:15px;">
+                                            <option value="">Email Status</option>
+                                            <option value="verified" {{ request('email_verified') == 'verified' ? 'selected' : '' }}>Verified</option>
+                                            <option value="unverified" {{ request('email_verified') == 'unverified' ? 'selected' : '' }}>Unverified</option>
+                                        </select>
+                                    </div>
                                     <div class="d-none col-md-2">
                                         <select name="language" class="form-control"
                                             style="border-radius:10px; font-size:15px;">
@@ -272,6 +280,7 @@
                                         <th>Country</th>
                                         <th>Name</th>
                                         <th>Email</th>
+                                        <th>Email Status</th>
                                         <th>Registered On</th>
                                     </tr>
                                 </thead>
@@ -306,11 +315,18 @@
                                                 <a href="{{ route('user.admin.profile', ['id' => $user->id]) }}"
                                                     style="color: inherit; text-decoration: none;font-size: 19px">{{ $user->email }}</a>
                                             </td>
+                                            <td>
+                                                @if($user->email_verified_at)
+                                                    <span class="badge bg-success" style="font-size: 14px; padding: 6px 12px;">✓ Verified</span>
+                                                @else
+                                                    <span class="badge bg-warning" style="font-size: 14px; padding: 6px 12px;">⚠ Unverified</span>
+                                                @endif
+                                            </td>
                                             <td><span  style="font-size: 18px">{{ $user->created_at ? $user->created_at->format('d/M/Y H:i') : '' }}</span></td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="5" class="text-center text-muted">No users found</td>
+                                            <td colspan="6" class="text-center text-muted">No users found</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
