@@ -191,14 +191,26 @@ class Booking extends BaseModel
 
     public function generateCode()
     {
-        // Generate a 5-digit code starting from 6000 (range: 6000-99999)
-        do {
-            $code = rand(6000, 99999);
-            // Check if code already exists
-            $exists = static::where('code', $code)->exists();
-        } while ($exists);
+        // Generate sequential order number starting from 1001
+        // Find the highest numeric code in the database
+        $maxNumericCode = static::where('code', 'REGEXP', '^[0-9]+$')
+            ->orderByRaw('CAST(code AS UNSIGNED) DESC')
+            ->value('code');
 
-        return (string) $code;
+        if ($maxNumericCode && intval($maxNumericCode) >= 1001) {
+            // Continue from existing max code
+            $nextCode = intval($maxNumericCode) + 1;
+        } else {
+            // Start from 1001 for new sequential system
+            $nextCode = 1001;
+        }
+
+        // Ensure we don't have duplicates (safety check)
+        while (static::where('code', $nextCode)->exists()) {
+            $nextCode++;
+        }
+
+        return (string) $nextCode;
     }
 
     public function save(array $options = [])
