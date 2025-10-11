@@ -410,22 +410,23 @@
                         let itemsHtml = '';
                         data.items.forEach(item => {
                             itemsHtml += `
-                                        <div class="favourite-item" style="margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
-                                            <div style="display: flex; gap: 16px; align-items: flex-start;">
-                                                <img src="${item.image}" alt="${item.title}" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover; flex-shrink: 0;">
-                                                <div style="flex: 1;">
-                                                    <div class="favourite-item-title">${item.title}</div>
-                                                    
-                                                </div>
-                                                <div style="text-align: right;">
-                                                    <div class="favourite-item-price" style="font-size: 16px; margin-bottom: 8px;">${item.price}</div>
-                                                    <a href="${item.service_url}" target="_blank" style="color: #63b3ed; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-                                                View
-                                                    </a>
+                                            <div class="favourite-item" style="margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                                                <div style="display: flex; gap: 16px; align-items: flex-start;">
+                                                    <img src="${item.image}" alt="${item.title}" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover; flex-shrink: 0;">
+                                                    <div style="flex: 1;">
+                                                        <div class="favourite-item-title">${item.title}</div>
+                                                        ${item.category ? `<div style="color: #8b92a7; font-size: 12px; margin-top: 4px;">${item.category}</div>` : ''}
+
+                                                    </div>
+                                                    <div style="text-align: right;">
+                                                        <div class="favourite-item-price" style="font-size: 16px; margin-bottom: 8px;">${item.price}</div>
+                                                        <a href="${item.service_url}" target="_blank" style="color: #63b3ed; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                                                    View
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    `;
+                                        `;
                         });
                         modalBody.innerHTML = itemsHtml;
                     } else {

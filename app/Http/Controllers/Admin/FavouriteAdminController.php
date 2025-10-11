@@ -57,6 +57,13 @@ class FavouriteAdminController extends Controller
                 // Get subtitle (service type)
                 $subtitle = ucfirst($favourite->object_model ?? 'Service');
 
+                // Get category
+                $category = '';
+                if ($favourite->object_model === 'tour' && isset($service->category_id)) {
+                    $tourCategory = \Modules\Tour\Models\TourCategory::find($service->category_id);
+                    $category = $tourCategory ? $tourCategory->name : '';
+                }
+
                 // Get image
                 $image = asset('images/placeholder.jpg');
                 if (isset($service->image_id)) {
@@ -67,7 +74,7 @@ class FavouriteAdminController extends Controller
 
                 // Get price
                 $price = $service->sale_price ?? $service->price ?? 0;
-                $priceText = number_format($price, 2) . ' AED';
+                $priceText = number_format($price, 2) . get_current_currency_svg();
 
                 // Get location
                 $location = '';
@@ -79,6 +86,7 @@ class FavouriteAdminController extends Controller
                     'id' => $favourite->id,
                     'title' => $title,
                     'subtitle' => $subtitle,
+                    'category' => $category,
                     'image' => $image,
                     'price' => $priceText,
                     'location' => $location,
