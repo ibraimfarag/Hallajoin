@@ -11,6 +11,12 @@
             border-bottom: 1px solid #ddd;
             transition: background-color 0.3s;
             align-items: center;
+        }    
+            .wishlist-item .sale-price svg ,
+            .wishlist-item .price  svg {
+                    margin-bottom: -1px !important;
+    margin-left: 2px !important;
+         
         }
 
         .wishlist-item:hover {
@@ -118,6 +124,35 @@
             padding-right: 10px !important;
             width: 100%;
         }
+
+        /* Price styling improvements */
+        .sale-price {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .price {
+            color: #666;
+        }
+
+        .price.text-decoration-line-through {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        /* Currency SVG styling */
+        .sale-price svg,
+        .price svg {
+            width: 14px;
+            height: 14px;
+            margin-right: 2px;
+            vertical-align: baseline;
+        }
+
+
+
     </style>
 
     <li class="dropdown-notifications dropdown p-0">
@@ -166,7 +201,15 @@
                                 </div>
                                 <div class="location">
                                     <i class="icofont-money"></i>
-                                    {{__("Price")}}: <span class="sale-price">{{ $service->display_sale_price }}</span> <span class="price">{{ $service->display_price }}</span>
+                                    {{__("Price")}}: 
+                                    <span class="sale-price">
+                                        @if($service->sale_price && $service->sale_price < $service->price)
+                                             {{ number_format($service->sale_price, 0) }}{!! get_current_currency_svg() !!}
+                                        @endif
+                                    </span> 
+                                    <span class="price {{ $service->sale_price && $service->sale_price < $service->price ? 'text-decoration-line-through' : '' }}">
+                                        {{ number_format($service->price, 0) }}  {!! get_current_currency_svg() !!}
+                                    </span>
                                 </div>
                                 @if($service->getReviewEnable())
                                     <div class="rate">
