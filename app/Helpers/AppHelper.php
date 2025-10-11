@@ -1,13 +1,12 @@
 <?php
-use Modules\Core\Models\Settings;
+
 use App\Currency;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+use Modules\Core\Models\Settings;
 
-//include '../../custom/Helpers/CustomHelper.php';
+// include '../../custom/Helpers/CustomHelper.php';
 
 define('MINUTE_IN_SECONDS', 60);
 define('HOUR_IN_SECONDS', 60 * MINUTE_IN_SECONDS);
@@ -38,8 +37,9 @@ function setting_item_array($item, $default = '')
 function setting_item_with_lang($item, $locale = '', $default = '', $withOrigin = true)
 {
 
-    if (empty($locale))
+    if (empty($locale)) {
         $locale = app()->getLocale();
+    }
 
     if ($withOrigin == false and $locale == setting_item('site_locale')) {
         return $default;
@@ -66,12 +66,13 @@ function setting_update_item($item, $val)
 
     $s = Settings::where('name', $item)->first();
     if (empty($s)) {
-        $s = new Settings();
+        $s = new Settings;
         $s->name = $item;
     }
 
-    if (is_array($val) or is_object($val))
+    if (is_array($val) or is_object($val)) {
         $val = json_encode($val);
+    }
     $s->val = $val;
 
     $s->save();
@@ -86,20 +87,105 @@ function app_get_locale($locale = false, $before = false, $after = false)
     if (setting_item('site_enable_multi_lang') and app()->getLocale() != setting_item('site_locale')) {
         return $locale ? $before . $locale . $after : $before . app()->getLocale() . $after;
     }
+
     return '';
 }
 
 function format_money($price)
 {
+    // استخدام SVG في جميع الأماكن (فرونت إند وباك إند)
+    return format_money_with_svg((float) $price);
+}
 
+function format_money_simple($price)
+{
+    // للاستخدام في JavaScript أو الأماكن التي لا تدعم SVG
     return Currency::format((float) $price);
+}
 
+function format_price_only($price)
+{
+    // للحصول على السعر فقط بدون رمز العملة
+    $currency_thousand = get_current_currency('currency_thousand', '.');
+    $currency_decimal = get_current_currency('currency_decimal', ',');
+    $currency_no_decimal = get_current_currency('currency_no_decimal', 2);
+
+    return number_format($price, $currency_no_decimal, $currency_decimal, $currency_thousand);
 }
 function format_money_main($price)
 {
+    // استخدام SVG للعملة الرئيسية في جميع الأماكن
+    return format_money_with_svg((float) $price, true);
+}
 
-    return Currency::format((float) $price, true);
+function format_money_with_svg($price, $main_currency = false)
+{
+    // الحصول على رمز SVG للعملة الحالية
+    $svgSymbol = get_current_currency_svg();
 
+    // إذا كان هناك رمز SVG، استخدمه
+    if (!empty($svgSymbol)) {
+        // الحصول على إعدادات العملة
+        $currency_main = get_current_currency('currency_main', '');
+        $currency_format = get_current_currency('currency_format', 'left');
+        $currency_thousand = get_current_currency('currency_thousand', '.');
+        $currency_decimal = get_current_currency('currency_decimal', ',');
+        $currency_no_decimal = get_current_currency('currency_no_decimal', 2);
+
+        $exchange_rate = $main_currency ? 1 : get_current_currency('rate', 1);
+        $exchange_rate = (float) $exchange_rate;
+        if (!$exchange_rate) {
+            $exchange_rate = 1;
+        }
+
+        $price /= $exchange_rate;
+
+        $s = number_format((float) $price, (int) $currency_no_decimal, $currency_decimal, $currency_thousand);
+
+        // تنسيق مع رمز SVG - السعر أولاً ثم الرمز
+        switch ($currency_format) {
+            case 'right_space':
+                return $s . ' ' . $svgSymbol;
+            case 'right':
+                return $s . $svgSymbol;
+            case 'left':
+                return $s . $svgSymbol;  // تم تغييرها لتكون السعر أولاً
+            case 'left_space':
+                return $s . ' ' . $svgSymbol;  // تم تغييرها لتكون السعر أولاً
+            default:
+                return $s . $svgSymbol;
+        }
+    }
+
+    // إذا لم يكن هناك رمز SVG، استخدم التنسيق العادي
+    return Currency::format((float) $price, $main_currency);
+}
+
+function currency_svg_symbol()
+{
+    return setting_item('currency_symbol_svg') ?? '';
+}
+
+function get_current_currency_svg()
+{
+    $current_currency = get_current_currency('currency_main');
+
+    // البحث عن SVG للعملة الحالية
+    $svg = setting_item('currency_svg_' . strtolower($current_currency));
+
+    // إذا لم يجد SVG للعملة الحالية، استخدم الافتراضي
+    if (empty($svg)) {
+        $svg = setting_item('currency_symbol_svg');
+    }
+
+    // إذا لم يجد أي SVG، استخدم رمز العملة النصي كـ fallback
+    if (empty($svg)) {
+        $currency = Currency::getCurrency($current_currency);
+
+        return $currency['symbol'] ?? '$';
+    }
+
+    return $svg;
 }
 
 function currency_symbol()
@@ -121,7 +207,7 @@ function generate_menu($location = '', $options = [])
     if (!empty($setting)) {
         foreach ($setting as $l => $menuId) {
             if ($l == $location and $menuId) {
-                $menu = (new \Modules\Core\Models\Menu())->findById($menuId);
+                $menu = (new \Modules\Core\Models\Menu)->findById($menuId);
                 $translation = $menu->translate();
 
                 $walker = new $options['walker']($translation);
@@ -139,7 +225,7 @@ function set_active_menu($item)
     \Modules\Core\Walkers\MenuWalker::setCurrentMenuItem($item);
 }
 
-function get_exceprt($string, $length = 200, $more = "[...]")
+function get_exceprt($string, $length = 200, $more = '[...]')
 {
     $string = strip_tags($string);
     if (str_word_count($string) > 0) {
@@ -147,7 +233,7 @@ function get_exceprt($string, $length = 200, $more = "[...]")
         $excerpt = '';
         if (count($arr) > 0) {
             $count = 0;
-            if ($arr)
+            if ($arr) {
                 foreach ($arr as $str) {
                     $count += strlen($str);
                     if ($count > $length) {
@@ -156,7 +242,9 @@ function get_exceprt($string, $length = 200, $more = "[...]")
                     }
                     $excerpt .= ' ' . $str;
                 }
+            }
         }
+
         return $excerpt;
     }
 }
@@ -167,17 +255,19 @@ function getDatefomat($value)
 
 }
 
-function get_file_url($file_id, $size = "thumb", $resize = true)
+function get_file_url($file_id, $size = 'thumb', $resize = true)
 {
-    if (empty($file_id))
+    if (empty($file_id)) {
         return null;
+    }
+
     return \Modules\Media\Helpers\FileHelper::url($file_id, $size, $resize);
 }
 
 function get_image_tag($image_id, $size = 'thumb', $options = [])
 {
     $options = array_merge([
-        'lazy' => true
+        'lazy' => true,
     ], $options);
     $url = get_file_url($image_id, $size);
 
@@ -187,10 +277,11 @@ function get_image_tag($image_id, $size = 'thumb', $options = [])
         $class = $options['class'] ?? '';
         if (!empty($options['lazy'])) {
             $class .= ' lazy';
-            $attr .= " data-src=" . e($url) . " ";
+            $attr .= ' data-src=' . e($url) . ' ';
         } else {
             $attr .= " src='" . e($url) . "' ";
         }
+
         return sprintf("<img class='%s' %s alt='%s'>", e($class), $attr, e($alt));
     }
 }
@@ -245,6 +336,7 @@ function php_to_moment_format($format)
         'U' => 'X',
     ];
     $momentFormat = strtr($format, $replacements);
+
     return $momentFormat;
 }
 
@@ -283,10 +375,12 @@ function display_datetime($time)
 function human_time_diff($from, $to = false)
 {
 
-    if (is_string($from))
+    if (is_string($from)) {
         $from = strtotime($from);
-    if (is_string($to))
+    }
+    if (is_string($to)) {
         $to = strtotime($to);
+    }
 
     if (empty($to)) {
         $to = time();
@@ -373,8 +467,9 @@ function human_time_diff($from, $to = false)
 
 function human_time_diff_short($from, $to = false)
 {
-    if (!$to)
+    if (!$to) {
         $to = time();
+    }
     $today = strtotime(date('Y-m-d 00:00:00', $to));
 
     $diff = $from - $to;
@@ -395,258 +490,260 @@ function _n($l, $m, $count)
     if ($count) {
         return $m;
     }
+
     return $l;
 }
 function get_country_lists()
 {
-    $countries = array
-    (
-        'AF' => 'Afghanistan',
-        'AX' => 'Aland Islands',
-        'AL' => 'Albania',
-        'DZ' => 'Algeria',
-        'AS' => 'American Samoa',
-        'AD' => 'Andorra',
-        'AO' => 'Angola',
-        'AI' => 'Anguilla',
-        'AQ' => 'Antarctica',
-        'AG' => 'Antigua And Barbuda',
-        'AR' => 'Argentina',
-        'AM' => 'Armenia',
-        'AW' => 'Aruba',
-        'AU' => 'Australia',
-        'AT' => 'Austria',
-        'AZ' => 'Azerbaijan',
-        'BS' => 'Bahamas',
-        'BH' => 'Bahrain',
-        'BD' => 'Bangladesh',
-        'BB' => 'Barbados',
-        'BY' => 'Belarus',
-        'BE' => 'Belgium',
-        'BZ' => 'Belize',
-        'BJ' => 'Benin',
-        'BM' => 'Bermuda',
-        'BT' => 'Bhutan',
-        'BO' => 'Bolivia',
-        'BA' => 'Bosnia And Herzegovina',
-        'BW' => 'Botswana',
-        'BV' => 'Bouvet Island',
-        'BR' => 'Brazil',
-        'IO' => 'British Indian Ocean Territory',
-        'BN' => 'Brunei Darussalam',
-        'BG' => 'Bulgaria',
-        'BF' => 'Burkina Faso',
-        'BI' => 'Burundi',
-        'KH' => 'Cambodia',
-        'CM' => 'Cameroon',
-        'CA' => 'Canada',
-        'CV' => 'Cape Verde',
-        'KY' => 'Cayman Islands',
-        'CF' => 'Central African Republic',
-        'TD' => 'Chad',
-        'CL' => 'Chile',
-        'CN' => 'China',
-        'CX' => 'Christmas Island',
-        'CC' => 'Cocos (Keeling) Islands',
-        'CO' => 'Colombia',
-        'KM' => 'Comoros',
-        'CG' => 'Congo',
-        'CD' => 'Congo, Democratic Republic',
-        'CK' => 'Cook Islands',
-        'CR' => 'Costa Rica',
-        'CI' => 'Cote D\'Ivoire',
-        'HR' => 'Croatia',
-        'CU' => 'Cuba',
-        'CY' => 'Cyprus',
-        'CZ' => 'Czech Republic',
-        'DK' => 'Denmark',
-        'DJ' => 'Djibouti',
-        'DM' => 'Dominica',
-        'DO' => 'Dominican Republic',
-        'EC' => 'Ecuador',
-        'EG' => 'Egypt',
-        'SV' => 'El Salvador',
-        'GQ' => 'Equatorial Guinea',
-        'ER' => 'Eritrea',
-        'EE' => 'Estonia',
-        'ET' => 'Ethiopia',
-        'FK' => 'Falkland Islands (Malvinas)',
-        'FO' => 'Faroe Islands',
-        'FJ' => 'Fiji',
-        'FI' => 'Finland',
-        'FR' => 'France',
-        'GF' => 'French Guiana',
-        'PF' => 'French Polynesia',
-        'TF' => 'French Southern Territories',
-        'GA' => 'Gabon',
-        'GM' => 'Gambia',
-        'GE' => 'Georgia',
-        'DE' => 'Germany',
-        'GH' => 'Ghana',
-        'GI' => 'Gibraltar',
-        'GR' => 'Greece',
-        'GL' => 'Greenland',
-        'GD' => 'Grenada',
-        'GP' => 'Guadeloupe',
-        'GU' => 'Guam',
-        'GT' => 'Guatemala',
-        'GG' => 'Guernsey',
-        'GN' => 'Guinea',
-        'GW' => 'Guinea-Bissau',
-        'GY' => 'Guyana',
-        'HT' => 'Haiti',
-        'HM' => 'Heard Island & Mcdonald Islands',
-        'VA' => 'Holy See (Vatican City State)',
-        'HN' => 'Honduras',
-        'HK' => 'Hong Kong',
-        'HU' => 'Hungary',
-        'IS' => 'Iceland',
-        'IN' => 'India',
-        'ID' => 'Indonesia',
-        'IR' => 'Iran, Islamic Republic Of',
-        'IQ' => 'Iraq',
-        'IE' => 'Ireland',
-        'IM' => 'Isle Of Man',
-        'IL' => 'Israel',
-        'IT' => 'Italy',
-        'JM' => 'Jamaica',
-        'JP' => 'Japan',
-        'JE' => 'Jersey',
-        'JO' => 'Jordan',
-        'KZ' => 'Kazakhstan',
-        'KE' => 'Kenya',
-        'KI' => 'Kiribati',
-        'KR' => 'Korea',
-        'KW' => 'Kuwait',
-        'KG' => 'Kyrgyzstan',
-        'LA' => 'Lao People\'s Democratic Republic',
-        'LV' => 'Latvia',
-        'LB' => 'Lebanon',
-        'LS' => 'Lesotho',
-        'LR' => 'Liberia',
-        'LY' => 'Libyan Arab Jamahiriya',
-        'LI' => 'Liechtenstein',
-        'LT' => 'Lithuania',
-        'LU' => 'Luxembourg',
-        'MO' => 'Macao',
-        'MK' => 'Macedonia',
-        'MG' => 'Madagascar',
-        'MW' => 'Malawi',
-        'MY' => 'Malaysia',
-        'MV' => 'Maldives',
-        'ML' => 'Mali',
-        'MT' => 'Malta',
-        'MH' => 'Marshall Islands',
-        'MQ' => 'Martinique',
-        'MR' => 'Mauritania',
-        'MU' => 'Mauritius',
-        'YT' => 'Mayotte',
-        'MX' => 'Mexico',
-        'FM' => 'Micronesia, Federated States Of',
-        'MD' => 'Moldova',
-        'MC' => 'Monaco',
-        'MN' => 'Mongolia',
-        'ME' => 'Montenegro',
-        'MS' => 'Montserrat',
-        'MA' => 'Morocco',
-        'MZ' => 'Mozambique',
-        'MM' => 'Myanmar',
-        'NA' => 'Namibia',
-        'NR' => 'Nauru',
-        'NP' => 'Nepal',
-        'NL' => 'Netherlands',
-        'AN' => 'Netherlands Antilles',
-        'NC' => 'New Caledonia',
-        'NZ' => 'New Zealand',
-        'NI' => 'Nicaragua',
-        'NE' => 'Niger',
-        'NG' => 'Nigeria',
-        'NU' => 'Niue',
-        'NF' => 'Norfolk Island',
-        'MP' => 'Northern Mariana Islands',
-        'NO' => 'Norway',
-        'OM' => 'Oman',
-        'PK' => 'Pakistan',
-        'PW' => 'Palau',
-        'PS' => 'Palestinian Territory, Occupied',
-        'PA' => 'Panama',
-        'PG' => 'Papua New Guinea',
-        'PY' => 'Paraguay',
-        'PE' => 'Peru',
-        'PH' => 'Philippines',
-        'PN' => 'Pitcairn',
-        'PL' => 'Poland',
-        'PT' => 'Portugal',
-        'PR' => 'Puerto Rico',
-        'QA' => 'Qatar',
-        'RE' => 'Reunion',
-        'RO' => 'Romania',
-        'RU' => 'Russian Federation',
-        'RW' => 'Rwanda',
-        'BL' => 'Saint Barthelemy',
-        'SH' => 'Saint Helena',
-        'KN' => 'Saint Kitts And Nevis',
-        'LC' => 'Saint Lucia',
-        'MF' => 'Saint Martin',
-        'PM' => 'Saint Pierre And Miquelon',
-        'VC' => 'Saint Vincent And Grenadines',
-        'WS' => 'Samoa',
-        'SM' => 'San Marino',
-        'ST' => 'Sao Tome And Principe',
-        'SA' => 'Saudi Arabia',
-        'SN' => 'Senegal',
-        'RS' => 'Serbia',
-        'SC' => 'Seychelles',
-        'SL' => 'Sierra Leone',
-        'SG' => 'Singapore',
-        'SK' => 'Slovakia',
-        'SI' => 'Slovenia',
-        'SB' => 'Solomon Islands',
-        'SO' => 'Somalia',
-        'ZA' => 'South Africa',
-        'GS' => 'South Georgia And Sandwich Isl.',
-        'ES' => 'Spain',
-        'LK' => 'Sri Lanka',
-        'SD' => 'Sudan',
-        'SR' => 'Suriname',
-        'SJ' => 'Svalbard And Jan Mayen',
-        'SZ' => 'Swaziland',
-        'SE' => 'Sweden',
-        'CH' => 'Switzerland',
-        'SY' => 'Syrian Arab Republic',
-        'TW' => 'Taiwan',
-        'TJ' => 'Tajikistan',
-        'TZ' => 'Tanzania',
-        'TH' => 'Thailand',
-        'TL' => 'Timor-Leste',
-        'TG' => 'Togo',
-        'TK' => 'Tokelau',
-        'TO' => 'Tonga',
-        'TT' => 'Trinidad And Tobago',
-        'TN' => 'Tunisia',
-        'TR' => 'Turkey',
-        'TM' => 'Turkmenistan',
-        'TC' => 'Turks And Caicos Islands',
-        'TV' => 'Tuvalu',
-        'UG' => 'Uganda',
-        'UA' => 'Ukraine',
-        'AE' => 'United Arab Emirates',
-        'GB' => 'United Kingdom',
-        'US' => 'United States',
-        'UM' => 'United States Outlying Islands',
-        'UY' => 'Uruguay',
-        'UZ' => 'Uzbekistan',
-        'VU' => 'Vanuatu',
-        'VE' => 'Venezuela',
-        'VN' => 'Viet Nam',
-        'VG' => 'Virgin Islands, British',
-        'VI' => 'Virgin Islands, U.S.',
-        'WF' => 'Wallis And Futuna',
-        'EH' => 'Western Sahara',
-        'YE' => 'Yemen',
-        'ZM' => 'Zambia',
-        'ZW' => 'Zimbabwe',
-    );
+    $countries =
+        [
+            'AF' => 'Afghanistan',
+            'AX' => 'Aland Islands',
+            'AL' => 'Albania',
+            'DZ' => 'Algeria',
+            'AS' => 'American Samoa',
+            'AD' => 'Andorra',
+            'AO' => 'Angola',
+            'AI' => 'Anguilla',
+            'AQ' => 'Antarctica',
+            'AG' => 'Antigua And Barbuda',
+            'AR' => 'Argentina',
+            'AM' => 'Armenia',
+            'AW' => 'Aruba',
+            'AU' => 'Australia',
+            'AT' => 'Austria',
+            'AZ' => 'Azerbaijan',
+            'BS' => 'Bahamas',
+            'BH' => 'Bahrain',
+            'BD' => 'Bangladesh',
+            'BB' => 'Barbados',
+            'BY' => 'Belarus',
+            'BE' => 'Belgium',
+            'BZ' => 'Belize',
+            'BJ' => 'Benin',
+            'BM' => 'Bermuda',
+            'BT' => 'Bhutan',
+            'BO' => 'Bolivia',
+            'BA' => 'Bosnia And Herzegovina',
+            'BW' => 'Botswana',
+            'BV' => 'Bouvet Island',
+            'BR' => 'Brazil',
+            'IO' => 'British Indian Ocean Territory',
+            'BN' => 'Brunei Darussalam',
+            'BG' => 'Bulgaria',
+            'BF' => 'Burkina Faso',
+            'BI' => 'Burundi',
+            'KH' => 'Cambodia',
+            'CM' => 'Cameroon',
+            'CA' => 'Canada',
+            'CV' => 'Cape Verde',
+            'KY' => 'Cayman Islands',
+            'CF' => 'Central African Republic',
+            'TD' => 'Chad',
+            'CL' => 'Chile',
+            'CN' => 'China',
+            'CX' => 'Christmas Island',
+            'CC' => 'Cocos (Keeling) Islands',
+            'CO' => 'Colombia',
+            'KM' => 'Comoros',
+            'CG' => 'Congo',
+            'CD' => 'Congo, Democratic Republic',
+            'CK' => 'Cook Islands',
+            'CR' => 'Costa Rica',
+            'CI' => 'Cote D\'Ivoire',
+            'HR' => 'Croatia',
+            'CU' => 'Cuba',
+            'CY' => 'Cyprus',
+            'CZ' => 'Czech Republic',
+            'DK' => 'Denmark',
+            'DJ' => 'Djibouti',
+            'DM' => 'Dominica',
+            'DO' => 'Dominican Republic',
+            'EC' => 'Ecuador',
+            'EG' => 'Egypt',
+            'SV' => 'El Salvador',
+            'GQ' => 'Equatorial Guinea',
+            'ER' => 'Eritrea',
+            'EE' => 'Estonia',
+            'ET' => 'Ethiopia',
+            'FK' => 'Falkland Islands (Malvinas)',
+            'FO' => 'Faroe Islands',
+            'FJ' => 'Fiji',
+            'FI' => 'Finland',
+            'FR' => 'France',
+            'GF' => 'French Guiana',
+            'PF' => 'French Polynesia',
+            'TF' => 'French Southern Territories',
+            'GA' => 'Gabon',
+            'GM' => 'Gambia',
+            'GE' => 'Georgia',
+            'DE' => 'Germany',
+            'GH' => 'Ghana',
+            'GI' => 'Gibraltar',
+            'GR' => 'Greece',
+            'GL' => 'Greenland',
+            'GD' => 'Grenada',
+            'GP' => 'Guadeloupe',
+            'GU' => 'Guam',
+            'GT' => 'Guatemala',
+            'GG' => 'Guernsey',
+            'GN' => 'Guinea',
+            'GW' => 'Guinea-Bissau',
+            'GY' => 'Guyana',
+            'HT' => 'Haiti',
+            'HM' => 'Heard Island & Mcdonald Islands',
+            'VA' => 'Holy See (Vatican City State)',
+            'HN' => 'Honduras',
+            'HK' => 'Hong Kong',
+            'HU' => 'Hungary',
+            'IS' => 'Iceland',
+            'IN' => 'India',
+            'ID' => 'Indonesia',
+            'IR' => 'Iran, Islamic Republic Of',
+            'IQ' => 'Iraq',
+            'IE' => 'Ireland',
+            'IM' => 'Isle Of Man',
+            'IL' => 'Israel',
+            'IT' => 'Italy',
+            'JM' => 'Jamaica',
+            'JP' => 'Japan',
+            'JE' => 'Jersey',
+            'JO' => 'Jordan',
+            'KZ' => 'Kazakhstan',
+            'KE' => 'Kenya',
+            'KI' => 'Kiribati',
+            'KR' => 'Korea',
+            'KW' => 'Kuwait',
+            'KG' => 'Kyrgyzstan',
+            'LA' => 'Lao People\'s Democratic Republic',
+            'LV' => 'Latvia',
+            'LB' => 'Lebanon',
+            'LS' => 'Lesotho',
+            'LR' => 'Liberia',
+            'LY' => 'Libyan Arab Jamahiriya',
+            'LI' => 'Liechtenstein',
+            'LT' => 'Lithuania',
+            'LU' => 'Luxembourg',
+            'MO' => 'Macao',
+            'MK' => 'Macedonia',
+            'MG' => 'Madagascar',
+            'MW' => 'Malawi',
+            'MY' => 'Malaysia',
+            'MV' => 'Maldives',
+            'ML' => 'Mali',
+            'MT' => 'Malta',
+            'MH' => 'Marshall Islands',
+            'MQ' => 'Martinique',
+            'MR' => 'Mauritania',
+            'MU' => 'Mauritius',
+            'YT' => 'Mayotte',
+            'MX' => 'Mexico',
+            'FM' => 'Micronesia, Federated States Of',
+            'MD' => 'Moldova',
+            'MC' => 'Monaco',
+            'MN' => 'Mongolia',
+            'ME' => 'Montenegro',
+            'MS' => 'Montserrat',
+            'MA' => 'Morocco',
+            'MZ' => 'Mozambique',
+            'MM' => 'Myanmar',
+            'NA' => 'Namibia',
+            'NR' => 'Nauru',
+            'NP' => 'Nepal',
+            'NL' => 'Netherlands',
+            'AN' => 'Netherlands Antilles',
+            'NC' => 'New Caledonia',
+            'NZ' => 'New Zealand',
+            'NI' => 'Nicaragua',
+            'NE' => 'Niger',
+            'NG' => 'Nigeria',
+            'NU' => 'Niue',
+            'NF' => 'Norfolk Island',
+            'MP' => 'Northern Mariana Islands',
+            'NO' => 'Norway',
+            'OM' => 'Oman',
+            'PK' => 'Pakistan',
+            'PW' => 'Palau',
+            'PS' => 'Palestinian Territory, Occupied',
+            'PA' => 'Panama',
+            'PG' => 'Papua New Guinea',
+            'PY' => 'Paraguay',
+            'PE' => 'Peru',
+            'PH' => 'Philippines',
+            'PN' => 'Pitcairn',
+            'PL' => 'Poland',
+            'PT' => 'Portugal',
+            'PR' => 'Puerto Rico',
+            'QA' => 'Qatar',
+            'RE' => 'Reunion',
+            'RO' => 'Romania',
+            'RU' => 'Russian Federation',
+            'RW' => 'Rwanda',
+            'BL' => 'Saint Barthelemy',
+            'SH' => 'Saint Helena',
+            'KN' => 'Saint Kitts And Nevis',
+            'LC' => 'Saint Lucia',
+            'MF' => 'Saint Martin',
+            'PM' => 'Saint Pierre And Miquelon',
+            'VC' => 'Saint Vincent And Grenadines',
+            'WS' => 'Samoa',
+            'SM' => 'San Marino',
+            'ST' => 'Sao Tome And Principe',
+            'SA' => 'Saudi Arabia',
+            'SN' => 'Senegal',
+            'RS' => 'Serbia',
+            'SC' => 'Seychelles',
+            'SL' => 'Sierra Leone',
+            'SG' => 'Singapore',
+            'SK' => 'Slovakia',
+            'SI' => 'Slovenia',
+            'SB' => 'Solomon Islands',
+            'SO' => 'Somalia',
+            'ZA' => 'South Africa',
+            'GS' => 'South Georgia And Sandwich Isl.',
+            'ES' => 'Spain',
+            'LK' => 'Sri Lanka',
+            'SD' => 'Sudan',
+            'SR' => 'Suriname',
+            'SJ' => 'Svalbard And Jan Mayen',
+            'SZ' => 'Swaziland',
+            'SE' => 'Sweden',
+            'CH' => 'Switzerland',
+            'SY' => 'Syrian Arab Republic',
+            'TW' => 'Taiwan',
+            'TJ' => 'Tajikistan',
+            'TZ' => 'Tanzania',
+            'TH' => 'Thailand',
+            'TL' => 'Timor-Leste',
+            'TG' => 'Togo',
+            'TK' => 'Tokelau',
+            'TO' => 'Tonga',
+            'TT' => 'Trinidad And Tobago',
+            'TN' => 'Tunisia',
+            'TR' => 'Turkey',
+            'TM' => 'Turkmenistan',
+            'TC' => 'Turks And Caicos Islands',
+            'TV' => 'Tuvalu',
+            'UG' => 'Uganda',
+            'UA' => 'Ukraine',
+            'AE' => 'United Arab Emirates',
+            'GB' => 'United Kingdom',
+            'US' => 'United States',
+            'UM' => 'United States Outlying Islands',
+            'UY' => 'Uruguay',
+            'UZ' => 'Uzbekistan',
+            'VU' => 'Vanuatu',
+            'VE' => 'Venezuela',
+            'VN' => 'Viet Nam',
+            'VG' => 'Virgin Islands, British',
+            'VI' => 'Virgin Islands, U.S.',
+            'WF' => 'Wallis And Futuna',
+            'EH' => 'Western Sahara',
+            'YE' => 'Yemen',
+            'ZM' => 'Zambia',
+            'ZW' => 'Zimbabwe',
+        ];
+
     return $countries;
 }
 
@@ -664,6 +761,7 @@ function get_page_url($page_id)
     if ($page) {
         return $page->getDetailUrl();
     }
+
     return false;
 }
 
@@ -690,8 +788,9 @@ function recaptcha_field($action)
 function add_query_arg($args, $uri = false)
 {
 
-    if (empty($uri))
+    if (empty($uri)) {
         $uri = request()->url();
+    }
 
     $query = request()->query();
 
@@ -706,13 +805,16 @@ function add_query_arg($args, $uri = false)
 
 function is_default_lang($lang = '')
 {
-    if (!$lang)
+    if (!$lang) {
         $lang = request()->query('lang');
-    if (!$lang)
+    }
+    if (!$lang) {
         $lang = request()->route('lang');
+    }
 
-    if (empty($lang) or $lang == setting_item('site_locale'))
+    if (empty($lang) or $lang == setting_item('site_locale')) {
         return true;
+    }
 
     return false;
 }
@@ -744,18 +846,19 @@ function get_currency_switcher_url($code = false)
     return url($url);
 }
 
-
 function translate_or_origin($key, $settings = [], $locale = '')
 {
-    if (empty($locale))
+    if (empty($locale)) {
         $locale = request()->query('lang');
+    }
 
-    if ($locale and $locale == setting_item('site_locale'))
+    if ($locale and $locale == setting_item('site_locale')) {
         $locale = false;
+    }
 
-    if (empty($locale))
+    if (empty($locale)) {
         return $settings[$key] ?? '';
-    else {
+    } else {
         return $settings[$key . '_' . $locale] ?? '';
     }
 }
@@ -778,12 +881,11 @@ function get_bookable_services()
         }
     }
 
-
     // Plugin Menu
     $plugins_modules = \Plugins\ServiceProvider::getModules();
     if (!empty($plugins_modules)) {
         foreach ($plugins_modules as $module) {
-            $moduleClass = "\\Plugins\\" . ucfirst($module) . "\\ModuleProvider";
+            $moduleClass = '\\Plugins\\' . ucfirst($module) . '\\ModuleProvider';
             if (class_exists($moduleClass)) {
                 $services = call_user_func([$moduleClass, 'getBookableServices']);
                 $all = array_merge($all, $services);
@@ -793,6 +895,7 @@ function get_bookable_services()
     foreach ($all as $id => $class) {
         $all[$id] = get_class(app()->make($class));
     }
+
     return $all;
 }
 function get_payable_services()
@@ -854,11 +957,11 @@ function file_get_contents_curl($url, $isPost = false, $data = [])
 
     $ch = curl_init();
 
-    curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
+    curl_setopt($ch, CURLOPT_AUTOREFERER, true);
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
     if ($isPost) {
         curl_setopt($ch, CURLOPT_POST, count($data));
@@ -874,11 +977,11 @@ function file_get_contents_curl($url, $isPost = false, $data = [])
 function size_unit_format($number = '')
 {
     switch (setting_item('size_unit')) {
-        case "m2":
-            return $number . " m<sup>2</sup>";
+        case 'm2':
+            return $number . ' m<sup>2</sup>';
             break;
         default:
-            return $number . " " . __('sqft');
+            return $number . ' ' . __('sqft');
             break;
     }
 }
@@ -890,7 +993,7 @@ function get_payment_gateways()
     $custom_modules = \Modules\ServiceProvider::getModules();
     if (!empty($custom_modules)) {
         foreach ($custom_modules as $module) {
-            $moduleClass = "\\Modules\\" . ucfirst($module) . "\\ModuleProvider";
+            $moduleClass = '\\Modules\\' . ucfirst($module) . '\\ModuleProvider';
             if (class_exists($moduleClass)) {
                 $gateway = call_user_func([$moduleClass, 'getPaymentGateway']);
                 if (!empty($gateway)) {
@@ -899,11 +1002,11 @@ function get_payment_gateways()
             }
         }
     }
-    //Plugin
+    // Plugin
     $plugin_modules = \Plugins\ServiceProvider::getModules();
     if (!empty($plugin_modules)) {
         foreach ($plugin_modules as $module) {
-            $moduleClass = "\\Plugins\\" . ucfirst($module) . "\\ModuleProvider";
+            $moduleClass = '\\Plugins\\' . ucfirst($module) . '\\ModuleProvider';
             if (class_exists($moduleClass)) {
                 $gateway = call_user_func([$moduleClass, 'getPaymentGateway']);
                 if (!empty($gateway)) {
@@ -916,6 +1019,7 @@ function get_payment_gateways()
     foreach ($gateways as $id => $class) {
         $gateways[$id] = get_class(app()->make($class));
     }
+
     return $gateways;
 }
 
@@ -927,37 +1031,37 @@ function get_current_currency($need, $default = '')
 function booking_status_to_text($status)
 {
     switch ($status) {
-        case "draft":
+        case 'draft':
             return __('Draft');
             break;
-        case "unpaid":
+        case 'unpaid':
             return __('Unpaid');
             break;
-        case "paid":
+        case 'paid':
             return __('Paid');
             break;
-        case "processing":
+        case 'processing':
             return __('Processing');
             break;
-        case "completed":
+        case 'completed':
             return __('Completed');
             break;
-        case "confirmed":
+        case 'confirmed':
             return __('Confirmed');
             break;
-        case "cancelled":
+        case 'cancelled':
             return __('Cancelled');
             break;
-        case "cancel":
+        case 'cancel':
             return __('Cancel');
             break;
-        case "pending":
+        case 'pending':
             return __('Pending');
             break;
-        case "partial_payment":
+        case 'partial_payment':
             return __('Partial Payment');
             break;
-        case "fail":
+        case 'fail':
             return __('Failed');
             break;
         default:
@@ -968,24 +1072,24 @@ function booking_status_to_text($status)
 function verify_type_to($type, $need = 'name')
 {
     switch ($type) {
-        case "phone":
-            return __("Phone");
+        case 'phone':
+            return __('Phone');
             break;
-        case "number":
-            return __("Number");
+        case 'number':
+            return __('Number');
             break;
-        case "email":
-            return __("Email");
+        case 'email':
+            return __('Email');
             break;
-        case "file":
-            return __("Attachment");
+        case 'file':
+            return __('Attachment');
             break;
-        case "multi_files":
-            return __("Multi Attachments");
+        case 'multi_files':
+            return __('Multi Attachments');
             break;
-        case "text":
+        case 'text':
         default:
-            return __("Text");
+            return __('Text');
             break;
     }
 }
@@ -994,7 +1098,7 @@ function get_all_verify_fields()
 {
     return setting_item_array('role_verify_fields');
 }
-/*Hook Functions*/
+/* Hook Functions */
 function add_action($hook, $callback, $priority = 20, $arguments = 1)
 {
     return \Modules\Core\Facades\Hook::addAction($hook, $callback, $priority, $arguments);
@@ -1022,7 +1126,7 @@ function is_enable_multi_lang()
 
 function is_enable_language_route()
 {
-    return (is_installed() and is_enable_multi_lang() and app()->getLocale() != setting_item('site_locale'));
+    return is_installed() and is_enable_multi_lang() and app()->getLocale() != setting_item('site_locale');
 }
 
 function duration_format($duration, $duration_unit, $is_full = false)
@@ -1041,8 +1145,9 @@ function duration_format($duration, $duration_unit, $is_full = false)
 
     $tmp = '';
 
-    if ($day)
+    if ($day) {
         $tmp = $day . __('D');
+    }
 
     if ($hour) {
         $tmp .= $hour . ($duration_unit == 'hours' ? __('H') : __('H'));
@@ -1091,13 +1196,16 @@ function handleVideoUrl($string, $video_id = false)
 {
     if ($video_id && !empty($string)) {
         parse_str(parse_url($string, PHP_URL_QUERY), $values);
+
         return $values['v'];
     }
     if (strpos($string, 'youtu') !== false) {
         preg_match("#(?<=v=)[a-zA-Z0-9-]+(?=&)|(?<=v\/)[^&\n]+|(?<=v=)[^&\n]+|(?<=youtu.be/)[^&\n]+#", $string, $matches);
-        if (!empty($matches[0]))
-            return "https://www.youtube.com/embed/" . e($matches[0]);
+        if (!empty($matches[0])) {
+            return 'https://www.youtube.com/embed/' . e($matches[0]);
+        }
     }
+
     return $string;
 }
 
@@ -1119,8 +1227,9 @@ function money_to_credit($amount, $roundUp = false)
 {
     $res = $amount / setting_item('wallet_credit_exchange_rate', 1);
 
-    if ($roundUp)
+    if ($roundUp) {
         return ceil($res);
+    }
 
     return $res;
 }
@@ -1154,6 +1263,7 @@ function clean_by_key($object, $keyIndex, $children = 'children')
 
         return $object;
     }
+
     return $object;
 }
 function periodDate($startDate, $endDate, $day = true, $interval = '1 day')
@@ -1165,29 +1275,35 @@ function periodDate($startDate, $endDate, $day = true, $interval = '1 day')
     }
     $interval = \DateInterval::createFromDateString($interval);
     $period = new \DatePeriod($begin, $interval, $end);
+
     return $period;
 }
 
 function _fixTextScanTranslations()
 {
-    return __("Show on the map");
+    return __('Show on the map');
 }
-
 
 function is_admin()
 {
-    if (!auth()->check())
+    if (!auth()->check()) {
         return false;
-    if (auth()->user()->hasPermission('dashboard_access'))
+    }
+    if (auth()->user()->hasPermission('dashboard_access')) {
         return true;
+    }
+
     return false;
 }
 function is_vendor()
 {
-    if (!auth()->check())
+    if (!auth()->check()) {
         return false;
-    if (auth()->user()->hasPermission('dashboard_vendor_access'))
+    }
+    if (auth()->user()->hasPermission('dashboard_vendor_access')) {
         return true;
+    }
+
     return false;
 }
 
@@ -1217,37 +1333,36 @@ function format_interval($d1, $d2 = '')
     if (!empty($d2)) {
         $second_date = new DateTime($d2);
     } else {
-        $second_date = new DateTime();
+        $second_date = new DateTime;
     }
-
 
     $interval = $first_date->diff($second_date);
 
-    $result = "";
+    $result = '';
     if ($interval->y) {
-        $result .= $interval->format("%y years ");
+        $result .= $interval->format('%y years ');
     }
     if ($interval->m) {
-        $result .= $interval->format("%m months ");
+        $result .= $interval->format('%m months ');
     }
     if ($interval->d) {
-        $result .= $interval->format("%d days ");
+        $result .= $interval->format('%d days ');
     }
     if ($interval->h) {
-        $result .= $interval->format("%h hours ");
+        $result .= $interval->format('%h hours ');
     }
     if ($interval->i) {
-        $result .= $interval->format("%i minutes ");
+        $result .= $interval->format('%i minutes ');
     }
     if ($interval->s) {
-        $result .= $interval->format("%s seconds ");
+        $result .= $interval->format('%s seconds ');
     }
 
     return $result;
 }
 function generate_timezone_list()
 {
-    static $regions = array(
+    static $regions = [
     DateTimeZone::AFRICA,
     DateTimeZone::AMERICA,
     DateTimeZone::ANTARCTICA,
@@ -1257,14 +1372,14 @@ function generate_timezone_list()
     DateTimeZone::EUROPE,
     DateTimeZone::INDIAN,
     DateTimeZone::PACIFIC,
-    );
+    ];
 
-    $timezones = array();
+    $timezones = [];
     foreach ($regions as $region) {
         $timezones = array_merge($timezones, DateTimeZone::listIdentifiers($region));
     }
 
-    $timezone_offsets = array();
+    $timezone_offsets = [];
     foreach ($timezones as $timezone) {
         $tz = new DateTimeZone($timezone);
         $timezone_offsets[$timezone] = $tz->getOffset(new DateTime);
@@ -1273,7 +1388,7 @@ function generate_timezone_list()
     // sort timezone by offset
     asort($timezone_offsets);
 
-    $timezone_list = array();
+    $timezone_list = [];
     foreach ($timezone_offsets as $timezone => $offset) {
         $offset_prefix = $offset < 0 ? '-' : '+';
         $offset_formatted = gmdate('H:i', abs($offset));
@@ -1290,6 +1405,7 @@ function is_string_match($string, $wildcard)
 {
     $pattern = preg_quote($wildcard, '/');
     $pattern = str_replace('\*', '.*', $pattern);
+
     return preg_match('/^' . $pattern . '$/i', $string);
 }
 function getNotify()
@@ -1312,23 +1428,21 @@ function getNotify()
 function getWishlist()
 {
 
-
     $checkwishlist = \Modules\User\Models\UserWishList::query();
 
     $wishlistQuery = $checkwishlist->where(function ($query) {
-        $query->where("user_wishlist.user_id", Auth::id());
+        $query->where('user_wishlist.user_id', Auth::id());
         $query->orderBy('user_wishlist.id', 'desc');
     });
-
-
 
     $wishlist = $wishlistQuery->with('service')->get();
     // $wishlist->paginate(5);
     $count = $wishlist->count();
+
     // dd([$wishlist,$count]);
     return [
         'wishlist' => $wishlist,
-        'count' => $count
+        'count' => $count,
     ];
 
 }
@@ -1339,6 +1453,7 @@ function is_enable_registration()
 function is_enable_vendor_team()
 {
     return false;
+
     return setting_item('vendor_team_enable');
 }
 

@@ -2,7 +2,7 @@
 @if($available_payout_amount)
     <div class="total-amount-payable h4 text-primary">
         <strong>{{__("Balance: ")}}</strong>
-        <strong>{{format_money($available_payout_amount)}}</strong>
+        <strong>{!! format_money($available_payout_amount) !!}</strong>
     </div>
     <br>
     <div class="">
@@ -26,7 +26,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">{{__("Available for payout")}}</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" readonly value="{{format_money($available_payout_amount)}}">
+                            <input type="text" class="form-control" readonly value="{!! format_money($available_payout_amount) !!}">
                         </div>
                     </div>
                     <div class="form-group row">

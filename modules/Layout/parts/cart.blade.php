@@ -199,7 +199,7 @@
                                 </div>
                             @endif
                             {{-- <div class="cart-item-qty">{{__('Qty')}}: {{ $item['quantity'] }}</div> --}}
-                            <div class="cart-item-price">{{ format_money($item['price']) }}</div>
+                            <div class="cart-item-price">{!! format_money($item['price']) !!}</div>
                         </div>
                         <div class="media-right">
                             <a href="#" class="remove-cart-item" data-id="{{ $item['id'] }}"><i class="fa fa-trash"></i></a>
@@ -214,7 +214,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <span class="font-weight-bold">{{__('Total')}}:</span>
                 <span class="cart-total-price"
-                    style="color:#0000009a; font-weight:bold; font-size:16px;">{{ format_money($totalPrice) }}</span>
+                    style="color:#0000009a; font-weight:bold; font-size:16px;">{!! format_money($totalPrice) !!}</span>
             </div>
             <a href="{{ route('cart.index') }}" class="btn btn-primary"
                 style="display:block; margin: 0 40px 10px 40px; background:#007bff; color:#fff; border-radius:6px; font-weight:600; text-align:center;">

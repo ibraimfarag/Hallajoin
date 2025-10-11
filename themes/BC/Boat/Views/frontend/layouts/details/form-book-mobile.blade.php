@@ -6,8 +6,12 @@
                     <span class="fr_text">{{__("from")}}</span>
                 </div>
                 <div class="price ml-1">
-                    <div><strong>{{ format_money($row->price_per_hour) }}</strong><small>{{ __("/per hour") }}</small></div>
-                    <div><strong>{{ format_money($row->price_per_day) }}</strong><small>{{ __("/per day") }}</small></div>
+                    <div>
+                        <strong>{{ format_money_simple($row->price_per_hour) }}</strong><small>{{ __("/per hour") }}</small>
+                    </div>
+                    <div>
+                        <strong>{{ format_money_simple($row->price_per_day) }}</strong><small>{{ __("/per day") }}</small>
+                    </div>
                 </div>
             </div>
         </div>

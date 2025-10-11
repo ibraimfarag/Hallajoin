@@ -19,8 +19,8 @@
 
 
                     <span class="value">
-                        <span class="onsale">{{ $row->display_sale_price }}</span>
-                        <span class="text-lg">{{ $row->display_price }}</span>
+                        <span class="onsale">{{ $row->display_sale_price_only }}{!! $row->currency_svg !!}</span>
+                        <span class="text-lg">{{ $row->display_price_only }}{!! $row->currency_svg !!}</span>
                     </span>
 
                     @if ($row->discount_percent)

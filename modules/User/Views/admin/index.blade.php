@@ -180,12 +180,12 @@
                                 <div class="row g-2 align-items-center mb-2">
                                     <div class="col-md-2">
                                         <input type="text" name="search" class="form-control" placeholder="Search"
-                                            value="{{ request('search') }}" style="border-radius:10px; font-size:15px;">
+                                            value="{{ request('search') }}" style="border-radius:20px; font-size:15px;">
                                     </div>
                                     <div class="col-md-2">
                                         <div class="input-group">
                                             <input type="date" name="from" class="form-control" placeholder="From"
-                                                value="{{ request('from') }}" style="border-radius:10px;  font-size:15px;">
+                                                value="{{ request('from') }}" style="border-radius:20px;  font-size:15px;">
                                             <span class="input-group-text"
                                                 style="background:transparent; border:none; color:#7c8ba1; font-size:18px;"><i
                                                     class="fas fa-calendar-alt"></i></span>
@@ -194,7 +194,7 @@
                                     <div class="col-md-2">
                                         <div class="input-group">
                                             <input type="date" name="to" class="form-control" placeholder="To"
-                                                value="{{ request('to') }}" style="border-radius:10px;  font-size:15px;">
+                                                value="{{ request('to') }}" style="border-radius:20px;  font-size:15px;">
                                             <span class="input-group-text"
                                                 style="background:transparent; border:none; color:#7c8ba1; font-size:18px;"><i
                                                     class="fas fa-calendar-alt"></i></span>
@@ -202,7 +202,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <select name="country" class="form-control"
-                                            style="border-radius:10px; font-size:15px;">
+                                            style="border-radius:20px; font-size:15px;">
                                             <option value="">Country</option>
                                             @foreach($countries as $country)
                                                 <option value="{{ $country }}" {{ request('country') == $country ? 'selected' : '' }}>{{ $country }}</option>
@@ -211,7 +211,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <select name="role" class="form-control"
-                                            style="border-radius:10px; font-size:15px;">
+                                            style="border-radius:20px; font-size:15px;">
                                             <option value="">Any Role</option>
                                             @foreach($roles as $role)
                                                 <option value="{{$role->name}}" {{ request('role') == $role->name ? 'selected' : '' }}>{{ucfirst($role->name)}}</option>
@@ -289,38 +289,24 @@
                                                     </div>
                                                 @endif
                                                 <a href="{{ route('user.admin.profile', ['id' => $user->id]) }}"
-                                                    style="color: #60a5fa; text-decoration: none;">{{ $user->phone }}</a>
+                                                    style="color: #60a5fa; text-decoration: none;font-size: 19px">{{ $user->phone }}</a>
                                             </td>
                                             <td>
                                                 <div style="display: flex; align-items: center; gap: 8px;">
-                                                    @if($user->country == 'United Arab Emirates' || $user->country == 'UAE' || !$user->country)
-                                                        <span style="font-size: 16px;">🇦🇪</span>
-                                                    @elseif($user->country == 'Saudi Arabia')
-                                                        <span style="font-size: 16px;">🇸🇦</span>
-                                                    @elseif($user->country == 'Kuwait')
-                                                        <span style="font-size: 16px;">🇰🇼</span>
-                                                    @elseif($user->country == 'Qatar')
-                                                        <span style="font-size: 16px;">🇶🇦</span>
-                                                    @elseif($user->country == 'Bahrain')
-                                                        <span style="font-size: 16px;">🇧🇭</span>
-                                                    @elseif($user->country == 'Oman')
-                                                        <span style="font-size: 16px;">🇴🇲</span>
-                                                    @else
-                                                        <span style="font-size: 16px;">🌍</span>
-                                                    @endif
+                                                    
                                                     <a href="{{ route('user.admin.profile', ['id' => $user->id]) }}"
-                                                        style="color: inherit; text-decoration: none;">{{ $user->country ?? 'United Arab Emirates' }}</a>
+                                                        style="color: inherit; text-decoration: none;font-size: 19px">{{ $user->country ?? 'United Arab Emirates' }}</a>
                                                 </div>
                                             </td>
                                             <td>
                                                 <a href="{{ route('user.admin.profile', ['id' => $user->id]) }}"
-                                                    style="color: inherit; text-decoration: none;">{{ $user->getDisplayName() }}</a>
+                                                    style="color: inherit; text-decoration: none;font-size: 19px">{{ $user->getDisplayName() }}</a>
                                             </td>
                                             <td>
                                                 <a href="{{ route('user.admin.profile', ['id' => $user->id]) }}"
-                                                    style="color: inherit; text-decoration: none;">{{ $user->email }}</a>
+                                                    style="color: inherit; text-decoration: none;font-size: 19px">{{ $user->email }}</a>
                                             </td>
-                                            <td>{{ $user->created_at ? $user->created_at->format('d/M/Y H:i') : '' }}</td>
+                                            <td><span  style="font-size: 18px">{{ $user->created_at ? $user->created_at->format('d/M/Y H:i') : '' }}</span></td>
                                         </tr>
                                     @empty
                                         <tr>

@@ -37,10 +37,10 @@
     <td>
         <div>{{__("Total")}}: {{format_money_main($booking->total)}}</div>
         <div>{{__("Paid")}}: {{format_money_main($booking->paid)}}</div>
-        <div>{{__("Remain")}}: {{format_money($booking->total - $booking->paid)}}</div>
+        <div>{{__("Remain")}}: {!! format_money($booking->total - $booking->paid) !!}</div>
     </td>
     <td>
-        {{ format_money($booking->commission) }}
+        {!! format_money($booking->commission) !!}
     </td>
     <td class="{{$booking->status}} a-hidden">{{$booking->statusName}}</td>
     <td width="2%">

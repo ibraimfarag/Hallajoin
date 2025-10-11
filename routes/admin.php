@@ -49,4 +49,10 @@ Route::group(['prefix' => config('admin.admin_route_prefix'), 'middleware' => ['
 
     // Balance route
     Route::get('/balance', [\App\Http\Controllers\Admin\BalanceAdminController::class, 'index'])->name('admin.balance.index');
+
+    // Currency settings routes
+    Route::get('/currency', [\Modules\Core\Admin\CurrencyController::class, 'index'])->name('admin.currency.index');
+    Route::post('/currency/update-svg', [\Modules\Core\Admin\CurrencyController::class, 'updateSvgSymbol'])->name('admin.currency.update-svg');
+    Route::post('/currency/update-currency-svg', [\Modules\Core\Admin\CurrencyController::class, 'updateCurrencySvg'])->name('admin.currency.update-currency-svg');
+    Route::post('/currency/preview', [\Modules\Core\Admin\CurrencyController::class, 'preview'])->name('admin.currency.preview');
 });

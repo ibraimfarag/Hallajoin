@@ -51,7 +51,10 @@
                             </div>
                             <div class="price">
                                 <span class="onsale">{{ $row->display_sale_price }}</span>
-                                <span class="text-price"> <span class="small">from</span> {{ $row->display_price }}</span>
+                                <span class="text-price"> 
+                                    <span class="small">from</span> 
+                                    {{ format_money_simple($row->price) }}
+                                </span>
                             </div>
                         </div>
 

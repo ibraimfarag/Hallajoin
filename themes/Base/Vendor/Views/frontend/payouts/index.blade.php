@@ -46,7 +46,7 @@
                     @foreach($payouts as $payout)
                         <tr>
                             <td>#{{$payout->id}}</td>
-                            <th>{{format_money($payout->amount)}}</th>
+                            <th>{!! format_money($payout->amount) !!}</th>
                             <td>
                                 {{__(':name to :info',['name'=>$payout->payout_method_name,'info'=>$payout->account_info])}}
                             </td>

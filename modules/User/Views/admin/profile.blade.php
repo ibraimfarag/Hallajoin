@@ -6,7 +6,7 @@
 
     <style>
         .profile-header {
-            background: linear-gradient(135deg, #2d4a69 0%, #1e3a5f 100%);
+            background: #132439;
             border-radius: 16px;
             padding: 24px;
             margin-bottom: 24px;
@@ -14,17 +14,7 @@
             overflow: hidden;
         }
 
-        .profile-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-            transform: translate(50%, -50%);
-        }
+
 
         .profile-avatar {
             width: 80px;
@@ -39,6 +29,7 @@
             font-weight: 700;
             color: white;
             margin-bottom: 16px;
+                margin-top: 40px;
         }
 
         .country-flag {
@@ -114,7 +105,7 @@
         .status-badge {
             padding: 6px 12px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 15px;
             font-weight: 600;
             display: inline-flex;
             align-items: center;

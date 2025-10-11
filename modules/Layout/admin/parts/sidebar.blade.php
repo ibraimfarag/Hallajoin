@@ -62,6 +62,12 @@ $menus = [
                 'icon' => 'icon ion-ios-globe',
                 'permission' => 'language_manage',
             ],
+            'currency' => [
+                'url' => route('admin.currency.index'),
+                'title' => __('Currency Settings'),
+                'icon' => 'fa fa-dollar-sign',
+                'permission' => 'setting_update',
+            ],
             'translation' => [
                 'url' => route('language.admin.translations.index'),
                 'title' => __("Translation Manager"),

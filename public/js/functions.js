@@ -37,6 +37,37 @@ window.bravo_format_money = function ($money) {
     return $money_string;
 }
 
+// إضافة function جديدة لدعم SVG
+window.bravo_format_money_with_svg = function ($money) {
+    if (!$money) {
+        //return bookingCore.free_text;
+    }
+
+    $money = bravo_number_format($money / bookingCore.currency_rate, bookingCore.booking_decimals, bookingCore.decimal_separator, bookingCore.thousand_separator);
+
+    // استخدام SVG symbol إذا كان متوفراً
+    var $symbol = bookingCore.currency_symbol_svg || bookingCore.currency_symbol;
+    var $money_string = '';
+
+    switch (bookingCore.currency_position) {
+        case "right":
+            $money_string = $money + $symbol;
+            break;
+        case "left_space":
+            $money_string = $symbol + " " + $money;
+            break;
+        case "right_space":
+            $money_string = $money + " " + $symbol;
+            break;
+        case "left":
+        default:
+            $money_string = $symbol + $money;
+            break;
+    }
+
+    return $money_string;
+}
+
 window.bravo_number_format = function (number, decimals, dec_point, thousands_sep) {
 
 

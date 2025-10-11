@@ -40,10 +40,9 @@
         .favourite-table th {
             padding: 16px;
             text-align: left;
-            font-size: 12px;
+            font-size: 19px;
             font-weight: 600;
             color: #8b92a7;
-            text-transform: uppercase;
             letter-spacing: 0.5px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -88,12 +87,12 @@
         .user-name {
             color: #ffffff;
             font-weight: 500;
-            font-size: 14px;
+            font-size: 17px;
         }
 
         .user-phone {
             color: #63b3ed;
-            font-size: 13px;
+            font-size: 19px;
             margin-top: 2px;
         }
 
@@ -140,7 +139,7 @@
 
         .date-cell {
             color: #a0aec0;
-            font-size: 13px;
+            font-size: 17px !important;
         }
 
         .empty-state {
@@ -192,7 +191,7 @@
         .favourite-modal-content {
             background: #1a2942;
             border-radius: 30px;
-            max-width: 700px;
+            max-width: 670px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
@@ -294,7 +293,7 @@
 
     <div class="favourite-container">
         <div class="favourite-header">
-            <h1 class="favourite-title">{{__('Favourites')}}</h1>
+            <h1 class="favourite-title">{{__('Bookmark')}}</h1>
         </div>
 
         <div class="favourite-table-container">
@@ -341,7 +340,7 @@
                             </td>
                             <td style="text-align: center;">
                                 <svg onclick="openFavouriteModal({{ $user->id }})"
-                                    style="width: 20px; height: 20px; cursor: pointer; color: #8b92a7;"
+                                    style="width: 30px; height: 30px; cursor: pointer; color: #8b92a7;"
                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -416,16 +415,12 @@
                                                 <img src="${item.image}" alt="${item.title}" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover; flex-shrink: 0;">
                                                 <div style="flex: 1;">
                                                     <div class="favourite-item-title">${item.title}</div>
-                                                    <div class="favourite-item-subtitle">${item.subtitle}</div>
-                                                    <div class="favourite-item-info" style="margin-top: 8px;">
-                                                        ${item.location ? `<div class="favourite-item-info-row" style="font-size: 13px; color: #8b92a7; margin-bottom: 4px;"><svg xmlns="http://www.w3.org/2000/svg" style="width: 12px; height: 12px; margin-right: 6px; display: inline-block; vertical-align: middle;" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C5.2 0 3 2.2 3 5c0 3.5 5 11 5 11s5-7.5 5-11c0-2.8-2.2-5-5-5zm0 7.5c-1.4 0-2.5-1.1-2.5-2.5S6.6 2.5 8 2.5s2.5 1.1 2.5 2.5S9.4 7.5 8 7.5z"/></svg>${item.location}</div>` : ''}
-                                                        <div style="font-size: 13px; color: #8b92a7;"><svg xmlns="http://www.w3.org/2000/svg" style="width: 12px; height: 12px; margin-right: 6px; display: inline-block; vertical-align: middle;" fill="currentColor" viewBox="0 0 16 16"><path d="M14 2h-1V1a1 1 0 0 0-2 0v1H5V1a1 1 0 0 0-2 0v1H2C.9 2 0 2.9 0 4v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM2 14V7h12v7H2z"/></svg>${item.added_date}</div>
-                                                    </div>
+                                                    
                                                 </div>
                                                 <div style="text-align: right;">
                                                     <div class="favourite-item-price" style="font-size: 16px; margin-bottom: 8px;">${item.price}</div>
                                                     <a href="${item.service_url}" target="_blank" style="color: #63b3ed; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" style="width: 12px; height: 12px;" fill="currentColor" viewBox="0 0 16 16"><path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z"/><path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6H9z"/></svg> View
+                                                View
                                                     </a>
                                                 </div>
                                             </div>

@@ -321,7 +321,7 @@ body.dark-mode .form-control::placeholder {
 
 /* Buttons */
 body.dark-mode .btn-primary {
-    background: linear-gradient(135deg, var(--dark-accent-blue) 0%, var(--dark-accent-blue-hover) 100%);
+    /* background: linear-gradient(135deg, var(--dark-accent-blue) 0%, var(--dark-accent-blue-hover) 100%); */
     border-color: var(--dark-accent-blue);
     color: white;
 }
@@ -729,7 +729,7 @@ body.dark-mode .stat-currency {
 }
 
 .stat-amount {
-    font-size: 1.8rem;
+    font-size: 2.2rem;
     font-weight: 700;
     color: var(--primary-color);
     margin-bottom: 8px;

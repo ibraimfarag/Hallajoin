@@ -73,18 +73,18 @@
                     @foreach ($person_types as $type)
                         <li>
                             <div class="label">{{ $type['name_' . $lang_local] ?? __($type['name']) }}:
-                                {{ $type['number'] }} * {{ format_money($type['price']) }}</div>
+                                {{ $type['number'] }} * {!! format_money($type['price']) !!}</div>
                             <div class="val">
-                                {{ format_money($type['price'] * $type['number']) }}
+                                {!! format_money($type['price'] * $type['number']) !!}
                             </div>
                         </li>
                     @endforeach
                 @else
                     <li>
                         <div class="label">{{ __('Guests') }}: {{ $booking->total_guests }} *
-                            {{ format_money($booking->getMeta('base_price')) }}</div>
+                            {!! format_money($booking->getMeta('base_price')) !!}</div>
                         <div class="val">
-                            {{ format_money($booking->getMeta('base_price') * $booking->total_guests) }}
+                            {!! format_money($booking->getMeta('base_price') * $booking->total_guests) !!}
                         </div>
                     </li>
                 @endif --}}
@@ -99,7 +99,7 @@
                                 <li>
                                     <div class="label">{{ $type['name_' . $lang_local] ?? __($type['name']) }}:</div>
                                     <div class="val">
-                                        {{ format_money($type['total'] ?? 0) }}
+                                        {!! format_money($type['total'] ?? 0) !!}
                                     </div>
                                 </li>
                             @endforeach
@@ -124,7 +124,7 @@
                                         :
                                     </div>
                                     <div class="val">
-                                        - {{ format_money($type['total'] ?? 0) }}
+                                        - {!! format_money($type['total'] ?? 0) !!}
                                     </div>
                                 </li>
                             @endforeach
@@ -155,14 +155,14 @@
                                 <i class="icofont-info-circle" data-toggle="tooltip" data-placement="top"
                                     title="{{ $item['desc_' . $lang_local] ?? $item['desc'] }}"></i>
                                 @if (!empty($item['per_person']) and $item['per_person'] == 'on')
-                                    : {{ $booking->total_guests }} * {{ format_money($fee_price) }}
+                                    : {{ $booking->total_guests }} * {!! format_money($fee_price) !!}
                                 @endif
                             </div>
                             <div class="val">
                                 @if (!empty($item['per_person']) and $item['per_person'] == 'on')
-                                    {{ format_money($fee_price * $booking->total_guests) }}
+                                    {!! format_money($fee_price * $booking->total_guests) !!}
                                 @else
-                                    {{ format_money($fee_price) }}
+                                    {!! format_money($fee_price) !!}
                                 @endif
                             </div>
                         </li>
@@ -240,7 +240,7 @@
                                 <div class="label">
                                     {{ $type['name_' . $lang_local] ?? __($type['name']) }}:</div>
                                 <div class="val">
-                                    {{ format_money($type['total'] ?? 0) }}
+                                    {!! format_money($type['total'] ?? 0) !!}
                                 </div>
                             </li>
                         @endforeach
@@ -272,7 +272,7 @@
 
                 <span>{{ __('Total') }} </span>
                 <strong>
-                    <h4>{{ format_money($booking->total) }}</h4>
+                    <h4>{!! format_money($booking->total) !!}</h4>
                 </strong>
             </div>
 
@@ -302,17 +302,17 @@
 <li class="final-total d-block">
     <div class="d-flex justify-content-between">
         <div class="label">{{ __('Total:') }}</div>
-        <div class="val orange">{{ format_money($booking->total) }}</div>
+        <div class="val orange">{!! format_money($booking->total) !!}</div>
     </div>
     @if ($booking->status != 'draft')
         <div class="d-flex justify-content-between">
             <div class="label">{{ __('Paid:') }}</div>
-            <div class="val orange">{{ format_money($booking->paid) }}</div>
+            <div class="val orange">{!! format_money($booking->paid) !!}</div>
         </div>
         @if ($booking->paid < $booking->total)
             <div class="d-flex justify-content-between">
                 <div class="label">{{ __('Remain:') }}</div>
-                <div class="val orange">{{ format_money($booking->total - $booking->paid) }}</div>
+                <div class="val orange">{!! format_money($booking->total - $booking->paid) !!}</div>
             </div>
         @endif
     @endif

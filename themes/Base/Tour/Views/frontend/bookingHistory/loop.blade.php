@@ -22,9 +22,9 @@
         {{__("Check in")}} : {{display_date($booking->start_date)}} <br>
         {{__("Duration")}} : {{ $booking->getMeta("duration") ?? "1"  }} {{__("hours")}}
     </td>
-    <td>{{format_money($booking->total)}}</td>
-    <td>{{format_money($booking->paid)}}</td>
-    <td>{{format_money($booking->total - $booking->paid)}}</td>
+    <td>{!! format_money($booking->total) !!}</td>
+    <td>{!! format_money($booking->paid) !!}</td>
+    <td>{!! format_money($booking->total - $booking->paid) !!}</td>
     <td class="{{$booking->status}} a-hidden">
         {{$booking->statusName}}
     </td>

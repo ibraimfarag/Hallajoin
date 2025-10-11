@@ -40,7 +40,7 @@
         .cart-table th {
             padding: 16px;
             text-align: left;
-            font-size: 12px;
+            font-size: 18px;
             font-weight: 600;
             color: #8b92a7;
             text-transform: uppercase;
@@ -52,7 +52,7 @@
             padding: 16px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             color: #e2e8f0;
-            font-size: 14px;
+            font-size: 19px;
         }
 
         .cart-table tbody tr:hover {
@@ -88,12 +88,12 @@
         .user-name {
             color: #ffffff;
             font-weight: 500;
-            font-size: 14px;
+            font-size: 17px;
         }
 
         .user-phone {
             color: #63b3ed;
-            font-size: 13px;
+            font-size: 19px;
             margin-top: 2px;
         }
 
@@ -181,7 +181,7 @@
         .cart-modal-content {
             background: #1a2942;
             border-radius: 30px;
-            max-width: 600px;
+            max-width: 670px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
@@ -343,7 +343,7 @@
                             </td>
                             <td style="text-align: center;">
                                 <svg onclick="openCartModal({{ $cart->id }})"
-                                    style="width: 20px; height: 20px; cursor: pointer; color: #8b92a7;"
+                                    style="width: 30px; height: 30px; cursor: pointer; color: #8b92a7;"
                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -419,7 +419,7 @@
                                                     <div class="cart-item-title">${item.title}</div>
                                                     <div class="cart-item-info">
                                                         ${item.datetime ? `<div class="cart-item-info-row"><strong>Date:</strong> ${item.datetime}</div>` : ''}
-                                                        ${item.quantity_text ? `<div class="cart-item-info-row"><strong>Persons:</strong> ${item.quantity_text}</div>` : ''}
+                                                        ${item.quantity_text ? `<div class="cart-item-info-row"> ${item.quantity_text}</div>` : ''}
                                                     </div>
                                                 </div>
                                                 <div class="cart-item-price">

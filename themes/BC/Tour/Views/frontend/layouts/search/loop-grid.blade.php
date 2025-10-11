@@ -14,10 +14,9 @@
     @endif
     <div class="thumb-image">
         {{-- @if ($row->discount_percent)
-            <div class="sale_info">{{ $row->discount_percent }}</div>
+        <div class="sale_info">{{ $row->discount_percent }}</div>
         @endif --}}
-        <a @if (!empty($blank)) target="_blank" @endif
-            href="{{ $row->getDetailUrl($include_param ?? true) }}">
+        <a @if (!empty($blank)) target="_blank" @endif href="{{ $row->getDetailUrl($include_param ?? true) }}">
             @if ($row->image_url)
                 @if (!empty($disable_lazyload))
                     @php
@@ -37,8 +36,7 @@
                 @endif
             @endif
         </a>
-        <div class="service-wishlist {{ $row->isWishList() }}" data-id="{{ $row->id }}"
-            data-type="{{ $row->type }}">
+        <div class="service-wishlist {{ $row->isWishList() }}" data-id="{{ $row->id }}" data-type="{{ $row->type }}">
             <i class="fa fa-heart"></i>
         </div>
     </div>
@@ -47,7 +45,7 @@
         <div class="location">
             @if (!empty($row->location->name))
                 @php
-                $location = $row->location->translate();
+                    $location = $row->location->translate();
                     $terms_ids = $row->tour_term->pluck('term_id');
                     $attributes = \Modules\Core\Models\Terms::getTermsById($terms_ids);
                     $hasId108 = false;
@@ -77,29 +75,28 @@
         </div>
 
         @if (setting_item('tour_enable_review'))
-            <?php
+                <?php
             $reviewData = $row->getScoreReview();
             $score_total = $reviewData['score_total'];
-            ?>
-            <div class="service-review tour-review-{{ $score_total }}">
-                <div class="list-star">
-                    <i class="fa fa-star orange"></i>
-                    <span class="rating-text"> {{ $score_total }} </span>
+                                    ?>
+                <div class="service-review tour-review-{{ $score_total }}">
+                    <div class="list-star">
+                        <i class="fa fa-star orange"></i>
+                        <span class="rating-text"> {{ $score_total }} </span>
+                    </div>
+                    <span class="review">
+                        @if ($reviewData['total_review'] > 1)
+                            {{ __('(:number)', ['number' => $reviewData['total_review']]) }}
+                        @else
+                            {{ __('(:number)', ['number' => $reviewData['total_review']]) }}
+                        @endif
+                    </span>
                 </div>
-                <span class="review">
-                    @if ($reviewData['total_review'] > 1)
-                        {{ __('(:number)', ['number' => $reviewData['total_review']]) }}
-                    @else
-                        {{ __('(:number)', ['number' => $reviewData['total_review']]) }}
-                    @endif
-                </span>
-            </div>
         @endif
     </div>
 
     <div class="item-title">
-        <a @if (!empty($blank)) target="_blank" @endif
-            href="{{ $row->getDetailUrl($include_param ?? true) }}">
+        <a @if (!empty($blank)) target="_blank" @endif href="{{ $row->getDetailUrl($include_param ?? true) }}">
             {{ $translation->title }}
         </a>
     </div>
@@ -121,35 +118,39 @@
                 <span class="onsale">
                     @if ($row->display_sale_price)
                         <span class="fr_text">{{ __('from') }}</span>
-                    @endif{{ $row->display_sale_price }}
+                    @endif
+                    @if($row->sale_price)
+                        {{ format_price_only($row->sale_price) }}{!! get_current_currency_svg() !!}
+                    @endif
                 </span>
 
                 <div class="row">
 
-               
 
-                        <span class="text-price">{{ $row->display_price }}  </span>
-             
+
+                    <span
+                        class="text-price">{{ format_price_only($row->price) }}{!! get_current_currency_svg() !!}</span>
+
 
                     @if ($row->discount_percent)
-           
-                    <span class="text-price-discount_percent">{{ __('Save up to ') }}{{ $row->discount_percent }}</span>
-                @endif
 
-             
-            </div>
+                        <span class="text-price-discount_percent">{{ __('Save up to ') }}{{ $row->discount_percent }}</span>
+                    @endif
+
+
+                </div>
             </div>
         </div>
 
-{{-- 
+        {{--
         @if ($row->duration)
-            
+
         <div class="duration">
             <i class="icofont-wall-clock orange"></i>
             {{ duration_format($row->duration, $row->duration_unit) }}
-                </div>
-      
-            
+        </div>
+
+
         @endif --}}
 
 

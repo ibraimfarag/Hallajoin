@@ -105,7 +105,7 @@
                         <div class="label">{{__('Rental price')}}
                         </div>
                         <div class="val">
-                            {{format_money( $price_item)}}
+                            {!! format_money( $price_item) !!}
                         </div>
                     </li>
                 @endif
@@ -120,7 +120,7 @@
                                 <li>
                                     <div class="label">{{$type['name_'.$lang_local] ?? $type['name']}}:</div>
                                     <div class="val">
-                                        {{format_money($type['total'] ?? 0)}}
+                                        {!! format_money($type['total'] ?? 0) !!}
                                     </div>
                                 </li>
                             @endforeach
@@ -150,14 +150,14 @@
                                 {{$item['name_'.$lang_local] ?? $item['name']}}
                                 <i class="icofont-info-circle" data-toggle="tooltip" data-placement="top" title="{{ $item['desc_'.$lang_local] ?? $item['desc'] }}"></i>
                                 @if(!empty($item['per_person']) and $item['per_person'] == "on")
-                                    : {{$booking->total_guests}} * {{format_money( $fee_price )}}
+                                    : {{$booking->total_guests}} * {!! format_money( $fee_price ) !!}
                                 @endif
                             </div>
                             <div class="val">
                                 @if(!empty($item['per_person']) and $item['per_person'] == "on")
-                                    {{ format_money( $fee_price * $booking->total_guests ) }}
+                                    {!! format_money( $fee_price * $booking->total_guests ) !!}
                                 @else
-                                    {{ format_money( $fee_price ) }}
+                                    {!! format_money( $fee_price ) !!}
                                 @endif
                             </div>
                         </li>
@@ -167,17 +167,17 @@
                 <li class="final-total d-block">
                     <div class="d-flex justify-content-between">
                         <div class="label">{{__("Total:")}}</div>
-                        <div class="val">{{format_money($booking->total)}}</div>
+                        <div class="val">{!! format_money($booking->total) !!}</div>
                     </div>
                     @if($booking->status !='draft')
                         <div class="d-flex justify-content-between">
                             <div class="label">{{__("Paid:")}}</div>
-                            <div class="val">{{format_money($booking->paid)}}</div>
+                            <div class="val">{!! format_money($booking->paid) !!}</div>
                         </div>
                         @if($booking->paid < $booking->total )
                             <div class="d-flex justify-content-between">
                                 <div class="label">{{__("Remain:")}}</div>
-                                <div class="val">{{format_money($booking->total - $booking->paid)}}</div>
+                                <div class="val">{!! format_money($booking->total - $booking->paid) !!}</div>
                             </div>
                         @endif
                     @endif
@@ -209,7 +209,7 @@ $dateDetail = $service->detailBookingEachDate($booking);
                                     </div>
                                 <div class="d-flex justify-content-between font-weight-bold px-2">
                                     <span>{{__("Total:")}}</span>
-                                    <span>{{format_money(array_sum(\Illuminate\Support\Arr::pluck($dateDetail,['price'])))}}</span>
+                                    <span>{!! format_money(array_sum(\Illuminate\Support\Arr::pluck($dateDetail,['price']))) !!}</span>
                                 </div>
                             </li>
                     </ul>

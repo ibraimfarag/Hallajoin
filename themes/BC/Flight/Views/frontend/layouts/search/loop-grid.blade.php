@@ -1,15 +1,19 @@
-<div class="card w-100 shadow-hover-3 mb-4">
+<div class="					<h6 class=" font-weight-bold font-size-17 text-gray-3 mb-0">{{ format_money_simple(@$row->min_price) }}
+	</h6>ard w-100 shadow-hover-3 mb-4">
 	<a href="#" class="d-block mb-0 mx-1 mt-1 p-3" tabindex="0">
 		<img class="card-img-top" src="{{$row->airline->image_url}}" alt="{{$row->airline->name}}">
 	</a>
 	<div class="card-body px-3 pt-0 pb-3 my-0 mx-1">
 		<div class="row">
 			<div class="col-7">
-				<a href="#" class="card-title text-dark font-size-17 font-weight-bold" tabindex="0">{{$row->airportFrom->name}}</a>
+				<a href="#" class="card-title text-dark font-size-17 font-weight-bold"
+					tabindex="0">{{$row->airportFrom->name}}</a>
 			</div>
 			<div class="col-5">
 				<div class="text-right">
-					<h6 class="font-weight-bold font-size-17 text-gray-3 mb-0">{{format_money(@$row->min_price)}}</h6>
+					<h6 class="font-weight-bold font-size-17 text-gray-3 mb-0">
+						{{ format_money_simple(@$row->min_price) }}
+					</h6>
 					<span class="font-weight-normal font-size-12 d-block text-color-1">{{__('avg/person')}}</span>
 				</div>
 			</div>
@@ -40,9 +44,10 @@
 		</div>
 		<div class="d-flex justify-content-center pl-3 pr-3">
 			@if($row->can_book)
-			<a @click="openModalBook('{{$row->id}}')" href=""  onclick="event.preventDefault()" class="btn btn-primary text-white btn-choose w-100">{{__("Choose")}}</a>
+				<a @click="openModalBook('{{$row->id}}')" href="" onclick="event.preventDefault()"
+					class="btn btn-primary text-white btn-choose w-100">{{__("Choose")}}</a>
 			@else
-				<a  href="#"  class="btn btn-warning btn-disabled">{{__("Full Book")}}</a>
+				<a href="#" class="btn btn-warning btn-disabled">{{__("Full Book")}}</a>
 			@endif
 		</div>
 	</div>

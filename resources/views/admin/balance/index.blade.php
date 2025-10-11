@@ -45,9 +45,8 @@
             .balance-table thead th {
                 background: rgba(99, 179, 237, 0.1);
                 color: #8b92a7;
-                font-size: 12px;
+                font-size: 19px;
                 font-weight: 600;
-                text-transform: uppercase;
                 padding: 16px;
                 text-align: left;
                 border: none;
@@ -117,19 +116,19 @@
             }
 
             .user-name {
-                font-size: 14px;
+                font-size: 17px;
                 font-weight: 500;
                 color: #ffffff;
                 margin-bottom: 4px;
             }
 
             .user-phone {
-                font-size: 12px;
+                font-size: 19px;
                 color: #8b92a7;
             }
 
             .balance-amount {
-                font-size: 14px;
+                font-size: 19px;
                 font-weight: 500;
                 color: #ffffff;
             }
@@ -144,12 +143,14 @@
                 font-size: 13px;
                 font-weight: 500;
                 color: #63b3ed;
+                    margin-left: 20px;
             }
 
             .total-balance {
-                font-size: 16px;
+                font-size: 19px;
                 font-weight: 600;
                 text-align: right;
+                    padding-right: 30px;
             }
 
             .sort-icon {

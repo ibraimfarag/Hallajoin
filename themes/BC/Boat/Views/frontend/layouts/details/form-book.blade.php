@@ -4,8 +4,8 @@
             <div class="form-head">
                 <div class="price flex-wrap">
                     <span class="value">
-                        <div>{{ format_money($row->price_per_hour) }}<small>{{ __("/per hour") }}</small></div>
-                        <div>{{ format_money($row->price_per_day) }}<small>{{ __("/per day") }}</small></div>
+                        <div>{{ format_money_simple($row->price_per_hour) }}<small>{{ __("/per hour") }}</small></div>
+                        <div>{{ format_money_simple($row->price_per_day) }}<small>{{ __("/per day") }}</small></div>
                     </span>
                 </div>
             </div>
