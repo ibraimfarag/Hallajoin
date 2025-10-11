@@ -3,6 +3,8 @@
 @section('content')
     <!-- Add Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Add Flag Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/7.5.0/css/flag-icons.min.css">
 
     <style>
         .profile-header {
@@ -29,7 +31,7 @@
             font-weight: 700;
             color: white;
             margin-bottom: 16px;
-                margin-top: 40px;
+            margin-top: 40px;
         }
 
         .country-flag {
@@ -41,34 +43,32 @@
             border-radius: 20px;
             font-size: 14px;
             margin-bottom: 8px;
+            margin-left: -15px;
         }
 
-        .country-flag span {
-            font-size: 16px;
+        .country-flag .fi {
+            font-size: 16px !important;
             line-height: 1;
+            border-radius: 2px;
+            display: inline-block;
+            width: 18px;
+            height: 12px;
         }
 
         .profile-phone {
             color: #a0aec0;
             font-size: 16px;
-            margin-bottom: 24px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
         .profile-name {
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 16px;
             margin: 8px 0;
-            color: #ffffff;
+            color: #a0aec0;
         }
 
-        .profile-phone {
-            color: #a0aec0;
-            font-size: 16px;
-            margin-bottom: 24px;
-        }
 
         .profile-info {
             display: grid;
@@ -466,21 +466,6 @@
             font-weight: 900 !important;
             display: inline-block;
         }
-
-        .country-flag .flag-emoji {
-            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-            font-size: 18px;
-            line-height: 1;
-        }
-
-        .country-flag .flag-fallback {
-            width: 20px;
-            height: 15px;
-            background: linear-gradient(to bottom, #ff0000 33%, #ffffff 33%, #ffffff 66%, #000000 66%);
-            border-radius: 2px;
-            display: inline-block;
-            margin-right: 4px;
-        }
     </style>
 
     <div class="profile-container">
@@ -509,27 +494,41 @@
                                 <div class="country-flag">
                                     @php
                                         $countryFlags = [
-                                            'United Arab Emirates' => '🇦🇪',
-                                            'UAE' => '🇦🇪',
-                                            'Saudi Arabia' => '🇸🇦',
-                                            'Kuwait' => '🇰🇼',
-                                            'Qatar' => '🇶🇦',
-                                            'Bahrain' => '🇧🇭',
-                                            'Oman' => '🇴🇲',
-                                            'US' => '🇺🇸',
-                                            'United States' => '🇺🇸',
+                                            'United Arab Emirates' => 'ae',
+                                            'UAE' => 'ae',
+                                            'Saudi Arabia' => 'sa',
+                                            'Kuwait' => 'kw',
+                                            'Qatar' => 'qa',
+                                            'Bahrain' => 'bh',
+                                            'Oman' => 'om',
+                                            'US' => 'us',
+                                            'United States' => 'us',
+                                            'Egypt' => 'eg',
+                                            'Lebanon' => 'lb',
+                                            'Jordan' => 'jo',
+                                            'Syria' => 'sy',
+                                            'Iraq' => 'iq',
+                                            'Yemen' => 'ye',
+                                            'Morocco' => 'ma',
+                                            'Algeria' => 'dz',
+                                            'Tunisia' => 'tn',
+                                            'Libya' => 'ly',
+                                            'Sudan' => 'sd',
                                         ];
                                         $country = $user->country ?? 'United Arab Emirates';
-                                        $flag = $countryFlags[$country] ?? '🌍';
+                                        $flagCode = $countryFlags[$country] ?? 'ae'; // default to UAE
                                     @endphp
-                                    <span class="flag-emoji" style="font-size: 18px; line-height: 1;">{{ $flag }}</span>
-                                    <span style="margin-left: 8px;">{{ $country }}</span>
+                                    <span class="fi fi-{{ $flagCode }}"
+                                        style="font-size: 18px; line-height: 1; margin-right: 3px;"></span>
+                                    <span style="color: #a0aec0;">{{ $country }}</span>
                                 </div>
                                 <div class="profile-phone">
                                     <i class="fas fa-phone" style="font-size: 14px; color: #a0aec0;"></i>
                                     {{ $user->phone ?? 'No phone provided' }}
                                 </div>
-                                <div class="profile-name">{{ $user->getDisplayName() }}</div>
+                                <div class="profile-name">
+                                    <i class="fas fa-user" style="margin-right: 8px;"></i>{{ $user->getDisplayName() }}
+                                </div>
 
                                 <div class="status-badges">
                                     @if($user->status == 'publish')
@@ -552,8 +551,8 @@
                     <div class="section-card">
                         <div class="section-header">
                             <h3 class="section-title">{{ __('Balance') }}</h3>
-                            <div style="color: #a0aec0; font-size: 18px; font-weight: 700;">AED
-                                {{ number_format($balance, 2) }}
+                            <div style="color: #a0aec0; font-size: 18px; font-weight: 700;">
+                                {{ number_format($balance, 2) }}{!! get_current_currency_svg() !!}
                             </div>
                         </div>
                         <div class="balance-grid">
@@ -562,7 +561,9 @@
                                     <i class="fas fa-wallet"></i>
                                 </div>
                                 <div class="balance-info">
-                                    <p>{{ __('Wallet') }}: AED {{ number_format($balance, 2) }}</p>
+                                    <p>{{ __('Wallet') }}:
+                                        {{ number_format($balance, 2) }}{!! get_current_currency_svg() !!}
+                                    </p>
                                 </div>
                             </div>
                             <div class="balance-item">
@@ -570,7 +571,8 @@
                                     <i class="fas fa-star"></i>
                                 </div>
                                 <div class="balance-info">
-                                    <p>{{ __('Points') }}: {{ $points }} (AED {{ number_format($pointsValue, 2) }})</p>
+                                    <p>{{ __('Points') }}: {{ $points }}
+                                        ({{ number_format($pointsValue, 2) }}{!! get_current_currency_svg() !!})</p>
                                 </div>
                             </div>
                         </div>
@@ -586,11 +588,14 @@
                         <div class="orders-summary">
                             <div style="margin-bottom: 16px;">
                                 <div style="color: #ffffff; font-size: 18px; font-weight: 700;">{{ $totalOrders }}
-                                    {{ __('orders') }}</div>
-                                <div style="color: #a0aec0; font-size: 14px;">{{ __('Total Amount') }}: AED
-                                    {{ number_format($totalAmount, 2) }}</div>
-                                <div style="color: #a0aec0; font-size: 14px;">{{ __('Refunded') }}: AED
-                                    {{ number_format($totalRefunded, 2) }}</div>
+                                    {{ __('orders') }}
+                                </div>
+                                <div style="color: #a0aec0; font-size: 14px;">{{ __('Total Amount') }}:
+                                    {{ number_format($totalAmount, 2) }}{!! get_current_currency_svg() !!}
+                                </div>
+                                <div style="color: #a0aec0; font-size: 14px;">{{ __('Refunded') }}:
+                                    {{ number_format($totalRefunded, 2) }}{!! get_current_currency_svg() !!}
+                                </div>
                             </div>
                         </div>
 
@@ -600,24 +605,28 @@
                                 <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px;">
                                     <!-- Order ID - Main Line -->
                                     <div style="margin-bottom: 12px;">
-                                        <span style="color: #63b3ed; font-size: 16px; font-weight: 600;">#{{ $lastOrder->code ?? $lastOrder->id }}</span>
+                                        <span
+                                            style="color: #63b3ed; font-size: 16px; font-weight: 600;">#{{ $lastOrder->code ?? $lastOrder->id }}</span>
                                     </div>
-                                    
+
                                     <!-- Order Details - Secondary Lines -->
                                     <div style="display: flex; flex-direction: column; gap: 6px;">
                                         <div style="display: flex; justify-content: space-between; align-items: center;">
                                             <span style="color: #a0aec0; font-size: 14px;">{{ __('Date') }}:</span>
-                                            <span style="color: #e2e8f0; font-size: 14px;">{{ $lastOrder->created_at->format('d/M/Y H:i') }}</span>
+                                            <span
+                                                style="color: #e2e8f0; font-size: 14px;">{{ $lastOrder->created_at->format('d/M/Y H:i') }}</span>
                                         </div>
-                                        
+
                                         <div style="display: flex; justify-content: space-between; align-items: center;">
                                             <span style="color: #a0aec0; font-size: 14px;">{{ __('Amount') }}:</span>
-                                            <span style="color: #68d391; font-size: 14px; font-weight: 600;">AED {{ number_format($lastOrder->total, 2) }}</span>
+                                            <span
+                                                style="color: #68d391; font-size: 14px; font-weight: 600;">{{ number_format($lastOrder->total, 2) }}{!! get_current_currency_svg() !!}</span>
                                         </div>
-                                        
+
                                         <div style="display: flex; justify-content: space-between; align-items: center;">
                                             <span style="color: #a0aec0; font-size: 14px;">{{ __('Status') }}:</span>
-                                            <span style="background: {{ $lastOrder->status == 'completed' ? '#28a745' : ($lastOrder->status == 'pending' ? '#ffc107' : '#6c757d') }}; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;">
+                                            <span
+                                                style="background: {{ $lastOrder->status == 'completed' ? '#28a745' : ($lastOrder->status == 'pending' ? '#ffc107' : '#6c757d') }}; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;">
                                                 {{ ucfirst($lastOrder->status) }}
                                             </span>
                                         </div>
@@ -656,20 +665,16 @@
 
                                     <div style=" margin: 20px 0;display: flex;gap: 20px;">
                                         <div style="margin-bottom: 8px;">
-                                            <input type="checkbox" 
-                                                   id="userBlocked" 
-                                                   style="margin-right: 8px;" 
-                                                   {{ $user->blocked ? 'checked' : '' }}
-                                                   onchange="toggleUserBlock({{ $user->id }}, this.checked)">
-                                            <label for="userBlocked" style="color: #a0aec0; cursor: pointer;">{{ __('Block User') }}</label>
+                                            <input type="checkbox" id="userBlocked" style="margin-right: 8px;" {{ $user->blocked ? 'checked' : '' }}
+                                                onchange="toggleUserBlock({{ $user->id }}, this.checked)">
+                                            <label for="userBlocked"
+                                                style="color: #a0aec0; cursor: pointer;">{{ __('Block User') }}</label>
                                         </div>
                                         <div style="margin-bottom: 8px;">
-                                            <input type="checkbox" 
-                                                   id="orderBlocked" 
-                                                   style="margin-right: 8px;" 
-                                                   {{ $user->order_blocked ? 'checked' : '' }}
-                                                   onchange="toggleOrderBlock({{ $user->id }}, this.checked)">
-                                            <label for="orderBlocked" style="color: #a0aec0; cursor: pointer;">{{ __('Block Orders') }}</label>
+                                            <input type="checkbox" id="orderBlocked" style="margin-right: 8px;" {{ $user->order_blocked ? 'checked' : '' }}
+                                                onchange="toggleOrderBlock({{ $user->id }}, this.checked)">
+                                            <label for="orderBlocked"
+                                                style="color: #a0aec0; cursor: pointer;">{{ __('Block Orders') }}</label>
                                         </div>
                                     </div>
 
@@ -695,14 +700,14 @@
                                 </div>
                             </div>
 
-            
+
                             <!-- Bottom section - Roles and Suspended time -->
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                                 <div>
                                     <span class="info-label">{{ __('Roles') }}:</span>
                                     <span class="info-value">{{ $user->role->name ?? __('No Role') }}</span>
                                 </div>
-                                
+
                             </div>
                         </div>
 
@@ -857,8 +862,7 @@
                                                 <div>
                                                     <div
                                                         style="color: {{ $order->status == 'cancelled' ? '#f56565' : '#68d391' }};">
-                                                        AED
-                                                        {{ $order->status == 'cancelled' ? '-' : '' }}{{ number_format($order->total, 2) }}
+                                                        {{ $order->status == 'cancelled' ? '-' : '' }}{{ number_format($order->total, 2) }}{!! get_current_currency_svg() !!}
                                                     </div>
                                                     @if($order->wallet_credit_used > 0)
                                                         <div style="color: #a0aec0; font-size: 12px;">
@@ -867,8 +871,8 @@
                                                     @endif
                                                 </div>
                                             </td>
-                                            <td>AED {{ number_format($order->paid ?? 0, 2) }}</td>
-                                            <td>{{ $order->coupon_amount > 0 ? 'AED ' . number_format($order->coupon_amount, 2) : '' }}
+                                            <td>{{ number_format($order->paid ?? 0, 2) }}{!! get_current_currency_svg() !!}</td>
+                                            <td>{{ $order->coupon_amount > 0 ? number_format($order->coupon_amount, 2) . get_current_currency_svg() : '' }}
                                             </td>
                                             <td>{{ $order->status == 'cancelled' ? 'Refund' : 'OrderPayment' }}</td>
                                             <td>{{ $order->created_at->format('d/M/Y') }}<br>{{ $order->created_at->format('H:i') }}
@@ -877,7 +881,8 @@
                                     @empty
                                         <tr>
                                             <td colspan="6" style="text-align: center; color: #a0aec0;">
-                                                {{ __('No transactions found') }}</td>
+                                                {{ __('No transactions found') }}
+                                            </td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -896,17 +901,6 @@
     </div>
 
     <script>
-        // Ensure UAE flag emoji displays correctly
-        document.addEventListener('DOMContentLoaded', function () {
-            const flagEmojis = document.querySelectorAll('.flag-emoji');
-            flagEmojis.forEach(function (emoji) {
-                // Force UTF-8 encoding for emoji
-                emoji.style.fontFamily = '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
-                emoji.style.fontFeatureSettings = '"liga"';
-                emoji.innerHTML = '🇦🇪'; // UAE flag
-            });
-        });
-
         // Copy to clipboard function with better UX
         function copyToClipboard(text) {
             if (!text) return;
@@ -947,7 +941,7 @@
                         }
                         throw new Error('Network response was not ok');
                     })
-                    .then(data => {
+                    .then data => {
                         if (data.success) {
                             // Remove the row from table
                             const row = document.querySelector(`tr[data-session-id="${sessionId}"]`);
@@ -971,10 +965,10 @@
                             showToast(data.message || '{{ __("Failed to delete session") }}', 'error');
                         }
                     })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showToast('{{ __("An error occurred while deleting the session") }}', 'error');
-                    });
+                        .catch (error => {
+                    console.error('Error:', error);
+                    showToast('{{ __("An error occurred while deleting the session") }}', 'error');
+                });
             }
         }
 
@@ -982,21 +976,21 @@
         function showToast(message, type = 'success') {
             const toast = document.createElement('div');
             toast.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: ${type === 'success' ? '#28a745' : '#dc3545'};
-                    color: white;
-                    padding: 16px 24px;
-                    border-radius: 8px;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                    z-index: 10000;
-                    font-size: 14px;
-                    font-weight: 500;
-                    animation: slideIn 0.3s ease;
-                    max-width: 300px;
-                    word-wrap: break-word;
-                `;
+                            position: fixed;
+                            top: 20px;
+                            right: 20px;
+                            background: ${type === 'success' ? '#28a745' : '#dc3545'};
+                            color: white;
+                            padding: 16px 24px;
+                            border-radius: 8px;
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                            z-index: 10000;
+                            font-size: 14px;
+                            font-weight: 500;
+                            animation: slideIn 0.3s ease;
+                            max-width: 300px;
+                            word-wrap: break-word;
+                        `;
             toast.textContent = message;
             document.body.appendChild(toast);
 
@@ -1014,7 +1008,7 @@
         function toggleUserBlock(userId, isBlocked) {
             const checkbox = document.getElementById('userBlocked');
             checkbox.disabled = true; // Disable during request
-            
+
             fetch(`{{ route('admin.user.toggle.block', ['id' => ':userId']) }}`.replace(':userId', userId), {
                 method: 'POST',
                 headers: {
@@ -1026,32 +1020,32 @@
                     blocked: isBlocked
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showToast(data.message, 'success');
-                } else {
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(data.message, 'success');
+                    } else {
+                        // Revert checkbox state on error
+                        checkbox.checked = !isBlocked;
+                        showToast(data.message || '{{ __("Failed to update block status") }}', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                     // Revert checkbox state on error
                     checkbox.checked = !isBlocked;
-                    showToast(data.message || '{{ __("Failed to update block status") }}', 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Revert checkbox state on error
-                checkbox.checked = !isBlocked;
-                showToast('{{ __("An error occurred while updating block status") }}', 'error');
-            })
-            .finally(() => {
-                checkbox.disabled = false; // Re-enable checkbox
-            });
+                    showToast('{{ __("An error occurred while updating block status") }}', 'error');
+                })
+                .finally(() => {
+                    checkbox.disabled = false; // Re-enable checkbox
+                });
         }
 
         // Toggle order block/unblock  
         function toggleOrderBlock(userId, isBlocked) {
             const checkbox = document.getElementById('orderBlocked');
             checkbox.disabled = true; // Disable during request
-            
+
             fetch(`{{ route('admin.user.toggle.order.block', ['id' => ':userId']) }}`.replace(':userId', userId), {
                 method: 'POST',
                 headers: {
@@ -1063,39 +1057,39 @@
                     order_blocked: isBlocked
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showToast(data.message, 'success');
-                } else {
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(data.message, 'success');
+                    } else {
+                        // Revert checkbox state on error
+                        checkbox.checked = !isBlocked;
+                        showToast(data.message || '{{ __("Failed to update order block status") }}', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                     // Revert checkbox state on error
                     checkbox.checked = !isBlocked;
-                    showToast(data.message || '{{ __("Failed to update order block status") }}', 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Revert checkbox state on error
-                checkbox.checked = !isBlocked;
-                showToast('{{ __("An error occurred while updating order block status") }}', 'error');
-            })
-            .finally(() => {
-                checkbox.disabled = false; // Re-enable checkbox
-            });
+                    showToast('{{ __("An error occurred while updating order block status") }}', 'error');
+                })
+                .finally(() => {
+                    checkbox.disabled = false; // Re-enable checkbox
+                });
         }
 
         // Add CSS animations
         const style = document.createElement('style');
         style.textContent = `
-                @keyframes slideIn {
-                    from { transform: translateX(400px); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-                @keyframes slideOut {
-                    from { transform: translateX(0); opacity: 1; }
-                    to { transform: translateX(400px); opacity: 0; }
-                }
-            `;
+                        @keyframes slideIn {
+                            from { transform: translateX(400px); opacity: 0; }
+                            to { transform: translateX(0); opacity: 1; }
+                        }
+                        @keyframes slideOut {
+                            from { transform: translateX(0); opacity: 1; }
+                            to { transform: translateX(400px); opacity: 0; }
+                        }
+                    `;
         document.head.appendChild(style);
     </script>
 @endsection
