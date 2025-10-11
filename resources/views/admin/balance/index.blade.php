@@ -217,13 +217,13 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="balance-amount">AED {{ $user['wallet'] }}</div>
+                                        <div class="balance-amount">{{ $user['wallet'] }}{!! get_current_currency_svg() !!}</div>
                                     </td>
                                     <td>
                                         <span class="balance-points">{{ $user['points'] }}</span>
                                     </td>
                                     <td>
-                                        <div class="total-balance">AED {{ $user['total_balance'] }}</div>
+                                        <div class="total-balance">{{ $user['total_balance'] }}{!! get_current_currency_svg() !!}</div>
                                     </td>
                                 </tr>
                             @endforeach
