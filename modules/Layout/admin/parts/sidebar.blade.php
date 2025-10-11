@@ -188,8 +188,9 @@ $menus = array_merge($menus, $menuConfig);
 
 
 
-$currentUrl = url(\Modules\Core\Walkers\MenuWalker::getActiveMenu());
+$currentUrl = request()->url();
 $user = \Illuminate\Support\Facades\Auth::user();
+
 if (!empty($menus)) {
     foreach ($menus as $k => $menuItem) {
 
@@ -207,7 +208,7 @@ if (!empty($menus)) {
         $menus[$k]['class'] = $currentUrl == url($menuItem['url']) ? 'active' : '';
 
         if (!empty($menuItem['children'])) {
-            $menus[$k]['class'] .= ' has-children';
+            $hasActiveChild = false;
 
             foreach ($menuItem['children'] as $k2 => $menuItem2) {
                 if (!empty($menuItem2['permission']) && !$user->hasPermission($menuItem2['permission'])) {
@@ -215,7 +216,18 @@ if (!empty($menus)) {
                     continue;
                 }
 
-                $menus[$k]['children'][$k2]['class'] = $currentUrl == url($menuItem2['url']) ? 'active' : '';
+                $isChildActive = $currentUrl == url($menuItem2['url']);
+                $menus[$k]['children'][$k2]['class'] = $isChildActive ? 'active' : '';
+
+                if ($isChildActive) {
+                    $hasActiveChild = true;
+                }
+            }
+
+            // Add has-children class first, then active if any child is active
+            $menus[$k]['class'] .= ' has-children';
+            if ($hasActiveChild) {
+                $menus[$k]['class'] .= ' active';
             }
         }
     }
@@ -231,8 +243,10 @@ if (!empty($menus)) {
 ?>
 <ul class="main-menu pb-5">
     @foreach($menus as $menuItem)
-        @php $menuItem['class'] .= " " . str_ireplace("/", "_", $menuItem['url']) @endphp
-        <li class="{{$menuItem['class']}}"><a href="{{ url($menuItem['url']) }}">
+        @php 
+            $finalClass = trim($menuItem['class']);
+        @endphp
+        <li class="{{$finalClass}}"><a href="{{ url($menuItem['url']) }}">
                 @if(!empty($menuItem['icon']))
                     <span class="icon text-center"><i class="{{$menuItem['icon']}}"></i></span>
                 @endif
@@ -244,7 +258,7 @@ if (!empty($menus)) {
                 <span class="btn-toggle"><i class="fa fa-angle-left pull-right"></i></span>
                 <ul class="children">
                     @foreach($menuItem['children'] as $menuItem2)
-                        <li class="{{$menuItem['class']}}"><a href="{{ url($menuItem2['url']) }}">
+                        <li class="{{$menuItem2['class']}}"><a href="{{ url($menuItem2['url']) }}">
                                 @if(!empty($menuItem2['icon']))
                                     <i class="{{$menuItem2['icon']}}"></i>
                                 @endif
