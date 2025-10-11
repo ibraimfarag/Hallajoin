@@ -38,6 +38,24 @@
 
     <link href="{{ asset('dist/admin/css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('dist/admin/css/dark-mode.css') }}" rel="stylesheet">
+
+    <!-- Prevent flash of light mode when dark mode is active -->
+    <style>
+        html.dark-mode-instant {
+            background-color: #1a1d29 !important;
+            color: #ffffff !important;
+        }
+
+        html.dark-mode-instant body {
+            background-color: #1a1d29 !important;
+            color: #ffffff !important;
+        }
+
+        /* Force immediate dark background on HTML */
+        html.dark-mode-instant * {
+            background-color: transparent !important;
+        }
+    </style>
     {!! \App\Helpers\Assets::css() !!}
     {!! \App\Helpers\Assets::js() !!}
     <script>
@@ -162,10 +180,37 @@
     <script src="{{ asset('libs/tinymce/js/tinymce/tinymce.min.js') }}"></script>
     @stack('css')
 
+    <!-- Prevent FOUC (Flash of Unstyled Content) for dark mode -->
+    <script>
+        // Apply dark mode to HTML immediately
+        (function () {
+            const savedTheme = localStorage.getItem('admin-theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark-mode-instant');
+                document.documentElement.style.backgroundColor = '#1a1d29';
+            }
+        })();
+    </script>
+
 </head>
 
 <body
-    class="{{($enable_multi_lang ?? '') ? 'enable_multi_lang' : '' }} @if(setting_item('site_enable_multi_lang')) site_enable_multi_lang @endif">
+    class="{{($enable_multi_lang ?? '') ? 'enable_multi_lang' : '' }} @if(setting_item('site_enable_multi_lang')) site_enable_multi_lang @endif"
+    data-theme-check="true">
+
+    <!-- Apply dark mode immediately when body is available -->
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('admin-theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.body.style.backgroundColor = '#1a1d29';
+                document.body.style.color = '#ffffff';
+                document.documentElement.classList.remove('dark-mode-instant');
+                document.documentElement.style.backgroundColor = '#1a1d29';
+            }
+        })();
+    </script>
     <div id="app">
         <div class="main-header d-flex">
             @include('Layout::admin.parts.header')
@@ -230,13 +275,27 @@
             const themeIcon = document.getElementById('themeIcon');
             const body = document.body;
 
+            // Remove instant loading class if it exists
+            document.documentElement.classList.remove('dark-mode-instant');
+
             // Check for saved theme preference or default to light mode
             const currentTheme = localStorage.getItem('admin-theme') || 'light';
 
-            // Apply saved theme
+            // Apply saved theme and ensure proper icon display
             if (currentTheme === 'dark') {
-                body.classList.add('dark-mode');
+                if (!body.classList.contains('dark-mode')) {
+                    body.classList.add('dark-mode');
+                }
                 themeIcon.className = 'fa fa-sun-o';
+
+                // Remove any inline styles that were added for instant loading
+                body.style.backgroundColor = '';
+                body.style.color = '';
+                document.documentElement.style.backgroundColor = '';
+                document.documentElement.style.color = '';
+            } else {
+                body.classList.remove('dark-mode');
+                themeIcon.className = 'fa fa-moon-o';
             }
 
             // Theme toggle functionality
