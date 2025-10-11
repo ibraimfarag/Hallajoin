@@ -42,14 +42,15 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
-                                                <span class="item-price">{{ number_format($item->price, 2) }} AED</span>
+                                                <span class="item-price">{{ number_format($item->price, 2) }} {!! currency_symbol() !!}</span>
                                             </div>
                                             <div class="col-md-1">
-                                                <span class="item-total">{{ number_format($item->total_price, 2) }} AED</span>
+                                                <span class="item-total">{{ number_format($item->total_price, 2) }} {!! currency_symbol() !!}</span>
                                             </div>
                                             <div class="col-md-1">
                                                 <button class="btn btn-sm btn-outline-danger remove-item"
-                                                    data-item-id="{{ $item->id }}">
+                                                    data-item-id="{{ $item->id }}" 
+                                                    title="{{ __('Remove item') }}">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </div>
@@ -77,13 +78,13 @@
                                 <div class="card-body">
                                     <div class="summary-line">
                                         <span>{{__('Items')}} ({{ $cart->items->count() }})</span>
-                                        <span class="cart-subtotal">{{ number_format($cart->total_amount ?? 0, 2) }} AED</span>
+                                        <span class="cart-subtotal">{{ number_format($cart->total_amount ?? 0, 2) }} {!! currency_symbol() !!}</span>
                                     </div>
                                     <hr>
                                     <div class="summary-line total">
                                         <strong>
                                             <span>{{__('Total')}}</span>
-                                            <span class="cart-total">{{ number_format($cart->total_amount ?? 0, 2) }} AED</span>
+                                            <span class="cart-total">{{ number_format($cart->total_amount ?? 0, 2) }} {!! currency_symbol() !!}</span>
                                         </strong>
                                     </div>
                                     <div class="mt-3">
@@ -108,20 +109,41 @@
     <style>
         .cart-item {
             padding: 15px 0;
+            transition: background-color 0.3s ease;
+        }
+
+        .cart-item:hover {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 0 -15px;
         }
 
         .quantity-controls input {
             width: 80px;
+            text-align: center;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            transition: border-color 0.3s ease;
+        }
+
+        .quantity-controls input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
 
         .summary-line {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
+            padding: 5px 0;
         }
 
         .summary-line.total {
             font-size: 1.2em;
+            border-top: 2px solid #dee2e6;
+            padding-top: 15px;
+            margin-top: 10px;
         }
 
         .empty-cart {
@@ -129,6 +151,98 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+        }
+
+        .cart-summary .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 12px;
+        }
+
+        .cart-summary .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px 12px 0 0 !important;
+            border: none;
+        }
+
+        .item-price, .item-total {
+            font-weight: 600;
+            color: #28a745;
+        }
+
+        .cart-total, .cart-subtotal {
+            font-weight: 700;
+            color: #007bff;
+        }
+
+        .remove-item {
+            transition: all 0.3s ease;
+        }
+
+        .remove-item:hover {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .checkout-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            padding: 12px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        .clear-cart {
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .clear-cart:hover {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: white;
+        }
+
+        /* Currency symbol styling */
+        .currency-symbol {
+            display: inline-block;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+
+        .currency-symbol svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        /* Responsive improvements */
+        @media (max-width: 768px) {
+            .cart-item .row > div {
+                margin-bottom: 10px;
+            }
+            
+            .cart-item .col-md-6 {
+                order: 1;
+            }
+            
+            .cart-item .col-md-2:first-of-type {
+                order: 2;
+            }
+            
+            .cart-item .col-md-2:last-of-type,
+            .cart-item .col-md-1 {
+                order: 3;
+            }
         }
     </style>
 
@@ -170,8 +284,8 @@
                     },
                     success: function (response) {
                         if (response.success) {
-                            $(`.cart-item[data-item-id="${itemId}"] .item-total`).text(response.total_price.toFixed(2) + ' AED');
-                            $('.cart-total, .cart-subtotal').text(response.cart_total.toFixed(2) + ' AED');
+                            $(`.cart-item[data-item-id="${itemId}"] .item-total`).html(response.total_price.toFixed(2) + ' {!! addslashes(currency_symbol()) !!}');
+                            $('.cart-total, .cart-subtotal').html(response.cart_total.toFixed(2) + ' {!! addslashes(currency_symbol()) !!}');
                         }
                     }
                 });
@@ -191,7 +305,7 @@
                         success: function (response) {
                             if (response.success) {
                                 $(`.cart-item[data-item-id="${itemId}"]`).remove();
-                                $('.cart-total, .cart-subtotal').text(response.cart_total.toFixed(2) + ' AED');
+                                $('.cart-total, .cart-subtotal').html(response.cart_total.toFixed(2) + ' {!! addslashes(currency_symbol()) !!}');
 
                                 if ($('.cart-item').length === 0) {
                                     location.reload();

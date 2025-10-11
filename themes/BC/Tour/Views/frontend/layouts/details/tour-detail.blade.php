@@ -48,6 +48,81 @@
         width: 100%;
         height: 100%;
     }
+
+    /* Wishlist button improvements */
+    .service-wishlist {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 8px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+    }
+
+    .service-wishlist:hover {
+        background-color: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .service-wishlist i {
+        font-size: 18px;
+        color: #ccc;
+        transition: color 0.3s ease;
+    }
+
+    .service-wishlist.active i,
+    .service-wishlist.is_loved i {
+        color: #e74c3c !important;
+    }
+
+    .service-wishlist:not(.active):not(.is_loved) i {
+        color: #ccc !important;
+    }
+
+    .service-wishlist.loading {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+
+    .service-wishlist.processing {
+        opacity: 0.8;
+        pointer-events: none;
+    }
+
+    .service-wishlist.loading i {
+        animation: heartbeat 1s infinite;
+    }
+
+    @keyframes heartbeat {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    /* Ensure button is clickable */
+    .service-wishlist {
+        position: relative;
+        z-index: 10;
+        pointer-events: auto !important;
+    }
+
+    .service-wishlist:not(.processing):not(.loading) {
+        cursor: pointer !important;
+    }
 </style>
 
 <div class="g-header">
@@ -304,6 +379,252 @@
         document.body.removeChild(tempInput);
         alert("Link copied to clipboard: " + link);
     }
+
+    // jQuery Wishlist handler
+
+    @guest
+        alert('Please login to add items to wishlist');
+        return false;
+    @else
+
+    @endguest
+
+        var $element = $(element);
+    var objectId = $element.attr('data-id');
+    var objectType = $element.attr('data-type');
+    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+
+    if (!objectId || !objectType) {
+        alert('Missing data attributes');
+        return false;
+    }
+
+    if (!csrfToken) {
+        alert('CSRF token missing');
+        return false;
+    }
+
+    // Build URL with fallback
+    var baseUrl = typeof bookingCore !== 'undefined' && bookingCore.url ? bookingCore.url : '{{ url(app_get_locale()) }}';
+    var wishlistUrl = baseUrl + '/user/wishlist';
+
+
+    $element.addClass('loading');
+
+
+    fetch(wishlistUrl, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+            object_id: objectId,
+            object_model: objectType,
+            _token: csrfToken
+        })
+    })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            $element.removeClass('loading');
+
+            if (data.class !== undefined) {
+                if (data.class === '') {
+                    // Empty class means removed from wishlist
+                    $element.removeClass('active').addClass('');
+                    $element.find('i').css('color', '#ccc');
+                } else {
+                    // Active class means added to wishlist
+                    $element.removeClass('').addClass(data.class);
+                    $element.find('i').css('color', '#e74c3c');
+                }
+            }                // Handle different response formats
+            var message = '';
+            if (data.message) {
+                message = data.message;
+            } else if (data.status === 1) {
+                if (data.class === 'active') {
+                    message = 'Added to wishlist successfully!';
+                } else if (data.class === '' || !data.class) {
+                    message = 'Removed from wishlist successfully!';
+                } else {
+                    message = 'Wishlist updated successfully!';
+                }
+            } else {
+                message = 'Wishlist updated successfully';
+            }
+
+       
+
+            // Show a subtle success message instead of alert
+            if (typeof toastr !== 'undefined') {
+                toastr.success(message);
+            } else {
+                // Create a temporary success notification
+                var notification = $('<div class="wishlist-notification">' + message + '</div>');
+                notification.css({
+                    position: 'fixed',
+                    top: '20px',
+                    right: '20px',
+                    background: '#28a745',
+                    color: 'white',
+                    padding: '10px 20px',
+                    borderRadius: '5px',
+                    zIndex: 9999,
+                    fontSize: '14px'
+                });
+                $('body').append(notification);
+                setTimeout(function () {
+                    notification.fadeOut(function () {
+                        notification.remove();
+                    });
+                }, 3000);
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            $element.removeClass('loading');
+            alert('Error updating wishlist: ' + error.message);
+        });
+    }
+
+    // Ensure CSRF token is available for AJAX requests
+    $(document).ready(function () {
+        // Setup CSRF token for all AJAX requests
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        // Enhanced wishlist functionality
+        $(document).off('click.wishlist', '.service-wishlist').on('click.wishlist', '.service-wishlist', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var $this = $(this);
+            var objectId = $this.attr('data-id');
+            var objectType = $this.attr('data-type');
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+            // Build URL with fallback
+            var baseUrl = typeof bookingCore !== 'undefined' && bookingCore.url ? bookingCore.url : '{{ url(app_get_locale()) }}';
+            var wishlistUrl = baseUrl + '/user/wishlist';
+
+            // Check if user is logged in
+            @guest
+                alert('Please login to add items to wishlist');
+                return false;
+            @endguest
+
+            // Validate required data
+            if (!objectId || !objectType || !csrfToken) {
+                alert('Missing required data. Please refresh the page.');
+                return false;
+            }
+
+            // Prevent double clicks
+            if ($this.hasClass('processing')) {
+                return false;
+            }
+
+            $this.addClass('processing loading');
+
+            $.ajax({
+                url: wishlistUrl,
+                method: 'POST',
+                data: {
+                    object_id: objectId,
+                    object_model: objectType,
+                    _token: csrfToken
+                },
+                dataType: 'json',
+                timeout: 10000,
+                beforeSend: function (xhr) {
+                },
+                success: function (res) {
+                    $this.removeClass('processing loading');
+
+                    if (res.class !== undefined) {
+                        if (res.class === '') {
+                            // Empty class means removed from wishlist
+                            $this.removeClass('active').addClass('');
+                            $this.find('i').css('color', '#ccc');
+                        } else {
+                            // Active class means added to wishlist
+                            $this.removeClass('').addClass(res.class);
+                            $this.find('i').css('color', '#e74c3c');
+                        }
+                    }
+
+                    // Handle different response formats
+                    var message = '';
+                    if (res.message) {
+                        message = res.message;
+                    } else if (res.status === 1) {
+                        if (res.class === 'active') {
+                            message = 'Added to wishlist successfully!';
+                        } else if (res.class === '' || !res.class) {
+                            message = 'Removed from wishlist successfully!';
+                        } else {
+                            message = 'Wishlist updated successfully!';
+                        }
+                    } else {
+                        message = 'Wishlist updated successfully';
+                    }
+
+                    // Show success message
+                    if (typeof toastr !== 'undefined') {
+                        toastr.success(message);
+                    } else {
+                        // Create a temporary success notification
+                        var notification = $('<div class="wishlist-notification">' + message + '</div>');
+                        notification.css({
+                            position: 'fixed',
+                            top: '20px',
+                            right: '20px',
+                            background: '#28a745',
+                            color: 'white',
+                            padding: '10px 20px',
+                            borderRadius: '5px',
+                            zIndex: 9999,
+                            fontSize: '14px'
+                        });
+                        $('body').append(notification);
+                        setTimeout(function () {
+                            notification.fadeOut(function () {
+                                notification.remove();
+                            });
+                        }, 3000);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $this.removeClass('processing loading');
+
+                    if (xhr.status === 401) {
+                        alert('Please login to add items to wishlist');
+                    } else if (xhr.status === 419) {
+                        alert('Session expired. Please refresh the page.');
+                    } else if (xhr.status === 500) {
+                        alert('Server error. Please try again later.');
+                    } else {
+                        alert('Something went wrong. Please try again. (Error: ' + xhr.status + ')');
+                    }
+                }
+            });
+
+            return false;
+        });
+
+        // Test button click detection - REMOVED to avoid jQuery conflicts
+        // $('.service-wishlist').click(function() {
+        //     console.log('Direct click handler triggered');
+        // });
+    });
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {

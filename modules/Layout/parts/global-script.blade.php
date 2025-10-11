@@ -1,5 +1,5 @@
 <script>
-    currency_symbol: '{{currency_symbol()}}',   var bookingCore = {
+    var bookingCore = {
         url: '{{url(app_get_locale())}}',
         url_root: '{{ url('') }}',
         admin_url: '{{ route('admin.index') }}',
