@@ -293,6 +293,27 @@
             font-size: 11px;
             margin-top: 2px;
         }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            border: 3px solid rgba(99, 179, 237, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #63b3ed;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 
     <div class="cart-container">
@@ -305,7 +326,7 @@
                 <thead>
                     <tr>
                         <th>{{__('User')}}</th>
-                        <th>{{__('Created On')}} <i class="fas fa-sort-down" style="margin-left: 4px;"></i></th>
+                        <th>{{__('Created On')}} <span style="margin-left: 4px; font-size: 12px;">▼</span></th>
                         <th style="text-align: center;">{{__('Cart Count')}}</th>
                         <th style="text-align: center;">{{__('Details')}}</th>
                     </tr>
@@ -392,7 +413,7 @@
             const modalBody = document.getElementById('cartModalBody');
 
             modal.classList.add('active');
-            modalBody.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #63b3ed;"></i></div>';
+            modalBody.innerHTML = '<div style="text-align: center; padding: 40px;"><div class="loading-spinner"></div><div style="margin-top: 10px; color: #63b3ed;">Loading...</div></div>';
 
             // Fetch cart items via AJAX
             fetch(`/admin/carts/${cartId}`, {
@@ -413,21 +434,22 @@
                         let itemsHtml = '';
                         data.items.forEach(item => {
                             itemsHtml += `
-                                            <div class="cart-item">
-                                                <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.title}" class="cart-item-image">
-                                                <div class="cart-item-details">
-                                                    <div class="cart-item-title">${item.title}</div>
-                                                    <div class="cart-item-info">
-                                                        ${item.datetime ? `<div class="cart-item-info-row"><strong>Date:</strong> ${item.datetime}</div>` : ''}
-                                                        ${item.quantity_text ? `<div class="cart-item-info-row"> ${item.quantity_text}</div>` : ''}
-                                                    </div>
-                                                </div>
-                                                <div class="cart-item-price">
-                                                    <div class="cart-item-total">${item.total}</div>
-                                                    ${item.price !== item.total ? `<div class="cart-item-unit-price">${item.price} each</div>` : ''}
-                                                </div>
-                                            </div>
-                                        `;
+                                                                <div class="cart-item">
+                                                                    <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.title}" class="cart-item-image">
+                                                                    <div class="cart-item-details">
+                                                                        <div class="cart-item-title">${item.title}</div>
+                                                                        ${item.category ? `<div class="cart-item-info-row" style=" font-size: 12px;">${item.category}</div>` : ''}
+                                                                        <div class="cart-item-info">
+                                                                            ${item.datetime ? `<div class="cart-item-info-row"><strong>${item.datetime}</strong></div>` : ''}
+                                                                            ${item.quantity_text && item.quantity_text.length > 0 ? item.quantity_text.map(quantity => `<div class="cart-item-info-row"><strong>${quantity}</strong></div>`).join('') : ''}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="cart-item-price">
+                                                                        <div class="cart-item-total">${item.total}</div>
+                                                                        ${item.price !== item.total ? `<div class="cart-item-unit-price">${item.price} each</div>` : ''}
+                                                                    </div>
+                                                                </div>
+                                                            `;
                         });
                         modalBody.innerHTML = itemsHtml;
                     } else {

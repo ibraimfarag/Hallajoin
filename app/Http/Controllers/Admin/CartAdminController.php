@@ -24,9 +24,9 @@ class CartAdminController extends Controller
         // Search by user
         if ($request->has('search') && $request->search !== '') {
             $query->whereHas('user', function ($q) use ($request) {
-                $q->where('first_name', 'like', '%' . $request->search . '%')
-                    ->orWhere('last_name', 'like', '%' . $request->search . '%')
-                    ->orWhere('email', 'like', '%' . $request->search . '%');
+                $q->where('first_name', 'like', '%'.$request->search.'%')
+                    ->orWhere('last_name', 'like', '%'.$request->search.'%')
+                    ->orWhere('email', 'like', '%'.$request->search.'%');
             });
         }
 
@@ -57,11 +57,20 @@ class CartAdminController extends Controller
                 // Get service title
                 $title = 'N/A';
                 if ($service) {
-                    $title = $service->title ?? $service->name ?? 'Service #' . $item->service_id;
+                    $title = $service->title ?? $service->name ?? 'Service #'.$item->service_id;
                 }
 
                 // Get subtitle (service type)
                 $subtitle = ucfirst($item->service_type ?? 'Service');
+
+                // Get category
+                $category = '';
+                if ($service) {
+                    if ($item->service_type === 'tour' && isset($service->category_id)) {
+                        $tourCategory = \Modules\Tour\Models\TourCategory::find($service->category_id);
+                        $category = $tourCategory ? $tourCategory->name : '';
+                    }
+                }
 
                 // Get image
                 $image = asset('images/placeholder.jpg');
@@ -75,47 +84,47 @@ class CartAdminController extends Controller
                 $datetime = '';
                 if (isset($bookingData['start_date'])) {
                     $date = date('Y-m-d', strtotime($bookingData['start_date']));
-                    $datetime = date('d/m/Y', strtotime($date));
+                    $dayName = date('l', strtotime($date)); // Get day name in English
+                    $datetime = $dayName.', '.date('d/m/Y', strtotime($date));
 
                     // Add time if available
                     if (isset($bookingData['start_time'])) {
-                        $datetime .= ' ' . $bookingData['start_time'];
+                        $datetime .= ' '.$bookingData['start_time'];
                     } elseif (strpos($bookingData['start_date'], ':') !== false) {
-                        $datetime .= ' ' . date('H:i', strtotime($bookingData['start_date']));
+                        $datetime .= ' '.date('H:i', strtotime($bookingData['start_date']));
                     }
                 }
 
                 // Get quantity text from person_types
-                $quantityText = '';
+                $quantityText = [];
                 if (isset($bookingData['person_types']) && is_array($bookingData['person_types'])) {
-                    $personTexts = [];
                     foreach ($bookingData['person_types'] as $personType) {
                         if (isset($personType['number']) && $personType['number'] > 0) {
                             $name = $personType['name'] ?? 'Person';
-                            $personTexts[] = $name . ' x' . $personType['number'];
+                            $quantityText[] = $name.' x'.$personType['number'];
                         }
                     }
-                    $quantityText = implode(', ', $personTexts);
                 } elseif (isset($bookingData['adults']) && $bookingData['adults'] > 0) {
-                    $quantityText = 'Adult x' . $bookingData['adults'];
+                    $quantityText[] = 'Adult x'.$bookingData['adults'];
                     if (isset($bookingData['children']) && $bookingData['children'] > 0) {
-                        $quantityText .= ', Child x' . $bookingData['children'];
+                        $quantityText[] = 'Child x'.$bookingData['children'];
                     }
                 } elseif (isset($bookingData['total_guests']) && $bookingData['total_guests'] > 0) {
-                    $quantityText = 'Guests: ' . $bookingData['total_guests'];
+                    $quantityText[] = 'Guests: '.$bookingData['total_guests'];
                 } elseif ($item->quantity > 0) {
-                    $quantityText = 'Quantity: ' . $item->quantity;
+                    $quantityText[] = 'Quantity: '.$item->quantity;
                 }
 
                 return [
                     'id' => $item->id,
                     'title' => $title,
                     'subtitle' => $subtitle,
+                    'category' => $category,
                     'image' => $image,
                     'datetime' => $datetime,
                     'quantity_text' => $quantityText,
-                    'price' => number_format($item->price, 2) . ' AED',
-                    'total' => number_format($item->total_price, 2) . ' AED',
+                    'price' => number_format($item->price, 2).get_current_currency_svg(),
+                    'total' => number_format($item->total_price, 2).get_current_currency_svg(),
                 ];
             });
 
@@ -126,7 +135,7 @@ class CartAdminController extends Controller
                     'id' => $cart->id,
                     'total' => $cart->total_amount,
                     'items_count' => $cart->items->count(),
-                ]
+                ],
             ]);
         }
 
