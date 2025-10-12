@@ -493,30 +493,76 @@
                             <div class="flex-grow-1 pl-4">
                                 <div class="country-flag">
                                     @php
-                                        $countryFlags = [
-                                            'United Arab Emirates' => 'ae',
-                                            'UAE' => 'ae',
-                                            'Saudi Arabia' => 'sa',
-                                            'Kuwait' => 'kw',
-                                            'Qatar' => 'qa',
-                                            'Bahrain' => 'bh',
-                                            'Oman' => 'om',
-                                            'US' => 'us',
-                                            'United States' => 'us',
-                                            'Egypt' => 'eg',
-                                            'Lebanon' => 'lb',
-                                            'Jordan' => 'jo',
-                                            'Syria' => 'sy',
-                                            'Iraq' => 'iq',
-                                            'Yemen' => 'ye',
-                                            'Morocco' => 'ma',
-                                            'Algeria' => 'dz',
-                                            'Tunisia' => 'tn',
-                                            'Libya' => 'ly',
-                                            'Sudan' => 'sd',
+                                        // Map country codes to country names and flag codes
+                                        $phoneCodeToCountry = [
+                                            '971' => ['name' => 'United Arab Emirates', 'flag' => 'ae'],
+                                            '966' => ['name' => 'Saudi Arabia', 'flag' => 'sa'],
+                                            '965' => ['name' => 'Kuwait', 'flag' => 'kw'],
+                                            '974' => ['name' => 'Qatar', 'flag' => 'qa'],
+                                            '973' => ['name' => 'Bahrain', 'flag' => 'bh'],
+                                            '968' => ['name' => 'Oman', 'flag' => 'om'],
+                                            '1' => ['name' => 'United States', 'flag' => 'us'],
+                                            '20' => ['name' => 'Egypt', 'flag' => 'eg'],
+                                            '961' => ['name' => 'Lebanon', 'flag' => 'lb'],
+                                            '962' => ['name' => 'Jordan', 'flag' => 'jo'],
+                                            '963' => ['name' => 'Syria', 'flag' => 'sy'],
+                                            '964' => ['name' => 'Iraq', 'flag' => 'iq'],
+                                            '967' => ['name' => 'Yemen', 'flag' => 'ye'],
+                                            '212' => ['name' => 'Morocco', 'flag' => 'ma'],
+                                            '213' => ['name' => 'Algeria', 'flag' => 'dz'],
+                                            '216' => ['name' => 'Tunisia', 'flag' => 'tn'],
+                                            '218' => ['name' => 'Libya', 'flag' => 'ly'],
+                                            '249' => ['name' => 'Sudan', 'flag' => 'sd'],
                                         ];
+
+                                        // Try to determine country from phone number first
                                         $country = $user->country ?? 'United Arab Emirates';
-                                        $flagCode = $countryFlags[$country] ?? 'ae'; // default to UAE
+                                        $flagCode = 'ae'; // default
+
+                                        if ($user->phone) {
+                                            // Extract country code from phone number
+                                            $phone = preg_replace('/[^0-9]/', '', $user->phone);
+
+                                            // Check for common country codes
+                                            foreach ($phoneCodeToCountry as $code => $countryData) {
+                                                if (str_starts_with($phone, $code)) {
+                                                    $country = $countryData['name'];
+                                                    $flagCode = $countryData['flag'];
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        // Fallback to manual country mapping if no phone match
+                                        if (!$user->phone || $country == 'United Arab Emirates') {
+                                            $countryFlags = [
+                                                'United Arab Emirates' => 'ae',
+                                                'UAE' => 'ae',
+                                                'Saudi Arabia' => 'sa',
+                                                'Kuwait' => 'kw',
+                                                'Qatar' => 'qa',
+                                                'Bahrain' => 'bh',
+                                                'Oman' => 'om',
+                                                'US' => 'us',
+                                                'United States' => 'us',
+                                                'Egypt' => 'eg',
+                                                'Lebanon' => 'lb',
+                                                'Jordan' => 'jo',
+                                                'Syria' => 'sy',
+                                                'Iraq' => 'iq',
+                                                'Yemen' => 'ye',
+                                                'Morocco' => 'ma',
+                                                'Algeria' => 'dz',
+                                                'Tunisia' => 'tn',
+                                                'Libya' => 'ly',
+                                                'Sudan' => 'sd',
+                                            ];
+
+                                            if ($user->country && isset($countryFlags[$user->country])) {
+                                                $country = $user->country;
+                                                $flagCode = $countryFlags[$user->country];
+                                            }
+                                        }
                                     @endphp
                                     <span class="fi fi-{{ $flagCode }}"
                                         style="font-size: 18px; line-height: 1; margin-right: 3px;"></span>
@@ -689,7 +735,8 @@
 
                                     <div style="margin-bottom: 12px;">
                                         <span class="info-label">{{ __('Gender') }}:</span>
-                                        <span class="info-value">{{ $user->getMeta('gender', __('Not Specified')) }}</span>
+                                        <span
+                                            class="info-value">{{ $user->gender ? __(ucfirst($user->gender)) : __('Not Specified') }}</span>
                                     </div>
 
                                     <div style="margin-bottom: 12px;">
@@ -965,7 +1012,7 @@
                             showToast(data.message || '{{ __("Failed to delete session") }}', 'error');
                         }
                     })
-                        .catch (error => {
+                                .catch (error => {
                     console.error('Error:', error);
                     showToast('{{ __("An error occurred while deleting the session") }}', 'error');
                 });
@@ -976,21 +1023,21 @@
         function showToast(message, type = 'success') {
             const toast = document.createElement('div');
             toast.style.cssText = `
-                            position: fixed;
-                            top: 20px;
-                            right: 20px;
-                            background: ${type === 'success' ? '#28a745' : '#dc3545'};
-                            color: white;
-                            padding: 16px 24px;
-                            border-radius: 8px;
-                            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                            z-index: 10000;
-                            font-size: 14px;
-                            font-weight: 500;
-                            animation: slideIn 0.3s ease;
-                            max-width: 300px;
-                            word-wrap: break-word;
-                        `;
+                                    position: fixed;
+                                    top: 20px;
+                                    right: 20px;
+                                    background: ${type === 'success' ? '#28a745' : '#dc3545'};
+                                    color: white;
+                                    padding: 16px 24px;
+                                    border-radius: 8px;
+                                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                                    z-index: 10000;
+                                    font-size: 14px;
+                                    font-weight: 500;
+                                    animation: slideIn 0.3s ease;
+                                    max-width: 300px;
+                                    word-wrap: break-word;
+                                `;
             toast.textContent = message;
             document.body.appendChild(toast);
 
@@ -1081,15 +1128,15 @@
         // Add CSS animations
         const style = document.createElement('style');
         style.textContent = `
-                        @keyframes slideIn {
-                            from { transform: translateX(400px); opacity: 0; }
-                            to { transform: translateX(0); opacity: 1; }
-                        }
-                        @keyframes slideOut {
-                            from { transform: translateX(0); opacity: 1; }
-                            to { transform: translateX(400px); opacity: 0; }
-                        }
-                    `;
+                                @keyframes slideIn {
+                                    from { transform: translateX(400px); opacity: 0; }
+                                    to { transform: translateX(0); opacity: 1; }
+                                }
+                                @keyframes slideOut {
+                                    from { transform: translateX(0); opacity: 1; }
+                                    to { transform: translateX(400px); opacity: 0; }
+                                }
+                            `;
         document.head.appendChild(style);
     </script>
 @endsection

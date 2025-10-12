@@ -41,6 +41,14 @@ class CartController extends Controller
      */
     public function addItem(Request $request)
     {
+        // Check if user is blocked from orders
+        if (Auth::user()->order_blocked == 1) {
+            return response()->json([
+                'success' => false,
+                'message' => __('You are blocked from making orders'),
+            ], 403);
+        }
+
         $request->validate([
             'service_type' => 'required|in:tour,hotel,car,space,boat,event,flight',
             'service_id' => 'required|integer',
@@ -167,6 +175,7 @@ class CartController extends Controller
         $item->delete();
         $cart->updateTotalAmount();
         $cart_count = $cart->items()->count();
+
         return response()->json([
             'success' => true,
             'message' => __('Item removed from cart successfully!'),

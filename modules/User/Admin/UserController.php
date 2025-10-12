@@ -91,6 +91,41 @@ class UserController extends AdminController
             $listUser->where('order_blocked', 1);
         }
 
+        // Birthday filter
+        if ($request->filled('birthday_filter')) {
+            $birthdayFilter = $request->get('birthday_filter');
+            $now = now();
+
+            switch ($birthdayFilter) {
+                case 'this_week':
+                    $startOfWeek = $now->startOfWeek();
+                    $endOfWeek = $now->copy()->endOfWeek();
+                    $listUser->whereRaw("DATE_FORMAT(birthday, '%m-%d') BETWEEN ? AND ?", [
+                        $startOfWeek->format('m-d'),
+                        $endOfWeek->format('m-d')
+                    ]);
+                    break;
+
+                case 'this_month':
+                    $listUser->whereMonth('birthday', $now->month);
+                    break;
+
+                case 'next_week':
+                    $startOfNextWeek = $now->copy()->addWeek()->startOfWeek();
+                    $endOfNextWeek = $now->copy()->addWeek()->endOfWeek();
+                    $listUser->whereRaw("DATE_FORMAT(birthday, '%m-%d') BETWEEN ? AND ?", [
+                        $startOfNextWeek->format('m-d'),
+                        $endOfNextWeek->format('m-d')
+                    ]);
+                    break;
+
+                case 'next_month':
+                    $nextMonth = $now->copy()->addMonth();
+                    $listUser->whereMonth('birthday', $nextMonth->month);
+                    break;
+            }
+        }
+
         // Support legacy search parameter
         $username = $request->query('s');
         if (!empty($username)) {

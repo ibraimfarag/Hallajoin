@@ -44,13 +44,14 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\HideDebugbar::class,
             SetCurrentCurrency::class,
             SetLanguageForAdmin::class,
-            RequireChangePassword::class
+            RequireChangePassword::class,
+            \App\Http\Middleware\UserStatus::class,
         ],
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            RequireChangePassword::class
+            RequireChangePassword::class,
         ],
     ];
 
@@ -72,9 +73,9 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
-        "dashboard" => \App\Http\Middleware\Dashboard::class,
-        "translation_manager" => \App\Http\Middleware\TranslationManager::class,
-        "system_log_view" => \App\Http\Middleware\CheckForLogPermission::class,
-        "set_language_for_api" => \App\Http\Middleware\SetLanguageForApi::class,
+        'dashboard' => \App\Http\Middleware\Dashboard::class,
+        'translation_manager' => \App\Http\Middleware\TranslationManager::class,
+        'system_log_view' => \App\Http\Middleware\CheckForLogPermission::class,
+        'set_language_for_api' => \App\Http\Middleware\SetLanguageForApi::class,
     ];
 }

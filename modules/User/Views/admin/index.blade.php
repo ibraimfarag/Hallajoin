@@ -226,6 +226,18 @@
                                             <option value="unverified" {{ request('email_verified') == 'unverified' ? 'selected' : '' }}>Unverified</option>
                                         </select>
                                     </div>
+                                </div>
+                                <div class="row g-2 align-items-center mb-2 mt-4">
+                                    <div class="col-md-2">
+                                        <select name="birthday_filter" class="form-control"
+                                            style="border-radius:20px; font-size:15px;">
+                                            <option value="">{{ __('Birthday Filter') }}</option>
+                                            <option value="this_week" {{ request('birthday_filter') == 'this_week' ? 'selected' : '' }}>{{ __('This Week') }}</option>
+                                            <option value="this_month" {{ request('birthday_filter') == 'this_month' ? 'selected' : '' }}>{{ __('This Month') }}</option>
+                                            <option value="next_week" {{ request('birthday_filter') == 'next_week' ? 'selected' : '' }}>{{ __('Next Week') }}</option>
+                                            <option value="next_month" {{ request('birthday_filter') == 'next_month' ? 'selected' : '' }}>{{ __('Next Month') }}</option>
+                                        </select>
+                                    </div>
                                     <div class="d-none col-md-2">
                                         <select name="language" class="form-control"
                                             style="border-radius:10px; font-size:15px;">
