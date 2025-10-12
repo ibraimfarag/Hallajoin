@@ -42,6 +42,22 @@ Route::group(['prefix' => config('admin.admin_route_prefix'), 'middleware' => ['
     Route::post('/user/{id}/toggle-block', [UserController::class, 'toggleBlock'])->name('admin.user.toggle.block');
     Route::post('/user/{id}/toggle-order-block', [UserController::class, 'toggleOrderBlock'])->name('admin.user.toggle.order.block');
 
+    // Test routes
+    Route::get('/test-toggle-block/{id}', function ($id) {
+        $user = App\User::find($id);
+        if (!$user)
+            return response()->json(['error' => 'User not found'], 404);
+
+        $user->blocked = !$user->blocked;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Block status toggled successfully',
+            'blocked' => $user->blocked
+        ]);
+    })->name('admin.test.toggle.block');
+
     // Favourites routes
     Route::get('/favourites', [\App\Http\Controllers\Admin\FavouriteAdminController::class, 'index'])->name('admin.favourites.index');
     Route::get('/favourites/{favourite}', [\App\Http\Controllers\Admin\FavouriteAdminController::class, 'show'])->name('admin.favourites.show');

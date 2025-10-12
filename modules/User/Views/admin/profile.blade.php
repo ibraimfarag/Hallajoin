@@ -711,17 +711,20 @@
 
                                     <div style=" margin: 20px 0;display: flex;gap: 20px;">
                                         <div style="margin-bottom: 8px;">
-                                            <input type="checkbox" id="userBlocked" style="margin-right: 8px;" {{ $user->blocked ? 'checked' : '' }}
+                                            <input type="checkbox" id="userBlocked" style="margin-right: 8px;" 
+                                                {{ $user->blocked ? 'checked' : '' }}
                                                 onchange="toggleUserBlock({{ $user->id }}, this.checked)">
                                             <label for="userBlocked"
                                                 style="color: #a0aec0; cursor: pointer;">{{ __('Block User') }}</label>
                                         </div>
                                         <div style="margin-bottom: 8px;">
-                                            <input type="checkbox" id="orderBlocked" style="margin-right: 8px;" {{ $user->order_blocked ? 'checked' : '' }}
+                                            <input type="checkbox" id="orderBlocked" style="margin-right: 8px;" 
+                                                {{ $user->order_blocked ? 'checked' : '' }}
                                                 onchange="toggleOrderBlock({{ $user->id }}, this.checked)">
                                             <label for="orderBlocked"
                                                 style="color: #a0aec0; cursor: pointer;">{{ __('Block Orders') }}</label>
                                         </div>
+                                       
                                     </div>
 
                                 </div>
@@ -988,7 +991,13 @@
                         }
                         throw new Error('Network response was not ok');
                     })
-                    .then data => {
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                        throw new Error('Network response was not ok');
+                    })
+                    .then(data => {
                         if (data.success) {
                             // Remove the row from table
                             const row = document.querySelector(`tr[data-session-id="${sessionId}"]`);
@@ -1012,7 +1021,17 @@
                             showToast(data.message || '{{ __("Failed to delete session") }}', 'error');
                         }
                     })
-                                .catch (error => {
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(data.message, 'success');
+                    } else {
+                        // Revert checkbox state on error
+                        checkbox.checked = !isBlocked;
+                        showToast(data.message || '{{ __("Failed to delete session") }}', 'error');
+                    }
+                })
+                .catch(error => {
                     console.error('Error:', error);
                     showToast('{{ __("An error occurred while deleting the session") }}', 'error');
                 });
@@ -1050,6 +1069,8 @@
                 }, 300);
             }, 3000);
         }
+
+   
 
         // Toggle user block/unblock
         function toggleUserBlock(userId, isBlocked) {
