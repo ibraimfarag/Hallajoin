@@ -62,10 +62,10 @@ class AvailabilityController extends FrontendController
         $breadcrumbs = [
             [
                 'name' => __('Tours'),
-                'url'  => route('tour.vendor.index')
+                'url' => route('tour.vendor.index')
             ],
             [
-                'name'  => __('Availability'),
+                'name' => __('Availability'),
                 'class' => 'active'
             ],
         ];
@@ -76,9 +76,9 @@ class AvailabilityController extends FrontendController
     public function loadDates(Request $request)
     {
         $rules = [
-            'id'    => 'required',
+            'id' => 'required',
             'start' => 'required',
-            'end'   => 'required',
+            'end' => 'required',
         ];
         $validator = \Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -96,15 +96,15 @@ class AvailabilityController extends FrontendController
         $query->where('end_date', '<=', date('Y-m-d H:i:s', strtotime($request->query('end'))));
         $rows = $query->take(50)->get();
         $allDates = [];
-        $period = periodDate($request->input('start'),$request->input('end'));
-        foreach ($period as $dt){
+        $period = periodDate($request->input('start'), $request->input('end'));
+        foreach ($period as $dt) {
             $i = $dt->getTimestamp();
             $date = [
-                'id'           => rand(0, 999),
-                'active'       => 0,
-                'price'        => (!empty($tour->sale_price) and $tour->sale_price > 0 and $tour->sale_price < $tour->price) ? $tour->sale_price : $tour->price,
-                'is_default'   => true,
-                'textColor'    => '#2791fe',
+                'id' => rand(0, 999),
+                'active' => 0,
+                'price' => (!empty($tour->sale_price) and $tour->sale_price > 0 and $tour->sale_price < $tour->price) ? $tour->sale_price : $tour->price,
+                'is_default' => true,
+                'textColor' => '#2791fe',
             ];
             if (!$is_single) {
                 $date['price_html'] = format_money_main($date['price']);
@@ -113,7 +113,7 @@ class AvailabilityController extends FrontendController
             }
             $date['max_guests'] = $tour->max_people;
             $date['title_origin'] = $date['price_html'];
-            $date['title'] = $date['event'] = $date['price_html'] . "<br>". __('Max guests: ') . $tour->max_people;
+            $date['title'] = $date['event'] = $date['price_html'] . "<br>" . __('Max guests: ') . $tour->max_people;
             $date['start'] = $date['end'] = date('Y-m-d', $i);
             if ($tour->default_state) {
                 $date['active'] = 1;
@@ -134,20 +134,20 @@ class AvailabilityController extends FrontendController
                 if (!empty($date['person_types'])) {
                     $c_title = "";
                     foreach ($date['person_types'] as &$person) {
-                        $person['name'] = !empty($person['name_' . $lang])?$person['name_' . $lang]:$person['name'];
+                        $person['name'] = !empty($person['name_' . $lang]) ? $person['name_' . $lang] : $person['name'];
                         if (!$is_single) {
                             $c_title .= $person['name'] . ": " . format_money_main($person['price']) . "<br>";
                             //for single
-                            $person['display_price'] = format_money_main($person['price']);
+                            $person['display_price'] = $person['price'] . ' ' . get_current_currency('symbol');
                         } else {
                             $c_title .= $person['name'] . ": " . format_money($person['price']) . "<br>";
                             //for single
-                            $person['display_price'] = format_money($person['price']);
+                            $person['display_price'] = $person['price'] . ' ' . get_current_currency('symbol');
                         }
                         $person['number'] = $person['min'] ?? 0;
                     }
                     $date['title_origin'] = $c_title;
-                    $c_title .= __('Max guests: ').$date['max_guests'];
+                    $c_title .= __('Max guests: ') . $date['max_guests'];
                     $date['title'] = $date['event'] = $c_title;
                 }
             }
@@ -188,23 +188,23 @@ class AvailabilityController extends FrontendController
                     if (!empty($list_person_types) and is_array($list_person_types)) {
                         $c_title = "";
                         foreach ($list_person_types as $k => &$person) {
-                            $person['name'] = !empty($person['name_' . $lang])?$person['name_' . $lang]:$person['name'];
+                            $person['name'] = !empty($person['name_' . $lang]) ? $person['name_' . $lang] : $person['name'];
                             $person['price'] = $date_person_types[$k]['price'] ?? $person['price'];
                             $person['max'] = $date_person_types[$k]['max'] ?? $person['max'];
                             $person['min'] = $date_person_types[$k]['min'] ?? $person['min'];
                             if (!$is_single) {
                                 $c_title .= $person['name'] . ": " . format_money_main($person['price']) . "<br>";
                                 //for single
-                                $person['display_price'] = format_money_main($person['price']);
+                                $person['display_price'] = $person['price'] . ' ' . get_current_currency('symbol');
                             } else {
                                 $c_title .= $person['name'] . ": " . format_money($person['price']) . "<br>";
                                 //for single
-                                $person['display_price'] = format_money($person['price']);
+                                $person['display_price'] = $person['price'] . ' ' . get_current_currency('symbol');
                             }
                             $person['number'] = $person['min'] ?? 0;
                         }
                         $row->title_origin = $c_title;
-                        $c_title .= __('Max guests: ').$row->max_guests;
+                        $c_title .= __('Max guests: ') . $row->max_guests;
                         $row->title = $c_title;
                     }
                 }
@@ -233,8 +233,8 @@ class AvailabilityController extends FrontendController
         $bookings = $this->bookingClass::getBookingInRanges($tour->id, $tour->type, $request->query('start'), $request->query('end'));
         if (!empty($bookings)) {
             foreach ($bookings as $booking) {
-                $period = periodDate($booking->start_date,$booking->end_date,false);
-                foreach ($period as $dt){
+                $period = periodDate($booking->start_date, $booking->end_date, false);
+                foreach ($period as $dt) {
                     $i = $dt->getTimestamp();
                     if (isset($allDates[date('Y-m-d', $i)])) {
                         $total_guests_booking = $booking->total_guests;
@@ -245,8 +245,8 @@ class AvailabilityController extends FrontendController
                             $allDates[date('Y-m-d', $i)]['title'] = __('Full Book');
                             $allDates[date('Y-m-d', $i)]['classNames'] = ['full-book-event'];
                         } else {
-                            $c_title = $allDates[date('Y-m-d', $i)]['title_origin'] . "<br>". __('Max guests: ').( $max_guests - $total_guests_booking );
-                            $allDates[date('Y-m-d', $i)]['title']  = $c_title;
+                            $c_title = $allDates[date('Y-m-d', $i)]['title_origin'] . "<br>" . __('Max guests: ') . ($max_guests - $total_guests_booking);
+                            $allDates[date('Y-m-d', $i)]['title'] = $c_title;
                         }
                     }
                 }
@@ -287,9 +287,9 @@ class AvailabilityController extends FrontendController
     {
 
         $request->validate([
-            'target_id'  => 'required',
+            'target_id' => 'required',
             'start_date' => 'required',
-            'end_date'   => 'required'
+            'end_date' => 'required'
         ]);
         $tour = $this->tourClass::find($request->input('target_id'));
         $target_id = $request->input('target_id');
@@ -311,9 +311,9 @@ class AvailabilityController extends FrontendController
             $postData['person_types'] = null;
         }
 
-//        for ($i = strtotime($request->input('start_date')); $i <= strtotime($request->input('end_date')); $i += DAY_IN_SECONDS) {
-        $period = periodDate($request->input('start_date'),$request->input('end_date'));
-        foreach ($period as $dt){
+        //        for ($i = strtotime($request->input('start_date')); $i <= strtotime($request->input('end_date')); $i += DAY_IN_SECONDS) {
+        $period = periodDate($request->input('start_date'), $request->input('end_date'));
+        foreach ($period as $dt) {
             $date = $this->tourDateClass::where('start_date', $dt->format('Y-m-d'))->where('target_id', $target_id)->first();
             if (empty($date)) {
                 $date = new $this->tourDateClass();
