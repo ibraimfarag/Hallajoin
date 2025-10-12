@@ -14,7 +14,7 @@
         }    
             .wishlist-item .sale-price svg ,
             .wishlist-item .price  svg {
-                    margin-bottom: -1px !important;
+                    margin-bottom: 3px !important;
     margin-left: 2px !important;
          
         }
@@ -148,7 +148,7 @@
             width: 14px;
             height: 14px;
             margin-right: 2px;
-            vertical-align: baseline;
+            /* vertical-align: baseline; */
         }
 
 
