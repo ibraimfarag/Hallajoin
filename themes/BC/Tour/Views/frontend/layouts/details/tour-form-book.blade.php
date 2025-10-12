@@ -113,7 +113,8 @@
                                                     <div class="flex-grow-1">
                                                         <label>@{{ type.name }}</label>
                                                         <div class="render check-in-render">@{{ type.desc }}</div>
-                                                        <div class="render check-in-render">@{{ type.display_price }}
+                                                        <div class="render check-in-render">@{{ type.display_price
+                                                            }}{!! $row->currency_svg !!}
                                                             {{ __('per ') }}@{{ type.name }}
                                                         </div>
                                                     </div>
