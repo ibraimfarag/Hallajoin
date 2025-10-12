@@ -91,6 +91,11 @@
             font-size: 17px;
         }
 
+        .user-name:hover {
+            color: #63b3ed !important;
+          
+        }
+
         .user-phone {
             color: #63b3ed;
             font-size: 19px;
@@ -314,6 +319,13 @@
                 transform: rotate(360deg);
             }
         }
+
+        .user-cell a:hover {
+
+ 
+
+    text-decoration: none !important;
+        }
     </style>
 
     <div class="cart-container">
@@ -346,9 +358,16 @@
                                     </div>
                                     <div class="user-info">
                                         @if($cart->user)
-                                            <span class="user-name">{{ $cart->user->first_name ?? '' }}
-                                                {{ $cart->user->last_name ?? '' }}</span>
-                                            <span class="user-phone">{{ $cart->user->phone ?? $cart->user->email ?? 'N/A' }}</span>
+                                            <a href="{{ route('user.admin.profile', ['id' => $cart->user->id]) }}" class="user-name"
+                                            >
+                                                {{ $cart->user->first_name ?? '' }} {{ $cart->user->last_name ?? '' }}
+                                            </a>
+                                            <a href="{{ route('user.admin.profile', ['id' => $cart->user->id]) }}" target="_blank"
+                                                class="user-profile-link"
+                                                style="color:#63b3ed; font-size:13px; word-break:break-all; margin-top:2px;">
+                                                <span class="user-phone">{{ $cart->user->phone ?? $cart->user->email ?? 'N/A' }}</span>
+                                               
+                                            </a>
                                         @else
                                             <span class="user-name">{{__('Guest')}}</span>
                                             <span class="user-phone">--</span>
@@ -434,22 +453,22 @@
                         let itemsHtml = '';
                         data.items.forEach(item => {
                             itemsHtml += `
-                                                                <div class="cart-item">
-                                                                    <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.title}" class="cart-item-image">
-                                                                    <div class="cart-item-details">
-                                                                        <div class="cart-item-title">${item.title}</div>
-                                                                        ${item.category ? `<div class="cart-item-info-row" style=" font-size: 12px;">${item.category}</div>` : ''}
-                                                                        <div class="cart-item-info">
-                                                                            ${item.datetime ? `<div class="cart-item-info-row"><strong>${item.datetime}</strong></div>` : ''}
-                                                                            ${item.quantity_text && item.quantity_text.length > 0 ? item.quantity_text.map(quantity => `<div class="cart-item-info-row"><strong>${quantity}</strong></div>`).join('') : ''}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="cart-item-price">
-                                                                        <div class="cart-item-total">${item.total}</div>
-                                                                        ${item.price !== item.total ? `<div class="cart-item-unit-price">${item.price} each</div>` : ''}
-                                                                    </div>
-                                                                </div>
-                                                            `;
+                                                                            <div class="cart-item">
+                                                                                <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.title}" class="cart-item-image">
+                                                                                <div class="cart-item-details">
+                                                                                    <div class="cart-item-title">${item.title}</div>
+                                                                                    ${item.category ? `<div class="cart-item-info-row" style=" font-size: 12px;">${item.category}</div>` : ''}
+                                                                                    <div class="cart-item-info">
+                                                                                        ${item.datetime ? `<div class="cart-item-info-row"><strong>${item.datetime}</strong></div>` : ''}
+                                                                                        ${item.quantity_text && item.quantity_text.length > 0 ? item.quantity_text.map(quantity => `<div class="cart-item-info-row"><strong>${quantity}</strong></div>`).join('') : ''}
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="cart-item-price">
+                                                                                    <div class="cart-item-total">${item.total}</div>
+                                                                                    ${item.price !== item.total ? `<div class="cart-item-unit-price">${item.price} each</div>` : ''}
+                                                                                </div>
+                                                                            </div>
+                                                                        `;
                         });
                         modalBody.innerHTML = itemsHtml;
                     } else {

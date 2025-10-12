@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container-fluid">
-       
+
         @include('admin.message')
 
         <style>
@@ -143,14 +143,14 @@
                 font-size: 13px;
                 font-weight: 500;
                 color: #63b3ed;
-                    margin-left: 20px;
+                margin-left: 20px;
             }
 
             .total-balance {
                 font-size: 19px;
                 font-weight: 600;
                 text-align: right;
-                    padding-right: 30px;
+                padding-right: 30px;
             }
 
             .sort-icon {
@@ -173,6 +173,10 @@
             .empty-state div {
                 font-size: 16px;
                 margin-top: 12px;
+            }
+
+               .balance-container  a:hover {
+                text-decoration: none !important;
             }
         </style>
 
@@ -209,10 +213,21 @@
                                                 <div class="user-avatar-placeholder">{{ $user['first_letter'] }}</div>
                                             @endif
                                             <div class="user-details">
-                                                <div class="user-name">{{ $user['name'] }}</div>
-                                                @if($user['phone'])
-                                                    <div class="user-phone">{{ $user['phone'] }}</div>
-                                                @endif
+                                                <a href="{{ route('user.admin.profile', ['id' => $user['id']]) }}" class="user-name"
+                                                  >
+                                                    {{ $user['name'] }}
+                                                </a>
+                                                <a href="{{ route('user.admin.profile', ['id' => $user['id']]) }}" target="_blank"
+                                                    class="user-profile-link"
+                                                    >
+                                                    
+                                                    
+                                                    @if($user['phone'])
+                                                        <div class="user-phone">{{ $user['phone'] }}</div>
+                                                    @endif
+
+
+                                                </a>
                                             </div>
                                         </div>
                                     </td>
@@ -223,7 +238,8 @@
                                         <span class="balance-points">{{ $user['points'] }}</span>
                                     </td>
                                     <td>
-                                        <div class="total-balance">{{ $user['total_balance'] }}{!! get_current_currency_svg() !!}</div>
+                                        <div class="total-balance">{{ $user['total_balance'] }}{!! get_current_currency_svg() !!}
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
