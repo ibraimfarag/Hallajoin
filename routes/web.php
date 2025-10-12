@@ -3,7 +3,35 @@
 use Illuminate\Support\Facades\Route;
 
 /*
-|--------------------------------------------------------------------------
+// Test route
+Route::get('/test-cart-clear', function() {
+    return view('test-cart-clear');
+});
+
+// Test cart clear without auth (for debugging)
+Route::get('/test-clear-debug', function() {
+    if (!Auth::check()) {
+        return response()->json(['error' => 'Not authenticated'], 401);
+    }
+
+    $cart = \App\Models\Cart::getActiveCartForUser(Auth::id());
+    if ($cart) {
+        $itemCount = $cart->items()->count();
+        $cart->items()->delete();
+        $cart->updateTotalAmount();
+        return response()->json([
+            'success' => true,
+            'message' => "Cleared cart with {$itemCount} items"
+        ]);
+    }
+
+    return response()->json([
+        'success' => true,
+        'message' => 'No cart found'
+    ]);
+});
+
+Route::middleware(['auth'])->group(function () {---------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 |
@@ -46,6 +74,11 @@ Route::get('/clear', function () {
 // Cart Routes
 Route::get('/cart', 'CartController@index')->name('cart.index');
 Route::get('/cart/count', 'CartController@getCount')->name('cart.count');
+
+// Test route
+Route::get('/test-cart-clear', function () {
+    return view('test-cart-clear');
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/cart/add', 'CartController@addItem')->name('cart.add');

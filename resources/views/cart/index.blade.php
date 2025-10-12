@@ -8,6 +8,25 @@
                     <div class="col-lg-8">
                         <h1 class="page-title">{{__('Shopping Cart')}}</h1>
 
+                        {{-- Success/Error Messages --}}
+                        @if(session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        @endif
+
+                        @if(session('error'))
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ session('error') }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        @endif
+
                         @if(!Auth::check())
                             <div class="empty-cart text-center py-5">
                                 <i class="fa fa-shopping-cart fa-5x text-muted mb-3"></i>
@@ -17,7 +36,7 @@
                                 <a href="{{ route('auth.register') }}"
                                     class="btn btn-outline-primary ml-2">{{__('Register')}}</a>
                             </div>
-                        @elseif(isset($cart->items) && $cart->items->count() > 0)
+                        @elseif(isset($cart) && is_object($cart) && isset($cart->items) && $cart->items->count() > 0)
                             <div class="cart-items">
                                 @foreach($cart->items as $item)
                                     @php
@@ -27,7 +46,7 @@
                                         $startDate = isset($bookingData['start_date']) ? \Carbon\Carbon::parse($bookingData['start_date']) : null;
                                         $endDate = isset($bookingData['end_date']) ? \Carbon\Carbon::parse($bookingData['end_date']) : null;
                                     @endphp
-                                    
+
                                     <div class="cart-item-enhanced" data-item-id="{{ $item->id }}">
                                         <div class="row">
                                             <!-- Tour Image -->
@@ -35,9 +54,8 @@
                                                 <a href="{{ $service ? $service->getDetailUrl() : '#' }}" class="tour-link">
                                                     <div class="tour-image-container">
                                                         @if($service && $service->image_id)
-                                                            <img src="{{ get_file_url($service->image_id, 'medium') }}" 
-                                                                 alt="{{ $item->service_title }}" 
-                                                                 class="tour-image">
+                                                            <img src="{{ get_file_url($service->image_id, 'medium') }}"
+                                                                alt="{{ $item->service_title }}" class="tour-image">
                                                         @else
                                                             <div class="no-image-placeholder">
                                                                 <i class="fa fa-image fa-2x text-muted"></i>
@@ -46,16 +64,17 @@
                                                     </div>
                                                 </a>
                                             </div>
-                                            
+
                                             <!-- Tour Details -->
                                             <div class="col-md-6">
                                                 <div class="tour-details">
                                                     <h5 class="tour-title">
-                                                        <a href="{{ $service ? $service->getDetailUrl() : '#' }}" class="tour-title-link">
+                                                        <a href="{{ $service ? $service->getDetailUrl() : '#' }}"
+                                                            class="tour-title-link">
                                                             {{ $item->service_title }}
                                                         </a>
                                                     </h5>
-                                                    
+
                                                     <!-- Category -->
                                                     @if($service && $service->category_tour)
                                                         <div class="tour-category">
@@ -63,7 +82,7 @@
                                                             <span>{{ $service->category_tour->name ?? $service->category_tour->title ?? 'Tour' }}</span>
                                                         </div>
                                                     @endif
-                                                    
+
                                                     <!-- Date and Time -->
                                                     @if($startDate)
                                                         <div class="tour-datetime">
@@ -84,7 +103,7 @@
                                                             </span>
                                                         </div>
                                                     @endif
-                                                    
+
                                                     <!-- Person Types -->
                                                     @if(!empty($personTypes))
                                                         <div class="person-types">
@@ -92,7 +111,10 @@
                                                             <span>
                                                                 @foreach($personTypes as $index => $personType)
                                                                     @if($personType['number'] > 0)
-                                                                        {{ $personType['number'] }} {{ $personType['name'] }}@if($index < count(array_filter($personTypes, function($p) { return $p['number'] > 0; })) - 1), @endif
+                                                                        {{ $personType['number'] }}
+                                                                        {{ $personType['name'] }}@if($index < count(array_filter($personTypes, function ($p) {
+                                                                            return $p['number'] > 0; })) - 1),
+                                                                        @endif
                                                                     @endif
                                                                 @endforeach
                                                             </span>
@@ -100,24 +122,23 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            
+
                                             <!-- Price and Actions -->
                                             <div class="col-md-3">
                                                 <div class="price-actions">
-                                          
-                                                    
+
+
                                                     <!-- Total Price -->
                                                     <div class="total-section">
                                                         <div class="item-total">
                                                             <strong>{{ number_format($item->total_price, 2) }}{!! get_current_currency_svg() !!}</strong>
                                                         </div>
                                                     </div>
-                                                    
+
                                                     <!-- Remove Button -->
                                                     <div class="remove-section">
-                                                        <button class="btn btn-sm btn-outline-danger remove-item" 
-                                                                data-item-id="{{ $item->id }}" 
-                                                                title="{{__('Remove item')}}">
+                                                        <button class="btn btn-sm btn-outline-danger remove-item"
+                                                            data-item-id="{{ $item->id }}" title="{{__('Remove item')}}">
                                                             <i class="fa fa-trash"></i>
                                                         </button>
                                                     </div>
@@ -138,7 +159,7 @@
                         @endif
                     </div>
 
-                    @if(Auth::check() && isset($cart->items) && $cart->items->count() > 0)
+                    @if(Auth::check() && isset($cart) && is_object($cart) && isset($cart->items) && $cart->items->count() > 0)
                         <div class="col-lg-4">
                             <div class="cart-summary card">
                                 <div class="card-header">
@@ -183,13 +204,13 @@
             padding: 20px;
             background: #fff;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             transition: box-shadow 0.3s ease;
         }
 
         .cart-item-enhanced:hover {
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
 
         .cart-divider {
@@ -401,21 +422,21 @@
             .cart-item-enhanced {
                 padding: 15px;
             }
-            
+
             .tour-details {
                 padding-left: 0;
                 margin-top: 15px;
             }
-            
+
             .price-actions {
                 align-items: flex-start;
                 margin-top: 15px;
             }
-            
+
             .tour-image-container {
                 height: 100px;
             }
-            
+
             .quantity-controls {
                 justify-content: flex-start;
             }
@@ -423,87 +444,96 @@
     </style>
 
     <script>
-        // Fallback SafeDOM implementation if not loaded
-        if (typeof SafeDOM === 'undefined') {
-            window.SafeDOM = {
-                jQuery: function (callback) {
-                    function checkReady() {
-                        if (document.readyState === 'complete' && typeof $ !== 'undefined') {
-                            callback($);
-                        } else {
-                            setTimeout(checkReady, 50);
-                        }
-                    }
+            // Simple approach withou     t jQuery conflicts
+            window.addEventListener('load', function() {
+                console.log('Cart page loaded, setting up click handlers...');
 
-                    if (document.readyState === 'loading') {
-                        document.addEventListener('DOMContentLoaded', checkReady);
-                    } else {
-                        checkReady();
-                    }
+                // Clear cart button
+                var clearCartBtn = document.querySelector('.clear-cart');
+                if (clearCartBtn) {
+                    clearCartBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        console.log('Clear cart button clicked');
+
+                        if (confirm('{{ __("Are you sure you want to clear your cart?") }}')) {
+                            var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                            console.log('CSRF Token:', csrfToken);
+
+                            // Create form and submit
+                            var form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = '{{ route("cart.clear") }}';
+                            form.style.display = 'none';
+
+                            // Add CSRF token
+                            var csrfInput = document.createElement('input');
+                            csrfInput.type = 'hidden';
+                            csrfInput.name = '_token';
+                            csrfInput.value = csrfToken;
+                            form.appendChild(csrfInput);
+
+                            // Add method override for DELETE
+                            var methodInput = document.createElement('input');
+                            methodInput.type = 'hidden';
+                            methodInput.name = '_method';
+                            methodInput.value = 'DELETE';
+                            form.appendChild(methodInput);
+
+                            document.body.appendChild(form);
+                            form.submit();
+                        }
+                    });
+                    console.log('Clear cart button handler attached');
+                } else {
+                    console.log('Clear cart button not found');
                 }
-            };
-        }
 
-        // Use SafeDOM to ensure jQuery is loaded and DOM is ready
-        SafeDOM.jQuery(function ($) {
-            // Remove item
-            $('.remove-item').on('click', function () {
-                const itemId = $(this).data('item-id');
+                // Remove item buttons
+                var removeButtons = document.querySelectorAll('.remove-item');
+                removeButtons.forEach(function(btn) {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        var itemId = this.getAttribute('data-item-id');
+                        console.log('Remove item clicked:', itemId);
 
-                if (confirm('{{__("Are you sure you want to remove this item?")}}')) {
-                    $.ajax({
-                        url: `/cart/item/${itemId}`,
-                        method: 'DELETE',
-                        data: {
-                            _token: $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                $(`.cart-item-enhanced[data-item-id="${itemId}"]`).fadeOut(300, function() {
-                                    $(this).next('.cart-divider').remove();
-                                    $(this).remove();
-                                    
-                                    if ($('.cart-item-enhanced').length === 0) {
-                                        location.reload();
-                                    } else {
-                                        $('.cart-total, .cart-subtotal').html(response.cart_total.toFixed(2) + '{!! get_current_currency_svg() !!}');
-                                    }
-                                });
-                            }
-                        },
-                        error: function() {
-                            alert('{{__("Error removing item. Please try again.")}}');
+                        if (confirm('{{ __("Are you sure you want to remove this item?") }}')) {
+                            var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                            // Create form and submit
+                            var form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = '/cart/item/' + itemId;
+                            form.style.display = 'none';
+
+                            // Add CSRF token
+                            var csrfInput = document.createElement('input');
+                            csrfInput.type = 'hidden';
+                            csrfInput.name = '_token';
+                            csrfInput.value = csrfToken;
+                            form.appendChild(csrfInput);
+
+                            // Add method override for DELETE
+                            var methodInput = document.createElement('input');
+                            methodInput.type = 'hidden';
+                            methodInput.name = '_method';
+                            methodInput.value = 'DELETE';
+                            form.appendChild(methodInput);
+
+                            document.body.appendChild(form);
+                            form.submit();
                         }
+                    });
+                });
+                console.log('Remove item handlers attached to', removeButtons.length, 'buttons');
+
+                // Checkout button
+                var checkoutBtn = document.querySelector('.checkout-btn');
+                if (checkoutBtn) {
+                    checkoutBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        alert('{{ __("Checkout functionality will be implemented here") }}');
                     });
                 }
             });
-
-            // Clear cart
-            $('.clear-cart').on('click', function () {
-                if (confirm('{{__("Are you sure you want to clear your cart?")}}')) {
-                    $.ajax({
-                        url: '{{ route("cart.clear") }}',
-                        method: 'DELETE',
-                        data: {
-                            _token: $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                location.reload();
-                            }
-                        },
-                        error: function() {
-                            alert('{{__("Error clearing cart. Please try again.")}}');
-                        }
-                    });
-                }
-            });
-
-            // Checkout button
-            $('.checkout-btn').on('click', function() {
-                // Add checkout functionality here
-                alert('{{__("Checkout functionality will be implemented here")}}');
-            });
-        });
-    </script>
+        </script>
 @endsection

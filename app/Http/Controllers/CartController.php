@@ -124,18 +124,25 @@ class CartController extends Controller
     {
         // Check if user owns this cart item
         if ($cartItem->cart->user_id !== Auth::id()) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+            if (request()->wantsJson()) {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+            return redirect()->route('cart.index')->with('error', __('Unauthorized'));
         }
 
         $cart = $cartItem->cart;
         $cartItem->delete();
         $cart->updateTotalAmount();
 
-        return response()->json([
-            'success' => true,
-            'message' => __('Item removed from cart successfully!'),
-            'cart_total' => $cart->total_amount,
-        ]);
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => __('Item removed from cart successfully!'),
+                'cart_total' => $cart->total_amount,
+            ]);
+        }
+
+        return redirect()->route('cart.index')->with('success', __('Item removed from cart successfully!'));
     }
 
     /**
@@ -143,6 +150,16 @@ class CartController extends Controller
      */
     public function clear()
     {
+        if (!Auth::check()) {
+            if (request()->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('Please login to manage your cart'),
+                ], 401);
+            }
+            return redirect()->route('login')->with('error', __('Please login to manage your cart'));
+        }
+
         $cart = Cart::getActiveCartForUser(Auth::id());
 
         if ($cart) {
@@ -150,10 +167,14 @@ class CartController extends Controller
             $cart->updateTotalAmount();
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => __('Cart cleared successfully!'),
-        ]);
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => __('Cart cleared successfully!'),
+            ]);
+        }
+
+        return redirect()->route('cart.index')->with('success', __('Cart cleared successfully!'));
     }
 
     /**
