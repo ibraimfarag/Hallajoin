@@ -2,11 +2,37 @@
 
 @section('content')
     <style>
+        /* Light Mode & Dark Mode Variables */
+        :root {
+            /* Dark Mode Colors (Default) */
+            --cart-bg-primary: #0f1c2e;
+            --cart-bg-secondary: #1a2942;
+            --cart-bg-hover: rgba(255, 255, 255, 0.03);
+            --cart-text-primary: #ffffff;
+            --cart-text-secondary: #e2e8f0;
+            --cart-text-muted: #8b92a7;
+            --cart-border-color: rgba(255, 255, 255, 0.1);
+            --cart-border-light: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Light Mode Override */
+        [data-theme="light"] {
+            --cart-bg-primary: #f7fafc;
+            --cart-bg-secondary: #ffffff;
+            --cart-bg-hover: #edf2f7;
+            --cart-text-primary: #1a202c;
+            --cart-text-secondary: #2d3748;
+            --cart-text-muted: #718096;
+            --cart-border-color: #e2e8f0;
+            --cart-border-light: #cbd5e0;
+        }
+
         .cart-container {
-            background: #0f1c2e;
+            background: var(--cart-bg-primary);
             min-height: 100vh;
             padding: 24px;
-            color: #e2e8f0;
+            color: var(--cart-text-secondary);
+            transition: background-color 0.3s ease;
         }
 
         .cart-header {
@@ -19,13 +45,15 @@
         .cart-title {
             font-size: 24px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--cart-text-primary);
         }
 
         .cart-table-container {
-            background: #1a2942;
+            background: var(--cart-bg-secondary);
             border-radius: 12px;
             overflow: hidden;
+            border: 1px solid var(--cart-border-color);
+            transition: all 0.3s ease;
         }
 
         .cart-table {
@@ -34,7 +62,7 @@
         }
 
         .cart-table thead {
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--cart-bg-hover);
         }
 
         .cart-table th {
@@ -42,21 +70,21 @@
             text-align: left;
             font-size: 18px;
             font-weight: 600;
-            color: #8b92a7;
+            color: var(--cart-text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--cart-border-color);
         }
 
         .cart-table td {
             padding: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            color: #e2e8f0;
+            border-bottom: 1px solid var(--cart-border-light);
+            color: var(--cart-text-secondary);
             font-size: 19px;
         }
 
         .cart-table tbody tr:hover {
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--cart-bg-hover);
             transition: background 0.2s ease;
         }
 
@@ -86,14 +114,14 @@
         }
 
         .user-name {
-            color: #ffffff;
+            color: var(--cart-text-primary);
             font-weight: 500;
             font-size: 17px;
         }
 
         .user-name:hover {
             color: #63b3ed !important;
-          
+
         }
 
         .user-phone {
@@ -113,9 +141,9 @@
         }
 
         .view-cart-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #ffffff;
+            background: var(--cart-bg-hover);
+            border: 1px solid var(--cart-border-color);
+            color: var(--cart-text-primary);
             padding: 8px 16px;
             border-radius: 6px;
             font-size: 13px;
@@ -127,13 +155,13 @@
         }
 
         .view-cart-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: var(--cart-bg-hover);
             text-decoration: none;
-            color: #ffffff;
+            color: var(--cart-text-primary);
         }
 
         .eye-icon {
-            color: #8b92a7;
+            color: var(--cart-text-muted);
             width: 20px;
             height: 20px;
             cursor: pointer;
@@ -144,19 +172,23 @@
             color: #63b3ed;
         }
 
+        td svg {
+            color: var(--cart-text-muted);
+        }
+
         td svg:hover {
             color: #63b3ed !important;
         }
 
         .date-cell {
-            color: #a0aec0;
+            color: var(--cart-text-muted);
             font-size: 13px;
         }
 
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            color: #8b92a7;
+            color: var(--cart-text-muted);
         }
 
         .empty-state i {
@@ -184,18 +216,19 @@
         }
 
         .cart-modal-content {
-            background: #1a2942;
+            background: var(--cart-bg-secondary);
             border-radius: 30px;
             max-width: 670px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
             position: relative;
+            border: 1px solid var(--cart-border-color);
         }
 
         .cart-modal-header {
             padding: 20px 24px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--cart-border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -204,13 +237,13 @@
         .cart-modal-title {
             font-size: 18px;
             font-weight: 600;
-            color: #ffffff;
+            color: var(--cart-text-primary);
         }
 
         .modal-close {
             background: none;
             border: none;
-            color: #8b92a7;
+            color: var(--cart-text-muted);
             font-size: 24px;
             cursor: pointer;
             padding: 0;
@@ -224,8 +257,8 @@
         }
 
         .modal-close:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
+            background: var(--cart-bg-hover);
+            color: var(--cart-text-primary);
         }
 
         .cart-modal-body {
@@ -236,10 +269,11 @@
             display: flex;
             gap: 12px;
             padding: 12px;
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--cart-bg-hover);
             border-radius: 8px;
             margin-bottom: 12px;
             align-items: flex-start;
+            border: 1px solid var(--cart-border-light);
         }
 
         .cart-item-image {
@@ -258,7 +292,7 @@
         }
 
         .cart-item-title {
-            color: #ffffff;
+            color: var(--cart-text-primary);
             font-weight: 600;
             font-size: 13px;
             line-height: 1.4;
@@ -271,13 +305,13 @@
         }
 
         .cart-item-info-row {
-            color: #8b92a7;
+            color: var(--cart-text-muted);
             font-size: 11px;
             line-height: 1.5;
         }
 
         .cart-item-info-row strong {
-            color: #a0aec0;
+            color: var(--cart-text-secondary);
             font-weight: 500;
         }
 
@@ -294,7 +328,7 @@
         }
 
         .cart-item-unit-price {
-            color: #8b92a7;
+            color: var(--cart-text-muted);
             font-size: 11px;
             margin-top: 2px;
         }
@@ -321,10 +355,12 @@
         }
 
         .user-cell a:hover {
+            text-decoration: none !important;
+        }
 
- 
-
-    text-decoration: none !important;
+        /* Smooth transitions for theme changes */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
     </style>
 
@@ -358,15 +394,16 @@
                                     </div>
                                     <div class="user-info">
                                         @if($cart->user)
-                                            <a href="{{ route('user.admin.profile', ['id' => $cart->user->id]) }}" class="user-name"
-                                            >
+                                            <a href="{{ route('user.admin.profile', ['id' => $cart->user->id]) }}"
+                                                class="user-name">
                                                 {{ $cart->user->first_name ?? '' }} {{ $cart->user->last_name ?? '' }}
                                             </a>
                                             <a href="{{ route('user.admin.profile', ['id' => $cart->user->id]) }}" target="_blank"
                                                 class="user-profile-link"
                                                 style="color:#63b3ed; font-size:13px; word-break:break-all; margin-top:2px;">
-                                                <span class="user-phone">{{ $cart->user->phone ?? $cart->user->email ?? 'N/A' }}</span>
-                                               
+                                                <span
+                                                    class="user-phone">{{ $cart->user->phone ?? $cart->user->email ?? 'N/A' }}</span>
+
                                             </a>
                                         @else
                                             <span class="user-name">{{__('Guest')}}</span>
@@ -453,22 +490,22 @@
                         let itemsHtml = '';
                         data.items.forEach(item => {
                             itemsHtml += `
-                                                                            <div class="cart-item">
-                                                                                <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.title}" class="cart-item-image">
-                                                                                <div class="cart-item-details">
-                                                                                    <div class="cart-item-title">${item.title}</div>
-                                                                                    ${item.category ? `<div class="cart-item-info-row" style=" font-size: 12px;">${item.category}</div>` : ''}
-                                                                                    <div class="cart-item-info">
-                                                                                        ${item.datetime ? `<div class="cart-item-info-row"><strong>${item.datetime}</strong></div>` : ''}
-                                                                                        ${item.quantity_text && item.quantity_text.length > 0 ? item.quantity_text.map(quantity => `<div class="cart-item-info-row"><strong>${quantity}</strong></div>`).join('') : ''}
+                                                                                <div class="cart-item">
+                                                                                    <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.title}" class="cart-item-image">
+                                                                                    <div class="cart-item-details">
+                                                                                        <div class="cart-item-title">${item.title}</div>
+                                                                                        ${item.category ? `<div class="cart-item-info-row" style=" font-size: 12px;">${item.category}</div>` : ''}
+                                                                                        <div class="cart-item-info">
+                                                                                            ${item.datetime ? `<div class="cart-item-info-row"><strong>${item.datetime}</strong></div>` : ''}
+                                                                                            ${item.quantity_text && item.quantity_text.length > 0 ? item.quantity_text.map(quantity => `<div class="cart-item-info-row"><strong>${quantity}</strong></div>`).join('') : ''}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="cart-item-price">
+                                                                                        <div class="cart-item-total">${item.total}</div>
+                                                                                        ${item.price !== item.total ? `<div class="cart-item-unit-price">${item.price} each</div>` : ''}
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="cart-item-price">
-                                                                                    <div class="cart-item-total">${item.total}</div>
-                                                                                    ${item.price !== item.total ? `<div class="cart-item-unit-price">${item.price} each</div>` : ''}
-                                                                                </div>
-                                                                            </div>
-                                                                        `;
+                                                                            `;
                         });
                         modalBody.innerHTML = itemsHtml;
                     } else {
@@ -490,6 +527,58 @@
             if (e.target === this) {
                 closeCartModal();
             }
+        });
+
+        // Auto-detect theme from header switcher
+        document.addEventListener('DOMContentLoaded', function () {
+            const html = document.documentElement;
+
+            // Check and apply theme
+            function applyTheme() {
+                // Get saved theme from localStorage (same as header switcher)
+                const savedTheme = localStorage.getItem('admin-theme');
+
+                // Check if dark-mode class exists on body or html
+                const hasDarkClass = document.body.classList.contains('dark-mode') ||
+                    html.classList.contains('dark-mode') ||
+                    html.classList.contains('dark-mode-instant');
+
+                // Apply light mode only if theme is explicitly light and no dark class
+                if (savedTheme === 'light' && !hasDarkClass) {
+                    html.setAttribute('data-theme', 'light');
+                } else if (savedTheme === 'dark' || hasDarkClass) {
+                    html.removeAttribute('data-theme');
+                } else {
+                    // Default to light if no preference
+                    html.setAttribute('data-theme', 'light');
+                }
+            }
+
+            // Apply theme immediately
+            applyTheme();
+
+            // Monitor for theme changes on body and html
+            const observer = new MutationObserver(applyTheme);
+
+            observer.observe(document.body, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+
+            observer.observe(html, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+
+            // Listen for localStorage changes (for theme switcher)
+            window.addEventListener('storage', function (e) {
+                if (e.key === 'admin-theme') {
+                    applyTheme();
+                }
+            });
+
+            // Also check periodically (as backup)
+            setInterval(applyTheme, 500);
         });
     </script>
 @endsection

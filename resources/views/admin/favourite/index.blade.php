@@ -2,11 +2,37 @@
 
 @section('content')
     <style>
+        /* Light Mode & Dark Mode Variables */
+        :root {
+            /* Dark Mode Colors (Default) */
+            --fav-bg-primary: #0f1c2e;
+            --fav-bg-secondary: #1a2942;
+            --fav-bg-hover: rgba(255, 255, 255, 0.03);
+            --fav-text-primary: #ffffff;
+            --fav-text-secondary: #e2e8f0;
+            --fav-text-muted: #8b92a7;
+            --fav-border-color: rgba(255, 255, 255, 0.1);
+            --fav-border-light: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Light Mode Override */
+        [data-theme="light"] {
+            --fav-bg-primary: #f7fafc;
+            --fav-bg-secondary: #ffffff;
+            --fav-bg-hover: #edf2f7;
+            --fav-text-primary: #1a202c;
+            --fav-text-secondary: #2d3748;
+            --fav-text-muted: #718096;
+            --fav-border-color: #e2e8f0;
+            --fav-border-light: #cbd5e0;
+        }
+
         .favourite-container {
-            background: #0f1c2e;
+            background: var(--fav-bg-primary);
             min-height: 100vh;
             padding: 24px;
-            color: #e2e8f0;
+            color: var(--fav-text-secondary);
+            transition: background-color 0.3s ease;
         }
 
         .favourite-header {
@@ -19,13 +45,15 @@
         .favourite-title {
             font-size: 24px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--fav-text-primary);
         }
 
         .favourite-table-container {
-            background: #1a2942;
+            background: var(--fav-bg-secondary);
             border-radius: 12px;
             overflow: hidden;
+            border: 1px solid var(--fav-border-color);
+            transition: all 0.3s ease;
         }
 
         .favourite-table {
@@ -34,7 +62,7 @@
         }
 
         .favourite-table thead {
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--fav-bg-hover);
         }
 
         .favourite-table th {
@@ -42,20 +70,20 @@
             text-align: left;
             font-size: 19px;
             font-weight: 600;
-            color: #8b92a7;
+            color: var(--fav-text-muted);
             letter-spacing: 0.5px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--fav-border-color);
         }
 
         .favourite-table td {
             padding: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            color: #e2e8f0;
+            border-bottom: 1px solid var(--fav-border-light);
+            color: var(--fav-text-secondary);
             font-size: 14px;
         }
 
         .favourite-table tbody tr:hover {
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--fav-bg-hover);
             transition: background 0.2s ease;
         }
 
@@ -85,7 +113,7 @@
         }
 
         .user-name {
-            color: #ffffff;
+            color: var(--fav-text-primary);
             font-weight: 500;
             font-size: 17px;
         }
@@ -126,26 +154,26 @@
         }
 
         .service-title {
-            color: #ffffff;
+            color: var(--fav-text-primary);
             font-weight: 500;
             font-size: 14px;
         }
 
         .service-type {
-            color: #8b92a7;
+            color: var(--fav-text-muted);
             font-size: 12px;
             margin-top: 2px;
         }
 
         .date-cell {
-            color: #a0aec0;
+            color: var(--fav-text-muted);
             font-size: 17px !important;
         }
 
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            color: #8b92a7;
+            color: var(--fav-text-muted);
         }
 
         .empty-state i {
@@ -155,7 +183,7 @@
         }
 
         .eye-icon {
-            color: #8b92a7;
+            color: var(--fav-text-muted);
             width: 20px;
             height: 20px;
             cursor: pointer;
@@ -164,6 +192,10 @@
 
         .eye-icon:hover {
             color: #63b3ed;
+        }
+
+        td svg {
+            color: var(--fav-text-muted);
         }
 
         td svg:hover {
@@ -189,18 +221,19 @@
         }
 
         .favourite-modal-content {
-            background: #1a2942;
+            background: var(--fav-bg-secondary);
             border-radius: 30px;
             max-width: 670px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
             position: relative;
+            border: 1px solid var(--fav-border-color);
         }
 
         .favourite-modal-header {
             padding: 20px 24px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--fav-border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -209,13 +242,13 @@
         .favourite-modal-title {
             font-size: 18px;
             font-weight: 600;
-            color: #ffffff;
+            color: var(--fav-text-primary);
         }
 
         .modal-close {
             background: none;
             border: none;
-            color: #8b92a7;
+            color: var(--fav-text-muted);
             font-size: 24px;
             cursor: pointer;
             padding: 0;
@@ -229,8 +262,8 @@
         }
 
         .modal-close:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
+            background: var(--fav-bg-hover);
+            color: var(--fav-text-primary);
         }
 
         .favourite-modal-body {
@@ -251,13 +284,13 @@
         }
 
         .favourite-item-title {
-            color: #ffffff;
+            color: var(--fav-text-primary);
             font-weight: 600;
             font-size: 18px;
         }
 
         .favourite-item-subtitle {
-            color: #8b92a7;
+            color: var(--fav-text-muted);
             font-size: 14px;
             margin-top: 4px;
         }
@@ -270,7 +303,7 @@
         }
 
         .favourite-item-info-row {
-            color: #a0aec0;
+            color: var(--fav-text-secondary);
             font-size: 14px;
             display: flex;
             align-items: center;
@@ -278,7 +311,7 @@
         }
 
         .favourite-item-info-row strong {
-            color: #ffffff;
+            color: var(--fav-text-primary);
             font-weight: 600;
             min-width: 100px;
         }
@@ -291,8 +324,12 @@
         }
 
         .user-cell a:hover {
-
             text-decoration: none !important;
+        }
+
+        /* Smooth transitions for theme changes */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
     </style>
 
@@ -331,8 +368,7 @@
                                         @endif
                                     </div>
                                     <div class="user-info">
-                                        <a href="{{ route('user.admin.profile', ['id' => $user->id]) }}" class="user-name"
-                                           >
+                                        <a href="{{ route('user.admin.profile', ['id' => $user->id]) }}" class="user-name">
                                             {{ $user->first_name ?? '' }} {{ $user->last_name ?? '' }}
                                         </a>
                                         <a href="{{ route('user.admin.profile', ['id' => $user->id]) }}" target="_blank"
@@ -420,23 +456,23 @@
                         let itemsHtml = '';
                         data.items.forEach(item => {
                             itemsHtml += `
-                                                    <div class="favourite-item" style="margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
-                                                        <div style="display: flex; gap: 16px; align-items: flex-start;">
-                                                            <img src="${item.image}" alt="${item.title}" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover; flex-shrink: 0;">
-                                                            <div style="flex: 1;">
-                                                                <div class="favourite-item-title">${item.title}</div>
-                                                                ${item.category ? `<div style="color: #8b92a7; font-size: 12px; margin-top: 4px;">${item.category}</div>` : ''}
+                                                        <div class="favourite-item" style="margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                                                            <div style="display: flex; gap: 16px; align-items: flex-start;">
+                                                                <img src="${item.image}" alt="${item.title}" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover; flex-shrink: 0;">
+                                                                <div style="flex: 1;">
+                                                                    <div class="favourite-item-title">${item.title}</div>
+                                                                    ${item.category ? `<div style="color: #8b92a7; font-size: 12px; margin-top: 4px;">${item.category}</div>` : ''}
 
-                                                            </div>
-                                                            <div style="text-align: right;">
-                                                                <div class="favourite-item-price" style="font-size: 16px; margin-bottom: 8px;">${item.price}</div>
-                                                                <a href="${item.service_url}" target="_blank" style="color: #63b3ed; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-                                                            View
-                                                                </a>
+                                                                </div>
+                                                                <div style="text-align: right;">
+                                                                    <div class="favourite-item-price" style="font-size: 16px; margin-bottom: 8px;">${item.price}</div>
+                                                                    <a href="${item.service_url}" target="_blank" style="color: #63b3ed; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                                                                View
+                                                                    </a>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                `;
+                                                    `;
                         });
                         modalBody.innerHTML = itemsHtml;
                     } else {
@@ -458,6 +494,58 @@
             if (e.target === this) {
                 closeFavouriteModal();
             }
+        });
+
+        // Auto-detect theme from header switcher
+        document.addEventListener('DOMContentLoaded', function () {
+            const html = document.documentElement;
+
+            // Check and apply theme
+            function applyTheme() {
+                // Get saved theme from localStorage (same as header switcher)
+                const savedTheme = localStorage.getItem('admin-theme');
+
+                // Check if dark-mode class exists on body or html
+                const hasDarkClass = document.body.classList.contains('dark-mode') ||
+                    html.classList.contains('dark-mode') ||
+                    html.classList.contains('dark-mode-instant');
+
+                // Apply light mode only if theme is explicitly light and no dark class
+                if (savedTheme === 'light' && !hasDarkClass) {
+                    html.setAttribute('data-theme', 'light');
+                } else if (savedTheme === 'dark' || hasDarkClass) {
+                    html.removeAttribute('data-theme');
+                } else {
+                    // Default to light if no preference
+                    html.setAttribute('data-theme', 'light');
+                }
+            }
+
+            // Apply theme immediately
+            applyTheme();
+
+            // Monitor for theme changes on body and html
+            const observer = new MutationObserver(applyTheme);
+
+            observer.observe(document.body, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+
+            observer.observe(html, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+
+            // Listen for localStorage changes (for theme switcher)
+            window.addEventListener('storage', function (e) {
+                if (e.key === 'admin-theme') {
+                    applyTheme();
+                }
+            });
+
+            // Also check periodically (as backup)
+            setInterval(applyTheme, 500);
         });
     </script>
 @endsection

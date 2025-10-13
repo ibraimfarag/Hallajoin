@@ -6,18 +6,46 @@
         @include('admin.message')
 
         <style>
+            /* Light Mode & Dark Mode Variables */
+            :root {
+                /* Dark Mode Colors (Default) */
+                --bal-bg-primary: #0f1c2e;
+                --bal-bg-secondary: #1a2942;
+                --bal-bg-hover: rgba(99, 179, 237, 0.05);
+                --bal-text-primary: #ffffff;
+                --bal-text-secondary: #8b92a7;
+                --bal-border-color: rgba(255, 255, 255, 0.1);
+                --bal-border-light: rgba(255, 255, 255, 0.05);
+                --bal-shadow: rgba(0, 0, 0, 0.3);
+            }
+
+            /* Light Mode Override */
+            [data-theme="light"] {
+                --bal-bg-primary: #f7fafc;
+                --bal-bg-secondary: #ffffff;
+                --bal-bg-hover: #edf2f7;
+                --bal-text-primary: #1a202c;
+                --bal-text-secondary: #718096;
+                --bal-border-color: #e2e8f0;
+                --bal-border-light: #cbd5e0;
+                --bal-shadow: rgba(0, 0, 0, 0.1);
+            }
+
             .balance-container {
-                background: #0f1c2e;
+                background: var(--bal-bg-primary);
                 min-height: 100vh;
                 padding: 24px;
                 padding-right: 20vw;
+                transition: background-color 0.3s ease;
             }
 
             .balance-card {
-                background: #1a2942;
+                background: var(--bal-bg-secondary);
                 border-radius: 12px;
                 padding: 24px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+                box-shadow: 0 4px 6px var(--bal-shadow);
+                border: 1px solid var(--bal-border-color);
+                transition: all 0.3s ease;
             }
 
             .balance-header {
@@ -26,13 +54,13 @@
                 align-items: center;
                 margin-bottom: 24px;
                 padding-bottom: 16px;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                border-bottom: 1px solid var(--bal-border-color);
             }
 
             .balance-title {
                 font-size: 24px;
                 font-weight: 600;
-                color: #ffffff;
+                color: var(--bal-text-primary);
                 margin: 0;
             }
 
@@ -44,7 +72,7 @@
 
             .balance-table thead th {
                 background: rgba(99, 179, 237, 0.1);
-                color: #8b92a7;
+                color: var(--bal-text-secondary);
                 font-size: 19px;
                 font-weight: 600;
                 padding: 16px;
@@ -68,13 +96,13 @@
             }
 
             .balance-table tbody tr:hover {
-                background: rgba(99, 179, 237, 0.05);
+                background: var(--bal-bg-hover);
             }
 
             .balance-table tbody td {
                 padding: 16px;
-                color: #ffffff;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                color: var(--bal-text-primary);
+                border-bottom: 1px solid var(--bal-border-light);
             }
 
             .balance-table tbody tr:last-child td {
@@ -118,19 +146,19 @@
             .user-name {
                 font-size: 17px;
                 font-weight: 500;
-                color: #ffffff;
+                color: var(--bal-text-primary);
                 margin-bottom: 4px;
             }
 
             .user-phone {
                 font-size: 19px;
-                color: #8b92a7;
+                color: var(--bal-text-secondary);
             }
 
             .balance-amount {
                 font-size: 19px;
                 font-weight: 500;
-                color: #ffffff;
+                color: var(--bal-text-primary);
             }
 
             .balance-points {
@@ -162,7 +190,7 @@
             .empty-state {
                 text-align: center;
                 padding: 80px 20px;
-                color: #8b92a7;
+                color: var(--bal-text-secondary);
             }
 
             .empty-state svg {
@@ -175,8 +203,13 @@
                 margin-top: 12px;
             }
 
-               .balance-container  a:hover {
+            .balance-container a:hover {
                 text-decoration: none !important;
+            }
+
+            /* Smooth transitions for theme changes */
+            * {
+                transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
             }
         </style>
 
@@ -213,15 +246,14 @@
                                                 <div class="user-avatar-placeholder">{{ $user['first_letter'] }}</div>
                                             @endif
                                             <div class="user-details">
-                                                <a href="{{ route('user.admin.profile', ['id' => $user['id']]) }}" class="user-name"
-                                                  >
+                                                <a href="{{ route('user.admin.profile', ['id' => $user['id']]) }}"
+                                                    class="user-name">
                                                     {{ $user['name'] }}
                                                 </a>
                                                 <a href="{{ route('user.admin.profile', ['id' => $user['id']]) }}" target="_blank"
-                                                    class="user-profile-link"
-                                                    >
-                                                    
-                                                    
+                                                    class="user-profile-link">
+
+
                                                     @if($user['phone'])
                                                         <div class="user-phone">{{ $user['phone'] }}</div>
                                                     @endif
@@ -259,4 +291,58 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Auto-detect theme from header switcher
+        document.addEventListener('DOMContentLoaded', function () {
+            const html = document.documentElement;
+
+            // Check and apply theme
+            function applyTheme() {
+                // Get saved theme from localStorage (same as header switcher)
+                const savedTheme = localStorage.getItem('admin-theme');
+
+                // Check if dark-mode class exists on body or html
+                const hasDarkClass = document.body.classList.contains('dark-mode') ||
+                    html.classList.contains('dark-mode') ||
+                    html.classList.contains('dark-mode-instant');
+
+                // Apply light mode only if theme is explicitly light and no dark class
+                if (savedTheme === 'light' && !hasDarkClass) {
+                    html.setAttribute('data-theme', 'light');
+                } else if (savedTheme === 'dark' || hasDarkClass) {
+                    html.removeAttribute('data-theme');
+                } else {
+                    // Default to light if no preference
+                    html.setAttribute('data-theme', 'light');
+                }
+            }
+
+            // Apply theme immediately
+            applyTheme();
+
+            // Monitor for theme changes on body and html
+            const observer = new MutationObserver(applyTheme);
+
+            observer.observe(document.body, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+
+            observer.observe(html, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+
+            // Listen for localStorage changes (for theme switcher)
+            window.addEventListener('storage', function (e) {
+                if (e.key === 'admin-theme') {
+                    applyTheme();
+                }
+            });
+
+            // Also check periodically (as backup)
+            setInterval(applyTheme, 500);
+        });
+    </script>
 @endsection
