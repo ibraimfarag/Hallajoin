@@ -5,6 +5,8 @@
 @endphp
 
 
+
+
 <div class="item-tour {{ $wrap_class ?? '' }}">
     @if ($row->is_featured == '1')
         <div class="featured">
@@ -106,7 +108,14 @@
             <i class="{{ $icon }}"></i>
             <span>{{ $name }}</span>
         </div>
-    @endif
+    @endif<style>
+
+  .info .g-price .price svg {
+        width: 20px;
+        height: 20px;
+
+    }
+</style>
 
     <div class="info">
         <div class="g-price">
@@ -121,7 +130,13 @@
                     @endif
                     @if($row->sale_price)
                         {{ format_price_only($row->sale_price) }}{!! get_current_currency_svg() !!}
+                    @endif 
+                     @if($row->sale_price)
+
+              
+                      <span class="fr_text">{{ __('/ person') }}</span>
                     @endif
+
                 </span>
 
                 <div class="row">
