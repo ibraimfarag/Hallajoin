@@ -7,13 +7,42 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/7.5.0/css/flag-icons.min.css">
 
     <style>
+        /* Light Mode & Dark Mode Variables */
+        :root {
+            /* Dark Mode Colors (Default) */
+            --bg-primary: #132439;
+            --bg-secondary: rgba(255, 255, 255, 0.05);
+            --bg-hover: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+            --text-muted: #718096;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --border-light: rgba(255, 255, 255, 0.2);
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Light Mode Override */
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7fafc;
+            --bg-hover: #edf2f7;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+            --border-light: #cbd5e0;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
         .profile-header {
-            background: #132439;
+            background: var(--bg-primary);
             border-radius: 16px;
             padding: 24px;
             margin-bottom: 24px;
             position: relative;
             overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
         }
 
 
@@ -38,12 +67,13 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--bg-secondary);
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 14px;
             margin-bottom: 8px;
             margin-left: -15px;
+            border: 1px solid var(--border-color);
         }
 
         .country-flag .fi {
@@ -56,7 +86,7 @@
         }
 
         .profile-phone {
-            color: #a0aec0;
+            color: var(--text-secondary);
             font-size: 16px;
             display: flex;
             align-items: center;
@@ -66,7 +96,7 @@
         .profile-name {
             font-size: 16px;
             margin: 8px 0;
-            color: #a0aec0;
+            color: var(--text-secondary);
         }
 
 
@@ -85,12 +115,12 @@
         }
 
         .info-label {
-            color: #a0aec0;
+            color: var(--text-secondary);
             font-size: 14px;
         }
 
         .info-value {
-            color: #ffffff;
+            color: var(--text-primary);
             font-weight: 600;
             font-size: 14px;
         }
@@ -133,10 +163,12 @@
         }
 
         .section-card {
-            background: #132439;
+            background: var(--bg-primary);
             border-radius: 16px;
             padding: 24px;
             margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
         }
 
         .section-header {
@@ -149,7 +181,7 @@
         .section-title {
             font-size: 18px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
         }
 
         .view-link {
@@ -166,12 +198,13 @@
         }
 
         .balance-item {
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--bg-secondary);
             border-radius: 12px;
             padding: 16px;
             display: flex;
             align-items: center;
             gap: 12px;
+            border: 1px solid var(--border-color);
         }
 
         .balance-icon {
@@ -198,12 +231,12 @@
             font-size: 20px;
             font-weight: 700;
             margin: 0;
-            color: #ffffff;
+            color: var(--text-primary);
         }
 
         .balance-info p {
             font-size: 14px;
-            color: #a0aec0;
+            color: var(--text-secondary);
             margin: 0;
         }
 
@@ -217,20 +250,21 @@
         .order-stat {
             text-align: left;
             padding: 16px;
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--bg-secondary);
             border-radius: 12px;
+            border: 1px solid var(--border-color);
         }
 
         .order-stat-number {
             font-size: 24px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
             margin-bottom: 4px;
         }
 
         .order-stat-label {
             font-size: 12px;
-            color: #a0aec0;
+            color: var(--text-secondary);
         }
 
         .table-responsive {
@@ -261,31 +295,31 @@
         .transactions-table td {
             padding: 12px 8px;
             text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--border-color);
             white-space: nowrap;
             /* Prevent text wrapping */
         }
 
         .sessions-table th,
         .transactions-table th {
-            color: #a0aec0;
+            color: var(--text-secondary);
             font-weight: 600;
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--bg-hover);
         }
 
         .sessions-table td,
         .transactions-table td {
-            color: #e2e8f0;
+            color: var(--text-primary);
             font-size: 14px;
             vertical-align: middle;
         }
 
         .sessions-table tbody tr:hover,
         .transactions-table tbody tr:hover {
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--bg-hover);
             transition: background 0.2s ease;
         }
 
@@ -426,9 +460,9 @@
         }
 
         .back-button {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #ffffff;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
             padding: 10px 20px;
             border-radius: 8px;
             text-decoration: none;
@@ -441,9 +475,10 @@
         }
 
         .back-button:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
+            background: var(--bg-hover);
+            color: var(--text-primary);
             text-decoration: none;
+            box-shadow: 0 2px 8px var(--shadow);
         }
 
         .order-id {
@@ -465,6 +500,11 @@
             font-family: "Font Awesome 6 Free", "Font Awesome 5 Free" !important;
             font-weight: 900 !important;
             display: inline-block;
+        }
+
+        /* Smooth transitions for theme changes */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
     </style>
 
@@ -566,14 +606,15 @@
                                     @endphp
                                     <span class="fi fi-{{ $flagCode }}"
                                         style="font-size: 18px; line-height: 1; margin-right: 3px;"></span>
-                                    <span style="color: #a0aec0;">{{ $country }}</span>
+                                    <span style="color: var(--text-secondary);">{{ $country }}</span>
                                 </div>
                                 <div class="profile-phone">
-                                    <i class="fas fa-phone" style="font-size: 14px; color: #a0aec0;"></i>
+                                    <i class="fas fa-phone" style="font-size: 14px; color: var(--text-secondary);"></i>
                                     {{ $user->phone ?? 'No phone provided' }}
                                 </div>
                                 <div class="profile-name">
-                                    <i class="fas fa-user" style="margin-right: 8px;"></i>{{ $user->getDisplayName() }}
+                                    <i class="fas fa-user"
+                                        style="margin-right: 8px; color: var(--text-secondary);"></i>{{ $user->getDisplayName() }}
                                 </div>
 
                                 <div class="status-badges">
@@ -597,7 +638,7 @@
                     <div class="section-card">
                         <div class="section-header">
                             <h3 class="section-title">{{ __('Balance') }}</h3>
-                            <div style="color: #a0aec0; font-size: 18px; font-weight: 700;">
+                            <div style="color: var(--text-secondary); font-size: 18px; font-weight: 700;">
                                 {{ number_format($balance, 2) }}{!! get_current_currency_svg() !!}
                             </div>
                         </div>
@@ -633,22 +674,24 @@
 
                         <div class="orders-summary">
                             <div style="margin-bottom: 16px;">
-                                <div style="color: #ffffff; font-size: 18px; font-weight: 700;">{{ $totalOrders }}
+                                <div style="color: var(--text-primary); font-size: 18px; font-weight: 700;">
+                                    {{ $totalOrders }}
                                     {{ __('orders') }}
                                 </div>
-                                <div style="color: #a0aec0; font-size: 14px;">{{ __('Total Amount') }}:
+                                <div style="color: var(--text-secondary); font-size: 14px;">{{ __('Total Amount') }}:
                                     {{ number_format($totalAmount, 2) }}{!! get_current_currency_svg() !!}
                                 </div>
-                                <div style="color: #a0aec0; font-size: 14px;">{{ __('Refunded') }}:
+                                <div style="color: var(--text-secondary); font-size: 14px;">{{ __('Refunded') }}:
                                     {{ number_format($totalRefunded, 2) }}{!! get_current_currency_svg() !!}
                                 </div>
                             </div>
                         </div>
 
                         @if($lastOrder)
-                            <div style="text-align: left; padding: 20px; color: #a0aec0;">
+                            <div style="text-align: left; padding: 20px; color: var(--text-secondary);">
                                 <div style="margin-bottom: 12px;">{{ __('Last order') }}:</div>
-                                <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px;">
+                                <div
+                                    style="background: var(--bg-secondary); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
                                     <!-- Order ID - Main Line -->
                                     <div style="margin-bottom: 12px;">
                                         <span
@@ -658,19 +701,22 @@
                                     <!-- Order Details - Secondary Lines -->
                                     <div style="display: flex; flex-direction: column; gap: 6px;">
                                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                                            <span style="color: #a0aec0; font-size: 14px;">{{ __('Date') }}:</span>
                                             <span
-                                                style="color: #e2e8f0; font-size: 14px;">{{ $lastOrder->created_at->format('d/M/Y H:i') }}</span>
+                                                style="color: var(--text-secondary); font-size: 14px;">{{ __('Date') }}:</span>
+                                            <span
+                                                style="color: var(--text-primary); font-size: 14px;">{{ $lastOrder->created_at->format('d/M/Y H:i') }}</span>
                                         </div>
 
                                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                                            <span style="color: #a0aec0; font-size: 14px;">{{ __('Amount') }}:</span>
+                                            <span
+                                                style="color: var(--text-secondary); font-size: 14px;">{{ __('Amount') }}:</span>
                                             <span
                                                 style="color: #68d391; font-size: 14px; font-weight: 600;">{{ number_format($lastOrder->total, 2) }}{!! get_current_currency_svg() !!}</span>
                                         </div>
 
                                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                                            <span style="color: #a0aec0; font-size: 14px;">{{ __('Status') }}:</span>
+                                            <span
+                                                style="color: var(--text-secondary); font-size: 14px;">{{ __('Status') }}:</span>
                                             <span
                                                 style="background: {{ $lastOrder->status == 'completed' ? '#28a745' : ($lastOrder->status == 'pending' ? '#ffc107' : '#6c757d') }}; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;">
                                                 {{ ucfirst($lastOrder->status) }}
@@ -680,7 +726,7 @@
                                 </div>
                             </div>
                         @else
-                            <div style="text-align: center; padding: 20px; color: #a0aec0;">
+                            <div style="text-align: center; padding: 20px; color: var(--text-secondary);">
                                 {{ __('No orders yet') }}
                             </div>
                         @endif
@@ -711,20 +757,18 @@
 
                                     <div style=" margin: 20px 0;display: flex;gap: 20px;">
                                         <div style="margin-bottom: 8px;">
-                                            <input type="checkbox" id="userBlocked" style="margin-right: 8px;" 
-                                                {{ $user->blocked ? 'checked' : '' }}
+                                            <input type="checkbox" id="userBlocked" style="margin-right: 8px;" {{ $user->blocked ? 'checked' : '' }}
                                                 onchange="toggleUserBlock({{ $user->id }}, this.checked)">
                                             <label for="userBlocked"
-                                                style="color: #a0aec0; cursor: pointer;">{{ __('Block User') }}</label>
+                                                style="color: var(--text-secondary); cursor: pointer;">{{ __('Block User') }}</label>
                                         </div>
                                         <div style="margin-bottom: 8px;">
-                                            <input type="checkbox" id="orderBlocked" style="margin-right: 8px;" 
-                                                {{ $user->order_blocked ? 'checked' : '' }}
+                                            <input type="checkbox" id="orderBlocked" style="margin-right: 8px;" {{ $user->order_blocked ? 'checked' : '' }}
                                                 onchange="toggleOrderBlock({{ $user->id }}, this.checked)">
                                             <label for="orderBlocked"
-                                                style="color: #a0aec0; cursor: pointer;">{{ __('Block Orders') }}</label>
+                                                style="color: var(--text-secondary); cursor: pointer;">{{ __('Block Orders') }}</label>
                                         </div>
-                                       
+
                                     </div>
 
                                 </div>
@@ -768,7 +812,7 @@
                     <div class="section-card" style="height: fit-content;">
                         <div class="section-header">
                             <h3 class="section-title">{{ __('Sessions') }}</h3>
-                            <span style="color: #a0aec0; font-size: 14px;">{{ $sessions->count() }}
+                            <span style="color: var(--text-secondary); font-size: 14px;">{{ $sessions->count() }}
                                 {{ __('Sessions') }}</span>
                         </div>
 
@@ -834,24 +878,26 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <span style="color: #a0aec0;">{{ $session->os ?? 'Unknown' }}</span>
+                                                <span
+                                                    style="color: var(--text-secondary);">{{ $session->os ?? 'Unknown' }}</span>
                                             </td>
                                             <td>
-                                                <span style="color: #a0aec0;">{{ $session->browser ?? 'Unknown' }}</span>
+                                                <span
+                                                    style="color: var(--text-secondary);">{{ $session->browser ?? 'Unknown' }}</span>
                                             </td>
                                             <td>
                                                 <div style="line-height: 1.4;">
-                                                    <div style="color: #e2e8f0;">
+                                                    <div style="color: var(--text-primary);">
                                                         {{ $session->last_activity ? $session->last_activity->format('d/M/Y') : 'N/A' }}
                                                     </div>
-                                                    <div style="color: #a0aec0; font-size: 12px;">
+                                                    <div style="color: var(--text-secondary); font-size: 12px;">
                                                         {{ $session->last_activity ? $session->last_activity->format('H:i') : '' }}
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
                                                 <span
-                                                    style="text-transform: uppercase; color: #a0aec0; font-weight: 600; font-size: 12px;">
+                                                    style="text-transform: uppercase; color: var(--text-secondary); font-weight: 600; font-size: 12px;">
                                                     {{ $session->language ?? 'en' }}
                                                 </span>
                                             </td>
@@ -866,7 +912,8 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="9" style="text-align: center; color: #a0aec0; padding: 40px;">
+                                            <td colspan="9"
+                                                style="text-align: center; color: var(--text-secondary); padding: 40px;">
                                                 <i class="fas fa-inbox"
                                                     style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
                                                 <div>{{ __('No sessions found') }}</div>
@@ -930,7 +977,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="6" style="text-align: center; color: #a0aec0;">
+                                            <td colspan="6" style="text-align: center; color: var(--text-secondary);">
                                                 {{ __('No transactions found') }}
                                             </td>
                                         </tr>
@@ -991,12 +1038,6 @@
                         }
                         throw new Error('Network response was not ok');
                     })
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        }
-                        throw new Error('Network response was not ok');
-                    })
                     .then(data => {
                         if (data.success) {
                             // Remove the row from table
@@ -1021,20 +1062,10 @@
                             showToast(data.message || '{{ __("Failed to delete session") }}', 'error');
                         }
                     })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showToast(data.message, 'success');
-                    } else {
-                        // Revert checkbox state on error
-                        checkbox.checked = !isBlocked;
-                        showToast(data.message || '{{ __("Failed to delete session") }}', 'error');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showToast('{{ __("An error occurred while deleting the session") }}', 'error');
-                });
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showToast('{{ __("An error occurred while deleting the session") }}', 'error');
+                    });
             }
         }
 
@@ -1042,21 +1073,21 @@
         function showToast(message, type = 'success') {
             const toast = document.createElement('div');
             toast.style.cssText = `
-                                    position: fixed;
-                                    top: 20px;
-                                    right: 20px;
-                                    background: ${type === 'success' ? '#28a745' : '#dc3545'};
-                                    color: white;
-                                    padding: 16px 24px;
-                                    border-radius: 8px;
-                                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                                    z-index: 10000;
-                                    font-size: 14px;
-                                    font-weight: 500;
-                                    animation: slideIn 0.3s ease;
-                                    max-width: 300px;
-                                    word-wrap: break-word;
-                                `;
+                                        position: fixed;
+                                        top: 20px;
+                                        right: 20px;
+                                        background: ${type === 'success' ? '#28a745' : '#dc3545'};
+                                        color: white;
+                                        padding: 16px 24px;
+                                        border-radius: 8px;
+                                        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                                        z-index: 10000;
+                                        font-size: 14px;
+                                        font-weight: 500;
+                                        animation: slideIn 0.3s ease;
+                                        max-width: 300px;
+                                        word-wrap: break-word;
+                                    `;
             toast.textContent = message;
             document.body.appendChild(toast);
 
@@ -1070,7 +1101,7 @@
             }, 3000);
         }
 
-   
+
 
         // Toggle user block/unblock
         function toggleUserBlock(userId, isBlocked) {
@@ -1149,15 +1180,67 @@
         // Add CSS animations
         const style = document.createElement('style');
         style.textContent = `
-                                @keyframes slideIn {
-                                    from { transform: translateX(400px); opacity: 0; }
-                                    to { transform: translateX(0); opacity: 1; }
-                                }
-                                @keyframes slideOut {
-                                    from { transform: translateX(0); opacity: 1; }
-                                    to { transform: translateX(400px); opacity: 0; }
-                                }
-                            `;
+                                    @keyframes slideIn {
+                                        from { transform: translateX(400px); opacity: 0; }
+                                        to { transform: translateX(0); opacity: 1; }
+                                    }
+                                    @keyframes slideOut {
+                                        from { transform: translateX(0); opacity: 1; }
+                                        to { transform: translateX(400px); opacity: 0; }
+                                    }
+                                `;
         document.head.appendChild(style);
+
+        // Auto-detect theme from header switcher
+        document.addEventListener('DOMContentLoaded', function () {
+            const html = document.documentElement;
+
+            // Check and apply theme
+            function applyTheme() {
+                // Get saved theme from localStorage (same as header switcher)
+                const savedTheme = localStorage.getItem('admin-theme');
+
+                // Check if dark-mode class exists on body or html
+                const hasDarkClass = document.body.classList.contains('dark-mode') ||
+                    html.classList.contains('dark-mode') ||
+                    html.classList.contains('dark-mode-instant');
+
+                // Apply light mode only if theme is explicitly light and no dark class
+                if (savedTheme === 'light' && !hasDarkClass) {
+                    html.setAttribute('data-theme', 'light');
+                } else if (savedTheme === 'dark' || hasDarkClass) {
+                    html.removeAttribute('data-theme');
+                } else {
+                    // Default to light if no preference
+                    html.setAttribute('data-theme', 'light');
+                }
+            }
+
+            // Apply theme immediately
+            applyTheme();
+
+            // Monitor for theme changes on body and html
+            const observer = new MutationObserver(applyTheme);
+
+            observer.observe(document.body, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+
+            observer.observe(html, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+
+            // Listen for localStorage changes (for theme switcher)
+            window.addEventListener('storage', function (e) {
+                if (e.key === 'admin-theme') {
+                    applyTheme();
+                }
+            });
+
+            // Also check periodically (as backup)
+            setInterval(applyTheme, 500);
+        });
     </script>
 @endsection
