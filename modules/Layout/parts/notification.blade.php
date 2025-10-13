@@ -1,12 +1,16 @@
 <?php
-if(!auth()->check()) return;
-[$notifications,$countUnread] = getNotify();
+if (!auth()->check())
+    return;
+[$notifications, $countUnread] = getNotify();
 ?>
 
-<li class="dropdown-notifications dropdown p-0">
-    <a href="#" data-toggle="dropdown" class="is_login">
-        <i class="fa fa-bell mr-2"></i>
-        <span class="badge badge-danger orange-bg notification-icon">{{$countUnread}}</span>
+<li class="dropdown-notifications dropdown p-0 mr-3">
+    <a href="#" data-toggle="dropdown" class="is_login" style="display: flex; align-items: center; gap: 8px;">
+        <span style="position: relative; display: inline-block;">
+            <i class="fa fa-bell"></i>
+            <span class="badge badge-danger orange-bg notification-icon">{{$countUnread}}</span>
+        </span>
+        <span class="nav-text">{{__('Notifications')}}</span>
         <i class="fa fa-angle-down"></i>
     </a>
     <ul class="dropdown-menu overflow-auto notify-items dropdown-container dropdown-menu-right dropdown-large">
@@ -14,10 +18,11 @@ if(!auth()->check()) return;
             <div class="dropdown-toolbar-actions">
                 <a href="#" class="markAllAsRead">{{__('Mark all as read')}}</a>
             </div>
-            <h3 class="dropdown-toolbar-title">{{__('Notifications')}} (<span class="notif-count">{{$countUnread}}</span>)</h3>
+            <h3 class="dropdown-toolbar-title">{{__('Notifications')}} (<span
+                    class="notif-count">{{$countUnread}}</span>)</h3>
         </div>
         <ul class="dropdown-list-items p-0">
-            @if(count($notifications)> 0)
+            @if(count($notifications) > 0)
                 @foreach($notifications as $oneNotification)
                     @php
                         $active = $class = '';
@@ -34,7 +39,7 @@ if(!auth()->check()) return;
                         $avatar = @$usingData->avatar;
                         $link = @$usingData->link;
 
-                        if(empty($oneNotification->read_at)){
+                        if (empty($oneNotification->read_at)) {
                             $class = 'markAsRead';
                             $active = 'active';
                         }

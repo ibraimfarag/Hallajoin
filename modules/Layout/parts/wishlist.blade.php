@@ -155,10 +155,13 @@
 
     </style>
 
-    <li class="dropdown-notifications dropdown p-0">
-        <a href="#" data-toggle="dropdown" class="is_login">
-            <i class="fa fa-heart mr-2"></i>
-            <span class="badge badge-danger orange-bg notification-icon">{{$countUnread}}</span>
+    <li class="dropdown-notifications dropdown p-0  mr-3">
+        <a href="#" data-toggle="dropdown" class="is_login" style="display: flex; align-items: center; gap: 8px;">
+            <span style="position: relative; display: inline-block;">
+                <i class="fa fa-heart"></i>
+                <span class="badge badge-danger orange-bg notification-icon">{{$countUnread}}</span>
+            </span>
+            <span class="nav-text">{{__('Wishlist')}}</span>
             <i class="fa fa-angle-down"></i>
         </a>
         <ul class="dropdown-menu editmenu overflow-auto notify-items dropdown-container dropdown-menu-right dropdown-large">

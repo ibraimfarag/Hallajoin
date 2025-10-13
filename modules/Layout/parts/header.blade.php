@@ -1,3 +1,35 @@
+<style>
+    /* Navigation text styling */
+    .topbar-items .nav-text {
+        font-size: 14px;
+        font-weight: 500;
+        color: inherit;
+        white-space: nowrap;
+    }
+    
+    .topbar-items .is_login {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .sell-on-dojoin a {
+        color: inherit;
+        text-decoration: none;
+    }
+    
+    .sell-on-dojoin a:hover {
+        color: #007bff;
+    }
+    
+    /* Responsive: Hide text on smaller screens */
+    @media (max-width: 991px) {
+        .topbar-items .nav-text {
+            display: none;
+        }
+    }
+</style>
+
 <div class="bravo_header" id="bravo-header">
     <div class="{{ $container_class ?? 'container' }}">
         <div class="content">
@@ -71,7 +103,10 @@
                             @include('Layout::parts.wishlist')
                             @include('Layout::parts.notification')
                             @include('Layout::parts.cart')
-
+                            
+                            {{-- @if(is_vendor() || Auth::user()->hasPermission('dashboard_vendor_access'))
+                         
+                            @endif --}}
 
                             <li class="login-item dropdown ml-4">
                                 <a href="#" data-toggle="dropdown" class="login">{{__("Hi, :name",['name'=>Auth::user()->getDisplayName()])}}

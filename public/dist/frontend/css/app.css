@@ -8272,7 +8272,7 @@ ol, ul {
 }
 
 .bravo_wrap .bravo_header .content {
-    align-items: flex-end;
+    align-items: baseline;
     display: flex;
     margin-bottom: 10px;
 }
@@ -9185,7 +9185,8 @@ ol, ul {
 }
 
 .search-input {
-    width: 600px;
+    /* width: 600px; */
+    width: 380px;
     /* Adjust width as needed */
     padding: 5px 10px;
     border: 0px solid #cccccc4d;

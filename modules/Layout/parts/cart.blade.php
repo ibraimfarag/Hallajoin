@@ -167,12 +167,14 @@
 </style>
 <li class="dropdown-cart dropdown p-0" style="position: relative;">
     <a href="#" id="cartDropdownToggle" data-toggle="dropdown" class="is_login"
-        style="position: relative; display: flex; align-items: center;" aria-haspopup="true" aria-expanded="false">
+        style="position: relative; display: flex; align-items: center; gap: 8px;" aria-haspopup="true"
+        aria-expanded="false">
         <span style="position: relative; display: inline-block;">
             <i class="fa fa-shopping-cart"></i>
             <span class="badge badge-danger orange-bg cart-icon-badge" id="cart-icon-count"
                 style="top: -8px; right: -8px;">{{ count($cartItems) }}</span>
         </span>
+        <span class="nav-text">{{__('Cart')}}</span>
         <i class="fa fa-angle-down"></i>
     </a>
     <ul class="cart-dropdown-menu dropdown-menu custom-cart-menu overflow-auto cart-items-list dropdown-container dropdown-menu-right dropdown-large"
