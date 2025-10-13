@@ -24,13 +24,15 @@ class UserStatus
                     Auth::guard()->logout();
                     $request->session()->invalidate();
 
-                    return redirect('login')->with('error', 'Your account has been blocked');
+                    return redirect('login')->with('error', 'Oops! Your account is currently blocked.
+Please reach out to our support team to resolve this issue.');
                     break;
                 case 'deleted':
                     Auth::guard()->logout();
                     $request->session()->invalidate();
 
-                    return redirect('login')->with('error', 'Your account has been blocked');
+                    return redirect('login')->with('error', 'Oops! Your account is currently blocked.
+Please reach out to our support team to resolve this issue.');
             }
 
             // Check blocked field (additional check)
@@ -38,7 +40,8 @@ class UserStatus
                 Auth::guard()->logout();
                 $request->session()->invalidate();
 
-                return redirect('login')->with('error', 'Your account has been blocked');
+                return redirect('login')->with('error', 'Oops! Your account is currently blocked.
+Please reach out to our support team to resolve this issue.');
             }
         }
 
