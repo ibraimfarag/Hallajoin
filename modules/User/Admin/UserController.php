@@ -34,13 +34,13 @@ class UserController extends AdminController
         if ($request->filled('search')) {
             $search = $request->get('search');
             $listUser->where(function ($query) use ($search) {
-                $query->where('first_name', 'LIKE', '%'.$search.'%')
-                    ->orWhere('business_name', 'LIKE', '%'.$search.'%')
+                $query->where('first_name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('business_name', 'LIKE', '%' . $search . '%')
                     ->orWhere('id', $search)
-                    ->orWhere('phone', 'LIKE', '%'.$search.'%')
-                    ->orWhere('email', 'LIKE', '%'.$search.'%')
-                    ->orWhere('last_name', 'LIKE', '%'.$search.'%')
-                    ->orWhere(DB::raw("CONCAT(first_name,' ',last_name)"), 'LIKE', '%'.$search.'%');
+                    ->orWhere('phone', 'LIKE', '%' . $search . '%')
+                    ->orWhere('email', 'LIKE', '%' . $search . '%')
+                    ->orWhere('last_name', 'LIKE', '%' . $search . '%')
+                    ->orWhere(DB::raw("CONCAT(first_name,' ',last_name)"), 'LIKE', '%' . $search . '%');
             });
         }
 
@@ -78,7 +78,7 @@ class UserController extends AdminController
         }
 
         // Checkbox filters
-        if ($request->has('any_role') && ! $request->filled('role')) {
+        if ($request->has('any_role') && !$request->filled('role')) {
             // Show users with any role (has at least one role)
             $listUser->whereNotNull('role_id');
         }
@@ -128,15 +128,15 @@ class UserController extends AdminController
 
         // Support legacy search parameter
         $username = $request->query('s');
-        if (! empty($username)) {
+        if (!empty($username)) {
             $listUser->where(function ($query) use ($username) {
-                $query->where('first_name', 'LIKE', '%'.$username.'%');
-                $query->orWhere('business_name', 'LIKE', '%'.$username.'%');
+                $query->where('first_name', 'LIKE', '%' . $username . '%');
+                $query->orWhere('business_name', 'LIKE', '%' . $username . '%');
                 $query->orWhere('id', $username);
                 $query->orWhere('phone', $username);
-                $query->orWhere('email', 'LIKE', '%'.$username.'%');
-                $query->orWhere('last_name', 'LIKE', '%'.$username.'%');
-                $query->orWhere(DB::raw("CONCAT(first_name,' ',last_name)"), 'LIKE', '%'.$username.'%');
+                $query->orWhere('email', 'LIKE', '%' . $username . '%');
+                $query->orWhere('last_name', 'LIKE', '%' . $username . '%');
+                $query->orWhere(DB::raw("CONCAT(first_name,' ',last_name)"), 'LIKE', '%' . $username . '%');
             });
         }
 
@@ -182,7 +182,7 @@ class UserController extends AdminController
         if (empty($row)) {
             return redirect(route('user.admin.index'));
         }
-        if ($row->id != Auth::user()->id and ! $this->checkPermission('user_update', false)) {
+        if ($row->id != Auth::user()->id and !$this->checkPermission('user_update', false)) {
             abort(403);
         }
         $data = [
@@ -214,7 +214,7 @@ class UserController extends AdminController
         if (empty($row)) {
             return redirect(route('user.admin.index'));
         }
-        if ($row->id != Auth::user()->id and ! $this->checkPermission('user_update', false)) {
+        if ($row->id != Auth::user()->id and !$this->checkPermission('user_update', false)) {
             abort(403);
         }
 
@@ -228,14 +228,14 @@ class UserController extends AdminController
         }
         $rules = [];
         $urow = User::find($id);
-        if ($urow->id != Auth::user()->id and ! $this->checkPermission('user_update', false)) {
+        if ($urow->id != Auth::user()->id and !$this->checkPermission('user_update', false)) {
             abort(403);
         }
         $request->validate([
             'password' => 'required|min:6|max:255|confirmed',
         ]);
         $password = $request->input('password');
-        if ($urow->id != Auth::user()->id and ! $this->checkPermission('user_update', false)) {
+        if ($urow->id != Auth::user()->id and !$this->checkPermission('user_update', false)) {
             if ($password) {
                 if ($urow->id != Auth::user()->id) {
                     $rules['old_password'] = 'required';
@@ -244,7 +244,7 @@ class UserController extends AdminController
             }
             $this->validate($request, $rules);
             if ($password) {
-                if (! (Hash::check($request->input('old_password'), $urow->password))) {
+                if (!(Hash::check($request->input('old_password'), $urow->password))) {
                     // The Old passwords matches
                     return redirect()->back()->with('error', __('Your current password does not matches with the password you provided. Please try again.'));
                 }
@@ -274,7 +274,7 @@ class UserController extends AdminController
             if (empty($row)) {
                 abort(404);
             }
-            if ($row->id != Auth::user()->id and ! $this->checkPermission('user_update', false)) {
+            if ($row->id != Auth::user()->id and !$this->checkPermission('user_update', false)) {
                 abort(403);
             }
 
@@ -324,7 +324,7 @@ class UserController extends AdminController
         ];
         $row->role_id = $request->input('role_id');
         if ($request->input('is_email_verified')) {
-            if (! $row->email_verified_at) {
+            if (!$row->email_verified_at) {
                 $row->email_verified_at = date('Y-m-d H:i:s');
             }
         } else {
@@ -336,7 +336,7 @@ class UserController extends AdminController
         // Block all service when user is block
         if ($row->status == 'blocked') {
             $services = get_bookable_services();
-            if (! empty($services)) {
+            if (!empty($services)) {
                 foreach ($services as $service) {
                     $service::query()->where('create_user', $row->id)->update(['status' => 'draft']);
                 }
@@ -356,7 +356,7 @@ class UserController extends AdminController
             if (is_array($selected)) {
                 $res = User::whereIn('id', $selected)->take(50)->get();
                 $items = [];
-                if (! empty($res)) {
+                if (!empty($res)) {
                     foreach ($res as $item) {
                         $items[] = [
                             'id' => $item->id,
@@ -370,7 +370,7 @@ class UserController extends AdminController
                 ]);
             } else {
                 $item = User::find($selected);
-                if (! empty($item)) {
+                if (!empty($item)) {
                     return $this->sendSuccess([
                         'text' => $item->getDisplayName() ? $item->getDisplayName() : $item->email,
                     ]);
@@ -395,12 +395,12 @@ class UserController extends AdminController
 
         if ($q) {
             $query->where(function ($query) use ($q) {
-                $query->where('first_name', 'like', '%'.$q.'%')->orWhere('last_name', 'like', '%'.$q.'%')->orWhere('email', 'like', '%'.$q.'%')->orWhere('id', $q)->orWhere('phone', 'like', '%'.$q.'%');
+                $query->where('first_name', 'like', '%' . $q . '%')->orWhere('last_name', 'like', '%' . $q . '%')->orWhere('email', 'like', '%' . $q . '%')->orWhere('id', $q)->orWhere('phone', 'like', '%' . $q . '%');
             });
         }
         $res = $query->orderBy('id', 'desc')->orderBy('first_name', 'asc')->limit(100)->get();
         $data = [];
-        if (! empty($res)) {
+        if (!empty($res)) {
             if ($request->query('user_type') == 'vendor') {
                 // for only vendor
                 foreach ($res as $item) {
@@ -456,8 +456,8 @@ class UserController extends AdminController
                     continue;
                 }
                 $query = User::where('id', $id)->first();
-                if (! empty($query)) {
-                    $query->email .= '_d_'.uniqid().rand(0, 99999);
+                if (!empty($query)) {
+                    $query->email .= '_d_' . uniqid() . rand(0, 99999);
                     $query->save();
                     $query->delete();
                 }
@@ -500,7 +500,7 @@ class UserController extends AdminController
             case 'delete':
                 foreach ($ids as $id) {
                     $query = VendorRequest::find($id);
-                    if (! empty($query)) {
+                    if (!empty($query)) {
                         $query->delete();
                     }
                 }
@@ -510,10 +510,10 @@ class UserController extends AdminController
             default:
                 foreach ($ids as $id) {
                     $vendorRequest = VendorRequest::find($id);
-                    if (! empty($vendorRequest)) {
+                    if (!empty($vendorRequest)) {
                         $vendorRequest->update(['status' => $action, 'approved_time' => now(), 'approved_by' => Auth::id()]);
                         $user = User::find($vendorRequest->user_id);
-                        if (! empty($user)) {
+                        if (!empty($user)) {
                             $user->assignRole($vendorRequest->role_request);
                         }
                         event(new VendorApproved($user, $vendorRequest));
@@ -533,10 +533,10 @@ class UserController extends AdminController
         }
 
         $vendorRequest = VendorRequest::find($id);
-        if (! empty($vendorRequest)) {
+        if (!empty($vendorRequest)) {
             $vendorRequest->update(['status' => 'approved', 'approved_time' => now(), 'approved_by' => Auth::id()]);
             $user = User::find($vendorRequest->user_id);
-            if (! empty($user)) {
+            if (!empty($user)) {
                 $user->assignRole($vendorRequest->role_request);
             }
 
@@ -550,13 +550,13 @@ class UserController extends AdminController
     {
         $this->checkPermission('user_view');
 
-        return (new UserExport)->download('user-'.date('M-d-Y').'.xlsx');
+        return (new UserExport)->download('user-' . date('M-d-Y') . '.xlsx');
     }
 
     public function verifyEmail(Request $request, $id)
     {
         $user = User::find($id);
-        if (! empty($user)) {
+        if (!empty($user)) {
             $user->email_verified_at = now();
             $user->save();
 
@@ -681,7 +681,7 @@ class UserController extends AdminController
             // Find the session
             $session = \App\Models\UserSession::find($id);
 
-            if (! $session) {
+            if (!$session) {
                 return response()->json([
                     'success' => false,
                     'message' => __('Session not found'),
@@ -697,7 +697,7 @@ class UserController extends AdminController
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Error deleting user session: '.$e->getMessage());
+            Log::error('Error deleting user session: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -725,7 +725,7 @@ class UserController extends AdminController
             // Find the user
             $user = User::find($id);
 
-            if (! $user) {
+            if (!$user) {
                 return response()->json([
                     'success' => false,
                     'message' => __('User not found'),
@@ -746,7 +746,7 @@ class UserController extends AdminController
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Error toggling user block: '.$e->getMessage());
+            Log::error('Error toggling user block: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -774,7 +774,7 @@ class UserController extends AdminController
             // Find the user
             $user = User::find($id);
 
-            if (! $user) {
+            if (!$user) {
                 return response()->json([
                     'success' => false,
                     'message' => __('User not found'),
@@ -795,7 +795,7 @@ class UserController extends AdminController
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Error toggling user order block: '.$e->getMessage());
+            Log::error('Error toggling user order block: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
