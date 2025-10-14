@@ -1,5 +1,6 @@
 <?php
-use \Illuminate\Support\Facades\Route;
+
+use Illuminate\Support\Facades\Route;
 
 Route::get('/getForSelect2', 'UserController@getForSelect2')->name('user.admin.getForSelect2');
 Route::get('/', 'UserController@index')->name('user.admin.index');
@@ -11,11 +12,11 @@ Route::post('/bulkEdit', 'UserController@bulkEdit')->name('user.admin.bulkEdit')
 Route::get('/password/{id}', 'UserController@password')->name('user.admin.password');
 Route::post('/changepass/{id}', 'UserController@changepass')->name('user.admin.changepass');
 Route::get('/verify-email/{id}', 'UserController@verifyEmail')->name('user.admin.verifyEmail');
+Route::post('/update-role/{id}', 'UserController@updateRole')->name('admin.user.update.role');
 
 Route::get('/userUpgradeRequest', 'UserController@userUpgradeRequest')->name('user.admin.upgrade');
 Route::get('/upgrade/{id}', 'UserController@userUpgradeRequestApprovedId')->name('user.admin.upgradeId');
 Route::post('/userUpgradeRequestApproved', 'UserController@userUpgradeRequestApproved')->name('user.admin.userUpgradeRequestApproved');
-
 
 Route::group(['prefix' => 'role'], function () {
     Route::get('/', 'RoleController@index')->name('user.admin.role.index');
@@ -37,7 +38,6 @@ Route::group(['prefix' => 'verification'], function () {
     Route::post('/bulkEdit', 'VerificationController@bulkEdit')->name('user.admin.verification.bulkEdit');
 });
 
-
 Route::group(['prefix' => 'wallet'], function () {
     Route::get('/add-credit/{id}', 'WalletController@addCredit')->name('user.admin.wallet.addCredit');
     Route::post('/add-credit/{id}', 'WalletController@store')->name('user.admin.wallet.store');
@@ -45,7 +45,6 @@ Route::group(['prefix' => 'wallet'], function () {
     Route::post('/reportBulkEdit', 'WalletController@reportBulkEdit')->name('user.admin.wallet.reportBulkEdit');
 
 });
-
 
 Route::group(['prefix' => 'subscriber'], function () {
     Route::get('/', 'SubscriberController@index')->name('user.admin.subscriber.index');
@@ -56,7 +55,6 @@ Route::group(['prefix' => 'subscriber'], function () {
 });
 
 Route::get('/export', 'UserController@export')->name('user.admin.export');
-
 
 Route::group(['prefix' => 'plan'], function () {
     Route::get('/', 'PlanController@index')->name('user.admin.plan.index');

@@ -1,41 +1,48 @@
 <?php
+
 namespace Modules\Booking\Models;
 
 use App\BaseModel;
+use App\User;
 use Eluceo\iCal\Component\Calendar;
 use Eluceo\iCal\Component\Event;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Mockery\Exception;
 use Modules\Booking\Emails\NewBookingEmail;
 use Modules\Booking\Emails\StatusUpdatedEmail;
 use Modules\Booking\Events\BookingUpdatedEvent;
 use Modules\Booking\Traits\HasPassenger;
 use Modules\Coupon\Models\CouponBookings;
 use Modules\Hotel\Models\HotelRoomBooking;
-use Modules\Space\Models\Space;
-use Modules\Tour\Models\Tour;
-use App\User;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\User\Models\Wallet\Transaction;
-use Modules\Booking\Models\BookingTimeSlots;
 
 class Booking extends BaseModel
 {
-    use SoftDeletes;
     use HasPassenger;
+    use SoftDeletes;
+
     protected $table = 'bravo_bookings';
+
     protected $cachedMeta = [];
-    //protected $cachedMetaArr = [];
+
+    // protected $cachedMetaArr = [];
     const DRAFT = 'draft'; // New booking, before payment processing
+
     const UNPAID = 'unpaid'; // Require payment
+
     const PROCESSING = 'processing'; // like offline - payment
+
     const CONFIRMED = 'confirmed'; // after processing -> confirmed (for offline payment)
+
     const COMPLETED = 'completed'; //
+
     const CANCELLED = 'cancelled';
+
     const PAID = 'paid'; //
+
     const PARTIAL_PAYMENT = 'partial_payment'; //
 
     protected $casts = [
@@ -46,7 +53,7 @@ class Booking extends BaseModel
     public static $notAcceptedStatus = [
         'draft',
         'cancelled',
-        'unpaid'
+        'unpaid',
     ];
 
     public function getGatewayObjAttribute()
@@ -62,23 +69,23 @@ class Booking extends BaseModel
     public function getStatusClassAttribute()
     {
         switch ($this->status) {
-            case "processing":
-                return "primary";
+            case 'processing':
+                return 'primary';
                 break;
-            case "completed":
-                return "success";
+            case 'completed':
+                return 'success';
                 break;
-            case "confirmed":
-                return "info";
+            case 'confirmed':
+                return 'info';
                 break;
-            case "cancelled":
-                return "danger";
+            case 'cancelled':
+                return 'danger';
                 break;
-            case "paid":
-                return "info";
+            case 'paid':
+                return 'info';
                 break;
-            case "partial_payment":
-                return "warning";
+            case 'partial_payment':
+                return 'warning';
                 break;
         }
     }
@@ -86,9 +93,10 @@ class Booking extends BaseModel
     public function service()
     {
         $all = get_bookable_services();
-        if ($this->object_model and !empty($all[$this->object_model])) {
+        if ($this->object_model and ! empty($all[$this->object_model])) {
             return $this->hasOne($all[$this->object_model], 'id', 'object_id');
         }
+
         return null;
     }
 
@@ -97,22 +105,34 @@ class Booking extends BaseModel
         return $this->hasOne(Payment::class, 'id', 'payment_id');
     }
 
+    public function notes()
+    {
+        return $this->hasMany(BookingNote::class, 'booking_id')->orderBy('created_at', 'desc');
+    }
+
+    public function salesman()
+    {
+        return $this->belongsTo(\App\User::class, 'salesman_id');
+    }
+
     public function getCheckoutUrl()
     {
         $is_api = request()->segment(1) == 'api';
-        return url(($is_api ? 'api/' : '') . app_get_locale(false, false, "/") . config('booking.booking_route_prefix') . '/' . $this->code . '/checkout');
+
+        return url(($is_api ? 'api/' : '').app_get_locale(false, false, '/').config('booking.booking_route_prefix').'/'.$this->code.'/checkout');
     }
 
     public function getDetailUrl($full = true)
     {
         $is_api = request()->segment(1) == 'api';
-        if (!$full) {
-            return ($is_api ? 'api/' : '') . app_get_locale(false, false, "/") . config('booking.booking_route_prefix') . '/' . $this->code;
+        if (! $full) {
+            return ($is_api ? 'api/' : '').app_get_locale(false, false, '/').config('booking.booking_route_prefix').'/'.$this->code;
         }
         if ($is_api) {
             return route('booking.thankyou', ['code' => $this->code, 'token' => request()->input('token')]);
         }
-        return url(($is_api ? 'api/' : '') . app_get_locale(false, false, "/") . config('booking.booking_route_prefix') . '/' . $this->code);
+
+        return url(($is_api ? 'api/' : '').app_get_locale(false, false, '/').config('booking.booking_route_prefix').'/'.$this->code);
     }
 
     public function getAllMeta()
@@ -120,61 +140,66 @@ class Booking extends BaseModel
         $meta = DB::table('bravo_booking_meta')->select(['name', 'val'])->where([
             'booking_id' => $this->id,
         ])->get();
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             return $meta;
         }
+
         return false;
     }
 
     public function getMeta($key, $default = '')
     {
-        //if(isset($this->cachedMeta[$key])) return $this->cachedMeta[$key];
+        // if(isset($this->cachedMeta[$key])) return $this->cachedMeta[$key];
         $val = DB::table('bravo_booking_meta')->where([
             'booking_id' => $this->id,
-            'name' => $key
+            'name' => $key,
         ])->first();
-        if (!empty($val)) {
-            //$this->cachedMeta[$key]  = $val->val;
+        if (! empty($val)) {
+            // $this->cachedMeta[$key]  = $val->val;
             return $val->val;
         }
+
         return $default;
     }
 
     public function getJsonMeta($key, $default = [])
     {
         $meta = $this->getMeta($key, $default);
-        if (empty($meta))
+        if (empty($meta)) {
             return false;
+        }
+
         return json_decode($meta, true);
     }
 
     public function addMeta($key, $val, $multiple = false)
     {
 
-        if (is_object($val) or is_array($val))
+        if (is_object($val) or is_array($val)) {
             $val = json_encode($val);
+        }
         if ($multiple) {
             return DB::table('bravo_booking_meta')->insert([
                 'name' => $key,
                 'val' => $val,
-                'booking_id' => $this->id
+                'booking_id' => $this->id,
             ]);
         } else {
             $old = DB::table('bravo_booking_meta')->where([
                 'booking_id' => $this->id,
-                'name' => $key
+                'name' => $key,
             ])->first();
             if ($old) {
 
                 return DB::table('bravo_booking_meta')->where('id', $old->id)->update([
-                    'val' => $val
+                    'val' => $val,
                 ]);
 
             } else {
                 return DB::table('bravo_booking_meta')->insert([
                     'name' => $key,
                     'val' => $val,
-                    'booking_id' => $this->id
+                    'booking_id' => $this->id,
                 ]);
             }
         }
@@ -182,7 +207,7 @@ class Booking extends BaseModel
 
     public function batchInsertMeta($metaArrs = [])
     {
-        if (!empty($metaArrs)) {
+        if (! empty($metaArrs)) {
             foreach ($metaArrs as $key => $val) {
                 $this->addMeta($key, $val, true);
             }
@@ -215,11 +240,13 @@ class Booking extends BaseModel
 
     public function save(array $options = [])
     {
-        if (empty($this->code))
+        if (empty($this->code)) {
             $this->code = $this->generateCode();
+        }
 
-        if (!empty($this->coupon_amount))
+        if (! empty($this->coupon_amount)) {
             $this->updateStatusCoupons();
+        }
 
         return parent::save($options); // TODO: Change the autogenerated stub
     }
@@ -266,9 +293,9 @@ class Booking extends BaseModel
             // To Customer
             Mail::to($this->email)->send(new NewBookingEmail($this, 'customer'));
 
-        } catch (\Exception | \Swift_TransportException $exception) {
+        } catch (\Exception|\Swift_TransportException $exception) {
 
-            Log::warning('sendNewBookingEmails: ' . $exception->getMessage());
+            Log::warning('sendNewBookingEmails: '.$exception->getMessage());
         }
     }
 
@@ -291,12 +318,11 @@ class Booking extends BaseModel
             // To Customer
             Mail::to($this->email)->send(new StatusUpdatedEmail($this, 'customer'));
 
-
             app()->setLocale($old);
 
         } catch (\Exception $e) {
 
-            Log::warning('sendStatusUpdatedEmails: ' . $e->getMessage());
+            Log::warning('sendStatusUpdatedEmails: '.$e->getMessage());
 
         }
 
@@ -310,15 +336,16 @@ class Booking extends BaseModel
      */
     public function vendor()
     {
-        return $this->hasOne(User::class, "id", 'vendor_id');
+        return $this->hasOne(User::class, 'id', 'vendor_id');
     }
 
     public static function getRecentBookings($limit = 10, $vendor_id = false)
     {
         $q = parent::where('status', '!=', 'draft');
-        if (!empty($vendor_id)) {
+        if (! empty($vendor_id)) {
             $q->where('vendor_id', $vendor_id);
         }
+
         return $q->orderBy('id', 'desc')->limit($limit)->get();
     }
 
@@ -330,7 +357,7 @@ class Booking extends BaseModel
         $total_booking = parent::whereNotIn('status', static::$notAcceptedStatus)->count('id');
         $total_service = 0;
         $services = get_bookable_services();
-        if (!empty($services)) {
+        if (! empty($services)) {
             foreach ($services as $service) {
                 $total_service += $service::where('status', 'publish')->count('id');
             }
@@ -338,41 +365,42 @@ class Booking extends BaseModel
         $res[] = [
             'size' => 6,
             'size_md' => 3,
-            'title' => __("Revenue"),
+            'title' => __('Revenue'),
             'amount' => format_money_main($total_data->total_price),
-            'desc' => __("Total revenue"),
+            'desc' => __('Total revenue'),
             'class' => 'purple',
-            'icon' => 'icon ion-ios-cart'
+            'icon' => 'icon ion-ios-cart',
         ];
         $res[] = [
             'size' => 6,
             'size_md' => 3,
-            'title' => __("Earning"),
+            'title' => __('Earning'),
             'amount' => format_money_main($total_data->total_earning),
-            'desc' => __("Total Earning"),
+            'desc' => __('Total Earning'),
             'class' => 'pink',
-            'icon' => 'icon ion-ios-gift'
+            'icon' => 'icon ion-ios-gift',
         ];
         $res[] = [
 
             'size' => 6,
             'size_md' => 3,
-            'title' => __("Bookings"),
+            'title' => __('Bookings'),
             'amount' => $total_booking,
-            'desc' => __("Total bookings"),
+            'desc' => __('Total bookings'),
             'class' => 'info',
-            'icon' => 'icon ion-ios-pricetags'
+            'icon' => 'icon ion-ios-pricetags',
         ];
         $res[] = [
 
             'size' => 6,
             'size_md' => 3,
-            'title' => __("Services"),
+            'title' => __('Services'),
             'amount' => $total_service,
-            'desc' => __("Total bookable services"),
+            'desc' => __('Total bookable services'),
             'class' => 'success',
-            'icon' => 'icon ion-ios-flash'
+            'icon' => 'icon ion-ios-flash',
         ];
+
         return $res;
     }
 
@@ -382,38 +410,38 @@ class Booking extends BaseModel
             'labels' => [],
             'datasets' => [
                 [
-                    'label' => __("Total Revenue"),
+                    'label' => __('Total Revenue'),
                     'data' => [],
                     'backgroundColor' => '#8892d6',
                     'stack' => 'group-total',
                 ],
                 [
-                    'label' => __("Total Earning"),
+                    'label' => __('Total Earning'),
                     'data' => [],
                     'backgroundColor' => '#F06292',
                     'stack' => 'group-extra',
-                ]
-            ]
+                ],
+            ],
         ];
         $sql_raw[] = 'sum(`total`) as total_price';
         $sql_raw[] = 'sum( `total` - `total_before_fees` + `commission` - `vendor_service_fee_amount` ) AS total_earning';
         if (($to - $from) / DAY_IN_SECONDS > 90) {
-            $year = date("Y", $from);
+            $year = date('Y', $from);
             // Report By Month
             for ($month = 1; $month <= 12; $month++) {
-                $day_last_month = date("t", strtotime($year . "-" . $month . "-01"));
-                $dataBooking = parent::selectRaw(implode(",", $sql_raw))->whereBetween('created_at', [
-                    $year . '-' . $month . '-01 00:00:00',
-                    $year . '-' . $month . '-' . $day_last_month . ' 23:59:59'
+                $day_last_month = date('t', strtotime($year.'-'.$month.'-01'));
+                $dataBooking = parent::selectRaw(implode(',', $sql_raw))->whereBetween('created_at', [
+                    $year.'-'.$month.'-01 00:00:00',
+                    $year.'-'.$month.'-'.$day_last_month.' 23:59:59',
                 ])->whereNotIn('status', static::$notAcceptedStatus);
-                if (!empty($customer_id)) {
+                if (! empty($customer_id)) {
                     $dataBooking = $dataBooking->where('customer_id', $customer_id);
                 }
-                if (!empty($vendor_id)) {
+                if (! empty($vendor_id)) {
                     $dataBooking = $dataBooking->where('vendor_id', $vendor_id);
                 }
                 $dataBooking = $dataBooking->first();
-                $data['labels'][] = date("F", strtotime($year . "-" . $month . "-01"));
+                $data['labels'][] = date('F', strtotime($year.'-'.$month.'-01'));
                 $data['datasets'][0]['data'][] = $dataBooking->total_price ?? 0;
                 $data['datasets'][1]['data'][] = $dataBooking->total_earning ?? 0;
             }
@@ -421,14 +449,14 @@ class Booking extends BaseModel
             // Report By Hours
 
             for ($i = strtotime(date('Y-m-d', $from)); $i <= strtotime(date('Y-m-d 23:59:59', $to)); $i += HOUR_IN_SECONDS) {
-                $dataBooking = parent::selectRaw(implode(",", $sql_raw))->whereBetween('created_at', [
+                $dataBooking = parent::selectRaw(implode(',', $sql_raw))->whereBetween('created_at', [
                     date('Y-m-d H:i:s', $i),
                     date('Y-m-d H:i:s', $i + HOUR_IN_SECONDS - 1),
                 ])->whereNotIn('status', static::$notAcceptedStatus);
-                if (!empty($customer_id)) {
+                if (! empty($customer_id)) {
                     $dataBooking = $dataBooking->where('customer_id', $customer_id);
                 }
-                if (!empty($vendor_id)) {
+                if (! empty($vendor_id)) {
                     $dataBooking = $dataBooking->where('vendor_id', $vendor_id);
                 }
                 $dataBooking = $dataBooking->first();
@@ -440,14 +468,14 @@ class Booking extends BaseModel
             // Report By Day
             $period = periodDate(date('Y-m-d', $from), date('Y-m-d 23:59:59', $to));
             foreach ($period as $dt) {
-                $dataBooking = parent::selectRaw(implode(",", $sql_raw))->whereBetween('created_at', [
+                $dataBooking = parent::selectRaw(implode(',', $sql_raw))->whereBetween('created_at', [
                     $dt->format('Y-m-d 00:00:00'),
                     $dt->format('Y-m-d 23:59:59'),
                 ])->whereNotIn('status', static::$notAcceptedStatus);
-                if (!empty($customer_id)) {
+                if (! empty($customer_id)) {
                     $dataBooking = $dataBooking->where('customer_id', $customer_id);
                 }
-                if (!empty($vendor_id)) {
+                if (! empty($vendor_id)) {
                     $dataBooking = $dataBooking->where('vendor_id', $vendor_id);
                 }
                 $dataBooking = $dataBooking->first();
@@ -456,26 +484,28 @@ class Booking extends BaseModel
                 $data['datasets'][1]['data'][] = $dataBooking->total_earning ?? 0;
             }
         }
+
         return $data;
     }
 
     public static function getBookingHistory($booking_status = false, $customer_id = false, $vendor_id = false, $service = false)
     {
         $list_booking = parent::query()->orderBy('id', 'desc');
-        if (!empty($booking_status)) {
-            $list_booking->where("status", $booking_status);
+        if (! empty($booking_status)) {
+            $list_booking->where('status', $booking_status);
         }
-        if (!empty($customer_id)) {
-            $list_booking->where("customer_id", $customer_id);
+        if (! empty($customer_id)) {
+            $list_booking->where('customer_id', $customer_id);
         }
-        if (!empty($vendor_id)) {
-            $list_booking->where("vendor_id", $vendor_id);
+        if (! empty($vendor_id)) {
+            $list_booking->where('vendor_id', $vendor_id);
         }
-        if (!empty($service)) {
-            $list_booking->where("object_model", $service);
+        if (! empty($service)) {
+            $list_booking->where('object_model', $service);
         }
         $list_booking->where('status', '!=', 'draft');
         $list_booking->whereIn('object_model', array_keys(get_bookable_services()));
+
         return $list_booking->paginate(10);
     }
 
@@ -483,43 +513,44 @@ class Booking extends BaseModel
     {
 
         $res = [];
-        $total_money = parent::selectRaw('sum( `total_before_fees` - `commission` + `vendor_service_fee_amount` ) AS total_price , sum( CASE WHEN `status` = "completed" THEN `total_before_fees` - `commission` + `vendor_service_fee_amount` ELSE NULL END ) AS total_earning')->whereNotIn('status', static::$notAcceptedStatus)->where("vendor_id", $user_id)->first();
-        $total_booking = parent::whereNotIn('status', static::$notAcceptedStatus)->where("vendor_id", $user_id)->count('id');
+        $total_money = parent::selectRaw('sum( `total_before_fees` - `commission` + `vendor_service_fee_amount` ) AS total_price , sum( CASE WHEN `status` = "completed" THEN `total_before_fees` - `commission` + `vendor_service_fee_amount` ELSE NULL END ) AS total_earning')->whereNotIn('status', static::$notAcceptedStatus)->where('vendor_id', $user_id)->first();
+        $total_booking = parent::whereNotIn('status', static::$notAcceptedStatus)->where('vendor_id', $user_id)->count('id');
         $total_service = 0;
         $services = get_bookable_services();
-        if (!empty($services)) {
+        if (! empty($services)) {
             foreach ($services as $service) {
-                $total_service += $service::where('status', 'publish')->where("create_user", $user_id)->count('id');
+                $total_service += $service::where('status', 'publish')->where('create_user', $user_id)->count('id');
             }
         }
         $res[] = [
-            'title' => __("Pending"),
+            'title' => __('Pending'),
             'amount' => format_money_main($total_money->total_price - $total_money->total_earning),
-            'desc' => __("Total pending"),
+            'desc' => __('Total pending'),
             'class' => 'purple',
-            'icon' => 'icon ion-ios-cart'
+            'icon' => 'icon ion-ios-cart',
         ];
         $res[] = [
-            'title' => __("Earnings"),
+            'title' => __('Earnings'),
             'amount' => format_money_main($total_money->total_earning ?? 0),
-            'desc' => __("Total earnings"),
+            'desc' => __('Total earnings'),
             'class' => 'info',
-            'icon' => 'icon ion-ios-gift'
+            'icon' => 'icon ion-ios-gift',
         ];
         $res[] = [
-            'title' => __("Bookings"),
+            'title' => __('Bookings'),
             'amount' => $total_booking,
-            'desc' => __("Total bookings"),
+            'desc' => __('Total bookings'),
             'class' => 'pink',
-            'icon' => 'icon ion-ios-pricetags'
+            'icon' => 'icon ion-ios-pricetags',
         ];
         $res[] = [
-            'title' => __("Services"),
+            'title' => __('Services'),
             'amount' => $total_service,
-            'desc' => __("Total bookable services"),
+            'desc' => __('Total bookable services'),
             'class' => 'success',
-            'icon' => 'icon ion-ios-flash'
+            'icon' => 'icon ion-ios-flash',
         ];
+
         return $res;
     }
 
@@ -529,28 +560,28 @@ class Booking extends BaseModel
             'labels' => [],
             'datasets' => [
                 [
-                    'label' => __("Total Earning"),
+                    'label' => __('Total Earning'),
                     'data' => [],
-                    'backgroundColor' => '#F06292'
+                    'backgroundColor' => '#F06292',
                 ],
                 [
-                    'label' => __("Total Pending"),
+                    'label' => __('Total Pending'),
                     'data' => [],
-                    'backgroundColor' => '#8892d6'
-                ]
-            ]
+                    'backgroundColor' => '#8892d6',
+                ],
+            ],
         ];
         $sql_raw[] = 'sum( `total_before_fees` - `commission` + `vendor_service_fee_amount`) AS total_price';
         $sql_raw[] = 'sum( CASE WHEN `status` = "completed" THEN `total_before_fees` - `commission` + `vendor_service_fee_amount` ELSE NULL END ) AS total_earning';
         if (($to - $from) / DAY_IN_SECONDS > 90) {
-            $year = date("Y", $from);
+            $year = date('Y', $from);
             // Report By Month
             for ($month = 1; $month <= 12; $month++) {
-                $day_last_month = date("t", strtotime($year . "-" . $month . "-01"));
-                $data['labels'][] = date("F", strtotime($year . "-" . $month . "-01"));
-                $dataBooking = parent::selectRaw(implode(",", $sql_raw))->where("vendor_id", $user_id)->whereBetween('created_at', [
-                    $year . '-' . $month . '-01 00:00:00',
-                    $year . '-' . $month . '-' . $day_last_month . ' 23:59:59'
+                $day_last_month = date('t', strtotime($year.'-'.$month.'-01'));
+                $data['labels'][] = date('F', strtotime($year.'-'.$month.'-01'));
+                $dataBooking = parent::selectRaw(implode(',', $sql_raw))->where('vendor_id', $user_id)->whereBetween('created_at', [
+                    $year.'-'.$month.'-01 00:00:00',
+                    $year.'-'.$month.'-'.$day_last_month.' 23:59:59',
                 ])->whereNotIn('status', static::$notAcceptedStatus);
                 $dataBooking = $dataBooking->first();
                 $data['datasets'][1]['data'][] = $dataBooking->total_price - $dataBooking->total_earning;
@@ -560,7 +591,7 @@ class Booking extends BaseModel
             // Report By Hours
             for ($i = strtotime(date('Y-m-d', $from)); $i <= strtotime(date('Y-m-d 23:59:59', $to)); $i += HOUR_IN_SECONDS) {
                 $data['labels'][] = date('H:i', $i);
-                $dataBooking = parent::selectRaw(implode(",", $sql_raw))->where("vendor_id", $user_id)->whereBetween('created_at', [
+                $dataBooking = parent::selectRaw(implode(',', $sql_raw))->where('vendor_id', $user_id)->whereBetween('created_at', [
                     date('Y-m-d H:i:s', $i),
                     date('Y-m-d H:i:s', $i + HOUR_IN_SECONDS - 1),
                 ])->whereNotIn('status', static::$notAcceptedStatus);
@@ -572,7 +603,7 @@ class Booking extends BaseModel
             // Report By Day
             for ($i = strtotime(date('Y-m-d', $from)); $i <= strtotime(date('Y-m-d 23:59:59', $to)); $i += DAY_IN_SECONDS) {
                 $data['labels'][] = display_date($i);
-                $dataBooking = parent::selectRaw(implode(",", $sql_raw))->where("vendor_id", $user_id)->whereBetween('created_at', [
+                $dataBooking = parent::selectRaw(implode(',', $sql_raw))->where('vendor_id', $user_id)->whereBetween('created_at', [
                     date('Y-m-d 00:00:00', $i),
                     date('Y-m-d 23:59:59', $i),
                 ])->whereNotIn('status', static::$notAcceptedStatus);
@@ -581,27 +612,30 @@ class Booking extends BaseModel
                 $data['datasets'][0]['data'][] = $dataBooking->total_earning ?? 0;
             }
         }
+
         return $data;
     }
 
     public static function countBookingByServiceID($service_id = false, $user_id = false, $status = false)
     {
-        if (empty($service_id))
+        if (empty($service_id)) {
             return false;
-        $count = parent::query()->where("object_id", $service_id);
+        }
+        $count = parent::query()->where('object_id', $service_id);
 
-        if (!empty($status)) {
+        if (! empty($status)) {
             if (is_array($status)) {
-                $count->whereIn("status", $status);
+                $count->whereIn('status', $status);
             } else {
-                $count->where("status", $status);
+                $count->where('status', $status);
             }
         }
 
-        if (!empty($user_id)) {
-            $count->where("customer_id", $user_id);
+        if (! empty($user_id)) {
+            $count->where('customer_id', $user_id);
         }
-        return $count->count("id");
+
+        return $count->count('id');
     }
 
     public static function getAcceptedBookingQuery($service_id, $object_type)
@@ -627,58 +661,58 @@ class Booking extends BaseModel
         if ($statuses) {
             $list_statuses = [];
             foreach ($statuses as $status) {
-                if (!in_array($status, static::$notAcceptedStatus)) {
+                if (! in_array($status, static::$notAcceptedStatus)) {
                     $list_statuses[] = $status;
                 }
             }
             $statuses = $list_statuses;
         }
         $data = [
-            "chart" => [
+            'chart' => [
                 'labels' => [],
                 'datasets' => [
                     [
-                        'label' => __("Total Revenue"),
+                        'label' => __('Total Revenue'),
                         'data' => [],
                         'backgroundColor' => '#8892d6',
                         'stack' => 'group-total',
                     ],
                     [
-                        'label' => __("Total Fees"),
+                        'label' => __('Total Fees'),
                         'data' => [],
                         'backgroundColor' => '#45bbe0',
                         'stack' => 'group-extra',
                     ],
                     [
-                        'label' => __("Total Commission"),
+                        'label' => __('Total Commission'),
                         'data' => [],
                         'backgroundColor' => '#F06292',
                         'stack' => 'group-extra',
-                    ]
-                ]
+                    ],
+                ],
             ],
-            "detail" => [
-                "total_booking" => [
-                    "title" => __("Total Booking"),
-                    "val" => 0,
+            'detail' => [
+                'total_booking' => [
+                    'title' => __('Total Booking'),
+                    'val' => 0,
                 ],
-                "total_price" => [
-                    "title" => __("Total Revenue"),
-                    "val" => 0,
+                'total_price' => [
+                    'title' => __('Total Revenue'),
+                    'val' => 0,
                 ],
-                "total_commission" => [
-                    "title" => __("Total Commission"),
-                    "val" => 0,
+                'total_commission' => [
+                    'title' => __('Total Commission'),
+                    'val' => 0,
                 ],
-                "total_fees" => [
-                    "title" => __("Total Fees"),
-                    "val" => 0,
+                'total_fees' => [
+                    'title' => __('Total Fees'),
+                    'val' => 0,
                 ],
-                "total_earning" => [
-                    "title" => __("Total Earning"),
-                    "val" => 0,
+                'total_earning' => [
+                    'title' => __('Total Earning'),
+                    'val' => 0,
                 ],
-            ]
+            ],
         ];
         $sql_raw[] = 'sum(`total`) as total_price';
         $sql_raw[] = 'sum( CASE WHEN `total_before_fees` > 0 THEN  `total` - `total_before_fees` - `vendor_service_fee_amount` ELSE null END ) AS total_fees';
@@ -686,28 +720,28 @@ class Booking extends BaseModel
         if ($statuses) {
             $sql_raw[] = "count( CASE WHEN `status` != 'draft' THEN id ELSE NULL END ) AS total_booking";
             foreach ($statuses as $status) {
-                if (!in_array($status, static::$notAcceptedStatus)) {
+                if (! in_array($status, static::$notAcceptedStatus)) {
                     $sql_raw[] = "count( CASE WHEN `status` = '{$status}' THEN id ELSE NULL END ) AS {$status}";
                 }
             }
         }
         if (($to - $from) / DAY_IN_SECONDS > 90) {
-            $year = date("Y", $from);
+            $year = date('Y', $from);
             // Report By Month
             for ($month = 1; $month <= 12; $month++) {
-                $day_last_month = date("t", strtotime($year . "-" . $month . "-01"));
-                $dataBooking = parent::selectRaw(implode(",", $sql_raw))->whereBetween('created_at', [
-                    $year . '-' . $month . '-01 00:00:00',
-                    $year . '-' . $month . '-' . $day_last_month . ' 23:59:59'
+                $day_last_month = date('t', strtotime($year.'-'.$month.'-01'));
+                $dataBooking = parent::selectRaw(implode(',', $sql_raw))->whereBetween('created_at', [
+                    $year.'-'.$month.'-01 00:00:00',
+                    $year.'-'.$month.'-'.$day_last_month.' 23:59:59',
                 ])->whereNotIn('status', static::$notAcceptedStatus);
-                if (!empty($customer_id)) {
+                if (! empty($customer_id)) {
                     $dataBooking = $dataBooking->where('customer_id', $customer_id);
                 }
-                if (!empty($vendor_id)) {
+                if (! empty($vendor_id)) {
                     $dataBooking = $dataBooking->where('vendor_id', $vendor_id);
                 }
                 $dataBooking = $dataBooking->first();
-                $data['chart']['labels'][] = date("F", strtotime($year . "-" . $month . "-01"));
+                $data['chart']['labels'][] = date('F', strtotime($year.'-'.$month.'-01'));
                 $data['chart']['datasets'][0]['data'][] = $dataBooking->total_price ?? 0; // for total price
                 $data['chart']['datasets'][1]['data'][] = $dataBooking->total_fees ?? 0; // for total fees
                 $data['chart']['datasets'][2]['data'][] = $dataBooking->total_commission ?? 0; // for total commission
@@ -726,14 +760,14 @@ class Booking extends BaseModel
         } elseif (($to - $from) <= DAY_IN_SECONDS) {
             // Report By Hours
             for ($i = strtotime(date('Y-m-d', $from)); $i <= strtotime(date('Y-m-d 23:59:59', $to)); $i += HOUR_IN_SECONDS) {
-                $dataBooking = parent::selectRaw(implode(",", $sql_raw))->whereBetween('created_at', [
+                $dataBooking = parent::selectRaw(implode(',', $sql_raw))->whereBetween('created_at', [
                     date('Y-m-d H:i:s', $i),
                     date('Y-m-d H:i:s', $i + HOUR_IN_SECONDS - 1),
                 ])->whereNotIn('status', static::$notAcceptedStatus);
-                if (!empty($customer_id)) {
+                if (! empty($customer_id)) {
                     $dataBooking = $dataBooking->where('customer_id', $customer_id);
                 }
-                if (!empty($vendor_id)) {
+                if (! empty($vendor_id)) {
                     $dataBooking = $dataBooking->where('vendor_id', $vendor_id);
                 }
                 $dataBooking = $dataBooking->first();
@@ -756,14 +790,14 @@ class Booking extends BaseModel
         } else {
             // Report By Day
             for ($i = strtotime(date('Y-m-d', $from)); $i <= strtotime(date('Y-m-d 23:59:59', $to)); $i += DAY_IN_SECONDS) {
-                $dataBooking = parent::selectRaw(implode(",", $sql_raw))->whereBetween('created_at', [
+                $dataBooking = parent::selectRaw(implode(',', $sql_raw))->whereBetween('created_at', [
                     date('Y-m-d 00:00:00', $i),
                     date('Y-m-d 23:59:59', $i),
                 ])->whereNotIn('status', static::$notAcceptedStatus);
-                if (!empty($customer_id)) {
+                if (! empty($customer_id)) {
                     $dataBooking = $dataBooking->where('customer_id', $customer_id);
                 }
-                if (!empty($vendor_id)) {
+                if (! empty($vendor_id)) {
                     $dataBooking = $dataBooking->where('vendor_id', $vendor_id);
                 }
                 $dataBooking = $dataBooking->first();
@@ -788,6 +822,7 @@ class Booking extends BaseModel
         $data['detail']['total_commission']['val'] = format_money_main($data['detail']['total_commission']['val']);
         $data['detail']['total_fees']['val'] = format_money_main($data['detail']['total_fees']['val']);
         $data['detail']['total_earning']['val'] = format_money_main($data['detail']['total_earning']['val']);
+
         return $data;
     }
 
@@ -798,28 +833,29 @@ class Booking extends BaseModel
 
         return $days;
     }
+
     public function getDurationDaysAttribute()
     {
 
         $days = max(1, floor((strtotime($this->end_date) - strtotime($this->start_date)) / DAY_IN_SECONDS) + 1);
+
         return $days;
     }
+
     public function getDurationHoursAttribute()
     {
 
         $days = max(1, floor((strtotime($this->end_date) - strtotime($this->start_date)) / HOUR_IN_SECONDS));
+
         return $days;
     }
 
-    public function checkMaximumBooking($date)
-    {
-
-    }
+    public function checkMaximumBooking($date) {}
 
     public static function getBookingInRanges($object_id, $object_model, $from, $to, $object_child_id = false)
     {
 
-        $query = parent::selectRaw(" * , SUM( total_guests ) as total_guests ")->where([
+        $query = parent::selectRaw(' * , SUM( total_guests ) as total_guests ')->where([
             'object_id' => $object_id,
             'object_model' => $object_model,
         ])->whereNotIn('status', static::$notAcceptedStatus)
@@ -834,18 +870,21 @@ class Booking extends BaseModel
 
         return $query->get();
     }
+
     public static function getAllBookingInRanges($object_id, $object_model, $from, $to)
     {
 
-        $query = parent::selectRaw("*")->where([
+        $query = parent::selectRaw('*')->where([
             'object_id' => $object_id,
             'object_model' => $object_model,
         ])->whereNotIn('status', static::$notAcceptedStatus)
             ->where('end_date', '>=', $from)
             ->where('start_date', '<=', $to)
             ->take(200);
+
         return $query->get();
     }
+
     public function getCommissionVendor()
     {
         $vendorId = $this->vendor_id;
@@ -856,7 +895,7 @@ class Booking extends BaseModel
         ];
         if (setting_item('vendor_enable') == 1) {
             $vendor = User::find($vendorId);
-            if (!empty($vendor)) {
+            if (! empty($vendor)) {
                 $commission = [];
                 $commission['amount'] = setting_item('vendor_commission_amount', 10);
                 $commission['type'] = setting_item('vendor_commission_type', 'percent');
@@ -880,6 +919,7 @@ class Booking extends BaseModel
                 $returnArray['commission_type'] = json_encode($commission);
             }
         }
+
         return $returnArray;
     }
 
@@ -893,20 +933,20 @@ class Booking extends BaseModel
 
     public static function getContentCalendarIcal($service_type, $id, $module)
     {
-        $proid = config('app.name') . ' ' . $_SERVER['SERVER_NAME'];
+        $proid = config('app.name').' '.$_SERVER['SERVER_NAME'];
         $calendar = new Calendar($proid);
         $data = app()->make($module)::find($id);
-        if (!empty($data)) {
+        if (! empty($data)) {
             $availabilityData = $data->availabilityClass::where(['target_id' => $id, 'active' => 0])->get();
-            if (!empty($availabilityData)) {
+            if (! empty($availabilityData)) {
                 foreach ($availabilityData as $availabilityDatum) {
-                    $eventCalendar = new Event();
+                    $eventCalendar = new Event;
                     $eventCalendar
-                        ->setUniqueId($data->id . time())
+                        ->setUniqueId($data->id.time())
                         ->setCategories(ucfirst($service_type))
                         ->setDtStart(new \DateTime($availabilityDatum->start_date))
                         ->setDtEnd(new \DateTime($availabilityDatum->end_date))
-                        ->setSummary($data->title . '#' . $id . ' Blocked')
+                        ->setSummary($data->title.'#'.$id.' Blocked')
                         ->setNoTime(false);
                     $calendar->addComponent($eventCalendar);
                 }
@@ -921,41 +961,40 @@ class Booking extends BaseModel
                         ->where('start_date', '>=', now());
                 })->get();
             }
-            if (!empty($bookingData)) {
+            if (! empty($bookingData)) {
                 foreach ($bookingData as $item => $value) {
                     if ($service_type == 'room') {
-                        $customerName = $value->fist_name . ' ' . $value->last_name;
-                        $description = '<p>Name:' . $customerName . '</p>
-                                <p>Email:' . $value->email . '</p>
-                                <p>Phone:' . $value->phone . '</p>
-                                <p>Address:' . $value->address . '</p>
-                                <p>Customer notes:' . $value->customer_notes . '</p>
-                                <p>Total guest:' . $value->number . '</p>';
-                        $eventCalendar = new Event();
+                        $customerName = $value->fist_name.' '.$value->last_name;
+                        $description = '<p>Name:'.$customerName.'</p>
+                                <p>Email:'.$value->email.'</p>
+                                <p>Phone:'.$value->phone.'</p>
+                                <p>Address:'.$value->address.'</p>
+                                <p>Customer notes:'.$value->customer_notes.'</p>
+                                <p>Total guest:'.$value->number.'</p>';
+                        $eventCalendar = new Event;
                         $eventCalendar
-                            ->setUniqueId($value->id . time())
+                            ->setUniqueId($value->id.time())
                             ->setCategories(ucfirst($service_type))
                             ->setDtStart(new \DateTime($value->start_date))
                             ->setDtEnd(new \DateTime($value->end_date))
-                            ->setSummary($customerName . ' Booking ' . ucfirst($service_type) . ' ' . $data->title)
+                            ->setSummary($customerName.' Booking '.ucfirst($service_type).' '.$data->title)
                             ->setNoTime(false)
                             ->setDescriptionHTML($description);
                         $calendar->addComponent($eventCalendar);
                     } else {
 
-
-                        $customerName = $value->fist_name . ' ' . $value->last_name;
-                        $description = '<p>Name:' . $customerName . '</p>
-                                <p>Email:' . $value->email . '</p>
-                                <p>Phone:' . $value->phone . '</p>
-                                <p>Address:' . $value->address . '</p>
-                                <p>Customer notes:' . $value->customer_notes . '</p>
-                                <p>Total guest:' . $value->total_guests . '</p>';
-                        $eventCalendar = new Event();
+                        $customerName = $value->fist_name.' '.$value->last_name;
+                        $description = '<p>Name:'.$customerName.'</p>
+                                <p>Email:'.$value->email.'</p>
+                                <p>Phone:'.$value->phone.'</p>
+                                <p>Address:'.$value->address.'</p>
+                                <p>Customer notes:'.$value->customer_notes.'</p>
+                                <p>Total guest:'.$value->total_guests.'</p>';
+                        $eventCalendar = new Event;
                         if ($service_type == 'space') {
                             $byNight = $value->getMeta('booking_type');
                             if ($byNight == 'by_night') {
-                                $value->end_date = date("Y-m-d H:i:s", strtotime($value->end_date . " -1day"));
+                                $value->end_date = date('Y-m-d H:i:s', strtotime($value->end_date.' -1day'));
                             }
                         }
 
@@ -966,7 +1005,7 @@ class Booking extends BaseModel
                             ->setCategories(ucfirst($service_type))
                             ->setDtStart(new \DateTime($value->start_date))
                             ->setDtEnd($endDate)
-                            ->setSummary($customerName . ' Booking ' . ucfirst($service_type) . ' ' . $data->title)
+                            ->setSummary($customerName.' Booking '.ucfirst($service_type).' '.$data->title)
                             ->setNoTime(false)
                             ->setDescriptionHTML($description);
                         $calendar->addComponent($eventCalendar);
@@ -975,9 +1014,8 @@ class Booking extends BaseModel
                 }
             }
 
-
-
         }
+
         return $calendar->render();
     }
 
@@ -985,8 +1023,9 @@ class Booking extends BaseModel
     {
         $extra_price = $this->getJsonMeta('extra_price');
 
-        if (empty($extra_price) or !is_array($extra_price))
+        if (empty($extra_price) or ! is_array($extra_price)) {
             return $this->total_before_discount;
+        }
 
         $extra_price_collection = collect($extra_price);
 
@@ -1004,14 +1043,14 @@ class Booking extends BaseModel
             return;
         }
 
-        if ($this->customer_id and $this->wallet_transaction_id && !$this->is_refund_wallet) {
+        if ($this->customer_id and $this->wallet_transaction_id && ! $this->is_refund_wallet) {
             $user = User::find($this->customer_id);
             if ($user) {
                 $transaction = $this->wallet_transaction;
                 if ($transaction->amount) {
                     $transaction = $user->deposit($transaction->amount);
                     $transaction->object_id = $user;
-                    $transaction->object_model = "booking_refund_wallet";
+                    $transaction->object_model = 'booking_refund_wallet';
                     $transaction->booking_id = $this->id;
                     $transaction->save();
 
@@ -1047,16 +1086,16 @@ class Booking extends BaseModel
         // Set amount before fees after deducting coupon
         $this->total_before_fees = $total_booking;
 
-        //reload calculate buyer fees for admin
+        // reload calculate buyer fees for admin
         $total_buyer_fee = 0;
-        if (!empty($list_fees = $this->buyer_fees)) {
+        if (! empty($list_fees = $this->buyer_fees)) {
             $list_fees = json_decode($list_fees, true);
             $total_buyer_fee = $this->service->calculateServiceFees($list_fees, $this->total_before_fees, $this->total_guests);
             $total_booking += $total_buyer_fee;
         }
-        //reload calculate service fees for vendor
+        // reload calculate service fees for vendor
         $total_service_fee = 0;
-        if (!empty($list_fees = $this->vendor_service_fee)) {
+        if (! empty($list_fees = $this->vendor_service_fee)) {
             $total_service_fee = $this->service->calculateServiceFees($list_fees, $this->total_before_fees, $this->total_guests);
             $total_booking += $total_service_fee;
         }
@@ -1067,22 +1106,22 @@ class Booking extends BaseModel
         $this->total = $total_booking;
 
         // reload calculate deposit
-        if (!empty($deposit_info = $this->getMeta("deposit_info"))) {
+        if (! empty($deposit_info = $this->getMeta('deposit_info'))) {
             $deposit_info = json_decode($deposit_info, true);
             $booking_deposit_fomular = $deposit_info['fomular'];
             $tmp_price_total = $this->total;
-            if ($booking_deposit_fomular == "deposit_and_fee") {
+            if ($booking_deposit_fomular == 'deposit_and_fee') {
                 $tmp_price_total = $this->total_before_fees;
             }
             switch ($deposit_info['type']) {
-                case "percent":
+                case 'percent':
                     $this->deposit = $tmp_price_total * $deposit_info['amount'] / 100;
                     break;
                 default:
                     $this->deposit = $deposit_info['amount'];
                     break;
             }
-            if ($booking_deposit_fomular == "deposit_and_fee") {
+            if ($booking_deposit_fomular == 'deposit_and_fee') {
                 $this->deposit = $this->deposit + $total_buyer_fee + $total_service_fee;
             }
         }
@@ -1100,10 +1139,10 @@ class Booking extends BaseModel
             return 0;
         }
         switch ($this->object_model) {
-            case "car":
-            case "boat":
+            case 'car':
+            case 'boat':
                 return 0;
-            case "tour":
+            case 'tour':
             default:
                 return $this->total_guests;
 

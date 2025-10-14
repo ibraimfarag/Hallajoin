@@ -1,27 +1,24 @@
 <?php
+
 namespace Modules\Report\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Modules\AdminController;
-use Modules\Booking\Emails\NewBookingEmail;
 use Modules\Booking\Models\Booking;
 
 class StatisticController extends AdminController
 {
-    public function __construct()
-    {
-
-    }
+    public function __construct() {}
 
     public function index()
     {
         $f = strtotime('monday this week');
         $status = config('booking.statuses');
         $data = [
-            'earning_chart_data'  => Booking::getStatisticChartData($f, time(), $status)['chart'],
-            'earning_detail_data' => Booking::getStatisticChartData($f, time(), $status)['detail']
+            'earning_chart_data' => Booking::getStatisticChartData($f, time(), $status)['chart'],
+            'earning_detail_data' => Booking::getStatisticChartData($f, time(), $status)['detail'],
         ];
+
         return view('Report::admin.statistic.index', $data);
     }
 
@@ -39,9 +36,10 @@ class StatisticController extends AdminController
         if ($user_type == 'vendor') {
             $vendor_id = $request->input('user_id');
         }
+
         return $this->sendSuccess([
-            'chart_data'  => Booking::getStatisticChartData(strtotime($from), strtotime($to), $status, $customer_id, $vendor_id)['chart'],
-            'detail_data' => Booking::getStatisticChartData(strtotime($from), strtotime($to), $status, $customer_id, $vendor_id)['detail']
+            'chart_data' => Booking::getStatisticChartData(strtotime($from), strtotime($to), $status, $customer_id, $vendor_id)['chart'],
+            'detail_data' => Booking::getStatisticChartData(strtotime($from), strtotime($to), $status, $customer_id, $vendor_id)['detail'],
         ]);
     }
 }

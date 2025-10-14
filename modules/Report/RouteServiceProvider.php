@@ -1,8 +1,9 @@
 <?php
+
 namespace Modules\Report;
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -54,7 +55,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::middleware('web')
             ->namespace($this->moduleNamespace)
-            ->group(__DIR__ . '/Routes/web.php');
+            ->group(__DIR__.'/Routes/web.php');
     }
 
     protected function mapLanguageRoutes()
@@ -62,7 +63,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('web')
             ->namespace($this->moduleNamespace)
             ->prefix(app()->getLocale())
-            ->group(__DIR__ . '/Routes/language.php');
+            ->group(__DIR__.'/Routes/language.php');
     }
 
     /**
@@ -74,10 +75,10 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapAdminRoutes()
     {
-        Route::middleware(['web','dashboard'])
+        Route::middleware(['web', 'dashboard'])
             ->namespace($this->adminModuleNamespace)
             ->prefix(config('admin.admin_route_prefix').'/module/report')
-            ->group(__DIR__ . '/Routes/admin.php');
+            ->group(__DIR__.'/Routes/admin.php');
     }
 
     /**
@@ -92,6 +93,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api')
             ->middleware('api')
             ->namespace($this->moduleNamespace)
-            ->group(__DIR__ . '/Routes/api.php');
+            ->group(__DIR__.'/Routes/api.php');
     }
 }

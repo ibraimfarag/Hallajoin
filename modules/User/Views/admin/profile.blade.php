@@ -502,6 +502,60 @@
             display: inline-block;
         }
 
+        /* Select dropdown styling for Dark/Light mode */
+        select#userRole {
+            background: var(--bg-secondary) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select#userRole:hover {
+            border-color: var(--border-light);
+            background: var(--bg-hover) !important;
+        }
+
+        select#userRole:focus {
+            outline: none;
+            border-color: #63b3ed;
+            box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.1);
+        }
+
+        /* Options styling for Dark/Light mode */
+        select#userRole option {
+            background: var(--bg-primary) !important;
+            color: var(--text-primary) !important;
+            padding: 10px;
+        }
+
+        /* For Light Mode - specific browser overrides */
+        [data-theme="light"] select#userRole {
+            background: #f7fafc !important;
+            color: #1a202c !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        [data-theme="light"] select#userRole option {
+            background: #ffffff !important;
+            color: #1a202c !important;
+        }
+
+        [data-theme="light"] select#userRole:hover {
+            background: #edf2f7 !important;
+        }
+
+        /* For Dark Mode - specific browser overrides */
+        :root select#userRole option,
+        html:not([data-theme="light"]) select#userRole option {
+            background: #132439 !important;
+            color: #ffffff !important;
+        }
+
         /* Smooth transitions for theme changes */
         * {
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
@@ -795,11 +849,20 @@
                             </div>
 
 
-                            <!-- Bottom section - Roles and Suspended time -->
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <!-- Bottom section - Roles -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
                                 <div>
-                                    <span class="info-label">{{ __('Roles') }}:</span>
-                                    <span class="info-value">{{ $user->role->name ?? __('No Role') }}</span>
+                                    <span class="info-label"
+                                        style="display: block; margin-bottom: 8px;">{{ __('User Role') }}:</span>
+                                    <select id="userRole" class="form-control"
+                                        onchange="updateUserRole({{ $user->id }}, this.value)"
+                                        data-original="{{ $user->role_id }}">
+                                        @foreach($roles as $role)
+                                            <option value="{{ $role->id }}" {{ ($user->role_id == $role->id) ? 'selected' : '' }}>
+                                                {{ $role->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                             </div>
@@ -1073,21 +1136,21 @@
         function showToast(message, type = 'success') {
             const toast = document.createElement('div');
             toast.style.cssText = `
-                                        position: fixed;
-                                        top: 20px;
-                                        right: 20px;
-                                        background: ${type === 'success' ? '#28a745' : '#dc3545'};
-                                        color: white;
-                                        padding: 16px 24px;
-                                        border-radius: 8px;
-                                        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                                        z-index: 10000;
-                                        font-size: 14px;
-                                        font-weight: 500;
-                                        animation: slideIn 0.3s ease;
-                                        max-width: 300px;
-                                        word-wrap: break-word;
-                                    `;
+                                                position: fixed;
+                                                top: 20px;
+                                                right: 20px;
+                                                background: ${type === 'success' ? '#28a745' : '#dc3545'};
+                                                color: white;
+                                                padding: 16px 24px;
+                                                border-radius: 8px;
+                                                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                                                z-index: 10000;
+                                                font-size: 14px;
+                                                font-weight: 500;
+                                                animation: slideIn 0.3s ease;
+                                                max-width: 300px;
+                                                word-wrap: break-word;
+                                            `;
             toast.textContent = message;
             document.body.appendChild(toast);
 
@@ -1177,18 +1240,57 @@
                 });
         }
 
+        // Update user role
+        function updateUserRole(userId, roleId) {
+            const select = document.getElementById('userRole');
+            const originalValue = select.dataset.original || select.value;
+            select.disabled = true; // Disable during request
+
+            fetch(`{{ route('admin.user.update.role', ['id' => ':userId']) }}`.replace(':userId', userId), {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    role_id: roleId
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(data.message || '{{ __("User role updated successfully") }}', 'success');
+                        select.dataset.original = roleId; // Store new value
+                    } else {
+                        // Revert select state on error
+                        select.value = originalValue;
+                        showToast(data.message || '{{ __("Failed to update user role") }}', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Revert select state on error
+                    select.value = originalValue;
+                    showToast('{{ __("An error occurred while updating user role") }}', 'error');
+                })
+                .finally(() => {
+                    select.disabled = false; // Re-enable select
+                });
+        }
+
         // Add CSS animations
         const style = document.createElement('style');
         style.textContent = `
-                                    @keyframes slideIn {
-                                        from { transform: translateX(400px); opacity: 0; }
-                                        to { transform: translateX(0); opacity: 1; }
-                                    }
-                                    @keyframes slideOut {
-                                        from { transform: translateX(0); opacity: 1; }
-                                        to { transform: translateX(400px); opacity: 0; }
-                                    }
-                                `;
+                                            @keyframes slideIn {
+                                                from { transform: translateX(400px); opacity: 0; }
+                                                to { transform: translateX(0); opacity: 1; }
+                                            }
+                                            @keyframes slideOut {
+                                                from { transform: translateX(0); opacity: 1; }
+                                                to { transform: translateX(400px); opacity: 0; }
+                                            }
+                                        `;
         document.head.appendChild(style);
 
         // Auto-detect theme from header switcher
