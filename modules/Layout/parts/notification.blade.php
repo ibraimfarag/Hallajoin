@@ -50,9 +50,9 @@ if (!auth()->check())
                                 <div class="media-left">
                                     <div class="media-object">
                                         @if($avatar)
-                                            <img class="image-responsive" src="{{$avatar}}" alt="{{$name}}">
+                                            <img class="image-responsive" src="{{$avatar}}" alt="{{$name ?? 'User'}}">
                                         @else
-                                            <span class="avatar-text">{{ucfirst($name[0])}}</span>
+                                            <span class="avatar-text">{{$name ? ucfirst($name[0]) : 'N'}}</span>
                                         @endif
                                     </div>
                                 </div>

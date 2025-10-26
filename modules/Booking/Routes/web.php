@@ -19,6 +19,8 @@ Route::group(['prefix'=>config('booking.booking_route_prefix')],function(){
     Route::get('/modal/{booking}','BookingController@modal')->name('booking.modal');
 });
 
+// Payment checkout for grouped bookings
+Route::get('/payment/checkout/{payment_id}', 'BookingController@checkoutByPaymentId')->name('payment.checkout');
 
 Route::group(['prefix'=>'gateway'],function(){
     Route::get('/confirm/{gateway}','NormalCheckoutController@confirmPayment')->name('gateway.confirm');

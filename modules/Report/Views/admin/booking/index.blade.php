@@ -87,13 +87,13 @@
         <div class="orders-header">
             <h1 class="orders-title">{{ __('Sales') }}</h1>
             @if(!empty($booking_update))
-                <button class="btn-create-order" onclick="alert('Create Order functionality coming soon!')"
-                    style="background: transparent; border: 2px solid #059669; color: #059669; padding: 10px 20px; border-radius: 15px; font-weight: 600; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease;"
+                <a href="{{ route('report.admin.booking.create') }}" class="btn-create-order"
+                    style="background: transparent; border: 2px solid #059669; color: #059669; padding: 10px 20px; border-radius: 15px; font-weight: 600; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; text-decoration: none;"
                     onmouseover="this.style.background='#059669'; this.style.color='white';"
                     onmouseout="this.style.background='transparent'; this.style.color='#059669';">
                     <i class="fa fa-shopping-cart"></i>
                     {{ __('CREATE ORDER') }}
-                </button>
+                </a>
             @endif
         </div>
 
@@ -979,29 +979,29 @@
         function populateFinalSummary() {
             const booking = window.currentConfirmBooking;
             const summaryHtml = `
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Order") }}:</span>
-                                                                <span class="summary-value">${booking.orderNumber}</span>
-                                                            </div>
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Customer Name") }}:</span>
-                                                                <span class="summary-value">${booking.customerName}</span>
-                                                            </div>
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Ticket Available") }}:</span>
-                                                                <span class="summary-value">${booking.hasTicket ? '{{ __("Yes") }}' : '{{ __("No") }}'}</span>
-                                                            </div>
-                                                            ${booking.hasTicket ? `
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Ticket File") }}:</span>
-                                                                <span class="summary-value">${booking.ticketFile ? booking.ticketFile.name : '{{ __("No file") }}'}</span>
-                                                            </div>
-                                                            ` : ''}
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Send Method") }}:</span>
-                                                                <span class="summary-value">${booking.sendMethod === 'whatsapp' ? '{{ __("WhatsApp") }}' : '{{ __("Email") }}'}</span>
-                                                            </div>
-                                                        `;
+                                                                <div class="summary-item">
+                                                                    <span class="summary-label">{{ __("Order") }}:</span>
+                                                                    <span class="summary-value">${booking.orderNumber}</span>
+                                                                </div>
+                                                                <div class="summary-item">
+                                                                    <span class="summary-label">{{ __("Customer Name") }}:</span>
+                                                                    <span class="summary-value">${booking.customerName}</span>
+                                                                </div>
+                                                                <div class="summary-item">
+                                                                    <span class="summary-label">{{ __("Ticket Available") }}:</span>
+                                                                    <span class="summary-value">${booking.hasTicket ? '{{ __("Yes") }}' : '{{ __("No") }}'}</span>
+                                                                </div>
+                                                                ${booking.hasTicket ? `
+                                                                <div class="summary-item">
+                                                                    <span class="summary-label">{{ __("Ticket File") }}:</span>
+                                                                    <span class="summary-value">${booking.ticketFile ? booking.ticketFile.name : '{{ __("No file") }}'}</span>
+                                                                </div>
+                                                                ` : ''}
+                                                                <div class="summary-item">
+                                                                    <span class="summary-label">{{ __("Send Method") }}:</span>
+                                                                    <span class="summary-value">${booking.sendMethod === 'whatsapp' ? '{{ __("WhatsApp") }}' : '{{ __("Email") }}'}</span>
+                                                                </div>
+                                                            `;
 
             document.getElementById('finalSummary').innerHTML = summaryHtml;
         }
@@ -1360,17 +1360,17 @@
                 const phoneHtml = userPhone ? `<div class="mention-user-phone"><i class="fa fa-phone"></i> ${userPhone}</div>` : '';
 
                 html += `
-                                                                                        <div class="mention-user-item" onclick="insertMention('${safeUserName}', ${userId})" data-user-id="${userId}">
-                                                                                            <div class="mention-user-avatar">
-                                                                                                ${avatarHtml}
+                                                                                            <div class="mention-user-item" onclick="insertMention('${safeUserName}', ${userId})" data-user-id="${userId}">
+                                                                                                <div class="mention-user-avatar">
+                                                                                                    ${avatarHtml}
+                                                                                                </div>
+                                                                                                <div class="mention-user-info">
+                                                                                                    <div class="mention-user-name">${userName}</div>
+                                                                                                    ${phoneHtml}
+                                                                                                    <div class="mention-user-role"><i class="fa fa-user-tag"></i> ${userRole}</div>
+                                                                                                </div>
                                                                                             </div>
-                                                                                            <div class="mention-user-info">
-                                                                                                <div class="mention-user-name">${userName}</div>
-                                                                                                ${phoneHtml}
-                                                                                                <div class="mention-user-role"><i class="fa fa-user-tag"></i> ${userRole}</div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    `;
+                                                                                        `;
             });
 
             $('#mentionUsersList').html(html);
@@ -1440,11 +1440,11 @@
         function displayNotes(notes) {
             if (!notes || notes.length === 0) {
                 $('#notesContent').html(`
-                                                                                                        <div class="empty-notes">
-                                                                                                            <i class="fa fa-sticky-note"></i>
-                                                                                                            <p>{{ __("No Notes Yet!") }}</p>
-                                                                                                        </div>
-                                                                                                    `);
+                                                                                                            <div class="empty-notes">
+                                                                                                                <i class="fa fa-sticky-note"></i>
+                                                                                                                <p>{{ __("No Notes Yet!") }}</p>
+                                                                                                            </div>
+                                                                                                        `);
                 return;
             }
 
@@ -1487,31 +1487,31 @@
                         }
 
                         attachmentsHtml += `
-                                                                                    <a href="${attachment.url}" class="note-attachment" download="${fileName}" target="_blank">
-                                                                                        ${thumbnailHtml}
-                                                                                        <div class="attachment-info">
-                                                                                            <span class="attachment-name">${fileName}</span>
-                                                                                            <span class="attachment-size">${fileSize}</span>
-                                                                                        </div>
-                                                                                    </a>
-                                                                                `;
+                                                                                        <a href="${attachment.url}" class="note-attachment" download="${fileName}" target="_blank">
+                                                                                            ${thumbnailHtml}
+                                                                                            <div class="attachment-info">
+                                                                                                <span class="attachment-name">${fileName}</span>
+                                                                                                <span class="attachment-size">${fileSize}</span>
+                                                                                            </div>
+                                                                                        </a>
+                                                                                    `;
                     });
                     attachmentsHtml += '</div>';
                 }
 
                 html += `
-                                                                                                        <div class="note-item">
-                                                                                                            <div class="note-avatar">
-                                                                                                                ${avatarContent}
+                                                                                                            <div class="note-item">
+                                                                                                                <div class="note-avatar">
+                                                                                                                    ${avatarContent}
+                                                                                                                </div>
+                                                                                                                <div class="note-header">
+                                                                                                                    <span class="note-author">${note.user_name}</span>
+                                                                                                                    <span class="note-time">${note.created_at}</span>
+                                                                                                                </div>
+                                                                                                                <div class="note-content">${note.content}</div>
+                                                                                                                ${attachmentsHtml}
                                                                                                             </div>
-                                                                                                            <div class="note-header">
-                                                                                                                <span class="note-author">${note.user_name}</span>
-                                                                                                                <span class="note-time">${note.created_at}</span>
-                                                                                                            </div>
-                                                                                                            <div class="note-content">${note.content}</div>
-                                                                                                            ${attachmentsHtml}
-                                                                                                        </div>
-                                                                                                    `;
+                                                                                                        `;
             });
             html += '</div>';
 
@@ -1571,11 +1571,11 @@
                     }
 
                     const fileInfo = $(`
-                                                                                <div class="attachment-info">
-                                                                                    <span class="attachment-name">${file.name}</span>
-                                                                                    <span class="attachment-size">${fileSize}</span>
-                                                                                </div>
-                                                                            `);
+                                                                                    <div class="attachment-info">
+                                                                                        <span class="attachment-name">${file.name}</span>
+                                                                                        <span class="attachment-size">${fileSize}</span>
+                                                                                    </div>
+                                                                                `);
 
                     const removeBtn = $('<i class="fa fa-times attachment-item-remove" onclick="removeAttachment(' + index + ')"></i>');
 
@@ -1784,7 +1784,7 @@
                         <textarea class="form-control" id="noteTextarea" rows="5"
                             placeholder="{{ __('Enter your note here...') }}"
                             style="background: var(--sales-bg-primary); color: var(--sales-text-primary); border: 1px solid var(--sales-border-color);">
-                                                                                                                                </textarea>
+                                                                                                                                    </textarea>
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
                         <small class="text-muted" style="color: var(--sales-text-secondary) !important;">
@@ -2194,29 +2194,29 @@
         function populateFinalSummary() {
             const booking = window.currentConfirmBooking;
             const summaryHtml = `
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Order") }}:</span>
-                                                                <span class="summary-value">${booking.orderNumber}</span>
-                                                            </div>
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Customer") }}:</span>
-                                                                <span class="summary-value">${booking.customerName}</span>
-                                                            </div>
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Has Ticket") }}:</span>
-                                                                <span class="summary-value">${booking.hasTicket ? '{{ __("Yes") }}' : '{{ __("No") }}'}</span>
-                                                            </div>
-                                                            ${booking.hasTicket ? `
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Ticket File") }}:</span>
-                                                                <span class="summary-value">${booking.ticketFile ? booking.ticketFile.name : '{{ __("No file") }}'}</span>
-                                                            </div>
-                                                            ` : ''}
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Send Method") }}:</span>
-                                                                <span class="summary-value">${booking.sendMethod === 'whatsapp' ? '{{ __("WhatsApp") }}' : '{{ __("Email") }}'}</span>
-                                                            </div>
-                                                        `;
+                                                                <div class="summary-item">
+                                                                    <span class="summary-label">{{ __("Order") }}:</span>
+                                                                    <span class="summary-value">${booking.orderNumber}</span>
+                                                                </div>
+                                                                <div class="summary-item">
+                                                                    <span class="summary-label">{{ __("Customer") }}:</span>
+                                                                    <span class="summary-value">${booking.customerName}</span>
+                                                                </div>
+                                                                <div class="summary-item">
+                                                                    <span class="summary-label">{{ __("Has Ticket") }}:</span>
+                                                                    <span class="summary-value">${booking.hasTicket ? '{{ __("Yes") }}' : '{{ __("No") }}'}</span>
+                                                                </div>
+                                                                ${booking.hasTicket ? `
+                                                                <div class="summary-item">
+                                                                    <span class="summary-label">{{ __("Ticket File") }}:</span>
+                                                                    <span class="summary-value">${booking.ticketFile ? booking.ticketFile.name : '{{ __("No file") }}'}</span>
+                                                                </div>
+                                                                ` : ''}
+                                                                <div class="summary-item">
+                                                                    <span class="summary-label">{{ __("Send Method") }}:</span>
+                                                                    <span class="summary-value">${booking.sendMethod === 'whatsapp' ? '{{ __("WhatsApp") }}' : '{{ __("Email") }}'}</span>
+                                                                </div>
+                                                            `;
 
             document.getElementById('finalSummary').innerHTML = summaryHtml;
         }
@@ -2539,17 +2539,17 @@
                 const phoneHtml = userPhone ? `<div class="mention-user-phone"><i class="fa fa-phone"></i> ${userPhone}</div>` : '';
 
                 html += `
-                                                                <div class="mention-user-item" onclick="insertMention('${safeUserName}', ${userId})" data-user-id="${userId}">
-                                                                    <div class="mention-user-avatar">
-                                                                        ${avatarHtml}
+                                                                    <div class="mention-user-item" onclick="insertMention('${safeUserName}', ${userId})" data-user-id="${userId}">
+                                                                        <div class="mention-user-avatar">
+                                                                            ${avatarHtml}
+                                                                        </div>
+                                                                        <div class="mention-user-info">
+                                                                            <div class="mention-user-name">${userName}</div>
+                                                                            ${phoneHtml}
+                                                                            <div class="mention-user-role"><i class="fa fa-user-tag"></i> ${userRole}</div>
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="mention-user-info">
-                                                                        <div class="mention-user-name">${userName}</div>
-                                                                        ${phoneHtml}
-                                                                        <div class="mention-user-role"><i class="fa fa-user-tag"></i> ${userRole}</div>
-                                                                    </div>
-                                                                </div>
-                                                            `;
+                                                                `;
             });
 
             $('#mentionUsersList').html(html);
@@ -2669,33 +2669,33 @@
                         const sizeFormatted = formatFileSize(attachment.size);
 
                         attachmentsHtml += `
-                                                                        <a href="${attachment.url}" target="_blank" class="note-attachment">
-                                                                            ${iconHtml}
-                                                                            <div class="attachment-info">
-                                                                                <div class="attachment-name">${attachment.original_name}</div>
-                                                                                <div class="attachment-size">${sizeFormatted}</div>
-                                                                            </div>
-                                                                        </a>
-                                                                    `;
+                                                                            <a href="${attachment.url}" target="_blank" class="note-attachment">
+                                                                                ${iconHtml}
+                                                                                <div class="attachment-info">
+                                                                                    <div class="attachment-name">${attachment.original_name}</div>
+                                                                                    <div class="attachment-size">${sizeFormatted}</div>
+                                                                                </div>
+                                                                            </a>
+                                                                        `;
                     });
                     attachmentsHtml += '</div>';
                 }
 
                 html += `
-                                                                <div class="note-item">
-                                                                    <div class="note-avatar">
-                                                                        ${avatarHtml}
-                                                                    </div>
-                                                                    <div class="note-content">
-                                                                        <div class="note-header">
-                                                                            <span class="note-author">${userName}</span>
-                                                                            <span class="note-time">${note.created_at}</span>
+                                                                    <div class="note-item">
+                                                                        <div class="note-avatar">
+                                                                            ${avatarHtml}
                                                                         </div>
-                                                                        <div class="note-content">${note.content}</div>
-                                                                        ${attachmentsHtml}
+                                                                        <div class="note-content">
+                                                                            <div class="note-header">
+                                                                                <span class="note-author">${userName}</span>
+                                                                                <span class="note-time">${note.created_at}</span>
+                                                                            </div>
+                                                                            <div class="note-content">${note.content}</div>
+                                                                            ${attachmentsHtml}
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            `;
+                                                                `;
             });
 
             $('#notesTimeline').html(html);
@@ -2742,17 +2742,17 @@
                 const sizeFormatted = formatFileSize(file.size);
 
                 const fileHtml = `
-                                                                <div class="attachment-item" data-file-index="${index}">
-                                                                    ${thumbnailHtml}
-                                                                    <div class="attachment-info">
-                                                                        <div class="attachment-name">${file.name}</div>
-                                                                        <div class="attachment-size">${sizeFormatted}</div>
+                                                                    <div class="attachment-item" data-file-index="${index}">
+                                                                        ${thumbnailHtml}
+                                                                        <div class="attachment-info">
+                                                                            <div class="attachment-name">${file.name}</div>
+                                                                            <div class="attachment-size">${sizeFormatted}</div>
+                                                                        </div>
+                                                                        <span class="attachment-item-remove" onclick="removeSelectedFile(${index})">
+                                                                            <i class="fa fa-times"></i>
+                                                                        </span>
                                                                     </div>
-                                                                    <span class="attachment-item-remove" onclick="removeSelectedFile(${index})">
-                                                                        <i class="fa fa-times"></i>
-                                                                    </span>
-                                                                </div>
-                                                            `;
+                                                                `;
 
                 preview.append(fileHtml);
             });
@@ -2856,12 +2856,12 @@
             return colors[Math.floor(Math.random() * colors.length)];
         }
 
-                                    // Make Order Pending Function (commented to fix duplicate function error)
-                                    /* window.makePendingOrder = function(bookingId) { // Already defined in first script
-                                        console.log('makePendingOrder called with ID:', bookingId); // Debug log
-                                        if (!confirm('{{ __("Are you sure you want to make this order pending?") }}')) {
+                                        // Make Order Pending Function (commented to fix duplicate function error)
+                                        /* window.makePendingOrder = function(bookingId) { // Already defined in first script
+                                            console.log('makePendingOrder called with ID:', bookingId); // Debug log
+                                            if (!confirm('{{ __("Are you sure you want to make this order pending?") }}')) {
         return;
-                                        }
+                                            }
 
         showLoading();
 
@@ -2886,7 +2886,7 @@
                 alert('Error: ' + (xhr.responseJSON?.message || '{{ __("Something went wrong") }}'));
             }
         });
-                                    };
+                                        };
 
         // Debug: Check if function is defined (commented to fix duplicate)
         // console.log('makePendingOrder function defined:', typeof window.makePendingOrder);

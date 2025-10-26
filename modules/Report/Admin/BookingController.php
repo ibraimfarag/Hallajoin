@@ -793,4 +793,449 @@ class BookingController extends AdminController
             ], 500);
         }
     }
+
+    /**
+     * Show Create Order Page
+     */
+    public function createOrder()
+    {
+        $this->checkPermission('booking_update');
+
+        $data = [
+            'page_title' => __('Create Order'),
+            'breadcrumbs' => [
+                ['name' => __('Sales'), 'url' => route('report.admin.booking')],
+                ['name' => __('Create Order'), 'class' => 'active'],
+            ],
+        ];
+
+        return view('Report::admin.booking.create', $data);
+    }
+
+    /**
+     * Search Activities (Tours, Hotels, etc.)
+     */
+    public function searchActivities(Request $request)
+    {
+        $searchTerm = $request->input('search', '');
+        $results = [];
+
+        // Get all bookable services
+        $bookableServices = get_bookable_services();
+
+        foreach ($bookableServices as $objectModel => $serviceClass) {
+            if (class_exists($serviceClass)) {
+                $query = $serviceClass::query()
+                    ->where('status', 'publish')
+                    ->where('title', 'like', '%' . $searchTerm . '%')
+                    ->limit(10);
+
+                $services = $query->get();
+
+                foreach ($services as $service) {
+                    $results[] = [
+                        'id' => $service->id,
+                        'type' => $objectModel,
+                        'title' => $service->title,
+                        'image' => $service->image_id ? get_file_url($service->image_id, 'medium') : null,
+                        'base_price' => $service->price ?? 0,
+                    ];
+                }
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $results,
+        ]);
+    }
+
+    /**
+     * Search Customer by Phone Number
+     */
+    public function searchCustomer(Request $request)
+    {
+        $phone = $request->input('phone', '');
+
+        if (empty($phone)) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Please enter phone number'),
+            ]);
+        }
+
+        $customer = \App\User::where('phone', 'like', '%' . $phone . '%')
+            ->orWhere('phone', $phone)
+            ->first();
+
+        if (!$customer) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Customer not found'),
+                'create_new' => true,
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'id' => $customer->id,
+                'name' => $customer->getDisplayName(),
+                'first_name' => $customer->first_name,
+                'last_name' => $customer->last_name,
+                'email' => $customer->email,
+                'phone' => $customer->phone,
+                'avatar' => $customer->getAvatarUrl(),
+                'wallet_balance' => floatval($customer->getMeta('wallet_balance', 0)),
+                'points' => intval($customer->getMeta('points', 0)),
+            ],
+        ]);
+    }
+
+    /**
+     * Get Activity Details (Dates, Times, Pricing)
+     */
+    public function getActivityDetails(Request $request)
+    {
+        $activityId = $request->input('activity_id');
+        $activityType = $request->input('activity_type');
+
+        $bookableServices = get_bookable_services();
+
+        if (!isset($bookableServices[$activityType])) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Invalid activity type'),
+            ]);
+        }
+
+        $serviceClass = $bookableServices[$activityType];
+        $service = $serviceClass::find($activityId);
+
+        if (!$service) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Activity not found'),
+            ]);
+        }
+
+        $availableDates = [];
+        $availableTimes = [];
+        $personTypes = [];
+
+        // Get available dates based on activity type
+        if ($activityType === 'tour') {
+            // Get dates from tour_dates table
+            $tourDates = \Modules\Tour\Models\TourDate::where('target_id', $service->id)
+                ->where('active', 1)
+                ->where('start_date', '>=', now()->format('Y-m-d'))
+                ->orderBy('start_date', 'asc')
+                ->get();
+
+            foreach ($tourDates as $tourDate) {
+                $availableDates[] = [
+                    'date' => $tourDate->start_date,
+                    'price' => $tourDate->price ?? $service->price,
+                    'person_types' => $tourDate->person_types ?? null,
+                ];
+            }
+        } elseif ($activityType === 'event') {
+            // Get dates from event_dates table
+            $eventDates = \Modules\Event\Models\EventDate::where('target_id', $service->id)
+                ->where('start_date', '>=', now()->format('Y-m-d'))
+                ->orderBy('start_date', 'asc')
+                ->get();
+
+            foreach ($eventDates as $eventDate) {
+                $availableDates[] = [
+                    'date' => $eventDate->start_date,
+                    'price' => $eventDate->price ?? $service->price,
+                ];
+            }
+
+            // Get available time slots for events
+            if (!empty($service->start_time) && !empty($service->end_time) && !empty($service->duration)) {
+                $availableTimes = $this->generateTimeSlots(
+                    $service->start_time,
+                    $service->end_time,
+                    $service->duration,
+                    $service->duration_unit ?? 'hour'
+                );
+            }
+        } else {
+            // For other services (hotel, space, car, etc.), use a default 30-day range
+            $startDate = now();
+            for ($i = 0; $i < 30; $i++) {
+                $date = $startDate->copy()->addDays($i);
+                $availableDates[] = [
+                    'date' => $date->format('Y-m-d'),
+                    'price' => $service->price ?? 0,
+                ];
+            }
+        }
+
+        // Get person types from service meta (for tours and events)
+        if (in_array($activityType, ['tour', 'event'])) {
+            $meta = $service->meta;
+            if ($meta && !empty($meta->enable_person_types) && !empty($meta->person_types)) {
+                foreach ($meta->person_types as $type) {
+                    $personTypes[] = [
+                        'name' => $type['name'] ?? '',
+                        'desc' => $type['desc'] ?? '',
+                        'min' => $type['min'] ?? 0,
+                        'max' => $type['max'] ?? 99,
+                        'price' => $type['price'] ?? 0,
+                    ];
+                }
+            }
+        }
+
+        // Default person type if none configured
+        if (empty($personTypes)) {
+            $personTypes = [
+                [
+                    'name' => __('Adult'),
+                    'desc' => __('Ages 12+'),
+                    'min' => 1,
+                    'max' => 20,
+                    'price' => $service->price ?? 0,
+                ],
+            ];
+        }
+
+        $responseData = [
+            'success' => true,
+            'data' => [
+                'id' => $service->id,
+                'type' => $activityType,
+                'title' => $service->title,
+                'image' => $service->image_id ? get_file_url($service->image_id, 'medium') : null,
+                'base_price' => $service->price ?? 0,
+                'available_dates' => $availableDates,
+                'available_times' => $availableTimes,
+                'person_types' => $personTypes,
+            ],
+        ];
+
+        return response()->json($responseData);
+    }
+
+    /**
+     * Get Available Times for Selected Date
+     */
+    public function getAvailableTimes(Request $request)
+    {
+        $activityId = $request->input('activity_id');
+        $activityType = $request->input('activity_type');
+        $selectedDate = $request->input('date');
+
+        if (!$selectedDate) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Date is required'),
+            ]);
+        }
+
+        $bookableServices = get_bookable_services();
+
+        if (!isset($bookableServices[$activityType])) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Invalid activity type'),
+            ]);
+        }
+
+        $serviceClass = $bookableServices[$activityType];
+        $service = $serviceClass::find($activityId);
+
+        if (!$service) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Activity not found'),
+            ]);
+        }
+
+        $availableTimes = [];
+
+        // Get day of week from selected date (1=Monday, 7=Sunday)
+        $dayOfWeek = date('N', strtotime($selectedDate));
+
+        // For tours, get open hours from meta
+        if ($activityType === 'tour') {
+            $meta = $service->meta;
+
+            if ($meta && !empty($meta->enable_open_hours) && !empty($meta->open_hours)) {
+                $openHours = $meta->open_hours;
+
+                // Check if this day is enabled
+                if (isset($openHours[$dayOfWeek]) && !empty($openHours[$dayOfWeek]['enable'])) {
+                    $dayHours = $openHours[$dayOfWeek];
+                    $fromTime = $dayHours['from'] ?? null;
+                    $toTime = $dayHours['to'] ?? null;
+
+                    if ($fromTime && $toTime) {
+                        // Generate hourly time slots
+                        $availableTimes = $this->generateTimeSlots($fromTime, $toTime, 1, 'hour');
+                    }
+                }
+            }
+        }
+        // For events, use start_time and end_time with duration
+        elseif ($activityType === 'event') {
+            if (!empty($service->start_time) && !empty($service->end_time) && !empty($service->duration)) {
+                $availableTimes = $this->generateTimeSlots(
+                    $service->start_time,
+                    $service->end_time,
+                    $service->duration,
+                    $service->duration_unit ?? 'hour'
+                );
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'date' => $selectedDate,
+                'day_of_week' => $dayOfWeek,
+                'available_times' => $availableTimes,
+            ],
+        ]);
+    }
+
+    /**
+     * Generate time slots based on start time, end time, and duration
+     */
+    protected function generateTimeSlots($startTime, $endTime, $duration, $durationUnit = 'hour')
+    {
+        $slots = [];
+
+        // Convert times to timestamps
+        $start = strtotime($startTime);
+        $end = strtotime($endTime);
+
+        // Calculate duration in seconds
+        $durationSeconds = $durationUnit === 'hour'
+            ? $duration * 3600  // HOUR_IN_SECONDS
+            : $duration * 60;   // MINUTE_IN_SECONDS
+
+        // Generate slots
+        $current = $start;
+        while ($current + $durationSeconds <= $end) {
+            $slotStart = date('H:i', $current);
+            $slotEnd = date('H:i', $current + $durationSeconds);
+
+            $slots[] = [
+                'start' => $slotStart,
+                'end' => $slotEnd,
+                'display' => $slotStart . ' - ' . $slotEnd,
+            ];
+
+            $current += $durationSeconds;
+        }
+
+        return $slots;
+    }
+
+    /**
+     * Store New Order
+     */
+    public function storeOrder(Request $request)
+    {
+        $this->checkPermission('booking_update');
+
+        try {
+            $customerId = $request->input('customer_id');
+            $cartItems = $request->input('cart_items', []);
+
+            if (empty($customerId)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('Please select a customer'),
+                ]);
+            }
+
+            if (empty($cartItems)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('Cart is empty'),
+                ]);
+            }
+
+            $customer = \App\User::find($customerId);
+            if (!$customer) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('Customer not found'),
+                ]);
+            }
+
+            // Generate payment_id for grouping cart items
+            $paymentId = 'OP_' . time() . '_' . $customerId;
+            $createdBookings = [];
+
+            foreach ($cartItems as $item) {
+                // Calculate total guests
+                $totalGuests = 0;
+                foreach ($item['person_types'] as $personType) {
+                    $totalGuests += (int) $personType['number'];
+                }
+
+                $booking = new Booking;
+                $booking->customer_id = $customerId;
+                $booking->object_id = $item['activity_id'];
+                $booking->object_model = $item['activity_type'];
+                $booking->start_date = $item['date'];
+                $booking->end_date = $item['date']; // Same as start for tours
+                $booking->total = $item['total'];
+                $booking->total_guests = $totalGuests;
+                $booking->status = 'processing'; // Pending payment
+                $booking->payment_id = $paymentId;
+                $booking->first_name = $customer->first_name;
+                $booking->last_name = $customer->last_name;
+                $booking->email = $customer->email;
+                $booking->phone = $customer->phone;
+                $booking->salesman_id = Auth::id(); // Current agent
+                $booking->vendor_id = 1; // Default vendor
+                $booking->create_user = Auth::id();
+
+                $booking->save();
+
+                // Store person types as meta
+                if (!empty($item['person_types'])) {
+                    $booking->addMeta('person_types', $item['person_types']);
+                }
+
+                // Store time if available
+                if (!empty($item['time'])) {
+                    $booking->addMeta('selected_time', $item['time']);
+                }
+
+                $createdBookings[] = $booking;
+            }
+
+            // Calculate total amount for all items
+            $totalAmount = collect($cartItems)->sum('total');
+            $itemsCount = count($cartItems);
+
+            // Send notification to customer with checkout link
+            $customer->notify(new \App\Notifications\PendingPaymentNotification(
+                $paymentId,
+                $totalAmount,
+                $itemsCount
+            ));
+
+            return response()->json([
+                'success' => true,
+                'message' => __('Order created successfully. Customer has been notified.'),
+                'payment_id' => $paymentId,
+                'bookings' => collect($createdBookings)->pluck('id'),
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Failed to create order: ') . $e->getMessage(),
+            ], 500);
+        }
+    }
 }
