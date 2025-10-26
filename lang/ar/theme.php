@@ -145,7 +145,7 @@ return [
     'Adult' => 'بالغ',
     'Ages 12+' => 'أعمار 12+',
     'Searching...' => 'جاري البحث...',
-    
+
     // Payment notifications
     'Pending Order - Complete Payment' => 'طلب معلق - أكمل الدفع',
     'You have :count item(s) waiting for payment. Total: :amount AED' => 'لديك :count عنصر في انتظار الدفع. الإجمالي: :amount درهم',
