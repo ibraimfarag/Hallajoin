@@ -1031,6 +1031,19 @@ function get_current_currency($need, $default = '')
 function booking_status_to_text($status)
 {
     switch ($status) {
+        case 'cancelled':
+            return __('Cancelled');
+            break;
+        case 'processing':
+            return __('Processing');
+            break;
+        case 'success':
+            return __('Success');
+            break;
+        case 'complete':
+            return __('Completed');
+            break;
+        // Keep some legacy statuses for backward compatibility
         case 'draft':
             return __('Draft');
             break;
@@ -1040,17 +1053,11 @@ function booking_status_to_text($status)
         case 'paid':
             return __('Paid');
             break;
-        case 'processing':
-            return __('Processing');
-            break;
         case 'completed':
             return __('Completed');
             break;
         case 'confirmed':
             return __('Confirmed');
-            break;
-        case 'cancelled':
-            return __('Cancelled');
             break;
         case 'cancel':
             return __('Cancel');

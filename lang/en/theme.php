@@ -81,4 +81,19 @@ return [
     'Cart status updated successfully!' => 'Cart status updated successfully!',
     'Cart deleted successfully!' => 'Cart deleted successfully!',
     'Cart Total Value' => 'Cart Total Value',
+
+    // Confirmation method translations
+    'via WhatsApp' => 'via WhatsApp',
+    'via Email' => 'via Email',
+    'Click OK to copy WhatsApp link and open it manually' => 'Click OK to copy WhatsApp link and open it manually',
+    'WhatsApp link copied to clipboard' => 'WhatsApp link copied to clipboard',
+    'Copy this WhatsApp link:' => 'Copy this WhatsApp link:',
+    'Make Pending' => 'Make Pending',
+    'Confirmed via' => 'Confirmed via',
+    'Are you sure you want to make this order pending?' => 'Are you sure you want to make this order pending?',
+    'Order status changed to pending successfully' => 'Order status changed to pending successfully',
+    'This order is already pending' => 'This order is already pending',
+    'Order status changed to pending by :user' => 'Order status changed to pending by :user',
+    'Previously confirmed via :method on :date' => 'Previously confirmed via :method on :date',
+    'Failed to change order status: ' => 'Failed to change order status: ',
 ];

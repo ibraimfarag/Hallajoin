@@ -1,6 +1,20 @@
 <?php
 
 return [
+    // Confirmation method translations
+    'via WhatsApp' => 'عبر واتساب',
+    'via Email' => 'عبر الإيميل',
+    'Click OK to copy WhatsApp link and open it manually' => 'اضغط موافق لنسخ رابط الواتساب وفتحه يدوياً',
+    'WhatsApp link copied to clipboard' => 'تم نسخ رابط الواتساب',
+    'Copy this WhatsApp link:' => 'انسخ رابط الواتساب:',
+    'Make Pending' => 'جعل معلق',
+    'Confirmed via' => 'مؤكد عبر',
+    'Are you sure you want to make this order pending?' => 'هل أنت متأكد من جعل هذا الطلب معلقاً؟',
+    'Order status changed to pending successfully' => 'تم تغيير حالة الطلب إلى معلق بنجاح',
+    'This order is already pending' => 'هذا الطلب معلق بالفعل',
+    'Order status changed to pending by :user' => 'تم تغيير حالة الطلب إلى معلق بواسطة :user',
+    'Previously confirmed via :method on :date' => 'مؤكد سابقاً عبر :method في :date',
+    'Failed to change order status: ' => 'فشل في تغيير حالة الطلب: ',
     'Toggle Dark/Light Mode' => 'تبديل الوضع المظلم/الفاتح',
     'Dark' => 'مظلم',
     'Light' => 'فاتح',
@@ -35,6 +49,12 @@ return [
     'Total' => 'الإجمالي',
     'Proceed to Checkout' => 'المتابعة للدفع',
     'Clear Cart' => 'إفراغ السلة',
+
+    // Order Status translations
+    'Cancelled' => 'ملغية',
+    'Processing' => 'تحت قيد الدفع',
+    'Success' => 'تم الدفع',
+    'Completed' => 'اكتملت',
     'Are you sure you want to remove this item?' => 'هل أنت متأكد من إزالة هذا العنصر؟',
     'Are you sure you want to clear your cart?' => 'هل أنت متأكد من إفراغ سلتك؟',
     'Item added to cart successfully!' => 'تم إضافة العنصر إلى السلة بنجاح!',

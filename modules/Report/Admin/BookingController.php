@@ -334,48 +334,462 @@ class BookingController extends AdminController
     {
         $this->checkPermission('booking_view');
 
+        \Log::info('getNotes called with data:', $request->all());
+
         $request->validate([
             'booking_id' => 'required|exists:bravo_bookings,id',
         ]);
 
         try {
-            $notes = \Modules\Booking\Models\BookingNote::where('booking_id', $request->booking_id)
+            $bookingId = $request->booking_id;
+            \Log::info('Looking for notes for booking ID: ' . $bookingId);
+
+            $notes = \Modules\Booking\Models\BookingNote::where('booking_id', $bookingId)
                 ->with('user')
                 ->orderBy('created_at', 'desc')
-                ->get()
-                ->map(function ($note) {
-                    $attachments = [];
-                    if ($note->attachments && is_array($note->attachments)) {
-                        foreach ($note->attachments as $attachment) {
-                            $attachments[] = [
-                                'path' => $attachment['path'],
-                                'url' => asset('storage/' . $attachment['path']),
-                                'original_name' => $attachment['original_name'],
-                                'size' => $attachment['size'],
-                                'mime_type' => $attachment['mime_type'],
-                                'extension' => pathinfo($attachment['original_name'], PATHINFO_EXTENSION),
-                            ];
-                        }
-                    }
+                ->get();
 
-                    return [
-                        'id' => $note->id,
-                        'content' => $note->note,
-                        'user_name' => $note->user ? $note->user->getDisplayName() : __('Unknown User'),
-                        'user_avatar' => $note->user ? $note->user->getAvatarUrl() : null,
-                        'created_at' => $note->created_at->format('d M Y, h:i A'),
-                        'attachments' => $attachments,
-                    ];
-                });
+            \Log::info('Found ' . $notes->count() . ' notes for booking ' . $bookingId);
+
+            $formattedNotes = $notes->map(function ($note) {
+                $attachments = [];
+                if ($note->attachments && is_array($note->attachments)) {
+                    foreach ($note->attachments as $attachment) {
+                        $attachments[] = [
+                            'path' => $attachment['path'],
+                            'url' => asset('storage/' . $attachment['path']),
+                            'original_name' => $attachment['original_name'],
+                            'size' => $attachment['size'],
+                            'mime_type' => $attachment['mime_type'],
+                            'extension' => pathinfo($attachment['original_name'], PATHINFO_EXTENSION),
+                        ];
+                    }
+                }
+
+                return [
+                    'id' => $note->id,
+                    'content' => $note->note,
+                    'user_name' => $note->user ? $note->user->getDisplayName() : __('Unknown User'),
+                    'user_avatar' => $note->user ? $note->user->getAvatarUrl() : null,
+                    'created_at' => $note->created_at->format('d M Y, h:i A'),
+                    'attachments' => $attachments,
+                ];
+            });
 
             return response()->json([
                 'success' => true,
-                'notes' => $notes,
+                'notes' => $formattedNotes,
+                'count' => $notes->count(),
+                'booking_id' => $bookingId,
             ]);
         } catch (\Exception $e) {
+            \Log::error('Error in getNotes: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+
             return response()->json([
                 'success' => false,
                 'message' => __('Failed to load notes: ') . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function confirmOrder(Request $request)
+    {
+        $this->checkPermission('booking_update');
+
+        $request->validate([
+            'booking_id' => 'required|exists:bravo_bookings,id',
+            'has_ticket' => 'required|boolean',
+            'send_method' => 'required|in:whatsapp,email',
+            'ticket_file' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,pdf',
+        ]);
+
+        try {
+            $booking = \Modules\Booking\Models\Booking::find($request->booking_id);
+
+            if (!$booking) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('Booking not found'),
+                ], 404);
+            }
+
+            // Check if booking is already confirmed
+            if ($booking->confirm_type === 'confirmed') {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('This order is already confirmed'),
+                ], 400);
+            }
+
+            // Handle ticket file upload
+            $ticketPath = null;
+            if ($request->has_ticket && $request->hasFile('ticket_file')) {
+                $file = $request->file('ticket_file');
+                $bookingId = $booking->id;
+                $uploadPath = "booking_tickets/{$bookingId}";
+
+                $originalName = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+                $filename = 'ticket_' . time() . '_' . uniqid() . '.' . $extension;
+
+                // Store file
+                $ticketPath = $file->storeAs($uploadPath, $filename, 'public');
+            }
+
+            // Update booking
+            $booking->update([
+                'confirm_type' => 'confirmed',
+                'confirmation_method' => $request->send_method,
+                'confirmed_at' => now(),
+                'salesman_id' => Auth::id(),
+            ]);
+
+            // Create confirmation note
+            $noteText = __('Order confirmed by :user', ['user' => Auth::user()->getDisplayName()]);
+
+            if ($request->has_ticket) {
+                $noteText .= "\n" . __('Customer will receive ticket via :method', [
+                    'method' => $request->send_method === 'whatsapp' ? 'WhatsApp' : 'Email',
+                ]);
+            }
+
+            $noteData = [
+                'booking_id' => $booking->id,
+                'user_id' => Auth::id(),
+                'note' => $noteText,
+            ];
+
+            // Add ticket attachment to note if uploaded
+            if ($ticketPath) {
+                $noteData['attachments'] = [
+                    [
+                        'path' => $ticketPath,
+                        'original_name' => $originalName,
+                        'size' => $request->file('ticket_file')->getSize(),
+                        'mime_type' => $request->file('ticket_file')->getMimeType(),
+                    ],
+                ];
+            }
+
+            \Modules\Booking\Models\BookingNote::create($noteData);
+
+            // Prepare response data
+            $responseData = [
+                'success' => true,
+                'message' => __('Order confirmed successfully! You are now assigned as the salesman.'),
+            ];
+
+            // Handle send method
+            if ($request->send_method === 'whatsapp') {
+                // Prepare WhatsApp message
+                $message = $this->prepareWhatsAppMessage($booking, $ticketPath);
+                $phone = $this->formatPhoneForWhatsApp($booking->phone);
+
+                if ($phone) {
+                    // Ensure proper UTF-8 encoding for emojis
+                    $encodedMessage = rawurlencode(mb_convert_encoding($message, 'UTF-8', 'UTF-8'));
+                    $whatsappUrl = "https://wa.me/{$phone}?text={$encodedMessage}";
+                    $responseData['whatsapp_url'] = $whatsappUrl;
+                    $responseData['message'] .= ' ' . __('WhatsApp will open to send details to customer.');
+                } else {
+                    $responseData['message'] .= ' ' . __('Warning: Customer phone number not found for WhatsApp.');
+                }
+            } elseif ($request->send_method === 'email') {
+                // Send email
+                $this->sendConfirmationEmail($booking, $ticketPath);
+                $responseData['message'] .= ' ' . __('Confirmation email sent to customer.');
+            }
+
+            return response()->json($responseData);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Failed to confirm order: ') . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    private function prepareWhatsAppMessage($booking, $ticketPath = null)
+    {
+        try {
+            $orderNumber = $booking->code ?: $booking->id;
+            $customerName = trim(($booking->first_name ?? '') . ' ' . ($booking->last_name ?? '')) ?: __('Customer');
+
+            // Get all bookings with same payment_id (cart items)
+            $relatedBookings = collect([$booking]); // Default to current booking
+
+            if ($booking->payment_id) {
+                try {
+                    $cartBookings = \Modules\Booking\Models\Booking::where('payment_id', $booking->payment_id)
+                        ->orderBy('id')
+                        ->get();
+
+                    if (!$cartBookings->isEmpty()) {
+                        $relatedBookings = $cartBookings;
+                    }
+                } catch (\Exception $e) {
+                    // Fallback to current booking if query fails
+                    $relatedBookings = collect([$booking]);
+                }
+            }
+
+            // Calculate total amount for all bookings
+            $totalAmount = $relatedBookings->sum('total');
+
+            $message = "Hello *{$customerName}*! \n\n";
+            $message .= "*Your* *booking* *has* *been* *confirmed* *by* *Hallajoin*! \n";
+            $message .= "*Order*: {$orderNumber}\n\n";
+
+            foreach ($relatedBookings as $index => $relBooking) {
+                // Get service name safely
+                $serviceName = __('Unknown Service');
+                try {
+                    if ($relBooking->service && $relBooking->service->title) {
+                        $serviceName = $relBooking->service->title;
+                    }
+                } catch (\Exception $e) {
+                    // Service relationship failed, use default name
+                    $serviceName = __('Booking Service');
+                }
+
+                $serviceAmount = format_money_simple($relBooking->total);
+
+                $message .= "   *Service*: {$serviceName}\n";
+
+                // Add date if available
+                if ($relBooking->start_date) {
+                    $message .= '   *Date*: ' . display_date($relBooking->start_date) . "\n";
+                }
+
+                // Add guest info if available
+                $personTypes = $relBooking->getMeta('person_types');
+                if ($personTypes) {
+                    $personTypes = json_decode($personTypes, true);
+                    if (is_array($personTypes) && !empty($personTypes)) {
+                        $adults = 0;
+                        $children = 0;
+                        foreach ($personTypes as $type) {
+                            if (isset($type['number']) && $type['number'] > 0) {
+                                $typeName = strtolower($type['name'] ?? 'guest');
+                                if (strpos($typeName, 'adult') !== false) {
+                                    $adults += $type['number'];
+                                } elseif (strpos($typeName, 'child') !== false) {
+                                    $children += $type['number'];
+                                } else {
+                                    $adults += $type['number']; // Default to adults
+                                }
+                            }
+                        }
+
+                        if ($adults > 0) {
+                            $message .= "   *Adults*: {$adults}\n";
+                        }
+                        if ($children > 0) {
+                            $message .= "   *Children*: {$children}\n";
+                        }
+                    }
+                }
+
+                $message .= "   *Service* *Total*: {$serviceAmount}\n\n";
+            }
+
+            $message .= '*Services* *Total*: *' . format_money_simple($totalAmount) . "*\n\n";
+
+            if ($ticketPath) {
+                $ticketUrl = asset('storage/' . $ticketPath);
+                $message .= "🎫 *Your* *ticket*: {$ticketUrl}\n\n";
+            }
+
+            $message .= "Thanks for choosing Hallajoin! ✨\n";
+            $message .= "*Enjoy* *your* *visit* *and* *have* *an* *amazing* *experience!* ☺\n\n";
+            $message .= '🔔 Join our Telegram group for the latest offers: hallajoin';
+
+            return $message;
+
+        } catch (\Exception $e) {
+            // Fallback message if anything fails
+            return __('Hello! Your booking has been confirmed. Order: :order', [
+                'order' => $booking->code ?: $booking->id,
+            ]);
+        }
+    }
+
+    private function formatPhoneForWhatsApp($phone)
+    {
+        if (!$phone) {
+            return null;
+        }
+
+        // Remove all non-numeric characters
+        $phone = preg_replace('/[^0-9]/', '', $phone);
+
+        // Add country code if not present (assuming Egypt +20)
+        if (strlen($phone) === 10 && !str_starts_with($phone, '20')) {
+            $phone = '20' . $phone;
+        } elseif (strlen($phone) === 11 && str_starts_with($phone, '0')) {
+            $phone = '20' . substr($phone, 1);
+        }
+
+        return $phone;
+    }
+
+    private function sendConfirmationEmail($booking, $ticketPath = null)
+    {
+        // This would integrate with your email system
+        // For now, we'll just log it or you can implement according to your email setup
+
+        try {
+            $customerEmail = $booking->email;
+            if (!$customerEmail) {
+                throw new \Exception('Customer email not found');
+            }
+
+            // Get all bookings with same payment_id (cart items)
+            $relatedBookings = \Modules\Booking\Models\Booking::where('payment_id', $booking->payment_id)
+                ->where('payment_id', '!=', null)
+                ->with('service')
+                ->orderBy('id')
+                ->get();
+
+            // If no related bookings found, fallback to current booking
+            if ($relatedBookings->isEmpty()) {
+                $relatedBookings = collect([$booking]);
+            }
+
+            // Prepare email data
+            $emailData = [
+                'booking' => $booking,
+                'relatedBookings' => $relatedBookings,
+                'totalAmount' => $relatedBookings->sum('total'),
+                'ticketPath' => $ticketPath,
+                'ticketUrl' => $ticketPath ? asset('storage/' . $ticketPath) : null,
+            ];
+
+            // You can implement your email sending logic here
+            // Mail::to($customerEmail)->send(new BookingConfirmationMail($emailData));
+
+            // For now, just log the action with more details
+            \Log::info('Booking confirmation email would be sent', [
+                'booking_id' => $booking->id,
+                'customer_email' => $customerEmail,
+                'total_activities' => $relatedBookings->count(),
+                'total_amount' => $relatedBookings->sum('total'),
+                'has_ticket' => !empty($ticketPath),
+                'activities' => $relatedBookings->map(function ($b) {
+                    return $b->service ? $b->service->title : 'Unknown Service';
+                })->toArray(),
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to send confirmation email', [
+                'booking_id' => $booking->id,
+                'error' => $e->getMessage(),
+            ]);
+            throw $e;
+        }
+    }
+
+    public function getCustomerInfo(Request $request)
+    {
+        $this->checkPermission('booking_view');
+
+        $request->validate([
+            'booking_id' => 'required|exists:bravo_bookings,id',
+        ]);
+
+        try {
+            $booking = \Modules\Booking\Models\Booking::find($request->booking_id);
+
+            if (!$booking) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('Booking not found'),
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'customer' => [
+                    'name' => $booking->first_name . ' ' . $booking->last_name,
+                    'email' => $booking->email,
+                    'phone' => $booking->phone,
+                ],
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Failed to get customer info: ') . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function makePending(Request $request)
+    {
+        $this->checkPermission('booking_update');
+
+        $request->validate([
+            'booking_id' => 'required|exists:bravo_bookings,id',
+        ]);
+
+        try {
+            $booking = \Modules\Booking\Models\Booking::find($request->booking_id);
+
+            if (!$booking) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('Booking not found'),
+                ], 404);
+            }
+
+            // Check if booking is already pending
+            if ($booking->confirm_type === 'pending' || !$booking->confirm_type) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('This order is already pending'),
+                ], 400);
+            }
+
+            // Store previous confirmation info for note
+            $previousMethod = $booking->confirmation_method;
+            $previousConfirmedAt = $booking->confirmed_at;
+
+            // Update booking to pending (but keep confirmation method and timestamp for history)
+            $booking->update([
+                'confirm_type' => 'pending',
+                // Keep confirmation_method and confirmed_at for history
+                // 'confirmation_method' => null,
+                // 'confirmed_at' => null,
+            ]);
+
+            // Create note about status change
+            $noteText = __('Order status changed to pending by :user', ['user' => Auth::user()->getDisplayName()]);
+
+            if ($previousMethod) {
+                $methodName = $previousMethod === 'whatsapp' ? 'WhatsApp' : 'Email';
+                $noteText .= "\n" . __('Previously confirmed via :method on :date', [
+                    'method' => $methodName,
+                    'date' => $previousConfirmedAt ? date('d/m/Y H:i', strtotime($previousConfirmedAt)) : 'N/A',
+                ]);
+            }
+
+            \Modules\Booking\Models\BookingNote::create([
+                'booking_id' => $booking->id,
+                'user_id' => Auth::id(),
+                'note' => $noteText,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => __('Order status changed to pending successfully'),
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Failed to change order status: ') . $e->getMessage(),
             ], 500);
         }
     }

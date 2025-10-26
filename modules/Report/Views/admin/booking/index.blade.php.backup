@@ -87,11 +87,8 @@
         <div class="orders-header">
             <h1 class="orders-title">{{ __('Sales') }}</h1>
             @if(!empty($booking_update))
-                <button class="btn-create-order" onclick="alert('Create Order functionality coming soon!')"
-                    style="background: transparent; border: 2px solid #059669; color: #059669; padding: 10px 20px; border-radius: 15px; font-weight: 600; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease;"
-                    onmouseover="this.style.background='#059669'; this.style.color='white';"
-                    onmouseout="this.style.background='transparent'; this.style.color='#059669';">
-                    <i class="fa fa-shopping-cart"></i>
+                <button class="btn-create-order" onclick="alert('Create Order functionality coming soon!')">
+                    <i class="fa fa-plus"></i>
                     {{ __('CREATE ORDER') }}
                 </button>
             @endif
@@ -236,33 +233,13 @@
                                     <span style="opacity: 0.8; font-size: 16px;">{!! get_current_currency_svg() !!}</span>
                                 </div>
                             </td>
-                            <td style="text-align: center;">
-                                @php
-                                    $statusClass = '';
-                                    switch ($booking->status) {
-                                        case 'cancelled':
-                                            $statusClass = 'badge rounded-pill bg-danger';
-                                            break;
-                                        case 'success':
-                                            $statusClass = 'badge rounded-pill bg-primary';
-                                            break;
-                                        case 'processing':
-                                            $statusClass = 'badge rounded-pill bg-warning';
-                                            break;
-                                        case 'complete':
-                                            $statusClass = 'badge rounded-pill bg-success';
-                                            break;
-                                        default:
-                                            $statusClass = 'badge rounded-pill bg-secondary';
-                                            break;
-                                    }
-                                @endphp
-                                <span style="font-size: 15px;" class="{{ $statusClass }}">
+                            <td>
+                                <span class="status-badge {{ $booking->status }}">
                                     {{ $booking->statusName }}
                                 </span>
                             </td>
                             <td>{{ display_datetime($booking->created_at) }}</td>
-                            <td style="text-align: center;">
+                            <td>
                                 @php
                                     $confirmType = $booking->confirm_type ?: 'pending';
                                     $confirmTypeLabels = [
@@ -270,23 +247,31 @@
                                         'not_confirmed' => __('Not Confirmed'),
                                         'pending' => __('Pending')
                                     ];
-
-                                    // Bootstrap badge classes for confirm status
-                                    $confirmBadgeClasses = [
-                                        'confirmed' => 'badge rounded-pill bg-success',
-                                        'not_confirmed' => 'badge rounded-pill bg-danger',
-                                        'pending' => 'badge rounded-pill bg-warning'
+                                    $confirmIcon = [
+                                        'confirmed' => 'fa-check-circle',
+                                        'not_confirmed' => 'fa-times-circle',
+                                        'pending' => 'fa-clock-o'
                                     ];
-                                    $confirmBadgeClass = $confirmBadgeClasses[$confirmType] ?? 'badge rounded-pill bg-warning';
+                                    $confirmColor = [
+                                        'confirmed' => '#10b981',
+                                        'not_confirmed' => '#ef4444',
+                                        'pending' => '#f59e0b'
+                                    ];
+                                    $confirmBg = [
+                                        'confirmed' => 'rgba(16, 185, 129, 0.1)',
+                                        'not_confirmed' => 'rgba(239, 68, 68, 0.1)',
+                                        'pending' => 'rgba(245, 158, 11, 0.1)'
+                                    ];
                                 @endphp
-                                <div style="display: flex; flex-direction: column; gap: 4px; align-items: center;">
-                                    <span class="{{ $confirmBadgeClass }}" style="font-size: 14px;"
+                                <div style="display: flex; flex-direction: column; gap: 4px;">
+                                    <span
+                                        style="display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 500; background: {{ $confirmBg[$confirmType] ?? $confirmBg['pending'] }}; color: {{ $confirmColor[$confirmType] ?? $confirmColor['pending'] }};"
                                         title="{{ $confirmTypeLabels[$confirmType] ?? __('Pending') }}">
+                                        <i class="fa {{ $confirmIcon[$confirmType] ?? 'fa-clock-o' }}"></i>
                                         {{ $confirmTypeLabels[$confirmType] ?? __('Pending') }}
                                     </span>
                                     @if($booking->confirmation_method && $confirmType === 'confirmed')
-                                        <span
-                                            style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: #6b7280; margin-top: 2px;">
+                                        <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: #6b7280; margin-top: 2px;">
                                             @if($booking->confirmation_method === 'whatsapp')
                                                 <i class="fab fa-whatsapp" style="color: #25d366;"></i>
                                                 {{ __('via WhatsApp') }}
@@ -298,10 +283,6 @@
                                     @endif
                                 </div>
                             </td>
-
-
-
-
                             <td>
                                 @if($booking->salesman_id && $booking->salesman_id > 0)
                                     @php
@@ -422,7 +403,9 @@
                                                             <th style="padding: 10px; text-align: left; font-size: 13px;">
                                                                 {{ __('Amount') }}
                                                             </th>
-
+                                                            <th style="padding: 10px; text-align: center; font-size: 13px;">
+                                                                {{ __('Status') }}
+                                                            </th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -469,7 +452,12 @@
                                                                     <span
                                                                         style="opacity: 0.8; font-size: 13px;">{!! get_current_currency_svg() !!}</span>
                                                                 </td>
-
+                                                                <td style="padding: 12px; text-align: center;">
+                                                                    <span class="status-badge {{ $relBooking->status }}"
+                                                                        style="font-size: 11px;">
+                                                                        {{ $relBooking->statusName }}
+                                                                    </span>
+                                                                </td>
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
@@ -508,7 +496,7 @@
                                                 </button>
                                                 @if($booking->confirmation_method)
                                                     <small style="color: #6b7280; font-size: 11px; margin-left: 5px;">
-                                                        {{ __('Confirmed via') }}
+                                                        {{ __('Confirmed via') }} 
                                                         @if($booking->confirmation_method === 'whatsapp')
                                                             <i class="fab fa-whatsapp" style="color: #25d366;"></i> {{ __('WhatsApp') }}
                                                         @elseif($booking->confirmation_method === 'email')
@@ -563,14 +551,12 @@
                                 <i class="fa fa-exclamation-triangle"></i>
                             </div>
                             <div class="warning-content">
-                                <h4>{{ __('Do you want to confirm this order now?') }}</h4>
-                                <p>{{ __('If you proceed:') }}</p>
+                                <h4>{{ __('Are you sure you want to confirm this order?') }}</h4>
+                                <p>{{ __('This action will:') }}</p>
                                 <ul class="confirm-actions-list">
-                                    <li><i class="fa fa-check"></i> {{ __('The order status will change to Confirmed') }}
-                                    </li>
-                                    <li><i class="fa fa-user-tie"></i> {{ __('You’ll be set as the salesperson') }}</li>
-                                    <li><i class="fa fa-bell"></i>
-                                        {{ __(' the system will save a confirmation note for reference.') }}</li>
+                                    <li><i class="fa fa-check"></i> {{ __('Mark the order as confirmed') }}</li>
+                                    <li><i class="fa fa-user-tie"></i> {{ __('Assign you as the salesman') }}</li>
+                                    <li><i class="fa fa-bell"></i> {{ __('Add a confirmation note to the order') }}</li>
                                 </ul>
                             </div>
                         </div>
@@ -580,17 +566,17 @@
                     <div id="confirmStep2" class="confirm-step">
                         <div class="text-center">
                             <i class="fa fa-ticket" style="font-size: 48px; color: #3b82f6; margin-bottom: 20px;"></i>
-                            <h4>{{ __('Should this order have a ticket?') }}</h4>
+                            <h4>{{ __('Does this order have a ticket?') }}</h4>
                             <p style="color: var(--sales-text-secondary); margin-bottom: 30px;">
-                                {{ __('Tickets are required for some activities.') }}
+                                {{ __('Some activities require tickets to be sent to customers.') }}
                             </p>
                             <div class="ticket-options">
                                 <button type="button" class="btn btn-primary btn-lg" onclick="selectTicketOption(true)"
                                     style="margin-right: 15px;">
-                                    <i class="fa fa-check"></i> {{ __('Yes, ticket included') }}
+                                    <i class="fa fa-check"></i> {{ __('Yes, has ticket') }}
                                 </button>
                                 <button type="button" class="btn btn-secondary btn-lg" onclick="selectTicketOption(false)">
-                                    <i class="fa fa-times"></i> {{ __('No ticket') }}
+                                    <i class="fa fa-times"></i> {{ __('No ticket') }}
                                 </button>
                             </div>
                         </div>
@@ -599,12 +585,11 @@
                     <!-- Step 3: Upload Ticket -->
                     <div id="confirmStep3" class="confirm-step">
                         <div class="text-center">
-                            {{-- <i class="fa fa-cloud-upload"
-                                style="font-size: 48px; color: #10b981; margin-bottom: 20px;"></i> --}}
-                            {{-- <h4>{{ __('Upload Ticket') }}</h4> --}}
-                            {{-- <p style="color: var(--sales-text-secondary); margin-bottom: 30px;"> --}}
-                                {{-- {{ __('Please upload the ticket file (Image or PDF)') }} --}}
-                                {{-- </p> --}}
+                            <i class="fa fa-cloud-upload" style="font-size: 48px; color: #10b981; margin-bottom: 20px;"></i>
+                            <h4>{{ __('Upload Ticket') }}</h4>
+                            <p style="color: var(--sales-text-secondary); margin-bottom: 30px;">
+                                {{ __('Please upload the ticket file (Image or PDF)') }}
+                            </p>
 
                             <div class="upload-area" id="ticketUploadArea"
                                 onclick="document.getElementById('ticketFileInput').click()">
@@ -673,7 +658,7 @@
                     <div id="confirmStep5" class="confirm-step">
                         <div class="text-center">
                             <i class="fa fa-check-circle" style="font-size: 48px; color: #10b981; margin-bottom: 20px;"></i>
-                            <h4>{{ __('Ready to confirm?') }}</h4>
+                            <h4>{{ __('Ready to confirm and send?') }}</h4>
                             <div class="final-summary" id="finalSummary">
                                 <!-- Summary will be populated by JavaScript -->
                             </div>
@@ -979,29 +964,29 @@
         function populateFinalSummary() {
             const booking = window.currentConfirmBooking;
             const summaryHtml = `
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Order") }}:</span>
-                                                                <span class="summary-value">${booking.orderNumber}</span>
-                                                            </div>
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Customer Name") }}:</span>
-                                                                <span class="summary-value">${booking.customerName}</span>
-                                                            </div>
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Ticket Available") }}:</span>
-                                                                <span class="summary-value">${booking.hasTicket ? '{{ __("Yes") }}' : '{{ __("No") }}'}</span>
-                                                            </div>
-                                                            ${booking.hasTicket ? `
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Ticket File") }}:</span>
-                                                                <span class="summary-value">${booking.ticketFile ? booking.ticketFile.name : '{{ __("No file") }}'}</span>
-                                                            </div>
-                                                            ` : ''}
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Send Method") }}:</span>
-                                                                <span class="summary-value">${booking.sendMethod === 'whatsapp' ? '{{ __("WhatsApp") }}' : '{{ __("Email") }}'}</span>
-                                                            </div>
-                                                        `;
+                                <div class="summary-item">
+                                    <span class="summary-label">{{ __("Order") }}:</span>
+                                    <span class="summary-value">${booking.orderNumber}</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">{{ __("Customer") }}:</span>
+                                    <span class="summary-value">${booking.customerName}</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">{{ __("Has Ticket") }}:</span>
+                                    <span class="summary-value">${booking.hasTicket ? '{{ __("Yes") }}' : '{{ __("No") }}'}</span>
+                                </div>
+                                ${booking.hasTicket ? `
+                                <div class="summary-item">
+                                    <span class="summary-label">{{ __("Ticket File") }}:</span>
+                                    <span class="summary-value">${booking.ticketFile ? booking.ticketFile.name : '{{ __("No file") }}'}</span>
+                                </div>
+                                ` : ''}
+                                <div class="summary-item">
+                                    <span class="summary-label">{{ __("Send Method") }}:</span>
+                                    <span class="summary-value">${booking.sendMethod === 'whatsapp' ? '{{ __("WhatsApp") }}' : '{{ __("Email") }}'}</span>
+                                </div>
+                            `;
 
             document.getElementById('finalSummary').innerHTML = summaryHtml;
         }
@@ -1360,17 +1345,17 @@
                 const phoneHtml = userPhone ? `<div class="mention-user-phone"><i class="fa fa-phone"></i> ${userPhone}</div>` : '';
 
                 html += `
-                                                                                        <div class="mention-user-item" onclick="insertMention('${safeUserName}', ${userId})" data-user-id="${userId}">
-                                                                                            <div class="mention-user-avatar">
-                                                                                                ${avatarHtml}
-                                                                                            </div>
-                                                                                            <div class="mention-user-info">
-                                                                                                <div class="mention-user-name">${userName}</div>
-                                                                                                ${phoneHtml}
-                                                                                                <div class="mention-user-role"><i class="fa fa-user-tag"></i> ${userRole}</div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    `;
+                                                            <div class="mention-user-item" onclick="insertMention('${safeUserName}', ${userId})" data-user-id="${userId}">
+                                                                <div class="mention-user-avatar">
+                                                                    ${avatarHtml}
+                                                                </div>
+                                                                <div class="mention-user-info">
+                                                                    <div class="mention-user-name">${userName}</div>
+                                                                    ${phoneHtml}
+                                                                    <div class="mention-user-role"><i class="fa fa-user-tag"></i> ${userRole}</div>
+                                                                </div>
+                                                            </div>
+                                                        `;
             });
 
             $('#mentionUsersList').html(html);
@@ -1440,11 +1425,11 @@
         function displayNotes(notes) {
             if (!notes || notes.length === 0) {
                 $('#notesContent').html(`
-                                                                                                        <div class="empty-notes">
-                                                                                                            <i class="fa fa-sticky-note"></i>
-                                                                                                            <p>{{ __("No Notes Yet!") }}</p>
-                                                                                                        </div>
-                                                                                                    `);
+                                                                            <div class="empty-notes">
+                                                                                <i class="fa fa-sticky-note"></i>
+                                                                                <p>{{ __("No Notes Yet!") }}</p>
+                                                                            </div>
+                                                                        `);
                 return;
             }
 
@@ -1487,31 +1472,31 @@
                         }
 
                         attachmentsHtml += `
-                                                                                    <a href="${attachment.url}" class="note-attachment" download="${fileName}" target="_blank">
-                                                                                        ${thumbnailHtml}
-                                                                                        <div class="attachment-info">
-                                                                                            <span class="attachment-name">${fileName}</span>
-                                                                                            <span class="attachment-size">${fileSize}</span>
-                                                                                        </div>
-                                                                                    </a>
-                                                                                `;
+                                                        <a href="${attachment.url}" class="note-attachment" download="${fileName}" target="_blank">
+                                                            ${thumbnailHtml}
+                                                            <div class="attachment-info">
+                                                                <span class="attachment-name">${fileName}</span>
+                                                                <span class="attachment-size">${fileSize}</span>
+                                                            </div>
+                                                        </a>
+                                                    `;
                     });
                     attachmentsHtml += '</div>';
                 }
 
                 html += `
-                                                                                                        <div class="note-item">
-                                                                                                            <div class="note-avatar">
-                                                                                                                ${avatarContent}
-                                                                                                            </div>
-                                                                                                            <div class="note-header">
-                                                                                                                <span class="note-author">${note.user_name}</span>
-                                                                                                                <span class="note-time">${note.created_at}</span>
-                                                                                                            </div>
-                                                                                                            <div class="note-content">${note.content}</div>
-                                                                                                            ${attachmentsHtml}
-                                                                                                        </div>
-                                                                                                    `;
+                                                                            <div class="note-item">
+                                                                                <div class="note-avatar">
+                                                                                    ${avatarContent}
+                                                                                </div>
+                                                                                <div class="note-header">
+                                                                                    <span class="note-author">${note.user_name}</span>
+                                                                                    <span class="note-time">${note.created_at}</span>
+                                                                                </div>
+                                                                                <div class="note-content">${note.content}</div>
+                                                                                ${attachmentsHtml}
+                                                                            </div>
+                                                                        `;
             });
             html += '</div>';
 
@@ -1571,11 +1556,11 @@
                     }
 
                     const fileInfo = $(`
-                                                                                <div class="attachment-info">
-                                                                                    <span class="attachment-name">${file.name}</span>
-                                                                                    <span class="attachment-size">${fileSize}</span>
-                                                                                </div>
-                                                                            `);
+                                                    <div class="attachment-info">
+                                                        <span class="attachment-name">${file.name}</span>
+                                                        <span class="attachment-size">${fileSize}</span>
+                                                    </div>
+                                                `);
 
                     const removeBtn = $('<i class="fa fa-times attachment-item-remove" onclick="removeAttachment(' + index + ')"></i>');
 
@@ -1731,7 +1716,7 @@
         }
 
         // Make Order Pending Function
-        function makePendingOrder(bookingId) {
+        window.makePendingOrder = function(bookingId) {
             console.log('makePendingOrder called with ID:', bookingId); // Debug log
             if (!confirm('{{ __("Are you sure you want to make this order pending?") }}')) {
                 return;
@@ -1760,10 +1745,15 @@
                     alert('Error: ' + (xhr.responseJSON?.message || '{{ __("Something went wrong") }}'));
                 }
             });
+        };
+
+        // Also define it as a regular function for backward compatibility
+        function makePendingOrder(bookingId) {
+            return window.makePendingOrder(bookingId);
         }
 
         // Debug: Check if function is defined
-        console.log('makePendingOrder function defined:', typeof makePendingOrder);
+        console.log('makePendingOrder function defined:', typeof window.makePendingOrder);
     </script>
 
     <!-- Add Note Modal -->
@@ -1784,7 +1774,7 @@
                         <textarea class="form-control" id="noteTextarea" rows="5"
                             placeholder="{{ __('Enter your note here...') }}"
                             style="background: var(--sales-bg-primary); color: var(--sales-text-primary); border: 1px solid var(--sales-border-color);">
-                                                                                                                                </textarea>
+                                                                                                    </textarea>
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
                         <small class="text-muted" style="color: var(--sales-text-secondary) !important;">
@@ -1937,9 +1927,9 @@
     </div>
 
     <script>
-        // Global Variables (commented to fix duplicate declaration error)
-        // let currentBookingId = null; // Already declared in first script
-        // let mentionUsers = []; // Already declared in first script
+        // Global Variables
+        let currentBookingId = null;
+        let mentionUsers = [];
 
         // Toggle expandable details
         function toggleDetails(bookingId) {
@@ -2194,29 +2184,29 @@
         function populateFinalSummary() {
             const booking = window.currentConfirmBooking;
             const summaryHtml = `
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Order") }}:</span>
-                                                                <span class="summary-value">${booking.orderNumber}</span>
-                                                            </div>
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Customer") }}:</span>
-                                                                <span class="summary-value">${booking.customerName}</span>
-                                                            </div>
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Has Ticket") }}:</span>
-                                                                <span class="summary-value">${booking.hasTicket ? '{{ __("Yes") }}' : '{{ __("No") }}'}</span>
-                                                            </div>
-                                                            ${booking.hasTicket ? `
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Ticket File") }}:</span>
-                                                                <span class="summary-value">${booking.ticketFile ? booking.ticketFile.name : '{{ __("No file") }}'}</span>
-                                                            </div>
-                                                            ` : ''}
-                                                            <div class="summary-item">
-                                                                <span class="summary-label">{{ __("Send Method") }}:</span>
-                                                                <span class="summary-value">${booking.sendMethod === 'whatsapp' ? '{{ __("WhatsApp") }}' : '{{ __("Email") }}'}</span>
-                                                            </div>
-                                                        `;
+                                <div class="summary-item">
+                                    <span class="summary-label">{{ __("Order") }}:</span>
+                                    <span class="summary-value">${booking.orderNumber}</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">{{ __("Customer") }}:</span>
+                                    <span class="summary-value">${booking.customerName}</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">{{ __("Has Ticket") }}:</span>
+                                    <span class="summary-value">${booking.hasTicket ? '{{ __("Yes") }}' : '{{ __("No") }}'}</span>
+                                </div>
+                                ${booking.hasTicket ? `
+                                <div class="summary-item">
+                                    <span class="summary-label">{{ __("Ticket File") }}:</span>
+                                    <span class="summary-value">${booking.ticketFile ? booking.ticketFile.name : '{{ __("No file") }}'}</span>
+                                </div>
+                                ` : ''}
+                                <div class="summary-item">
+                                    <span class="summary-label">{{ __("Send Method") }}:</span>
+                                    <span class="summary-value">${booking.sendMethod === 'whatsapp' ? '{{ __("WhatsApp") }}' : '{{ __("Email") }}'}</span>
+                                </div>
+                            `;
 
             document.getElementById('finalSummary').innerHTML = summaryHtml;
         }
@@ -2539,17 +2529,17 @@
                 const phoneHtml = userPhone ? `<div class="mention-user-phone"><i class="fa fa-phone"></i> ${userPhone}</div>` : '';
 
                 html += `
-                                                                <div class="mention-user-item" onclick="insertMention('${safeUserName}', ${userId})" data-user-id="${userId}">
-                                                                    <div class="mention-user-avatar">
-                                                                        ${avatarHtml}
-                                                                    </div>
-                                                                    <div class="mention-user-info">
-                                                                        <div class="mention-user-name">${userName}</div>
-                                                                        ${phoneHtml}
-                                                                        <div class="mention-user-role"><i class="fa fa-user-tag"></i> ${userRole}</div>
-                                                                    </div>
-                                                                </div>
-                                                            `;
+                                    <div class="mention-user-item" onclick="insertMention('${safeUserName}', ${userId})" data-user-id="${userId}">
+                                        <div class="mention-user-avatar">
+                                            ${avatarHtml}
+                                        </div>
+                                        <div class="mention-user-info">
+                                            <div class="mention-user-name">${userName}</div>
+                                            ${phoneHtml}
+                                            <div class="mention-user-role"><i class="fa fa-user-tag"></i> ${userRole}</div>
+                                        </div>
+                                    </div>
+                                `;
             });
 
             $('#mentionUsersList').html(html);
@@ -2669,33 +2659,33 @@
                         const sizeFormatted = formatFileSize(attachment.size);
 
                         attachmentsHtml += `
-                                                                        <a href="${attachment.url}" target="_blank" class="note-attachment">
-                                                                            ${iconHtml}
-                                                                            <div class="attachment-info">
-                                                                                <div class="attachment-name">${attachment.original_name}</div>
-                                                                                <div class="attachment-size">${sizeFormatted}</div>
-                                                                            </div>
-                                                                        </a>
-                                                                    `;
+                                            <a href="${attachment.url}" target="_blank" class="note-attachment">
+                                                ${iconHtml}
+                                                <div class="attachment-info">
+                                                    <div class="attachment-name">${attachment.original_name}</div>
+                                                    <div class="attachment-size">${sizeFormatted}</div>
+                                                </div>
+                                            </a>
+                                        `;
                     });
                     attachmentsHtml += '</div>';
                 }
 
                 html += `
-                                                                <div class="note-item">
-                                                                    <div class="note-avatar">
-                                                                        ${avatarHtml}
-                                                                    </div>
-                                                                    <div class="note-content">
-                                                                        <div class="note-header">
-                                                                            <span class="note-author">${userName}</span>
-                                                                            <span class="note-time">${note.created_at}</span>
-                                                                        </div>
-                                                                        <div class="note-content">${note.content}</div>
-                                                                        ${attachmentsHtml}
-                                                                    </div>
-                                                                </div>
-                                                            `;
+                                    <div class="note-item">
+                                        <div class="note-avatar">
+                                            ${avatarHtml}
+                                        </div>
+                                        <div class="note-content">
+                                            <div class="note-header">
+                                                <span class="note-author">${userName}</span>
+                                                <span class="note-time">${note.created_at}</span>
+                                            </div>
+                                            <div class="note-content">${note.content}</div>
+                                            ${attachmentsHtml}
+                                        </div>
+                                    </div>
+                                `;
             });
 
             $('#notesTimeline').html(html);
@@ -2742,17 +2732,17 @@
                 const sizeFormatted = formatFileSize(file.size);
 
                 const fileHtml = `
-                                                                <div class="attachment-item" data-file-index="${index}">
-                                                                    ${thumbnailHtml}
-                                                                    <div class="attachment-info">
-                                                                        <div class="attachment-name">${file.name}</div>
-                                                                        <div class="attachment-size">${sizeFormatted}</div>
-                                                                    </div>
-                                                                    <span class="attachment-item-remove" onclick="removeSelectedFile(${index})">
-                                                                        <i class="fa fa-times"></i>
-                                                                    </span>
-                                                                </div>
-                                                            `;
+                                    <div class="attachment-item" data-file-index="${index}">
+                                        ${thumbnailHtml}
+                                        <div class="attachment-info">
+                                            <div class="attachment-name">${file.name}</div>
+                                            <div class="attachment-size">${sizeFormatted}</div>
+                                        </div>
+                                        <span class="attachment-item-remove" onclick="removeSelectedFile(${index})">
+                                            <i class="fa fa-times"></i>
+                                        </span>
+                                    </div>
+                                `;
 
                 preview.append(fileHtml);
             });
@@ -2856,49 +2846,49 @@
             return colors[Math.floor(Math.random() * colors.length)];
         }
 
-                                    // Make Order Pending Function (commented to fix duplicate function error)
-                                    /* window.makePendingOrder = function(bookingId) { // Already defined in first script
-                                        console.log('makePendingOrder called with ID:', bookingId); // Debug log
-                                        if (!confirm('{{ __("Are you sure you want to make this order pending?") }}')) {
-        return;
-                                        }
-
-        showLoading();
-
-        $.ajax({
-            url: '{{ route("report.admin.booking.make-pending") }}',
-            method: 'POST',
-            data: {
-                booking_id: bookingId,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function (response) {
-                hideLoading();
-                if (response.success) {
-                    alert(response.message || '{{ __("Order status changed to pending successfully") }}');
-                    window.location.reload();
-                } else {
-                    alert(response.message || '{{ __("Something went wrong") }}');
-                }
-            },
-            error: function (xhr) {
-                hideLoading();
-                alert('Error: ' + (xhr.responseJSON?.message || '{{ __("Something went wrong") }}'));
+        // Make Order Pending Function
+        window.makePendingOrder = function(bookingId) {
+            console.log('makePendingOrder called with ID:', bookingId); // Debug log
+            if (!confirm('{{ __("Are you sure you want to make this order pending?") }}')) {
+                return;
             }
-        });
-                                    };
 
-        // Debug: Check if function is defined (commented to fix duplicate)
-        // console.log('makePendingOrder function defined:', typeof window.makePendingOrder);
+            showLoading();
 
-        // Also define it as a regular function for backward compatibility (commented to fix duplicate)
-        // function makePendingOrder(bookingId) {
-        //     return window.makePendingOrder(bookingId);
-        // } */
+            $.ajax({
+                url: '{{ route("report.admin.booking.make-pending") }}',
+                method: 'POST',
+                data: {
+                    booking_id: bookingId,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    hideLoading();
+                    if (response.success) {
+                        alert(response.message || '{{ __("Order status changed to pending successfully") }}');
+                        window.location.reload();
+                    } else {
+                        alert(response.message || '{{ __("Something went wrong") }}');
+                    }
+                },
+                error: function (xhr) {
+                    hideLoading();
+                    alert('Error: ' + (xhr.responseJSON?.message || '{{ __("Something went wrong") }}'));
+                }
+            });
+        };
+
+        // Debug: Check if function is defined
+        console.log('makePendingOrder function defined:', typeof window.makePendingOrder);
+
+        // Also define it as a regular function for backward compatibility
+        function makePendingOrder(bookingId) {
+            return window.makePendingOrder(bookingId);
+        }
 
         // Override finalConfirmOrder to fix WhatsApp opening issue
         window.originalFinalConfirmOrder = window.finalConfirmOrder;
-        window.finalConfirmOrder = function () {
+        window.finalConfirmOrder = function() {
             const booking = window.currentConfirmBooking;
 
             // Disable button and show loading
@@ -2926,19 +2916,19 @@
                 contentType: false,
                 success: function (response) {
                     hideLoading();
-
+                    
                     console.log('Server response:', response); // Debug log
 
                     if (response.success) {
                         $('#confirmOrderModal').modal('hide');
-
+                        
                         // Show success message first
                         alert(response.message || '{{ __("Order confirmed successfully") }}');
-
+                        
                         if (response.whatsapp_url) {
                             console.log('Opening WhatsApp URL:', response.whatsapp_url); // Debug log
                             // Try to open WhatsApp immediately after user clicks OK on alert
-                            setTimeout(function () {
+                            setTimeout(function() {
                                 try {
                                     const opened = window.open(response.whatsapp_url, '_blank');
                                     if (!opened || opened.closed || typeof opened.closed == 'undefined') {
@@ -2967,7 +2957,7 @@
                         }
 
                         // Reload page after a delay
-                        setTimeout(function () {
+                        setTimeout(function() {
                             window.location.reload();
                         }, 2000);
                     } else {
@@ -2985,38 +2975,6 @@
                     $('#confirmOrderBtn').prop('disabled', false).html('<i class="fa fa-check-circle"></i> {{ __("Confirm & Send") }}');
                 }
             });
-        };
-    </script>
-
-    <!-- WhatsApp URL Fix Script -->
-    <script>
-        // Override window.open for WhatsApp URLs
-        const originalWindowOpen = window.open;
-        window.open = function (url, target, features) {
-            // Check if it's a WhatsApp URL
-            if (url && url.includes('wa.me')) {
-                // Force new tab/window for WhatsApp
-                const newWindow = originalWindowOpen.call(this, url, '_blank', 'noopener,noreferrer');
-
-                // Additional attempts if first one fails
-                setTimeout(() => {
-                    if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
-                        // Try creating a temporary link and clicking it
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.target = '_blank';
-                        link.rel = 'noopener noreferrer';
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                    }
-                }, 100);
-
-                return newWindow;
-            }
-
-            // For non-WhatsApp URLs, use original function
-            return originalWindowOpen.call(this, url, target, features);
         };
     </script>
 

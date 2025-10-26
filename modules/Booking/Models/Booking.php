@@ -26,6 +26,8 @@ class Booking extends BaseModel
 
     protected $table = 'bravo_bookings';
 
+    protected $guarded = [];
+
     protected $cachedMeta = [];
 
     // protected $cachedMetaArr = [];
