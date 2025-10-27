@@ -238,7 +238,13 @@ body.dark-mode-instant .create-order-container {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    min-height: 36px;
+
+}
+
+.activity-category {
+    font-size: 11px;
+    color: var(--create-text-secondary);
+    margin-bottom: 4px;
 }
 
 .activity-price {
@@ -485,7 +491,7 @@ body.dark-mode-instant .create-order-container {
 }
 
 .time-slot-button {
-    padding: 12px 16px;
+    padding: 5px 16px;
     background: var(--create-bg-secondary);
     border: 2px solid var(--create-border-color);
     border-radius: 8px;
@@ -539,6 +545,17 @@ body.dark-mode-instant .create-order-container {
 .currency {
     font-size: 20px !important;
     opacity: 0.9;
+}
+
+.currency-svg {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.currency-svg svg {
+    width: auto;
+    height: 1em;
+    vertical-align: middle;
 }
 
 /* Customer Section */

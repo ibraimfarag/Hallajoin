@@ -5,6 +5,9 @@ let cartItems = [];
 let currentActivity = null;
 let searchTimeout = null;
 
+// Get currency SVG from window variable (set in blade)
+const currencySvg = window.currencySvg || 'AED';
+
 // Initialize
 document.addEventListener('DOMContentLoaded', function () {
     initializeSearch();
@@ -58,17 +61,21 @@ function displaySearchResults(activities) {
     const resultsContainer = document.getElementById('searchResults');
     let html = '';
 
+    console.log('Activities:', activities); // Debug
+
     activities.forEach(activity => {
         const imageUrl = activity.image || '/images/placeholder.jpg';
-        const activityType = capitalizeFirst(activity.type);
+        const category = activity.category ? `<div class="activity-category">${activity.category}</div>` : '';
+
+        console.log('Activity:', activity.title, 'Category:', activity.category); // Debug
 
         html += `
             <div class="activity-item" onclick="selectActivity(${activity.id}, '${activity.type}')">
-                <span class="activity-badge">${activityType}</span>
                 <img src="${imageUrl}" class="activity-image-thumb" alt="${activity.title}" onerror="this.src='/images/placeholder.jpg'">
                 <div class="activity-info">
                     <div class="activity-title">${activity.title}</div>
-                    <div class="activity-price">${activity.base_price} AED</div>
+                    ${category}
+                    <div class="activity-price">${activity.base_price} <span class="currency-svg">${currencySvg}</span></div>
                 </div>
             </div>
         `;
@@ -189,7 +196,7 @@ function displayTimeSlots(timeSlots) {
     timeSlots.forEach((slot, index) => {
         html += `
             <button type="button" class="time-slot-button" onclick="selectTimeSlot(${index}, '${slot.start}')">
-                <span class="time-icon">🕐</span>
+             
                 <span class="time-range">${slot.display}</span>
             </button>
         `;
@@ -224,7 +231,7 @@ function displayPersonTypes(personTypes) {
                     <div class="person-type-name">${type.name}</div>
                     ${type.desc ? `<div class="person-type-desc">${type.desc}</div>` : ''}
                 </div>
-                <div class="person-type-price">${type.price} AED</div>
+                <div class="person-type-price">${type.price} <span class="currency-svg">${currencySvg}</span></div>
                 <div class="quantity-control">
                     <button class="btn-qty" onclick="changeQuantity(${index}, -1)">
                         <i class="fa fa-minus"></i>
@@ -382,7 +389,7 @@ function updateCartDisplay() {
                 <div class="cart-item-guests">
                     ${guestBadges}
                 </div>
-                <div class="cart-item-price">${item.total.toFixed(2)} AED</div>
+                <div class="cart-item-price">${item.total.toFixed(2)} <span class="currency-svg">${currencySvg}</span></div>
             </div>
         `;
     });
@@ -464,7 +471,7 @@ function displayCustomer(customer) {
     customerInfo.style.display = 'flex';
 
     // Show balance
-    document.getElementById('walletAmount').textContent = `${customer.wallet_balance} AED`;
+    document.getElementById('walletAmount').innerHTML = `${customer.wallet_balance} ${currencySvg}`;
     document.getElementById('pointsAmount').textContent = customer.points;
     document.getElementById('customerBalance').style.display = 'flex';
 
@@ -492,9 +499,43 @@ function createOrder() {
         return;
     }
 
-    if (!confirm('Create order for ' + selectedCustomer.name + '?')) {
+    // Show confirmation modal
+    showConfirmOrderModal();
+}
+
+function showConfirmOrderModal() {
+    // Set customer name
+    document.getElementById('confirmCustomerName').textContent = selectedCustomer.name;
+
+    // Calculate totals
+    const totalItems = cartItems.length;
+    const totalGuests = cartItems.reduce((sum, item) => sum + item.total_guests, 0);
+    const totalAmount = cartItems.reduce((sum, item) => sum + item.total, 0);
+
+    // Update modal content
+    document.getElementById('confirmItemsCount').textContent = totalItems;
+    document.getElementById('confirmTotalGuests').textContent = totalGuests;
+    document.getElementById('confirmTotalAmount').textContent = totalAmount.toFixed(2);
+
+    // Show modal
+    document.getElementById('confirmOrderModal').style.display = 'flex';
+}
+
+function closeConfirmOrderModal() {
+    document.getElementById('confirmOrderModal').style.display = 'none';
+}
+
+let isCreatingOrder = false;
+
+function confirmCreateOrder() {
+    // Prevent double submission
+    if (isCreatingOrder) {
         return;
     }
+    isCreatingOrder = true;
+
+    // Close modal
+    closeConfirmOrderModal();
 
     const btn = document.getElementById('createOrderBtn');
     btn.disabled = true;
@@ -513,12 +554,12 @@ function createOrder() {
         },
         success: function (response) {
             if (response.success) {
-                alert('Order created successfully! The customer will receive a notification.');
-                window.location.href = window.location.origin + '/admin/module/report/booking';
+                showSuccessModal();
             } else {
                 alert(response.message);
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa fa-check-circle"></i> CREATE ORDER';
+                isCreatingOrder = false;
             }
         },
         error: function (xhr) {
@@ -526,8 +567,17 @@ function createOrder() {
             alert('Error creating order');
             btn.disabled = false;
             btn.innerHTML = '<i class="fa fa-check-circle"></i> CREATE ORDER';
+            isCreatingOrder = false;
         }
     });
+}
+
+function showSuccessModal() {
+    document.getElementById('successOrderModal').style.display = 'flex';
+}
+
+function redirectToBookings() {
+    window.location.href = window.location.origin + '/admin/module/report/booking';
 }
 
 // Helper Functions

@@ -139,6 +139,14 @@ class BookingController extends AdminController
 
         $query->whereIn('object_model', array_keys(get_bookable_services()));
 
+        // Group by payment_id to avoid duplicate rows for cart orders
+        // For orders with payment_id, show only the first booking (lowest ID)
+        $query->whereRaw('(payment_id IS NULL OR payment_id = "" OR id IN (
+            SELECT MIN(id) FROM bravo_bookings 
+            WHERE payment_id IS NOT NULL AND payment_id != "" 
+            GROUP BY payment_id
+        ))');
+
         // Sorting
         $sortBy = $request->get('sort_by', 'id');
         $sortOrder = $request->get('sort_order', 'desc');
@@ -830,15 +838,33 @@ class BookingController extends AdminController
                     ->where('title', 'like', '%' . $searchTerm . '%')
                     ->limit(10);
 
+                // Eager load category relationship if exists
+                if (method_exists($serviceClass, 'category_tour')) {
+                    $query->with('category_tour');
+                }
+
                 $services = $query->get();
 
                 foreach ($services as $service) {
+                    // Get category name
+                    $categoryName = null;
+
+                    // Try different relationship names
+                    if (isset($service->category_tour) && $service->category_tour) {
+                        $categoryName = $service->category_tour->name ?? null;
+                    } elseif (isset($service->category) && $service->category) {
+                        $categoryName = $service->category->name ?? null;
+                    } elseif (isset($service->cat) && $service->cat) {
+                        $categoryName = $service->cat->name ?? null;
+                    }
+
                     $results[] = [
                         'id' => $service->id,
                         'type' => $objectModel,
                         'title' => $service->title,
                         'image' => $service->image_id ? get_file_url($service->image_id, 'medium') : null,
                         'base_price' => $service->price ?? 0,
+                        'category' => $categoryName,
                     ];
                 }
             }
@@ -1172,8 +1198,9 @@ class BookingController extends AdminController
             // Generate payment_id for grouping cart items
             $paymentId = 'OP_' . time() . '_' . $customerId;
             $createdBookings = [];
+            $sharedOrderCode = null; // Will store the code for all bookings in this order
 
-            foreach ($cartItems as $item) {
+            foreach ($cartItems as $index => $item) {
                 // Calculate total guests
                 $totalGuests = 0;
                 foreach ($item['person_types'] as $personType) {
@@ -1198,7 +1225,17 @@ class BookingController extends AdminController
                 $booking->vendor_id = 1; // Default vendor
                 $booking->create_user = Auth::id();
 
-                $booking->save();
+                // Only the first booking gets auto-generated code
+                // All other bookings will use the same code
+                if ($index === 0) {
+                    // First booking - save normally to get auto-generated code
+                    $booking->save();
+                    $sharedOrderCode = $booking->code;
+                } else {
+                    // Subsequent bookings - set code manually before save
+                    $booking->code = $sharedOrderCode;
+                    $booking->save();
+                }
 
                 // Store person types as meta
                 if (!empty($item['person_types'])) {

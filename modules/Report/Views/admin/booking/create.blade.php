@@ -124,8 +124,8 @@
                                 <div class="customer-phone" id="customerPhoneDisplay"></div>
                                 <div class="customer-email" id="customerEmail"></div>
                             </div>
-                            <button class="btn-edit-customer" onclick="clearCustomer()">
-                                <i class="fa fa-pencil"></i>
+                            <button class="btn-remove-item" onclick="clearCustomer()">
+                                <i class="fa fa-trash"></i>
                             </button>
                         </div>
 
@@ -134,7 +134,7 @@
                             <div class="balance-item">
                                 <i class="fa fa-wallet"></i>
                                 <span>{{ __('Wallet') }}:</span>
-                                <strong id="walletAmount">0 AED</strong>
+                                <strong id="walletAmount">0 {!! get_current_currency_svg() !!}</strong>
                             </div>
                             <div class="balance-item">
                                 <i class="fa fa-star"></i>
@@ -181,7 +181,88 @@
                 </div>
             </div>
         </div>
+
+        <!-- Confirm Order Modal -->
+        <div id="confirmOrderModal" class="activity-details-modal" style="display: none;">
+            <div class="modal-overlay" onclick="closeConfirmOrderModal()"></div>
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h3><i class="fa fa-check-circle"></i> {{ __('Confirm Order') }}</h3>
+                    <button class="btn-close" onclick="closeConfirmOrderModal()">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div style="text-align: center; padding: 20px 0;">
+                        <i class="fa fa-shopping-cart" style="font-size: 48px; color: #059669; margin-bottom: 20px;"></i>
+                        <p style="font-size: 18px; margin-bottom: 10px;">{{ __('Create order for') }}</p>
+                        <h4 id="confirmCustomerName" style="color: var(--create-text-primary); margin-bottom: 20px;"></h4>
+
+                        <div
+                            style="background: var(--create-bg-tertiary); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>{{ __('Items') }}:</span>
+                                <strong id="confirmItemsCount">0</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>{{ __('Total Guests') }}:</span>
+                                <strong id="confirmTotalGuests">0</strong>
+                            </div>
+                            <div
+                                style="display: flex; justify-content: space-between; font-size: 18px; padding-top: 10px; border-top: 2px solid var(--create-border-color);">
+                                <span>{{ __('Total Amount') }}:</span>
+                                <strong style="color: #059669;">
+                                    <span id="confirmTotalAmount">0</span> {!! get_current_currency_svg() !!}
+                                </strong>
+                            </div>
+                        </div>
+
+                        <p style="color: var(--create-text-secondary); font-size: 14px;">
+                            {{ __('The customer will receive a notification with payment link') }}
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeConfirmOrderModal()">
+                        <i class="fa fa-times"></i> {{ __('Cancel') }}
+                    </button>
+                    <button class="btn btn-primary" onclick="confirmCreateOrder()">
+                        <i class="fa fa-check"></i> {{ __('Confirm Order') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Order Modal -->
+        <div id="successOrderModal" class="activity-details-modal" style="display: none;">
+            <div class="modal-overlay"></div>
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-body">
+                    <div style="text-align: center; padding: 30px 20px;">
+                        <div style="width: 80px; height: 80px; border-radius: 50%; background: #059669; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fa fa-check" style="font-size: 48px; color: white;"></i>
+                        </div>
+                        <h3 style="color: var(--create-text-primary); margin-bottom: 15px; font-size: 24px;">
+                            {{ __('Order Created Successfully!') }}
+                        </h3>
+                        <p style="color: var(--create-text-secondary); font-size: 16px; margin-bottom: 10px;">
+                            {{ __('The customer will receive a notification') }}
+                        </p>
+                        <p style="color: var(--create-text-secondary); font-size: 16px; margin-bottom: 30px;">
+                            {{ __('with the payment link') }}
+                        </p>
+                        <button class="btn btn-primary" onclick="redirectToBookings()" style="padding: 12px 40px; font-size: 16px;">
+                            <i class="fa fa-arrow-left"></i> {{ __('Back to Sales') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <script>
+        // Make currency SVG available to JavaScript
+        window.currencySvg = `{!! str_replace(['`', '${'], ['\`', '\${'], get_current_currency_svg()) !!}`;
+    </script>
     <script src="{{ asset('module/report/js/create-order.js') }}"></script>
 @endsection
