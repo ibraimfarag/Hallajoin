@@ -1275,4 +1275,72 @@ class BookingController extends AdminController
             ], 500);
         }
     }
+
+    /**
+     * Cancel an order: set status and confirm_type to cancelled, disable payment link, notify user.
+     */
+    public function cancelOrder(Request $request, $id)
+    {
+        $this->checkPermission('booking_update');
+
+        $booking = \Modules\Booking\Models\Booking::find($id);
+        if (!$booking) {
+            return response()->json(['success' => false, 'message' => __('Booking not found')], 404);
+        }
+
+        // Only allow cancel if status is processing and confirm_type is pending
+        if ($booking->status !== 'processing' || ($booking->confirm_type && $booking->confirm_type !== 'pending')) {
+            return response()->json(['success' => false, 'message' => __('Cannot cancel this order')], 400);
+        }
+
+        // Update status and confirm_type
+        $booking->status = 'cancelled';
+        $booking->confirm_type = 'cancelled';
+        $booking->save();
+
+        // Disable payment link if exists
+        if ($booking->payment) {
+            $booking->payment->status = 'cancel';
+            $booking->payment->logs = json_encode(__('Order cancelled by admin'));
+            $booking->payment->save();
+        }
+
+        // Add admin note
+        \Modules\Booking\Models\BookingNote::create([
+            'booking_id' => $booking->id,
+            'user_id' => \Auth::id(),
+            'note' => __('Order cancelled by :user', ['user' => \Auth::user()->getDisplayName()]),
+        ]);
+
+        // Send email notification to customer, admin, and vendor
+        try {
+            $booking->sendStatusUpdatedEmails();
+        } catch (\Exception $e) {
+            \Log::warning('Failed to send cancellation email: ' . $e->getMessage());
+        }
+
+        // Send in-app notification to customer only (not vendor or admin)
+        try {
+            $customer = \App\User::where('id', $booking->customer_id)->where('status', 'publish')->first();
+            if ($customer) {
+                $customer->notify(new \App\Notifications\PrivateChannelServices([
+                    'event' => 'BookingCancelled',
+                    'to' => 'customer',
+                    'id' => $booking->id,
+                    'name' => \Auth::user()->display_name,
+                    'avatar' => \Auth::user()->avatar_url,
+                    'link' => route('user.booking_history'),
+                    'type' => $booking->object_model,
+                    'message' => __(':name has changed to :status', [
+                        'name' => $booking->service->title,
+                        'status' => $booking->status
+                    ])
+                ]));
+            }
+        } catch (\Exception $e) {
+            \Log::warning('Failed to send cancellation notification: ' . $e->getMessage());
+        }
+
+        return response()->json(['success' => true, 'message' => __('Order cancelled successfully')]);
+    }
 }

@@ -71,4 +71,6 @@ Route::group(['prefix' => config('admin.admin_route_prefix'), 'middleware' => ['
     Route::post('/currency/update-svg', [\Modules\Core\Admin\CurrencyController::class, 'updateSvgSymbol'])->name('admin.currency.update-svg');
     Route::post('/currency/update-currency-svg', [\Modules\Core\Admin\CurrencyController::class, 'updateCurrencySvg'])->name('admin.currency.update-currency-svg');
     Route::post('/currency/preview', [\Modules\Core\Admin\CurrencyController::class, 'preview'])->name('admin.currency.preview');
+    // Cancel booking route
+    Route::post('/module/report/booking/cancel/{id}', [\Modules\Report\Admin\BookingController::class, 'cancelOrder'])->name('admin.booking.cancel');
 });
