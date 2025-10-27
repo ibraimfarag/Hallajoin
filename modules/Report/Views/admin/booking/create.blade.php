@@ -248,9 +248,7 @@
                         <p style="color: var(--create-text-secondary); font-size: 16px; margin-bottom: 10px;">
                             {{ __('The customer will receive a notification') }}
                         </p>
-                        <p style="color: var(--create-text-secondary); font-size: 16px; margin-bottom: 30px;">
-                            {{ __('with the payment link') }}
-                        </p>
+                       
                         <button class="btn btn-primary" onclick="redirectToBookings()" style="padding: 12px 40px; font-size: 16px;">
                             <i class="fa fa-arrow-left"></i> {{ __('Back to Sales') }}
                         </button>

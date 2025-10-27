@@ -179,6 +179,7 @@ class BookingController extends AdminController
             'confirmed' => __('Confirmed'),
             'not_confirmed' => __('Not Confirmed'),
             'pending' => __('Pending'),
+            'cancelled' => __('Cancelled'),
         ];
 
         $data = [
@@ -1312,34 +1313,8 @@ class BookingController extends AdminController
             'note' => __('Order cancelled by :user', ['user' => \Auth::user()->getDisplayName()]),
         ]);
 
-        // Send email notification to customer, admin, and vendor
-        try {
-            $booking->sendStatusUpdatedEmails();
-        } catch (\Exception $e) {
-            \Log::warning('Failed to send cancellation email: ' . $e->getMessage());
-        }
-
-        // Send in-app notification to customer only (not vendor or admin)
-        try {
-            $customer = \App\User::where('id', $booking->customer_id)->where('status', 'publish')->first();
-            if ($customer) {
-                $customer->notify(new \App\Notifications\PrivateChannelServices([
-                    'event' => 'BookingCancelled',
-                    'to' => 'customer',
-                    'id' => $booking->id,
-                    'name' => \Auth::user()->display_name,
-                    'avatar' => \Auth::user()->avatar_url,
-                    'link' => route('user.booking_history'),
-                    'type' => $booking->object_model,
-                    'message' => __(':name has changed to :status', [
-                        'name' => $booking->service->title,
-                        'status' => $booking->status
-                    ])
-                ]));
-            }
-        } catch (\Exception $e) {
-            \Log::warning('Failed to send cancellation notification: ' . $e->getMessage());
-        }
+        // Don't send any email or notification to customer when cancelling
+        // Only update status silently
 
         return response()->json(['success' => true, 'message' => __('Order cancelled successfully')]);
     }
