@@ -140,24 +140,23 @@ class GenerateRandomEnquiries extends Command
             // Random units (1-10 people)
             $units = rand(1, 10);
 
-            // Create enquiry
-            $enquiry = new Enquiry();
-            $enquiry->object_id = $randomActivity['id'];
-            $enquiry->object_model = $randomActivity['model'];
-            $enquiry->activity_name = $randomActivity['title'];
-            $enquiry->name = $user->getDisplayName(true);
-            $enquiry->email = $user->email;
-            $enquiry->phone = $user->phone ?? '+20100' . rand(1000000, 9999999);
-            $enquiry->message = $messages[array_rand($messages)];
-            $enquiry->units = $units;
-            $enquiry->status = 'pending';
-            $enquiry->from_type = 'B2C';
-            $enquiry->create_user = $randomUserId;
-            $enquiry->salesman = null; // No salesman assigned
-            $enquiry->created_at = now()->subDays(rand(0, 30));
-            $enquiry->updated_at = $enquiry->created_at;
-
-            $enquiry->save();
+            // Create enquiry using DB insert to bypass fillable restrictions
+            DB::table('bravo_enquiries')->insert([
+                'object_id' => $randomActivity['id'],
+                'object_model' => $randomActivity['model'],
+                'activity_name' => $randomActivity['title'],
+                'name' => $user->getDisplayName(true),
+                'email' => $user->email,
+                'phone' => $user->phone ?? '+20100' . rand(1000000, 9999999),
+                'note' => $messages[array_rand($messages)],
+                'units' => $units,
+                'status' => 'pending',
+                'from_type' => 'B2C',
+                'create_user' => $randomUserId,
+                'salesman' => null,
+                'created_at' => now()->subDays(rand(0, 30)),
+                'updated_at' => now()->subDays(rand(0, 30)),
+            ]);
 
             $progressBar->advance();
         }
