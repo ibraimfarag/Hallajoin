@@ -142,6 +142,7 @@ class GenerateRandomEnquiries extends Command
             $units = rand(1, 10);
 
             // Create enquiry using DB insert to bypass fillable restrictions
+            // Start with required fields only
             $data = [
                 'object_id' => $randomActivity['id'],
                 'object_model' => $randomActivity['model'],
@@ -149,18 +150,30 @@ class GenerateRandomEnquiries extends Command
                 'email' => $user->email,
                 'phone' => $user->phone ?? '+20100' . rand(1000000, 9999999),
                 'note' => $messages[array_rand($messages)],
-                'units' => $units,
                 'status' => 'pending',
-                'from_type' => 'B2C',
-                'create_user' => $randomUserId,
-                'salesman' => null,
                 'created_at' => now()->subDays(rand(0, 30)),
                 'updated_at' => now()->subDays(rand(0, 30)),
             ];
             
-            // Add activity_name only if column exists
-            if (\Schema::hasColumn('bravo_enquiries', 'activity_name')) {
+            // Add optional fields only if columns exist
+            if (Schema::hasColumn('bravo_enquiries', 'activity_name')) {
                 $data['activity_name'] = $randomActivity['title'];
+            }
+            
+            if (Schema::hasColumn('bravo_enquiries', 'units')) {
+                $data['units'] = $units;
+            }
+            
+            if (Schema::hasColumn('bravo_enquiries', 'from_type')) {
+                $data['from_type'] = 'B2C';
+            }
+            
+            if (Schema::hasColumn('bravo_enquiries', 'create_user')) {
+                $data['create_user'] = $randomUserId;
+            }
+            
+            if (Schema::hasColumn('bravo_enquiries', 'salesman')) {
+                $data['salesman'] = null;
             }
             
             DB::table('bravo_enquiries')->insert($data);
