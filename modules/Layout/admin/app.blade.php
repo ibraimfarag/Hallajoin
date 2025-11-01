@@ -179,6 +179,7 @@
     </script>
     <script src="{{ asset('libs/tinymce/js/tinymce/tinymce.min.js') }}"></script>
     @stack('css')
+    @stack('head')
 
     <!-- Prevent FOUC (Flash of Unstyled Content) for dark mode -->
     <script>

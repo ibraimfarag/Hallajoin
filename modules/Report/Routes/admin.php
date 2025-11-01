@@ -32,6 +32,8 @@ Route::post('/enquiry/bulkEdit', 'EnquiryController@bulkEdit')->name('report.adm
 
 Route::get('/enquiry/{enquiry}/reply', 'EnquiryController@reply')->name('report.admin.enquiry.reply');
 Route::post('/enquiry/{enquiry}/reply/store', 'EnquiryController@replyStore')->name('report.admin.enquiry.replyStore');
-
+Route::get('/enquiry/users-for-mention', 'EnquiryController@getUsersForMention')->name('report.admin.enquiry.getUsersForMention');
+Route::get('/enquiry/{enquiry}/notes', 'EnquiryController@getNotes')->name('report.admin.enquiry.getNotes');
+Route::post('/enquiry/{enquiry}/notes/store', 'EnquiryController@storeNote')->name('report.admin.enquiry.storeNote');
 Route::get('/statistic', 'StatisticController@index')->name('report.admin.statistic.index');
 Route::match(['get', 'post'], '/statistic/reloadChart', 'StatisticController@reloadChart')->name('report.admin.statistic.reloadChart');
