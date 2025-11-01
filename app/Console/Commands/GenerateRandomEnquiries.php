@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Modules\Booking\Models\Enquiry;
 use App\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class GenerateRandomEnquiries extends Command
 {
@@ -141,10 +142,9 @@ class GenerateRandomEnquiries extends Command
             $units = rand(1, 10);
 
             // Create enquiry using DB insert to bypass fillable restrictions
-            DB::table('bravo_enquiries')->insert([
+            $data = [
                 'object_id' => $randomActivity['id'],
                 'object_model' => $randomActivity['model'],
-                'activity_name' => $randomActivity['title'],
                 'name' => $user->getDisplayName(true),
                 'email' => $user->email,
                 'phone' => $user->phone ?? '+20100' . rand(1000000, 9999999),
@@ -156,7 +156,14 @@ class GenerateRandomEnquiries extends Command
                 'salesman' => null,
                 'created_at' => now()->subDays(rand(0, 30)),
                 'updated_at' => now()->subDays(rand(0, 30)),
-            ]);
+            ];
+            
+            // Add activity_name only if column exists
+            if (\Schema::hasColumn('bravo_enquiries', 'activity_name')) {
+                $data['activity_name'] = $randomActivity['title'];
+            }
+            
+            DB::table('bravo_enquiries')->insert($data);
 
             $progressBar->advance();
         }
