@@ -3,6 +3,32 @@
 @section('content')
 
     <style>
+
+
+
+
+:root {
+            /* Dark Mode Colors (Default) */
+            --cart-bg-primary: #0f1c2e;
+            --cart-bg-secondary: #1a2942;
+            --cart-bg-hover: rgba(255, 255, 255, 0.03);
+               --cart-text-muted: #8b92a7;
+       
+        }
+
+        /* Light Mode Override */
+        [data-theme="light"] {
+            --cart-bg-primary: #f7fafc;
+            --cart-bg-secondary: #ffffff;
+            --cart-bg-hover: #edf2f7;
+                  --cart-text-muted: #718096;
+           
+        }
+
+
+
+
+
         body.dark-mode .card,
         body.dark-mode .panel {
             background: transparent;
@@ -159,13 +185,30 @@
             }
         }
 
+      body.dark-mode .table thead  {
+            background: var(--cart-bg-hover);
+        }
 
         body.dark-mode .table thead th {
             font-size: 18px !important;
             font-weight: 600;
-            text-transform: none;
+   
             font-weight: 500;
+             color: var(--cart-text-muted);
+                 text-transform: uppercase;
+    letter-spacing: 0.5px;
         }
+
+.table td, body.dark-mode .table th {
+    padding: 22px 12px !important;
+}
+     .table thead tr th 
+        
+        {
+              padding: 18px 18px !important;
+        }
+
+
     </style>
 
 
@@ -280,11 +323,10 @@
 
 
                         <div class="table-responsive " style="
-        padding: 20px;
+        padding: 2px;
         background: #132438;
         border-radius: 20px;
     ">
-                            <h4 class="mt-2 mb-5">Users</h4>
                             <table class="table table-dark table-hover align-middle">
                                 <thead>
                                     <tr>

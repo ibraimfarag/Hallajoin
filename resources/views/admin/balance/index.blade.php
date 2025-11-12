@@ -30,19 +30,22 @@
                 --bal-border-light: #cbd5e0;
                 --bal-shadow: rgba(0, 0, 0, 0.1);
             }
-
+.breadcrumb{
+    display: none;
+}
             .balance-container {
-                background: var(--bal-bg-primary);
+           
                 min-height: 100vh;
-                padding: 24px;
-                padding-right: 20vw;
+               
+
                 transition: background-color 0.3s ease;
+
+                margin-top: 80px;
             }
 
             .balance-card {
                 background: var(--bal-bg-secondary);
                 border-radius: 12px;
-                padding: 24px;
                 box-shadow: 0 4px 6px var(--bal-shadow);
                 border: 1px solid var(--bal-border-color);
                 transition: all 0.3s ease;
@@ -79,6 +82,7 @@
                 text-align: left;
                 border: none;
                 white-space: nowrap;
+                text-transform: uppercase;
             }
 
             .balance-table thead th:first-child {
@@ -109,19 +113,12 @@
                 border-bottom: none;
             }
 
-            .user-info {
+           .balance-table .user-info {
                 display: flex;
                 align-items: center;
                 gap: 12px;
             }
 
-            .user-avatar {
-                width: 48px;
-                height: 48px;
-                border-radius: 50%;
-                object-fit: cover;
-                border: 2px solid rgba(99, 179, 237, 0.3);
-            }
 
             .user-avatar-placeholder {
                 width: 48px;
@@ -215,9 +212,6 @@
 
         <div class="balance-container">
             <div class="balance-card">
-                <div class="balance-header">
-                    <h2 class="balance-title">{{ __('Balance') }}</h2>
-                </div>
 
                 @if($users->count() > 0)
                     <table class="balance-table">
@@ -255,7 +249,7 @@
 
 
                                                     @if($user['phone'])
-                                                        <div class="user-phone">{{ $user['phone'] }}</div>
+                                                        <div class="user-phone"  style="color: #60a5fa;">{{ $user['phone'] }}</div>
                                                     @endif
 
 

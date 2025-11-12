@@ -154,28 +154,28 @@ class GenerateRandomEnquiries extends Command
                 'created_at' => now()->subDays(rand(0, 30)),
                 'updated_at' => now()->subDays(rand(0, 30)),
             ];
-            
+
             // Add optional fields only if columns exist
             if (Schema::hasColumn('bravo_enquiries', 'activity_name')) {
                 $data['activity_name'] = $randomActivity['title'];
             }
-            
+
             if (Schema::hasColumn('bravo_enquiries', 'units')) {
                 $data['units'] = $units;
             }
-            
+
             if (Schema::hasColumn('bravo_enquiries', 'from_type')) {
                 $data['from_type'] = 'B2C';
             }
-            
+
             if (Schema::hasColumn('bravo_enquiries', 'create_user')) {
                 $data['create_user'] = $randomUserId;
             }
-            
+
             if (Schema::hasColumn('bravo_enquiries', 'salesman')) {
                 $data['salesman'] = null;
             }
-            
+
             DB::table('bravo_enquiries')->insert($data);
 
             $progressBar->advance();
