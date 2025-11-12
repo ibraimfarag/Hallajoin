@@ -29,19 +29,23 @@ class EnquiryController extends AdminController
         $query = $this->enquiryClass->query()->where('status', '!=', 'draft');
 
         // Search filter
-        if (!empty($request->s)) {
+        if (! empty($request->s)) {
             $query->where(function ($q) use ($request) {
-                $q->where('email', 'LIKE', '%' . $request->s . '%')
-                    ->orWhere('name', 'LIKE', '%' . $request->s . '%')
-                    ->orWhere('phone', 'LIKE', '%' . $request->s . '%')
-                    ->orWhere('activity_name', 'LIKE', '%' . $request->s . '%');
+                $q->where('email', 'LIKE', '%'.$request->s.'%')
+                    ->orWhere('name', 'LIKE', '%'.$request->s.'%')
+                    ->orWhere('phone', 'LIKE', '%'.$request->s.'%')
+                    ->orWhere('activity_name', 'LIKE', '%'.$request->s.'%');
             });
             $title_page = __('Search results: ":s"', ['s' => $request->s]);
         }
 
         // Salesman filter
-        if (!empty($request->salesman)) {
-            $query->where('salesman', $request->salesman);
+        if ($request->filled('salesman')) {
+            if ($request->salesman === '0') {
+                $query->whereNull('salesman');
+            } else {
+                $query->where('salesman', $request->salesman);
+            }
         }
 
         $query->whereIn('object_model', array_keys(get_bookable_services()));
@@ -87,7 +91,7 @@ class EnquiryController extends AdminController
     {
         $ids = $request->input('ids');
         $action = $request->input('action');
-        if (empty($ids) or !is_array($ids)) {
+        if (empty($ids) or ! is_array($ids)) {
             return redirect()->back()->with('error', __('No items selected'));
         }
         if (empty($action)) {
@@ -96,24 +100,24 @@ class EnquiryController extends AdminController
         if ($action == 'delete') {
             foreach ($ids as $id) {
                 $query = $this->enquiryClass->query()->where('id', $id);
-                if (!$this->hasPermission('enquiry_manage_others')) {
+                if (! $this->hasPermission('enquiry_manage_others')) {
                     $query->where('vendor_id', Auth::id());
                     $this->checkPermission('enquiry_update');
                 }
                 $query->first();
-                if (!empty($query)) {
+                if (! empty($query)) {
                     $query->delete();
                 }
             }
         } else {
             foreach ($ids as $id) {
                 $query = $this->enquiryClass->query()->where('id', $id);
-                if (!$this->hasPermission('enquiry_manage_others')) {
+                if (! $this->hasPermission('enquiry_manage_others')) {
                     $query->where('vendor_id', Auth::id());
                     $this->checkPermission('enquiry_update');
                 }
                 $item = $query->first();
-                if (!empty($item)) {
+                if (! empty($item)) {
                     $item->status = $action;
                     $item->save();
                 }
@@ -136,7 +140,7 @@ class EnquiryController extends AdminController
                     'url' => route('report.admin.enquiry.index'),
                 ],
                 [
-                    'name' => __('Enquiry :name', ['name' => '#' . $enquiry->id . ' - ' . ($enquiry->service->title ?? '')]),
+                    'name' => __('Enquiry :name', ['name' => '#'.$enquiry->id.' - '.($enquiry->service->title ?? '')]),
                 ],
                 [
                     'name' => __('All Replies'),
@@ -251,16 +255,16 @@ class EnquiryController extends AdminController
         // Handle file upload
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
-            $fileName = time() . '_' . $file->getClientOriginalName();
+            $fileName = time().'_'.$file->getClientOriginalName();
             $filePath = $file->storeAs('uploads/enquiry_notes', $fileName, 'public');
-            $note->attachment = 'storage/' . $filePath;
+            $note->attachment = 'storage/'.$filePath;
         }
 
         $note->save();
 
         // Send notifications to mentioned users
         preg_match_all('/@(\w+)/', $note->content, $mentions);
-        if (!empty($mentions[1])) {
+        if (! empty($mentions[1])) {
             foreach ($mentions[1] as $mentionedName) {
                 $mentionedUser = \App\User::where('status', 'active')
                     ->where(function ($query) use ($mentionedName) {
