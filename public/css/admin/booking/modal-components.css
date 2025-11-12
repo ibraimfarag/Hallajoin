@@ -339,7 +339,7 @@ body:not(.dark-mode) .sidebar-note-input {
     color: #ffffff;
     border: none;
     padding: 8px 16px;
-    border-radius: 6px;
+    border-radius: 20px;
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
@@ -377,7 +377,7 @@ body:not(.dark-mode) .sidebar-note-input {
     color: #ffffff;
     border: none;
     padding: 8px 24px;
-    border-radius: 6px;
+    border-radius: 20px;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;

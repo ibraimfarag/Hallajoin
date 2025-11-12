@@ -67,7 +67,7 @@ function loadNotes(bookingId) {
                 if (response.notes && response.notes.length > 0) {
                     displayNotes(response.notes);
                 } else {
-                    $('#notesTimeline').html('<div style="text-align: center; padding: 40px; color: #999;"><i class="fa fa-sticky-note-o" style="font-size: 48px; margin-bottom: 15px; display: block;"></i>لا توجد ملاحظات حتى الآن</div>');
+                    $('#notesTimeline').html('<div style="text-align: center; padding: 40px; color: #999;"><i class="fa fa-sticky-note-o" style="font-size: 48px; margin-bottom: 15px; display: block;"></i>No notes yet</div>');
                 }
             } else {
                 console.error('API returned error:', response ? response.message : 'Unknown error');

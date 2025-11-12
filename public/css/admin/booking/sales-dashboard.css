@@ -28,7 +28,7 @@ body.dark-mode-instant .sales-container {
     --sales-bg-tertiary: #122438;
     --sales-text-primary: #ffffff;
     --sales-text-secondary: #c5c5c5;
-    --sales-border-color: #1b3d63;
+    --sales-border-color: #dee2e640;
     --sales-input-bg: #122438;
     --sales-input-border: #1b3d63;
     --sales-hover-bg: #1a2f47;
@@ -225,7 +225,7 @@ body:not(.dark-mode) .orders-title {
     border-radius: 20px;
     overflow: hidden;
     box-shadow: none;
-    padding: 20px;
+    /* padding: 20px; */
 }
 
 body:not(.dark-mode) .sales-table-container {
@@ -239,22 +239,23 @@ body:not(.dark-mode) .sales-table-container {
 }
 
 .sales-table thead {
-    background: transparent;
+    background: #ffffff08;
 }
 
 .sales-table th {
-    padding: 12px 16px;
+    padding: 18px 18px;
     text-align: left;
     font-weight: 600;
     color: var(--sales-text-primary);
     border-bottom: 2px solid var(--sales-border-color);
     white-space: nowrap;
     font-size: 18px;
+    text-transform: uppercase;
 }
 
 body.dark-mode .sales-table th,
 body.dark-mode-instant .sales-table th {
-    color: #ffffff;
+    color: #8b92a7;
 }
 
 body:not(.dark-mode) .sales-table th {

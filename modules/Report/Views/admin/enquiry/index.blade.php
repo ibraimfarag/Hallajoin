@@ -16,7 +16,7 @@
 
         .enquiry-table-container {
             background-color: #ffffff;
-            border-radius: 8px;
+            border-radius: 20px;
             overflow: hidden;
         }
 
@@ -113,14 +113,17 @@
 
         .enquiry-table thead th {
             color: #6c757d !important;
-            font-weight: 600;
+
             font-size: 11px;
-            padding: 18px 14px;
+
             border: none;
             white-space: nowrap;
             background-color: #ffffff;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            padding: 22px 18px;
+            font-weight: 500 !important;
+
         }
 
         .enquiry-table thead th:first-child {
@@ -210,8 +213,8 @@
         }
 
         .enquiry-operation-btns .btn-primary:hover {
-            background-color: #dee2e6;
-            color: #212529;
+            background-color: transparent;
+            /* color: #212529; */
             transform: translateY(-2px);
         }
 
@@ -229,8 +232,8 @@
 
         .enquiry-operation-btns .badge-light {
             position: absolute;
-            top: -8px;
-            right: -8px;
+            top: -4px;
+            right: -2px;
             background-color: #7c3aed;
             color: white;
             font-size: 10px;
@@ -322,6 +325,7 @@
         body.dark-mode .enquiry-table-container,
         body.dark-mode-instant .enquiry-table-container {
             background-color: #122438;
+            border-radius: 20px;
         }
 
         body.dark-mode .enquiry-filter-bar,
@@ -351,7 +355,7 @@
 
         body.dark-mode .enquiry-filter-bar select.form-control,
         body.dark-mode-instant .enquiry-filter-bar select.form-control {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234a5a6d' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            /* background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234a5a6d' d='M6 9L1 4h10z'/%3E%3C/svg%3E"); */
         }
 
         body.dark-mode .enquiry-filter-bar .btn-secondary,
@@ -389,8 +393,12 @@
 
         body.dark-mode .enquiry-table thead th,
         body.dark-mode-instant .enquiry-table thead th {
-            color: #ffffffd1 !important;
-            background-color: #122438;
+            color: #8b92a7 !important;
+            background-color: #ffffff08;
+            text-transform: uppercase !important;
+            padding: 22px 18px;
+            font-weight: 500 !important;
+
         }
 
         body.dark-mode .enquiry-table tbody tr,
@@ -444,14 +452,18 @@
 
         body.dark-mode .enquiry-operation-btns .btn-primary,
         body.dark-mode-instant .enquiry-operation-btns .btn-primary {
-            background-color: #2a3a4d;
-            color: #ffffff;
+            background-color: transparent;
+            color: #ffffffa3;
         }
 
         body.dark-mode .enquiry-operation-btns .btn-primary:hover,
-        body.dark-mode-instant .enquiry-operation-btns .btn-primary:hover {
-            background-color: #3a4a5d;
+        body.dark-mode-instant .enquiry-operation-btns .btn-primary:hover,
+        body.dark-mode .btn-primary:hover {
+            background-color: transparent;
+            background: transparent;
             color: #c5d5e8;
+
+            box-shadow: none !important;
         }
 
         body.dark-mode .enquiry-operation-btns .btn-info,
@@ -468,7 +480,7 @@
 
         body.dark-mode .enquiry-operation-btns .badge-light,
         body.dark-mode-instant .enquiry-operation-btns .badge-light {
-            background-color: #818cf8;
+            background-color: #e74c3c;
         }
 
         body.dark-mode .user-avatar,
@@ -706,15 +718,19 @@
         }
 
         .file-select-btn:hover {
-            background: #f7fafc !important;
+            /* background: #f7fafc !important; */
             border-color: #6366f1 !important;
             transform: translateY(-1px);
         }
 
         .create-note-btn:hover {
-            background: #6366f1 !important;
+            background: #3b82f6 !important;
             transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(129, 140, 248, 0.5);
+
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
         }
 
         .create-note-btn:disabled {
@@ -917,13 +933,13 @@
 
         body.dark-mode .mention-btn,
         body.dark-mode-instant .mention-btn {
-            background: #818cf8 !important;
+            background: #6366f1 !important;
         }
 
         body.dark-mode .file-select-btn,
         body.dark-mode-instant .file-select-btn {
-            color: #818cf8 !important;
-            border-color: #818cf8 !important;
+            color: #fff !important;
+          
         }
 
         body.dark-mode div[id^="selectedFile"],
@@ -991,7 +1007,7 @@
 
 @section ('content')
     <div class="container-fluid">
-        @include('admin.message')
+
 
         <!-- Filter Container -->
         <div class="enquiry-filter-container">
@@ -1024,10 +1040,7 @@
 
         <!-- Table Container -->
         <div class="enquiry-table-container">
-            <!-- Table Header -->
-            <div class="enquiry-table-header">
-                {{__('Inquiries')}}
-            </div>
+
 
             <!-- Table Content -->
             <div class="table-responsive">
@@ -1131,7 +1144,7 @@
                                             data-target="#enquiryModal{{$row->id}}" title="{{__('View Details')}}">
                                             <i class="fa fa-file-text"></i>
                                         </button>
-                              
+
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#notesModal{{$row->id}}"
                                             onclick="loadNotes({{$row->id}})" title="{{__('Notes')}}">
                                             <i class="fa fa-sticky-note"></i>
@@ -1180,37 +1193,34 @@
                                             </div>
 
                                             <div class="note-input-container">
-                                                <textarea class="note-textarea" id="noteContent{{$row->id}}" 
-                                                    placeholder="{{__('Note')}}" 
+                                                <textarea class="note-textarea" id="noteContent{{$row->id}}" placeholder="{{__('Note')}}"
                                                     rows="4"
                                                     style="width: 100%; border: 2px solid #818cf869; border-radius: 12px; padding: 16px; font-size: 14px; line-height: 1.6; resize: none; margin-bottom: 16px;"></textarea>
-                                                
+
                                                 <div style="display: flex; align-items: center; gap: 12px;">
-                                                    <button type="button" class="mention-btn" 
-                                                        onclick="insertMention({{$row->id}})"
+                                                    <button type="button" class="mention-btn" onclick="insertMention({{$row->id}})"
                                                         style="background: #818cf8; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
                                                         <i class="fa fa-at"></i> {{__('Mention')}}
                                                     </button>
-                                                    
+
                                                     <label for="noteFile{{$row->id}}" class="file-select-btn"
-                                                        style="background: transparent; color: #818cf8; border: 2px solid #818cf8; padding: 10px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
-                                                        <i class="fa fa-paperclip"></i> {{__('SELECT FILE')}}
+                                                        style="padding: 10px 20px; cursor: pointer; ">
+                                                        <i class="fa fa-paperclip"></i> 
                                                     </label>
-                                                    <input type="file" id="noteFile{{$row->id}}"
-                                                        onchange="handleFileSelect({{$row->id}})"
-                                                        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                                                        style="display: none;">
-                                                    
+                                                    <input type="file" id="noteFile{{$row->id}}" onchange="handleFileSelect({{$row->id}})"
+                                                        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="display: none;">
+
                                                     <div style="flex: 1;"></div>
-                                                    
-                                                    <button type="button" class="create-note-btn" 
-                                                        onclick="addNote({{$row->id}})"
-                                                        style="background: #818cf8; color: white; border: none; padding: 12px 32px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; letter-spacing: 0.5px; transition: all 0.2s; box-shadow: 0 2px 8px rgba(129, 140, 248, 0.3);">
-                                                        {{__('CREATE')}}
+
+                                                    <button type="button" class="create-note-btn" onclick="addNote({{$row->id}})"
+                                                        style="background: #3b82f6;color: #ffffff;border: none;padding: 8px 24px;border-radius: 20px;font-size: 13px;font-weight: 600;cursor: pointer;transition: all 0.2s 
+ease;margin-left: auto;text-transform: uppercase;letter-spacing: 0.5px;">
+                                                        {{__('ADD NOTE')}}
                                                     </button>
                                                 </div>
-                                                
-                                                <div id="selectedFile{{$row->id}}" style="margin-top: 12px; display: none; padding: 8px 12px; background: #f7fafc; border-radius: 8px;">
+
+                                                <div id="selectedFile{{$row->id}}"
+                                                    style="margin-top: 12px; display: none; padding: 8px 12px; background: #f7fafc; border-radius: 8px;">
                                                     <span style="font-size: 13px; color: #4a5568;">
                                                         <i class="fa fa-file" style="color: #818cf8;"></i>
                                                         <span id="fileName{{$row->id}}" style="margin-left: 8px;"></span>
@@ -1300,26 +1310,26 @@
                                         else if (['doc', 'docx'].includes(fileExt)) fileIcon = 'fa-file-word-o';
 
                                         attachmentHtml = `
-                                                                    <a href="${note.attachment}" target="_blank" class="timeline-attachment">
-                                                                        <i class="fa ${fileIcon}"></i>
-                                                                        <span>${fileName}</span>
-                                                                    </a>
-                                                                `;
+                                                                                    <a href="${note.attachment}" target="_blank" class="timeline-attachment">
+                                                                                        <i class="fa ${fileIcon}"></i>
+                                                                                        <span>${fileName}</span>
+                                                                                    </a>
+                                                                                `;
                                     }
 
                                     return `
-                                                                <div class="timeline-item">
-                                                                    <div class="timeline-avatar">${firstLetter}</div>
-                                                                    <div class="timeline-content">
-                                                                        <div class="timeline-header">
-                                                                            <span class="timeline-author">${note.user_name}</span>
-                                                                            <span class="timeline-date">${note.created_at}</span>
-                                                                        </div>
-                                                                        <div class="timeline-text">${formattedContent}</div>
-                                                                        ${attachmentHtml}
-                                                                    </div>
-                                                                </div>
-                                                            `;
+                                                                                <div class="timeline-item">
+                                                                                    <div class="timeline-avatar">${firstLetter}</div>
+                                                                                    <div class="timeline-content">
+                                                                                        <div class="timeline-header">
+                                                                                            <span class="timeline-author">${note.user_name}</span>
+                                                                                            <span class="timeline-date">${note.created_at}</span>
+                                                                                        </div>
+                                                                                        <div class="timeline-text">${formattedContent}</div>
+                                                                                        ${attachmentHtml}
+                                                                                    </div>
+                                                                                </div>
+                                                                            `;
                                 }).join('');
                             }
                         }
@@ -1382,16 +1392,16 @@
                             : `background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);`;
 
                         return `
-                                    <div class="mention-item" onclick="selectMentionUser(${enquiryId}, '${user.name}', ${user.id})" style="display: flex; align-items: center; gap: 12px;">
-                                        <div style="width: 36px; height: 36px; border-radius: 50%; ${avatarStyle} display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px; flex-shrink: 0;">
-                                            ${user.avatar && user.avatar !== '' ? '' : firstLetter}
-                                        </div>
-                                        <div style="flex: 1; min-width: 0;">
-                                            <div style="font-weight: 600; font-size: 14px; color: #1a202c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.name}</div>
-                                            <div style="font-size: 11px; color: #9ca3af; margin-top: 2px;">${user.role}</div>
-                                        </div>
-                                    </div>
-                                `;
+                                                    <div class="mention-item" onclick="selectMentionUser(${enquiryId}, '${user.name}', ${user.id})" style="display: flex; align-items: center; gap: 12px;">
+                                                        <div style="width: 36px; height: 36px; border-radius: 50%; ${avatarStyle} display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px; flex-shrink: 0;">
+                                                            ${user.avatar && user.avatar !== '' ? '' : firstLetter}
+                                                        </div>
+                                                        <div style="flex: 1; min-width: 0;">
+                                                            <div style="font-weight: 600; font-size: 14px; color: #1a202c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.name}</div>
+                                                            <div style="font-size: 11px; color: #9ca3af; margin-top: 2px;">${user.role}</div>
+                                                        </div>
+                                                    </div>
+                                                `;
                     }).join('');
                 }
 

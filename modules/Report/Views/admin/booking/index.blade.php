@@ -278,7 +278,7 @@
                                     $confirmBadgeClass = $confirmBadgeClasses[$confirmType] ?? 'badge rounded-pill bg-warning';
                                 @endphp
                                 <div style="display: flex; flex-direction: column; gap: 4px; align-items: center;">
-                                    <span class="{{ $confirmBadgeClass }}" style="font-size: 14px;"
+                                    <span class="{{ $confirmBadgeClass }}" style="font-size: 15px;"
                                         title="{{ $confirmTypeLabels[$confirmType] ?? __('Pending') }}">
                                         {{ $confirmTypeLabels[$confirmType] ?? __('Pending') }}
                                     </span>
