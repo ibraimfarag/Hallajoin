@@ -2,6 +2,9 @@
 
 @push('head')
     <style>
+        .main-breadcrumb{
+            display: none !important;
+        }
         body {
             font-weight: bold;
         }

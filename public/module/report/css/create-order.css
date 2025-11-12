@@ -29,7 +29,9 @@ body.dark-mode-instant .create-order-container {
     --create-shadow: rgba(0, 0, 0, 0.3);
     --create-overlay: rgba(0, 0, 0, 0.7);
 }
-
+.main-breadcrumb{
+    display: none !important;
+}
 .create-order-container {
     padding: 20px;
     max-width: 1600px;

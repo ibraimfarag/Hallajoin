@@ -372,7 +372,7 @@ function updateCartDisplay() {
         ).join('');
 
         const detailsHtml = item.time
-            ? `<i class="fa fa-calendar"></i> ${formatDate(item.date)} <i class="fa fa-clock-o"></i> ${item.time}`
+            ? `<div><i class="fa fa-calendar"></i> ${formatDate(item.date)}</div><div><i class="fa fa-clock-o"></i> ${item.time}</div>`
             : `<i class="fa fa-calendar"></i> ${formatDate(item.date)}`;
 
         html += `
