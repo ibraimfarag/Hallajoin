@@ -82,7 +82,6 @@
                 text-align: left;
                 border: none;
                 white-space: nowrap;
-                text-transform: uppercase;
             }
 
             .balance-table thead th:first-child {
@@ -208,9 +207,23 @@
             * {
                 transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
             }
+            
+            body.dark-mode  .balance-container{
+
+                    background: #0f1c2e;
+    margin-top: 100px;
+    padding: 0px 23px;
+            }
+
+
+
+
         </style>
 
         <div class="balance-container">
+             <h1 style="    font-size: 24px;
+        font-weight: 700;    margin: 2px -1px 21px;
+    padding-top: 26px;">{{ __('Balance') }}</h1>
             <div class="balance-card">
 
                 @if($users->count() > 0)
@@ -220,12 +233,8 @@
                                 <th>{{ __('User') }}</th>
                                 <th>{{ __('Wallet') }}</th>
                                 <th>{{ __('Points') }}</th>
-                                <th style="text-align: right;">
+                                <th >
                                     {{ __('Total Balance') }}
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="sort-icon" style="width: 12px; height: 12px;"
-                                        fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M8 12l-4-4h8l-4 4z" />
-                                    </svg>
                                 </th>
                             </tr>
                         </thead>
