@@ -163,7 +163,7 @@
             },
             total_price_html: function () {
                 if (!this.total_price) return '';
-                return window.bravo_format_money(this.total_price);
+                return window.bravo_format_money_with_svg(this.total_price);
             },
             daysOfWeekDisabled() {
                 var res = [];
@@ -207,7 +207,7 @@
                 return this.total_price;
             },
             pay_now_price_html: function () {
-                return window.bravo_format_money(this.pay_now_price);
+                return window.bravo_format_money_with_svg(this.pay_now_price);
             },
             is_deposit_ready: function () {
                 if (this.deposit && this.deposit_amount) return true;

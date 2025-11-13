@@ -198,7 +198,7 @@
             <ul class="form-section-total list-unstyled" v-if="total_price > 0">
                 <li>
                     <label>{{ __('Total') }}</label>
-                    <span class="price">@{{ total_price_html }}</span>
+                    <span class="price">@{{ total_price_html }}{!! $row->currency_svg !!}</span>
                 </li>
                 <li v-if="is_deposit_ready">
                     <label for="">{{ __('Pay now') }}</label>
@@ -242,7 +242,7 @@
                             </div>
                             <div class="mb-2">
                                 <span class="font-weight-bold">{{ __('Total:') }}</span> <span class="text-success">@{{
-                                    total_price_html }}</span>
+                                    total_price_html }}{!! $row->currency_svg !!}</span>
                             </div>
                             <div class="alert alert-success mb-0">
                                 {{ __('The tour has been added to your cart successfully!') }}

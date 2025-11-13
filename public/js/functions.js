@@ -51,17 +51,17 @@ window.bravo_format_money_with_svg = function ($money) {
 
     switch (bookingCore.currency_position) {
         case "right":
-            $money_string = $money + $symbol;
+            $money_string = $money ;
             break;
         case "left_space":
-            $money_string = $symbol + " " + $money;
+            $money_string =  " " + $money;
             break;
         case "right_space":
-            $money_string = $money + " " + $symbol;
+            $money_string = $money + " " ;
             break;
         case "left":
         default:
-            $money_string = $symbol + $money;
+            $money_string =  $money;
             break;
     }
 
