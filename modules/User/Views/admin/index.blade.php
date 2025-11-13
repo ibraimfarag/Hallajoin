@@ -348,9 +348,8 @@
                                     </td>
                                     <td>
                                         <div style="display: flex; align-items: center; gap: 8px;">
-
                                             <a href="{{ route('user.admin.profile', ['id' => $user->id]) }}"
-                                                style="color: inherit; text-decoration: none;font-size: 19px">{{ $user->country ?? 'United Arab Emirates' }}</a>
+                                                style="color: inherit; text-decoration: none;font-size: 19px">{{ countryName($user->country ?? 'United Arab Emirates') }}</a>
                                         </div>
                                     </td>
                                     <td>
