@@ -7,7 +7,7 @@
             /* Dark Mode Colors (Default) */
             --fav-bg-primary: #0f1c2e;
             --fav-bg-secondary: #1a2942;
-            --fav-bg-hover: rgba(255, 255, 255, 0.03);
+            --fav-bg-hover: rgba(99, 179, 237, 0.1);
             --fav-text-primary: #ffffff;
             --fav-text-secondary: #e2e8f0;
             --fav-text-muted: #8b92a7;
@@ -381,7 +381,7 @@
                                 <span class="cart-count-badge">{{ $user->favourites_count }}</span>
                             </td>
                             <td style="text-align: center;">
-                                <svg onclick="openFavouriteModal({{ $user->id }})"
+                                <svg onclick="openFavouriteModal('{{ $user->id }}')"
                                     style="width: 30px; height: 30px; cursor: pointer; color: #8b92a7;"
                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

@@ -43,12 +43,20 @@ body.dark-mode-instant .sales-container {
 
 /* Container */
 .sales-container {
-    background: #0f1c2e;
+    
     color: var(--sales-text-primary);
     min-height: 100vh;
     padding: 30px;
     transition: all 0.3s ease;
 }
+
+
+
+body.dark-mode .sales-container {
+    background: #0f1c2e;
+}
+
+
 
 body.dark-mode .card,
 body.dark-mode .panel,
@@ -239,7 +247,7 @@ body:not(.dark-mode) .sales-table-container {
 }
 
 .sales-table thead {
-    background: #ffffff08;
+    background:rgba(99, 179, 237, 0.1);
 }
 
 .sales-table th {

@@ -410,7 +410,7 @@
         body.dark-mode .enquiry-table thead th,
         body.dark-mode-instant .enquiry-table thead th {
             color: #8b92a7 !important;
-            background-color: #ffffff08;
+            background-color: rgba(99, 179, 237, 0.1);
 
             padding: 22px 18px;
             font-weight: 500 !important;
@@ -1170,7 +1170,7 @@
                                         </button>
 
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#notesModal{{$row->id}}"
-                                            onclick="loadNotes({{$row->id}})" title="{{__('Notes')}}">
+                                            onclick="loadNotes('{{ $row->id }}')" title="{{ __('Notes') }}">
                                             <i class="fa fa-sticky-note"></i>
                                             @if($row->replies_count > 0)
                                                 <span class="badge badge-light">{{$row->replies_count}}</span>
@@ -1224,7 +1224,7 @@
                                                     style="width: 100%; border: 2px solid #818cf869; border-radius: 12px; padding: 16px; font-size: 14px; line-height: 1.6; resize: none; margin-bottom: 16px;"></textarea>
 
                                                 <div style="display: flex; align-items: center; gap: 12px;">
-                                                    <button type="button" class="mention-btn" onclick="insertMention({{$row->id}})"
+                                                    <button type="button" class="mention-btn" onclick="insertMention('{{$row->id}}')"
                                                         style="background: #818cf8; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
                                                         <i class="fa fa-at"></i> {{__('Mention')}}
                                                     </button>
@@ -1233,12 +1233,12 @@
                                                         style="padding: 10px 20px; cursor: pointer; ">
                                                         <i class="fa fa-paperclip"></i>
                                                     </label>
-                                                    <input type="file" id="noteFile{{$row->id}}" onchange="handleFileSelect({{$row->id}})"
+                                                    <input type="file" id="noteFile{{$row->id}}" onchange="handleFileSelect('{{$row->id}}')"
                                                         accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="display: none;">
 
                                                     <div style="flex: 1;"></div>
 
-                                                    <button type="button" class="create-note-btn" onclick="addNote({{$row->id}})"
+                                                    <button type="button" class="create-note-btn" onclick="addNote('{{$row->id}}')"
                                                         style="background: #3b82f6;color: #ffffff;border: none;padding: 8px 24px;border-radius: 20px;font-size: 13px;font-weight: 600;cursor: pointer;transition: all 0.2s 
                                                                                                                                 ease;margin-left: auto;text-transform: uppercase;letter-spacing: 0.5px;">
                                                         {{__('ADD NOTE')}}
@@ -1250,7 +1250,7 @@
                                                     <span style="font-size: 13px; color: #4a5568;">
                                                         <i class="fa fa-file" style="color: #818cf8;"></i>
                                                         <span id="fileName{{$row->id}}" style="margin-left: 8px;"></span>
-                                                        <a href="javascript:void(0)" onclick="removeFile({{$row->id}})"
+                                                        <a href="javascript:void(0)" onclick="removeFile('{{$row->id}}')"
                                                             style="margin-left: 12px; color: #dc3545; text-decoration: none; font-weight: 600;">
                                                             <i class="fa fa-times"></i>
                                                         </a>
