@@ -139,7 +139,7 @@
                 flex-direction: column;
             }
 
-            .balance-container.user-name {
+            .balance-container .user-name {
                 font-size: 17px;
                 font-weight: 500;
                 color: var(--bal-text-primary);

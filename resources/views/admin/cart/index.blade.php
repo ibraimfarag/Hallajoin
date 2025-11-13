@@ -71,7 +71,7 @@
             font-size: 18px;
             font-weight: 600;
             color: var(--cart-text-muted);
-            text-transform: uppercase;
+            
             letter-spacing: 0.5px;
             border-bottom: 1px solid var(--cart-border-color);
         }
