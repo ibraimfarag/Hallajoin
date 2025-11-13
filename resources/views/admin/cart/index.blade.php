@@ -502,7 +502,7 @@
                                                                                     </div>
                                                                                     <div class="cart-item-price">
                                                                                         <div class="cart-item-total">${item.total}</div>
-                                                                                        ${item.price !== item.total ? `<div class="cart-item-unit-price">${item.price} each</div>` : ''}
+                                                                                        ${item.price !== item.total ? `<div class="cart-item-unit-price d-none">${item.price} each</div>` : ''}
                                                                                     </div>
                                                                                 </div>
                                                                             `;
