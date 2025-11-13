@@ -2,6 +2,12 @@
 
 @push('head')
     <style>
+
+        .widget-user .user-name,
+        .widget-user .user-role {
+            font-weight: normal;
+        }
+
         body.dark-mode .container-fluid {
             background: #0f1c2e
         }
