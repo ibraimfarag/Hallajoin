@@ -17,6 +17,7 @@ Route::group(['prefix' => 'booking'], function () {
     Route::post('/confirm-order', 'BookingController@confirmOrder')->name('report.admin.booking.confirm-order');
     Route::post('/make-pending', 'BookingController@makePending')->name('report.admin.booking.make-pending');
     Route::get('/customer-info', 'BookingController@getCustomerInfo')->name('report.admin.booking.customer-info');
+    Route::get('/get-booking-details', 'BookingController@getBookingDetails')->name('report.admin.booking.get-details');
 
     // Create Order Routes
     Route::get('/create', 'BookingController@createOrder')->name('report.admin.booking.create');

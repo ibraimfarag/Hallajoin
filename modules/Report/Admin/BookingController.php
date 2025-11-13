@@ -1318,4 +1318,202 @@ class BookingController extends AdminController
 
         return response()->json(['success' => true, 'message' => __('Order cancelled successfully')]);
     }
+
+    /**
+     * Get booking details for expandable row
+     */
+    public function getBookingDetails(Request $request)
+    {
+        $this->checkPermission('booking_view');
+
+        $request->validate([
+            'booking_id' => 'required|exists:bravo_bookings,id',
+        ]);
+
+        try {
+            $booking = \Modules\Booking\Models\Booking::find($request->booking_id);
+
+            if (!$booking) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('Booking not found'),
+                ], 404);
+            }
+
+            // Get related bookings (cart items) if this is part of a cart
+            $relatedBookings = collect([$booking]);
+            if ($booking->payment_id) {
+                try {
+                    $cartBookings = \Modules\Booking\Models\Booking::where('payment_id', $booking->payment_id)
+                        ->orderBy('id')
+                        ->get();
+
+                    if (!$cartBookings->isEmpty()) {
+                        $relatedBookings = $cartBookings;
+                    }
+                } catch (\Exception $e) {
+                    // Fallback to current booking if cart query fails
+                    $relatedBookings = collect([$booking]);
+                }
+            }
+
+            // Load relationships safely
+            $service = null;
+            $vendor = null;
+            $salesman = null;
+            $payment = null;
+
+            try {
+                if ($booking->object_model && $booking->object_id) {
+                    $bookableServices = get_bookable_services();
+                    if (isset($bookableServices[$booking->object_model])) {
+                        $serviceClass = $bookableServices[$booking->object_model];
+                        $service = $serviceClass::find($booking->object_id);
+                    }
+                }
+            } catch (\Exception $e) {
+                // Service not found or invalid
+            }
+
+            try {
+                if ($booking->vendor_id) {
+                    $vendor = \App\User::find($booking->vendor_id);
+                }
+            } catch (\Exception $e) {
+                // Vendor not found
+            }
+
+            try {
+                if ($booking->salesman_id) {
+                    $salesman = \App\User::find($booking->salesman_id);
+                }
+            } catch (\Exception $e) {
+                // Salesman not found
+            }
+
+            try {
+                if ($booking->payment_id) {
+                    $payment = \Modules\Booking\Models\Payment::where('id', $booking->payment_id)->first();
+                }
+            } catch (\Exception $e) {
+                // Payment not found
+            }
+
+            // Prepare cart items data
+            $cartItems = [];
+            $cartTotal = $booking->total;
+
+            if ($relatedBookings->count() > 0) {
+                $cartTotal = $relatedBookings->sum('total');
+
+                foreach ($relatedBookings as $relBooking) {
+                    $itemService = null;
+                    try {
+                        if ($relBooking->object_model && $relBooking->object_id) {
+                            $bookableServices = get_bookable_services();
+                            if (isset($bookableServices[$relBooking->object_model])) {
+                                $serviceClass = $bookableServices[$relBooking->object_model];
+                                $itemService = $serviceClass::find($relBooking->object_id);
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Service not found
+                    }
+
+                    // Get person types HTML
+                    $personTypesHtml = '';
+                    $personTypes = $relBooking->getMeta('person_types');
+                    if ($personTypes) {
+                        $personTypes = json_decode($personTypes, true);
+                        if (is_array($personTypes) && !empty($personTypes)) {
+                            $personTypesHtml = '<div style="font-size: 13px; margin-top: 4px;">';
+                            foreach ($personTypes as $type) {
+                                if (isset($type['number']) && $type['number'] > 0) {
+                                    $personTypesHtml .= '<i class="fa fa-user"></i> ' . $type['number'] . ' × ' . ($type['name'] ?? 'Guest') . '<br>';
+                                }
+                            }
+                            $personTypesHtml .= '</div>';
+                        }
+                    }
+
+                    $cartItems[] = [
+                        'id' => $relBooking->id,
+                        'service_title' => $itemService ? $itemService->title : __('Unknown Service'),
+                        'start_date' => $relBooking->start_date ? date('d M Y', strtotime($relBooking->start_date)) : null,
+                        'total_guests' => $relBooking->total_guests,
+                        'total' => $relBooking->total,
+                        'person_types_html' => $personTypesHtml,
+                    ];
+                }
+            }
+
+            // Prepare response data
+            $responseData = [
+                'booking' => [
+                    'id' => $booking->id,
+                    'confirm_type' => $booking->confirm_type ?: 'pending',
+                    'confirmation_method' => $booking->confirmation_method,
+                    'status' => $booking->status,
+                ],
+                'customer' => [
+                    'first_name' => $booking->first_name,
+                    'last_name' => $booking->last_name,
+                    'email' => $booking->email,
+                    'phone' => $booking->phone,
+                    'country' => $booking->getMeta('country'),
+                ],
+                'service' => $service ? [
+                    'title' => $service->title,
+                    'category' => $this->getServiceCategory($service),
+                    'location' => $service->location ?? $service->address ?? null,
+                ] : null,
+                'vendor' => $vendor ? [
+                    'name' => $vendor->getDisplayName(),
+                ] : null,
+                'payment' => $payment ? [
+                    'gateway' => $payment->gateway,
+                    'status' => $payment->status,
+                    'transaction_id' => $payment->transaction_id,
+                    'created_at' => $payment->created_at ? date('d M Y, H:i', strtotime($payment->created_at)) : null,
+                ] : null,
+                'cart_items' => $cartItems,
+                'cart_total' => $cartTotal,
+            ];
+
+            return response()->json([
+                'success' => true,
+                'data' => $responseData,
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error in getBookingDetails: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+
+            return response()->json([
+                'success' => false,
+                'message' => __('Failed to load booking details: ') . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Get service category safely
+     */
+    private function getServiceCategory($service)
+    {
+        try {
+            // Try different category relationship names
+            if (isset($service->category_tour) && $service->category_tour) {
+                return $service->category_tour->name;
+            } elseif (isset($service->category) && $service->category) {
+                return $service->category->name;
+            } elseif (isset($service->cat) && $service->cat) {
+                return $service->cat->name;
+            }
+        } catch (\Exception $e) {
+            // Category not found
+        }
+
+        return null;
+    }
 }

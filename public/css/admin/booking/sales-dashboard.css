@@ -520,7 +520,7 @@ body:not(.dark-mode) .sales-table .user-phone:hover {
 }
 
 .detail-content {
-    padding: 25px;
+    /* padding: 25px; */
     border-top: 1px solid var(--sales-border-color);
 }
 
@@ -543,7 +543,7 @@ body:not(.dark-mode) .detail-content {
 
 .detail-section {
     background: var(--sales-bg-secondary);
-    padding: 20px;
+    /* padding: 20px; */
     border-radius: 8px;
     border: 1px solid var(--sales-border-color);
 }
