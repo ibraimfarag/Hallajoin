@@ -2,9 +2,14 @@
 
 @push('head')
     <style>
-        .main-breadcrumb{
+        body.dark-mode .container-fluid {
+            background: #0f1c2e
+        }
+
+        .main-breadcrumb {
             display: none !important;
         }
+
         body {
             font-weight: bold;
         }
@@ -144,7 +149,7 @@
 
         .enquiry-table tbody td {
             color: #495057 !important;
-            padding: 18px 14px;
+            padding: 12px 23px !important;
             border: none;
             vertical-align: middle;
             font-size: medium;
@@ -400,7 +405,7 @@
         body.dark-mode-instant .enquiry-table thead th {
             color: #8b92a7 !important;
             background-color: #ffffff08;
-            text-transform: uppercase !important;
+
             padding: 22px 18px;
             font-weight: 500 !important;
 
@@ -420,6 +425,7 @@
         body.dark-mode .enquiry-table tbody td,
         body.dark-mode-instant .enquiry-table tbody td {
             color: #ffffff !important;
+
         }
 
         body.dark-mode .enquiry-table tbody td:first-child,
@@ -530,7 +536,7 @@
 
         body.dark-mode .user-phone,
         body.dark-mode-instant .user-phone {
-            color: #a78bfa !important;
+            color: #60a5fa !important;
         }
 
 
@@ -1016,7 +1022,8 @@
 
 @section ('content')
     <div class="container-fluid">
-
+        <h1 style="    font-size: 24px;
+        font-weight: 700;margin: 20px -10px;" class="orders-title">{{ __('Inquiries') }}</h1>
 
         <!-- Filter Container -->
         <div class="enquiry-filter-container">
@@ -1226,7 +1233,7 @@
 
                                                     <button type="button" class="create-note-btn" onclick="addNote({{$row->id}})"
                                                         style="background: #3b82f6;color: #ffffff;border: none;padding: 8px 24px;border-radius: 20px;font-size: 13px;font-weight: 600;cursor: pointer;transition: all 0.2s 
-                                                                                                        ease;margin-left: auto;text-transform: uppercase;letter-spacing: 0.5px;">
+                                                                                                                                ease;margin-left: auto;text-transform: uppercase;letter-spacing: 0.5px;">
                                                         {{__('ADD NOTE')}}
                                                     </button>
                                                 </div>
@@ -1322,26 +1329,26 @@
                                         else if (['doc', 'docx'].includes(fileExt)) fileIcon = 'fa-file-word-o';
 
                                         attachmentHtml = `
-                                                                                                                    <a href="${note.attachment}" target="_blank" class="timeline-attachment">
-                                                                                                                        <i class="fa ${fileIcon}"></i>
-                                                                                                                        <span>${fileName}</span>
-                                                                                                                    </a>
-                                                                                                                `;
+                                                                                                                            <a href="${note.attachment}" target="_blank" class="timeline-attachment">
+                                                                                                                                <i class="fa ${fileIcon}"></i>
+                                                                                                                                <span>${fileName}</span>
+                                                                                                                            </a>
+                                                                                                                        `;
                                     }
 
                                     return `
-                                                                                                                <div class="timeline-item">
-                                                                                                                    <div class="timeline-avatar">${firstLetter}</div>
-                                                                                                                    <div class="timeline-content">
-                                                                                                                        <div class="timeline-header">
-                                                                                                                            <span class="timeline-author">${note.user_name}</span>
-                                                                                                                            <span class="timeline-date">${note.created_at}</span>
+                                                                                                                        <div class="timeline-item">
+                                                                                                                            <div class="timeline-avatar">${firstLetter}</div>
+                                                                                                                            <div class="timeline-content">
+                                                                                                                                <div class="timeline-header">
+                                                                                                                                    <span class="timeline-author">${note.user_name}</span>
+                                                                                                                                    <span class="timeline-date">${note.created_at}</span>
+                                                                                                                                </div>
+                                                                                                                                <div class="timeline-text">${formattedContent}</div>
+                                                                                                                                ${attachmentHtml}
+                                                                                                                            </div>
                                                                                                                         </div>
-                                                                                                                        <div class="timeline-text">${formattedContent}</div>
-                                                                                                                        ${attachmentHtml}
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                            `;
+                                                                                                                    `;
                                 }).join('');
                             }
                         }
@@ -1404,16 +1411,16 @@
                             : `background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);`;
 
                         return `
-                                                                                    <div class="mention-item" onclick="selectMentionUser(${enquiryId}, '${user.name}', ${user.id})" style="display: flex; align-items: center; gap: 12px;">
-                                                                                        <div style="width: 36px; height: 36px; border-radius: 50%; ${avatarStyle} display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px; flex-shrink: 0;">
-                                                                                            ${user.avatar && user.avatar !== '' ? '' : firstLetter}
-                                                                                        </div>
-                                                                                        <div style="flex: 1; min-width: 0;">
-                                                                                            <div style="font-weight: 600; font-size: 14px; color: #1a202c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.name}</div>
-                                                                                            <div style="font-size: 11px; color: #9ca3af; margin-top: 2px;">${user.role}</div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                `;
+                                                                                            <div class="mention-item" onclick="selectMentionUser(${enquiryId}, '${user.name}', ${user.id})" style="display: flex; align-items: center; gap: 12px;">
+                                                                                                <div style="width: 36px; height: 36px; border-radius: 50%; ${avatarStyle} display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px; flex-shrink: 0;">
+                                                                                                    ${user.avatar && user.avatar !== '' ? '' : firstLetter}
+                                                                                                </div>
+                                                                                                <div style="flex: 1; min-width: 0;">
+                                                                                                    <div style="font-weight: 600; font-size: 14px; color: #1a202c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.name}</div>
+                                                                                                    <div style="font-size: 11px; color: #9ca3af; margin-top: 2px;">${user.role}</div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        `;
                     }).join('');
                 }
 
