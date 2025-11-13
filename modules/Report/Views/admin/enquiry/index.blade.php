@@ -254,7 +254,7 @@
             justify-content: center;
         }
 
-        .enquiry-table-container .user-info {
+        .enquiry-table-container .enquiry-table-container .user-info {
             display: flex;
             align-items: center;
             gap: 10px;
@@ -266,11 +266,11 @@
             overflow: hidden !important;
         }
 
-        .user-info:hover {
+        .enquiry-table-container .user-info:hover {
             opacity: 0.8;
         }
 
-        .enquiry-table-container .user-avatar {
+        .enquiry-table-container .enquiry-table-container .user-avatar {
             width: 34px;
             height: 34px;
             border-radius: 50%;
@@ -279,7 +279,7 @@
             transition: border-color 0.2s ease;
         }
 
-        .enquiry-table-container .user-avatar-letter {
+        .enquiry-table-container.enquiry-table-container .user-avatar-letter {
             width: 34px;
             height: 34px;
             border-radius: 50%;
@@ -312,12 +312,12 @@
             color: #6c757d !important;
         }
 
-        .user-name {
+        .enquiry-table-container .user-name {
             font-weight: 600;
             color: inherit;
         }
 
-        .user-phone {
+       .enquiry-table-container .user-phone {
             font-size: small;
             color: #6c757d;
             margin-top: 2px;
@@ -529,13 +529,13 @@
             color: #5a6a7d !important;
         }
 
-        body.dark-mode .user-name,
-        body.dark-mode-instant .user-name {
+        body.dark-mode .enquiry-table-container .user-name,
+        body.dark-mode-instant .enquiry-table-container .user-name {
             color: #ffffff !important;
         }
 
-        body.dark-mode .user-phone,
-        body.dark-mode-instant .user-phone {
+        body.dark-mode .enquiry-table-container .user-phone,
+        body.dark-mode-instant .enquiry-table-container .user-phone {
             color: #60a5fa !important;
         }
 
