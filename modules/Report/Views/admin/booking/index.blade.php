@@ -193,7 +193,7 @@
                         <th>{{ __('Status') }}</th>
                         <th class="sortable" data-sort="created_at">
                             {{ __('Created On') }}
-                            <i class="fa fa-sort-down"></i>
+                         
                         </th>
                         <th>{{ __('Confirm Status') }}</th>
                         <th>{{ __('Salesman') }}</th>

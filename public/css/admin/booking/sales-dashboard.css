@@ -43,7 +43,7 @@ body.dark-mode-instant .sales-container {
 
 /* Container */
 .sales-container {
-    background: transparent;
+    background: #0f1c2e;
     color: var(--sales-text-primary);
     min-height: 100vh;
     padding: 30px;
@@ -250,7 +250,7 @@ body:not(.dark-mode) .sales-table-container {
     border-bottom: 2px solid var(--sales-border-color);
     white-space: nowrap;
     font-size: 18px;
-    text-transform: uppercase;
+
 }
 
 body.dark-mode .sales-table th,
