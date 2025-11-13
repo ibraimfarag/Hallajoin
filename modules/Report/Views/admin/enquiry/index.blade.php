@@ -1023,7 +1023,7 @@
 @section ('content')
     <div class="container-fluid">
         <h1 style="    font-size: 24px;
-        font-weight: 700;    margin: 16px -10px;
+        font-weight: 700;    margin: 2px -1px 21px;
     padding-top: 26px;" class="orders-title">{{ __('Inquiries') }}</h1>
 
         <!-- Filter Container -->
