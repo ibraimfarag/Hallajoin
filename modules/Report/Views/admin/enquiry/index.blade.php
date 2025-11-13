@@ -542,7 +542,7 @@
 
         .table thead th {
             text-transform: none !important;
-            font-size: medium !important;
+            font-size: 18px !important;
             font-weight: 900 !important;
         }
 
@@ -1023,7 +1023,8 @@
 @section ('content')
     <div class="container-fluid">
         <h1 style="    font-size: 24px;
-        font-weight: 700;margin: 20px -10px;" class="orders-title">{{ __('Inquiries') }}</h1>
+        font-weight: 700;    margin: 16px -10px;
+    padding-top: 26px;" class="orders-title">{{ __('Inquiries') }}</h1>
 
         <!-- Filter Container -->
         <div class="enquiry-filter-container">
