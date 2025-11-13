@@ -211,8 +211,10 @@
             body.dark-mode  .balance-container{
 
                     background: #0f1c2e;
-    margin-top: 100px;
-    padding: 0px 23px;
+    margin-top: 30px;
+    padding: 0px 25px;
+    margin-left: -17px;
+    margin-right: -17px;
             }
 
 
