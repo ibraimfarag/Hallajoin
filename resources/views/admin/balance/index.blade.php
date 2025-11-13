@@ -119,7 +119,7 @@
             }
 
 
-            .user-avatar-placeholder {
+           .balance-container .user-avatar-placeholder {
                 width: 48px;
                 height: 48px;
                 border-radius: 50%;
@@ -134,19 +134,19 @@
                 flex-shrink: 0;
             }
 
-            .user-details {
+           .balance-container .user-details {
                 display: flex;
                 flex-direction: column;
             }
 
-            .user-name {
+            .balance-container.user-name {
                 font-size: 17px;
                 font-weight: 500;
                 color: var(--bal-text-primary);
                 margin-bottom: 4px;
             }
 
-            .user-phone {
+            .balance-container .user-phone {
                 font-size: 19px;
                 color: var(--bal-text-secondary);
             }

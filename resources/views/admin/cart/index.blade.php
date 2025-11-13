@@ -88,13 +88,13 @@
             transition: background 0.2s ease;
         }
 
-        .user-cell {
+        .cart-container .user-cell {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .user-avatar {
+        .cart-container .user-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -108,23 +108,23 @@
             flex-shrink: 0;
         }
 
-        .user-info {
+         .cart-container .user-info {
             display: flex;
             flex-direction: column;
         }
 
-        .user-name {
+        .cart-container .user-name {
             color: var(--cart-text-primary);
             font-weight: 500;
             font-size: 17px;
         }
 
-        .user-name:hover {
+         .cart-container  .user-name:hover {
             color: #63b3ed !important;
 
         }
 
-        .user-phone {
+        .cart-container .user-phone {
             color: #63b3ed;
             font-size: 19px;
             margin-top: 2px;
@@ -354,7 +354,7 @@
             }
         }
 
-        .user-cell a:hover {
+         .cart-container .user-cell a:hover {
             text-decoration: none !important;
         }
 
@@ -374,7 +374,7 @@
                 <thead>
                     <tr>
                         <th>{{__('User')}}</th>
-                        <th>{{__('Created On')}} <span style="margin-left: 4px; font-size: 12px;">▼</span></th>
+                        <th>{{__('Created On')}} </th>
                         <th style="text-align: center;">{{__('Cart Count')}}</th>
                         <th style="text-align: center;">{{__('Details')}}</th>
                     </tr>

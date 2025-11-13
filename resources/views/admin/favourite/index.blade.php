@@ -87,13 +87,13 @@
             transition: background 0.2s ease;
         }
 
-        .user-cell {
+        .favourite-container .user-cell {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .user-avatar {
+        .favourite-container .user-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -107,18 +107,18 @@
             flex-shrink: 0;
         }
 
-        .user-info {
+        .favourite-container .user-info {
             display: flex;
             flex-direction: column;
         }
 
-        .user-name {
+        .favourite-container .user-name {
             color: var(--fav-text-primary);
             font-weight: 500;
             font-size: 17px;
         }
 
-        .user-phone {
+        .favourite-container .user-phone {
             color: #63b3ed;
             font-size: 19px;
             margin-top: 2px;
@@ -323,7 +323,7 @@
             margin-top: 8px;
         }
 
-        .user-cell a:hover {
+        .favourite-container .user-cell a:hover {
             text-decoration: none !important;
         }
 
@@ -344,11 +344,7 @@
                     <tr>
                         <th>{{__('User')}}</th>
                         <th>{{__('Created On')}}
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                style="width: 12px; height: 12px; margin-left: 4px; display: inline-block; vertical-align: middle;"
-                                fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M8 12l-4-4h8l-4 4z" />
-                            </svg>
+                          
                         </th>
                         <th style="text-align: center;">{{__('Activity Count')}}</th>
                         <th style="text-align: center;">{{__('Details')}}</th>
