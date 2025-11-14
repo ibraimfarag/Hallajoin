@@ -26,6 +26,13 @@
 
 
 
+    body.dark-mode .container-fluid {
+
+        background: #0f1c2e;
+    }
+
+
+
     body.dark-mode .card,
     body.dark-mode .panel {
         background: transparent;
@@ -172,6 +179,12 @@
         color: #374151;
     }
 
+    body.dark-mode .card-body {
+
+        padding: 0 !important;
+    }
+
+
     @media (max-width: 768px) {
         .filter-checkbox-bar {
             gap: 15px !important;
@@ -187,10 +200,11 @@
     }
 
     body.dark-mode .table thead th {
-        font-size: 18px !important;
-        font-weight: 500;
+        font-size: 19px !important;
+        font-weight: 600;
         color: var(--cart-text-muted);
         letter-spacing: 0.5px;
+            text-transform: none;
     }
 
     .table td,
@@ -205,6 +219,10 @@
 
 
 <div class="container-fluid ">
+            <h1 style="    font-size: 24px;
+        font-weight: 700;    margin: 2px -1px 45px;
+    padding-top: 26px;" class="orders-title">{{ __('Users') }}</h1>
+
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -362,9 +380,9 @@
                                     </td>
                                     <td>
                                         @if($user->email_verified_at)
-                                        <span class="badge bg-success" style="font-size: 14px; padding: 6px 12px;">✓ Verified</span>
+                                        <span class="badge bg-success" style="font-size: 14px; padding: 6px 12px;border-radius: 13px;">✓ Verified</span>
                                         @else
-                                        <span class="badge bg-warning" style="font-size: 14px; padding: 6px 12px;">⚠ Unverified</span>
+                                        <span class="badge bg-warning" style="font-size: 14px; padding: 6px 12px;border-radius: 13px;">⚠ Unverified</span>
                                         @endif
                                     </td>
                                     <td><span style="font-size: 18px">{{ $user->created_at ? $user->created_at->format('d/M/Y H:i') : '' }}</span></td>

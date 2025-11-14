@@ -224,7 +224,7 @@
 
         <div class="balance-container">
              <h1 style="    font-size: 24px;
-        font-weight: 700;    margin: 2px -1px 21px;
+        font-weight: 700;    margin: 2px -1px 45px;
     padding-top: 26px;">{{ __('Balance') }}</h1>
             <div class="balance-card">
 
