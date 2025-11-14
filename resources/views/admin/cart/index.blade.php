@@ -68,7 +68,7 @@
         .cart-table th {
             padding: 16px;
             text-align: left;
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 600;
             color: var(--cart-text-muted);
             
