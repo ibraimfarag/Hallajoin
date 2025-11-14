@@ -79,7 +79,7 @@
             padding: 16px;
             border-bottom: 1px solid var(--fav-border-light);
             color: var(--fav-text-secondary);
-            font-size: 14px;
+            font-size: 19px !important;
         }
 
         .favourite-table tbody tr:hover {
