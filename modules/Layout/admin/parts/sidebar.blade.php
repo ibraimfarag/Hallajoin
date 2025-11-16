@@ -8,7 +8,7 @@ $menus = [
     ],
     'members' => [
         'url' => '#',
-        'title' => __("Members"),
+        'title' => __("User"),
         'icon' => 'icon ion-ios-people',
         'position' => 12,
         'children' => [
@@ -41,6 +41,14 @@ $menus = [
         'title' => __("Menu"),
         'icon' => 'icon ion-ios-apps',
         'permission' => 'menu_view',
+    ],
+
+    'marketing' => [
+        "position" => 21,
+        'url' => '#',
+        'title' => __("Marketing"),
+        'icon' => 'icon ion-ios-megaphone',
+        'children' => []
     ],
     'general' => [
         "position" => 80,
@@ -114,10 +122,8 @@ if (!empty($custom_modules)) {
                         }));
                     }
                 }
-
             }
         }
-
     }
 }
 // dd($custom_modules);
@@ -171,10 +177,8 @@ if (!empty($custom_modules)) {
                         }));
                     }
                 }
-
             }
         }
-
     }
 }
 
@@ -243,32 +247,32 @@ if (!empty($menus)) {
 ?>
 <ul class="main-menu pb-5">
     @foreach($menus as $menuItem)
-        @php 
-            $finalClass = trim($menuItem['class']);
-        @endphp
-        <li class="{{$finalClass}}"><a href="{{ url($menuItem['url']) }}">
-                @if(!empty($menuItem['icon']))
-                    <span class="icon text-center"><i class="{{$menuItem['icon']}}"></i></span>
-                @endif
-                {!! clean($menuItem['title'], [
-            'Attr.AllowedClasses' => null
-        ]) !!}
-            </a>
-            @if(!empty($menuItem['children']))
-                <span class="btn-toggle"><i class="fa fa-angle-left pull-right"></i></span>
-                <ul class="children">
-                    @foreach($menuItem['children'] as $menuItem2)
-                        <li class="{{$menuItem2['class']}}"><a href="{{ url($menuItem2['url']) }}">
-                                @if(!empty($menuItem2['icon']))
-                                    <i class="{{$menuItem2['icon']}}"></i>
-                                @endif
-                                {!! clean($menuItem2['title'], [
-                            'Attr.AllowedClasses' => null
-                        ]) !!}</a>
-                        </li>
-                    @endforeach
-                </ul>
+    @php
+    $finalClass = trim($menuItem['class']);
+    @endphp
+    <li class="{{$finalClass}}"><a href="{{ url($menuItem['url']) }}">
+            @if(!empty($menuItem['icon']))
+            <span class="icon text-center"><i class="{{$menuItem['icon']}}"></i></span>
             @endif
-        </li>
+            {!! clean($menuItem['title'], [
+            'Attr.AllowedClasses' => null
+            ]) !!}
+        </a>
+        @if(!empty($menuItem['children']))
+        <span class="btn-toggle"><i class="fa fa-angle-left pull-right"></i></span>
+        <ul class="children">
+            @foreach($menuItem['children'] as $menuItem2)
+            <li class="{{$menuItem2['class']}}"><a href="{{ url($menuItem2['url']) }}">
+                    @if(!empty($menuItem2['icon']))
+                    <i class="{{$menuItem2['icon']}}"></i>
+                    @endif
+                    {!! clean($menuItem2['title'], [
+                    'Attr.AllowedClasses' => null
+                    ]) !!}</a>
+            </li>
+            @endforeach
+        </ul>
+        @endif
+    </li>
     @endforeach
 </ul>

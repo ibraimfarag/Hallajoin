@@ -20,7 +20,7 @@ class ModuleProvider extends \Modules\ModuleServiceProvider
 
         return [
             'sales' => [
-                'position' => 30,
+                'position' => 20,
                 'url' => route('report.admin.booking'),
                 'title' => __('Sales'),
                 'icon' => 'icon ion-md-cart',
