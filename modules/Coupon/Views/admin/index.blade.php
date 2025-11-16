@@ -373,11 +373,11 @@
                                 <tbody>
                                     @if ($rows->total() > 0)
                                         @foreach ($rows as $row)
-                                            <tr class="{{ $row->status }}">
+                                            <tr  style=" align-content: center; align-items: center;"class="{{ $row->status }}">
                                                 <!-- <td><input type="checkbox" name="ids[]" class="check-item" value="{{ $row->id }}"></td> -->
-                                                <td>{{ $row->name }}</td>
-                                                <td class="title"><strong>{{ $row->code }}</strong></td>
-                                                <td>
+                                                <td style=" align-content: center; align-items: center;">{{ $row->name }}</td>
+                                                <td class="title" style=" align-content: center; align-items: center;"><strong>{{ $row->code }}</strong></td>
+                                                <td style=" align-content: center; align-items: center;">
                                                     @if ($row->discount_type == 'percent')
                                                         {{ $row->amount }}<span style="color:#aaa; font-size:13px;">
                                                             %</span>
@@ -385,10 +385,10 @@
                                                         {!! format_money($row->amount) !!}
                                                     @endif
                                                 </td>
-                                                <td><span
+                                                <td style=" align-content: center; align-items: center;"><span
                                                         class="badge badge-{{ $row->status }}" style="font-size: 14px; padding: 6px 12px;border-radius: 13px;" >{{ $row->status == 'publish' ? 'Active' : 'Inactive' }}</span>
                                                 </td>
-                                                <td>
+                                                <td style=" align-content: center; align-items: center;">
                                                     @if ($row->created_at)
                                                         {{ $row->created_at->format('d/M/Y') }}<br>
                                                         <span
@@ -397,14 +397,14 @@
                                                         -
                                                     @endif
                                                 </td>
-                                                <td>{{ $row->end_date ? \Carbon\Carbon::parse($row->end_date)->format('d/M/Y') : '-' }}
+                                                <td style=" align-content: center; align-items: center;">{{ $row->end_date ? \Carbon\Carbon::parse($row->end_date)->format('d/M/Y') : '-' }}
                                                 </td>
 
 
-                                                <td>{{ $row->limit_per_user ?: __('Unlimited') }}</td>
-                                                <td>{{ \Modules\Coupon\Models\CouponBookings::where('coupon_code', $row->code)->whereNotIn('booking_status', ['draft', 'unpaid', 'cancelled'])->count() }}
+                                                <td style=" align-content: center; align-items: center;">{{ $row->limit_per_user ?: __('Unlimited') }}</td>
+                                                <td style=" align-content: center; align-items: center;">{{ \Modules\Coupon\Models\CouponBookings::where('coupon_code', $row->code)->whereNotIn('booking_status', ['draft', 'unpaid', 'cancelled'])->count() }}
                                                 </td>
-                                                <td>
+                                                <td style=" align-content: center; align-items: center;">
                                                     <div style="display: flex; align-items: center; gap: 8px;">
                                                         <a href="{{ route('coupon.admin.edit', ['id' => $row->id]) }}"
                                                             class="coupon-edit-btn" title="Edit">
