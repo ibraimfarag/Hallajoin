@@ -264,7 +264,7 @@
 
     <div class="container-fluid promotion-container">
         <div class="d-flex justify-content-between mb20">
-            <h1 class="title-bar">{{ __('Coupon Management') }}</h1>
+            <h1 class="title-bar">{{ __('Promotion Codes') }}</h1>
             <div class="title-actions">
                 @if (empty($recovery))
                     <a href="{{ route('coupon.admin.create') }}" class="btn btn-mint-outline">
@@ -274,7 +274,7 @@
                                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A1 1 0 007.6 17h8.8a1 1 0 00.95-.68L21 13M7 13V6h13" />
                         </svg>
                         <span style="vertical-align:middle;letter-spacing:1px;font-weight:600;text-transform:uppercase;">Add
-                            New Coupon</span>
+                            New Promotion</span>
                     </a>
                 @endif
             </div>
