@@ -141,6 +141,13 @@
         border-radius: 8px;
         padding: 0 20px;
     }
+    body:not(.dark-mode) input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(0);
+        }
+
+         body.dark-mode input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
 
     body:not(.dark-mode) .input-group-text i {
         color: #6b7280 !important;
@@ -215,6 +222,8 @@
     .table thead tr th {
         padding: 18px 18px !important;
     }
+
+      
 </style>
 
 

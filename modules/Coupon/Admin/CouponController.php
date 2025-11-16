@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Coupon\Admin;
 
 use Illuminate\Http\Request;
@@ -10,6 +11,17 @@ use Modules\Coupon\Models\CouponServices;
 
 class CouponController extends AdminController
 {
+
+    public function delete($id, Request $request)
+    {
+        $this->checkPermission('coupon_delete');
+        $coupon = Coupon::find($id);
+        if (!$coupon) {
+            return redirect()->back()->with('error', __('Coupon not found.'));
+        }
+        $coupon->delete();
+        return redirect()->back()->with('success', __('Coupon deleted successfully.'));
+    }
     public function __construct()
     {
         $this->setActiveMenu(route('coupon.admin.index'));
@@ -23,28 +35,84 @@ class CouponController extends AdminController
     {
         $this->checkPermission('coupon_view');
 
-        $query = Coupon::query() ;
+        $query = Coupon::query();
 
-        $query->orderBy('id', 'desc');
-        if (!empty($coupon_name = $request->input('s'))) {
-            $query->where('name', 'LIKE', '%' . $coupon_name . '%');
-            $query->orWhere('code',   $coupon_name );
+        // Search by name or code
+        if ($s = $request->input('s')) {
+            $query->where(function ($q) use ($s) {
+                $q->where('name', 'LIKE', "%$s%")
+                    ->orWhere('code', 'LIKE', "%$s%");
+            });
         }
 
+        // Date range filter (created_at)
+        if ($from = $request->input('from')) {
+            $query->whereDate('created_at', '>=', $from);
+        }
+        if ($to = $request->input('to')) {
+            $query->whereDate('created_at', '<=', $to);
+        }
+
+        // Status filter (active/inactive)
+        if ($active = $request->input('active')) {
+            $query->where('status', $active == '1' ? 'publish' : 'draft');
+        }
+
+        // Discount type filter
+        if ($discount_type = $request->input('discount_type')) {
+            $query->where('discount_type', $discount_type);
+        }
+
+        // Redeemed date range (from booking coupons)
+        if ($redeemed_from = $request->input('redeemed_from')) {
+            $query->whereHas('bookings', function ($q) use ($redeemed_from) {
+                $q->whereDate('created_at', '>=', $redeemed_from);
+            });
+        }
+        if ($redeemed_to = $request->input('redeemed_to')) {
+            $query->whereHas('bookings', function ($q) use ($redeemed_to) {
+                $q->whereDate('created_at', '<=', $redeemed_to);
+            });
+        }
+
+        // Redeemed checkbox
+        if ($request->input('redeemed')) {
+            $query->whereHas('bookings', function ($q) {
+                $q->whereNotIn('booking_status', ['draft', 'unpaid', 'cancelled']);
+            });
+        }
+
+        // Extra Discount checkbox (assume amount > X, adjust as needed)
+        if ($request->input('extra_discount')) {
+            $query->where('amount', '>', 100); // Example threshold
+        }
+
+        // Available checkbox (not expired and not used up)
+        if ($request->input('available')) {
+            $query->where(function ($q) {
+                $q->whereNull('end_date')->orWhere('end_date', '>', now());
+            });
+            $query->where(function ($q) {
+                $q->whereNull('quantity_limit')->orWhereRaw('(SELECT COUNT(*) FROM bravo_booking_coupons WHERE coupon_code = bravo_coupons.code AND booking_status NOT IN ("draft","unpaid","cancelled")) < quantity_limit');
+            });
+        }
+
+        $query->orderBy('id', 'desc');
+
         $data = [
-            'rows'               => $query->with(['author'])->paginate(20),
+            'rows'               => $query->paginate(20),
             'breadcrumbs'        => [
                 [
                     'name'  => __('Coupon Management'),
                     'class' => 'active'
                 ],
             ],
-            'page_title'=>__("Coupon Management"),
+            'page_title' => __("Coupon Management"),
         ];
         return view('Coupon::admin.index', $data);
     }
 
-    public function edit(Request $request,$id)
+    public function edit(Request $request, $id)
     {
         $this->checkPermission('coupon_update');
 
@@ -61,10 +129,10 @@ class CouponController extends AdminController
                     'url'  => route('coupon.admin.index')
                 ],
                 [
-                    'name' => __('Edit Coupon: :name',['name'=>$row->code]),
+                    'name' => __('Edit Coupon: :name', ['name' => $row->code]),
                 ],
             ],
-            'page_title'=>__("Edit: :name",['name'=>$row->code]),
+            'page_title' => __("Edit: :name", ['name' => $row->code]),
         ];
         return view('Coupon::admin.detail', $data);
     }
@@ -85,31 +153,31 @@ class CouponController extends AdminController
                     'name' => __('Create Coupon'),
                 ],
             ],
-            'page_title'=>__('Create Coupon'),
+            'page_title' => __('Create Coupon'),
         ];
         return view('Coupon::admin.detail', $data);
     }
 
-    public function store( Request $request,$id ){
+    public function store(Request $request, $id)
+    {
         $request->validate([
-            'code'=>[
+            'code' => [
                 'required',
                 'max:50',
                 'string',
                 'alpha_dash',
                 Rule::unique('bravo_coupons')->ignore($id > 0 ? $id : false)
             ],
-            'amount'=>['required'],
+            'amount' => ['required'],
         ]);
 
-        if($id>0){
+        if ($id > 0) {
             $this->checkPermission('coupon_update');
             $row = Coupon::find($id);
             if (empty($row)) {
                 return redirect(route('coupon.admin.index'));
             }
-
-        }else{
+        } else {
             $this->checkPermission('coupon_create');
             $row = new Coupon();
             $row->status = "publish";
@@ -131,32 +199,32 @@ class CouponController extends AdminController
             'image_id'
         ];
 
-        $row->fillByAttr($dataKeys,$request->input());
+        $row->fillByAttr($dataKeys, $request->input());
 
         //Save Coupon Product
         $services = $request->input('services');
         $coupon_product = new CouponServices();
         $coupon_product->clean($row->id);
-        if(!empty($services) and is_array($services)){
-            $services = Service::selectRaw('id,object_id,object_model')->whereIn('id',$services)->get();
-            foreach ($services as $service){
+        if (!empty($services) and is_array($services)) {
+            $services = Service::selectRaw('id,object_id,object_model')->whereIn('id', $services)->get();
+            foreach ($services as $service) {
                 $coupon_product = new CouponServices();
                 $coupon_product->fill([
-                        'coupon_id' => $row->id,
-                        'object_id' => $service->object_id,
-                        'object_model' => $service->object_model,
-                        'service_id' => $service->id,
-                    ]);
+                    'coupon_id' => $row->id,
+                    'object_id' => $service->object_id,
+                    'object_model' => $service->object_model,
+                    'service_id' => $service->id,
+                ]);
                 $coupon_product->save();
             }
         }
         $res = $row->save();
         if ($res) {
 
-            if($id > 0 ){
-                return redirect()->back()->with('success',  __('Coupon updated') );
-            }else{
-                return redirect()->to(route('coupon.admin.index'))->with('success',  __('Coupon created') );
+            if ($id > 0) {
+                return redirect()->back()->with('success',  __('Coupon updated'));
+            } else {
+                return redirect()->to(route('coupon.admin.index'))->with('success',  __('Coupon created'));
             }
         }
     }
@@ -171,13 +239,13 @@ class CouponController extends AdminController
         if (empty($action)) {
             return redirect()->back()->with('error', __('Please select an action!'));
         }
-        switch ($action){
+        switch ($action) {
             case "delete":
                 foreach ($ids as $id) {
                     $query = Coupon::query()->where("id", $id);
                     $this->checkPermission('coupon_delete');
                     $query->first();
-                    if(!empty($query)){
+                    if (!empty($query)) {
                         $query->delete();
                     }
                 }
@@ -202,7 +270,8 @@ class CouponController extends AdminController
         }
     }
 
-    function getServiceForSelect2(Request $request){
+    function getServiceForSelect2(Request $request)
+    {
         $q = $request->query('q');
         $query = Service::select('*');
         if ($q) {
@@ -217,7 +286,7 @@ class CouponController extends AdminController
             foreach ($res as $item) {
                 $data[] = [
                     'id'   => $item->id,
-                    'text' => strtoupper($item->object_model)." (#{$item->object_id}): {$item->title}",
+                    'text' => strtoupper($item->object_model) . " (#{$item->object_id}): {$item->title}",
                 ];
             }
         }
