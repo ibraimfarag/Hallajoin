@@ -257,7 +257,8 @@ body.dark-mode .panel {
 
 body.dark-mode .card-header,
 body.dark-mode .panel-title {
-    background: linear-gradient(135deg, var(--dark-bg-tertiary) 0%, var(--dark-card-bg) 100%);
+    /* background: linear-gradient(135deg, var(--dark-bg-tertiary) 0%, var(--dark-card-bg) 100%); */
+    background: rgba(99, 179, 237, 0.1);
     border-bottom: 1px solid var(--dark-border);
     border-radius: 12px 12px 0 0;
     color: var(--dark-text-primary);
@@ -295,7 +296,8 @@ body.dark-mode .table th {
 }
 
 body.dark-mode .table-hover tbody tr:hover {
-    background: linear-gradient(135deg, var(--dark-bg-tertiary) 0%, rgba(59, 130, 246, 0.1) 100%);
+    /* background: linear-gradient(135deg, var(--dark-bg-tertiary) 0%, rgba(59, 130, 246, 0.1) 100%); */
+    background: rgba(99, 179, 237, 0.1);
     transform: translateX(2px);
     transition: all 0.2s ease;
 }

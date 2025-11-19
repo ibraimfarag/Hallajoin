@@ -231,7 +231,7 @@
             width: 100% !important;
             background: var(--cart-bg-secondary) !important;
 
-                overflow: hidden;
+            overflow: hidden;
         }
 
 
@@ -244,20 +244,19 @@
         }
 
         .table thead th {
-        font-size: 19px !important;
-        font-weight: 600;
-        color: var(--cart-text-muted) !important;
-        letter-spacing: 0.5px;
+            font-size: 19px !important;
+            font-weight: 600;
+            color: var(--cart-text-muted) !important;
+            letter-spacing: 0.5px;
             text-transform: none !important;
-    }
+        }
 
-    .cart-table td {
-    padding: 23px 0px -4px !important;
-    border-bottom: 1px solid var(--cart-border-light) !important;
-    color: var(--cart-text-secondary) !important;
-    font-size: 19px !important;
-}
-
+        .cart-table td {
+            padding: 23px 0px -4px !important;
+            border-bottom: 1px solid var(--cart-border-light) !important;
+            color: var(--cart-text-secondary) !important;
+            font-size: 19px !important;
+        }
     </style>
 
 
@@ -373,10 +372,13 @@
                                 <tbody>
                                     @if ($rows->total() > 0)
                                         @foreach ($rows as $row)
-                                            <tr  style=" align-content: center; align-items: center;"class="{{ $row->status }}">
+                                            <tr
+                                                style=" align-content: center; align-items: center;"class="{{ $row->status }}">
                                                 <!-- <td><input type="checkbox" name="ids[]" class="check-item" value="{{ $row->id }}"></td> -->
-                                                <td style=" align-content: center; align-items: center;">{{ $row->name }}</td>
-                                                <td class="title" style=" align-content: center; align-items: center;"><strong>{{ $row->code }}</strong></td>
+                                                <td style=" align-content: center; align-items: center;">
+                                                    {{ $row->name }}</td>
+                                                <td class="title" style=" align-content: center; align-items: center;">
+                                                    <strong>{{ $row->code }}</strong></td>
                                                 <td style=" align-content: center; align-items: center;">
                                                     @if ($row->discount_type == 'percent')
                                                         {{ $row->amount }}<span style="color:#aaa; font-size:13px;">
@@ -386,23 +388,26 @@
                                                     @endif
                                                 </td>
                                                 <td style=" align-content: center; align-items: center;"><span
-                                                        class="badge badge-{{ $row->status }}" style="font-size: 14px; padding: 6px 12px;border-radius: 13px;" >{{ $row->status == 'publish' ? 'Active' : 'Inactive' }}</span>
+                                                        class="badge badge-{{ $row->status }}"
+                                                        style="font-size: 14px; padding: 6px 12px;border-radius: 13px;">{{ $row->status == 'publish' ? 'Active' : 'Inactive' }}</span>
                                                 </td>
                                                 <td style=" align-content: center; align-items: center;">
                                                     @if ($row->created_at)
                                                         {{ $row->created_at->format('d/M/Y') }}<br>
-                                                        <span
-                                                            >{{ $row->created_at->format('H:i') }}</span>
+                                                        <span>{{ $row->created_at->format('H:i') }}</span>
                                                     @else
                                                         -
                                                     @endif
                                                 </td>
-                                                <td style=" align-content: center; align-items: center;">{{ $row->end_date ? \Carbon\Carbon::parse($row->end_date)->format('d/M/Y') : '-' }}
+                                                <td style=" align-content: center; align-items: center;">
+                                                    {{ $row->end_date ? \Carbon\Carbon::parse($row->end_date)->format('d/M/Y') : '-' }}
                                                 </td>
 
 
-                                                <td style=" align-content: center; align-items: center;">{{ $row->limit_per_user ?: __('Unlimited') }}</td>
-                                                <td style=" align-content: center; align-items: center;">{{ \Modules\Coupon\Models\CouponBookings::where('coupon_code', $row->code)->whereNotIn('booking_status', ['draft', 'unpaid', 'cancelled'])->count() }}
+                                                <td style=" align-content: center; align-items: center;">
+                                                    {{ $row->limit_per_user ?: __('Unlimited') }}</td>
+                                                <td style=" align-content: center; align-items: center;">
+                                                    {{ \Modules\Coupon\Models\CouponBookings::where('coupon_code', $row->code)->whereNotIn('booking_status', ['draft', 'unpaid', 'cancelled'])->count() }}
                                                 </td>
                                                 <td style=" align-content: center; align-items: center;">
                                                     <div style="display: flex; align-items: center; gap: 8px;">

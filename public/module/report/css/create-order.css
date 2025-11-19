@@ -15,7 +15,7 @@
 }
 
 /* Dark Mode Colors */
-body.dark-mode .create-order-container,
+body.dark-mode .create-order-container,body.dark-mode ,
 body.dark-mode-instant .create-order-container {
     --create-bg-primary: #132438;
     --create-bg-secondary: #122438;
