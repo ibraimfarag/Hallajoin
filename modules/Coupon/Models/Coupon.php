@@ -111,6 +111,22 @@ class Coupon extends BaseModel
                 ];
             }
         }
+        // Apply to first_user -> only allow if user has no accepted bookings
+        if (! empty($this->apply_to) && $this->apply_to == 'first_user') {
+            if (empty($user_id = Auth::id())) {
+                return [
+                    'status' => 0,
+                    'message' => __('You need to log in to use the coupon code!'),
+                ];
+            }
+            $hasBooked = Booking::where('customer_id', $user_id)->whereNotIn('status', Booking::$notAcceptedStatus)->exists();
+            if ($hasBooked) {
+                return [
+                    'status' => 0,
+                    'message' => __('This coupon code is only for first time buyers!'),
+                ];
+            }
+        }
         if (! empty($quantity_limit = $this->quantity_limit)) {
             $count = CouponBookings::where('coupon_code', $this->code)->whereNotIn('booking_status', ['draft', 'unpaid', 'cancelled'])->count();
             if ($quantity_limit <= $count) {

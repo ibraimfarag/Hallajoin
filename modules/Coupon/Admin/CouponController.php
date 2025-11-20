@@ -65,6 +65,11 @@ class CouponController extends AdminController
             $query->where('discount_type', $discount_type);
         }
 
+        // Apply Coupon To filter
+        if ($apply_to = $request->input('apply_to')) {
+            $query->where('apply_to', $apply_to);
+        }
+
         // Redeemed date range (from booking coupons)
         if ($redeemed_from = $request->input('redeemed_from')) {
             $query->whereHas('bookings', function ($q) use ($redeemed_from) {
@@ -112,6 +117,21 @@ class CouponController extends AdminController
             'page_title' => __('Coupon Management'),
         ];
 
+        // Add activity (service) name for display in index table
+        if (!empty($data['rows'])) {
+            $data['rows']->getCollection()->transform(function ($item) {
+                $first = $item->couponServices()->first();
+                if (!empty($first)) {
+                    $service = Service::find($first->service_id);
+                    $item->activity_name = $service ? $service->title : null;
+                } else {
+                    $item->activity_name = null;
+                }
+
+                return $item;
+            });
+        }
+
         return view('Coupon::admin.index', $data);
     }
 
@@ -137,7 +157,34 @@ class CouponController extends AdminController
             ],
             'page_title' => __('Edit: :name', ['name' => $row->code]),
         ];
+        // Make sure we pass apply_to to the view if exists
+        if (! empty($row->apply_to)) {
+            $data['row']->apply_to = $row->apply_to;
+        }
 
+        // جلب بيانات المستخدم من only_for_user
+        $userData = null;
+        if (!empty($row->only_for_user)) {
+            $userIds = is_array($row->only_for_user) ? $row->only_for_user : json_decode($row->only_for_user, true);
+            if (!empty($userIds) && is_array($userIds)) {
+                $userId = $userIds[0] ?? null;
+                if ($userId) {
+                    $user = \App\User::find($userId);
+                    if ($user) {
+                        $userData = [
+                            'id' => $user->id,
+                            'name' => $user->getDisplayName(),
+                            'avatar' => $user->getAvatarUrl(),
+                            'phone' => $user->phone ?? '',
+                            'email' => $user->email ?? '',
+                        ];
+                    }
+                }
+            }
+        }
+        $data['user'] = $userData;
+        // $data['row']['only_for_user'] = $userData;
+// dd($data);
         return view('Coupon::admin.detail', $data);
     }
 
@@ -165,6 +212,8 @@ class CouponController extends AdminController
 
     public function store(Request $request, $id)
     {
+
+// dd($request->all());
         $request->validate([
             'code' => [
                 'required',
@@ -198,15 +247,33 @@ class CouponController extends AdminController
             'min_total',
             'max_total',
             'services',
+            'apply_to',
             'only_for_user',
             'quantity_limit',
             'limit_per_user',
             'image_id',
         ];
 
-        $row->fillByAttr($dataKeys, $request->input());
 
-        // Save Coupon Product
+        $row->fillByAttr($dataKeys, $request->input());
+        // تأكد أن only_for_user دائماً مصفوفة
+        if (!empty($request->input('only_for_user'))) {
+            $onlyForUser = $request->input('only_for_user');
+            if (!is_array($onlyForUser)) {
+                $onlyForUser = [$onlyForUser];
+            }
+            // نظف القيم الفارغة
+            $row->only_for_user = array_filter($onlyForUser);
+        }
+
+        // If coupon is not for specific user, clear any only_for_user data
+        if ($request->input('apply_to') !== 'specific_user') {
+            $row->only_for_user = [];
+        }
+
+        $res = $row->save();
+
+        // Save Coupon Product only after coupon is saved (so coupon_id is available)
         $services = $request->input('services');
         $coupon_product = new CouponServices;
         $coupon_product->clean($row->id);
@@ -223,7 +290,6 @@ class CouponController extends AdminController
                 $coupon_product->save();
             }
         }
-        $res = $row->save();
         if ($res) {
 
             if ($id > 0) {

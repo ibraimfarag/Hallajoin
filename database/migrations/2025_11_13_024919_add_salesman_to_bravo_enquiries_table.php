@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('bravo_enquiries', function (Blueprint $table) {
-            $table->unsignedBigInteger('salesman')->nullable()->after('vendor_id');
+            if (! Schema::hasColumn('bravo_enquiries', 'salesman')) {
+                $table->unsignedBigInteger('salesman')->nullable()->after('vendor_id');
+            }
         });
     }
 
@@ -22,7 +24,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('bravo_enquiries', function (Blueprint $table) {
-            $table->dropColumn('salesman');
+            if (Schema::hasColumn('bravo_enquiries', 'salesman')) {
+                $table->dropColumn('salesman');
+            }
         });
     }
 };

@@ -229,8 +229,8 @@
                             style="display: flex;align-items: center;gap: 10px;border-bottom: 0;border-radius: 14px;">
                             <strong>{{ __('Active') }}</strong>
                             <div class="switch-toggle" style="margin-left: 0;">
-                                <input type="checkbox" id="status_switch" name="status" value="publish" <blade
-                                    if|%20(%24row-%3Estatus%20%3D%3D%20%26%2339%3Bpublish%26%2339%3B)%20checked%20%40endif%3E%0D>
+                                <input type="checkbox" id="status_switch" name="status" value="publish" @if($row->status
+                                == 'publish') checked @endif>
                                 <label for="status_switch" class="switch-label">
                                     <span class="switch-text-yes">YES</span>
                                     <span class="switch-slider"></span>
@@ -267,38 +267,65 @@
                                         class="text-danger">*</span></label>
                                 <div style="display: flex; gap: 15px;">
                                     <label class="custom-radio">
-                                        <input type="radio" name="apply_to" value="specific_user">
+                                        <input type="radio" name="apply_to" value="specific_user"
+                                            @if(!empty($row->apply_to) && $row->apply_to == 'specific_user') checked
+                                        @endif>
                                         <span class="checkmark"></span>
                                         {{ __('Specific User') }}
                                     </label>
                                     <label class="custom-radio">
-                                        <input type="radio" name="apply_to" value="first_user">
+                                        <input type="radio" name="apply_to" value="first_user"
+                                            @if(!empty($row->apply_to) && $row->apply_to == 'first_user') checked
+                                        @endif>
                                         <span class="checkmark"></span>
                                         {{ __('First User') }}
                                     </label>
                                     <label class="custom-radio">
-                                        <input type="radio" name="apply_to" value="everyone">
+                                        <input type="radio" name="apply_to" value="everyone" @if(!empty($row->apply_to)
+                                        && $row->apply_to == 'everyone') checked @endif>
                                         <span class="checkmark"></span>
                                         {{ __('Everyone') }}
                                     </label>
                                 </div>
+                                <small
+                                    class="text-muted">{{ __('First User = the coupon will be applied only on the user\'s first successful booking (no previous paid bookings).') }}</small>
                             </div>
                             <div class="form-group">
                                 <div id="selectUserGroup" class="form-group"
                                     style="margin-top:12px; display:flex; align-items:center; gap:10px;">
 
-                                    <input type="hidden" id="selectedUserId" name="only_for_user[]" value="">
+                                    <input type="hidden" id="selectedUserId" name="only_for_user[]"
+                                        value="{{ !empty($row->only_for_user) ? (is_array($row->only_for_user) ? ($row->only_for_user[0] ?? '') : $row->only_for_user) : '' }}">
                                 </div>
                                 <div id="selectedUserDisplay" style="display:flex;align-items:center;gap:10px;">
                                 </div>
                             </div>
                             <div id="customerInfo" class="customer-info" style="display: none; margin-top:12px;">
-                                <div class="customer-avatar" id="customerAvatar"></div>
-                                <div class="customer-details">
-                                    <div class="customer-name" id="customerName"></div>
-                                    <div class="customer-phone" id="customerPhoneDisplay"></div>
-                                    <div class="customer-email" id="customerEmail"></div>
-                                </div>
+                                @if(!empty($user))
+                                    <div class="customer-avatar">
+                                        @if(!empty($user['avatar']))
+                                            <img src="{{ $user['avatar'] }}"
+                                                style="width:48px;height:48px;border-radius:50%;object-fit:cover;">
+                                        @else
+                                            <div
+                                                style="width:48px;height:48px;border-radius:50%;background:#059669;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:bold;">
+                                                {{ strtoupper(mb_substr($user['name'],0,1)) }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="customer-details">
+                                        <div class="customer-name">{{ $user['name'] }}</div>
+                                        <div class="customer-phone">{{ $user['phone'] }}</div>
+                                        <div class="customer-email">{{ $user['email'] }}</div>
+                                    </div>
+                                @else
+                                    <div class="customer-avatar" id="customerAvatar"></div>
+                                    <div class="customer-details">
+                                        <div class="customer-name" id="customerName"></div>
+                                        <div class="customer-phone" id="customerPhoneDisplay"></div>
+                                        <div class="customer-email" id="customerEmail"></div>
+                                    </div>
+                                @endif
                                 <button class="btn-remove-item" onclick="clearCustomer()" type="button">
                                     <i class="fa fa-trash"></i>
                                 </button>
@@ -330,6 +357,8 @@
                                     <!-- Custom selected activity display -->
                                     <div id="selectedActivityDisplay"
                                         style="display:flex;align-items:center;gap:10px;padding:8px 0;"></div>
+                                    <input type="hidden" id="selectedServiceInput" name="services[]"
+                                        value="{{ $row->services && is_array($row->services) ? ($row->services[0] ?? '') : '' }}">
                                     <button id="clearSelectedService" type="button" class="btn btn-light"
                                         style="display:none;padding:6px 8px;border-radius:6px;border:1px solid #e5e7eb; margin-left:10px;">{{ __('Clear') }}</button>
                                 </div>
@@ -366,6 +395,25 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script>
         $(document).ready(function () {
+            // عند تحميل الصفحة، إذا كان هناك مستخدم محفوظ، جلب بياناته وعرضها
+            var initialUserId = $('#selectedUserId').val();
+            if (initialUserId) {
+                $.get("{{ route('user.admin.getForSelect2') }}", {
+                    q: initialUserId
+                }, function (res) {
+                    if (res && res.results && res.results.length) {
+                        var user = res.results[0];
+                        selectedUser = {
+                            id: user.id,
+                            text: user.text,
+                            avatar: user.avatar,
+                            phone: user.phone,
+                            email: user.email
+                        };
+                        renderSelectedUser(selectedUser);
+                    }
+                });
+            }
             $('.has-datetimepicker').daterangepicker({
                 singleDatePicker: true,
                 timePicker: true,
@@ -393,26 +441,33 @@
             function renderSelectedUser(user) {
                 var $display = $('#selectedUserDisplay');
                 if (!user) {
+                    // امسح كل البيانات
                     $display.html('');
                     $('#selectedUserId').val('');
                     $('#clearSelectedUser').hide();
                     $('#customerInfo').hide();
+                    // امسح محتوى معلومات العميل
+                    $('#customerName').text('');
+                    $('#customerPhoneDisplay').text('');
+                    $('#customerEmail').text('');
+                    $('#customerAvatar').html('');
                     return;
                 }
+
                 var img = user.avatar ? '<img src="' + user.avatar +
                     '" style="width:45px;height:45px;border-radius:50%;object-fit:cover;margin-right:8px;vertical-align:middle;">' :
                     '<div style="width:45px;height:45px;border-radius:50%;background:#059669;color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:bold;">' +
                     (user.text ? user.text.trim().charAt(0).toUpperCase() : '?') + '</div>';
-                var html = '<div style="display:flex;align-items:center;gap:10px;">' + img +
-                    '<span style="font-weight:600;">' + user.text + '</span></div>';
-                // $display.html(html);
+
                 $('#selectedUserId').val(user.id);
                 $('#clearSelectedUser').show();
-                // Update customerInfo panel
+
+                // حدّث بيانات العميل
                 $('#customerInfo').show();
                 $('#customerName').text(user.text);
                 $('#customerPhoneDisplay').text(user.phone ? user.phone : '');
                 $('#customerEmail').text(user.email ? user.email : '');
+
                 if (user.avatar) {
                     $('#customerAvatar').html('<img src="' + user.avatar +
                         '" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">');
@@ -424,6 +479,7 @@
                         firstLetter + '</div>');
                 }
             }
+
 
             // User search input
             var userSearchWrapper = $(
@@ -543,19 +599,46 @@
                 if (!activity) {
                     $display.html('');
                     $('#clearSelectedService').hide();
+                    // امسح القيمة المخفية
+                    $('#selectedServiceInput').val('');
                     return;
                 }
+
                 var img = activity.image ? '<img src="' + activity.image +
                     '" style="width:45px;height:45px;border-radius:6px;object-fit:cover;margin-right:8px;vertical-align:middle;">' :
                     '';
                 var html = '<div style="display:flex;align-items:center;gap:10px;">' + img +
                     '<span style="font-weight:600;">' + activity.text + '</span></div>';
                 $display.html(html);
+                // حط القيمة في الـ input المخفي
+                $('#selectedServiceInput').val(activity.id);
                 $('#clearSelectedService').show();
             }
 
+
             // Store selected activity object
             var selectedActivity = null;
+
+            // If there is a preselected service id from server, fetch details and render
+            var initialServiceIds = @json($row -> services ?? []);
+            if (initialServiceIds && initialServiceIds.length) {
+                var initId = initialServiceIds[0];
+                $.get('{{ route('coupon.admin.getServices') }}', {
+                    q: initId
+                }, function (res) {
+                    if (res && res.results && res.results.length) {
+                        var s = res.results[0];
+                        selectedActivity = {
+                            id: s.id,
+                            text: s.text,
+                            image: s.image
+                        };
+                        renderSelectedActivity(selectedActivity);
+                        // set hidden input
+                        $('#selectedServiceInput').val(s.id);
+                    }
+                });
+            }
 
             // If there is a preselected service when page loads, show clear
             if ($('#servicesSelect').val()) {
@@ -565,6 +648,7 @@
                     return $(this).data('id').toString() === val.toString();
                 }).addClass('selected');
             }
+            // nothing
 
 
             // Clear selected activity via button
@@ -573,6 +657,13 @@
                 renderSelectedActivity(null);
                 $('.activity-item').removeClass('selected');
                 $(this).hide();
+                // امسح القيمة المخفية
+                $('#selectedServiceInput').val('');
+                // امسح نتائج البحث وحقل البحث
+                $('#searchResults').html(
+                    '<div class="no-results"><i class="fa fa-search"></i><p>{{ __('Start typing to search for activities') }}</p></div>'
+                );
+                $('#activitySearch').val('');
             });
 
             // Remove select2 change sync logic (no longer needed)
@@ -642,6 +733,8 @@
                     image: image
                 };
                 renderSelectedActivity(selectedActivity);
+                // Set hidden input so service id is sent on submit
+                $('#selectedServiceInput').val(id);
                 // highlight this result
                 $('.activity-item').removeClass('selected');
                 $(this).addClass('selected');
@@ -678,6 +771,13 @@
             // Initial state
             $('#selectUserGroup').hide();
             toggleCustomerInfoVisibility();
+            // Show user search if coupon is already set to specific_user
+            var currentApplyTo = $('input[name="apply_to"]:checked').val();
+            if (currentApplyTo === 'specific_user') {
+                userSearchWrapper.show();
+            } else {
+                userSearchWrapper.hide();
+            }
 
             $('input[name="apply_to"]').on('change', function () {
                 var prev = $(this).data('prev') || 'specific_user';
@@ -697,6 +797,44 @@
             window.clearCustomer = function () {
                 selectedUser = null;
                 renderSelectedUser(null);
+                // امسح حقل البحث
+                userSearchBox.val('');
+                // اخفي وامسح الـ dropdown
+                userDropdown.hide();
+                userDropdown.html('');
+                // امسح القيمة المخفية
+                $('#selectedUserId').val('');
+                // اخفي معلومات العميل
+                $('#customerInfo').hide();
+            }
+
+        });
+
+
+
+
+        // قبل إرسال الفورم، تأكد من حذف input المخفي إذا كانت قيمته فاضية
+        $('form').on('submit', function (e) {
+            var serviceValue = $('#selectedServiceInput').val();
+
+            // إذا كانت القيمة فاضية أو null، أضف input مخفي بقيمة صريحة للحذف
+            if (!serviceValue || serviceValue === '' || serviceValue === 'null') {
+                // أزل الـ input القديم
+                $('#selectedServiceInput').remove();
+
+                // أضف input جديد بقيمة فاضية واضحة
+                $(this).append('<input type="hidden" name="services" value="">');
+            }
+
+            // نفس الشيء للمستخدم
+            var userValue = $('#selectedUserId').val();
+            var applyTo = $('input[name="apply_to"]:checked').val();
+
+            if (applyTo !== 'specific_user' || !userValue || userValue === '') {
+                $('#selectedUserId').remove();
+                if (applyTo === 'specific_user') {
+                    $(this).append('<input type="hidden" name="only_for_user" value="">');
+                }
             }
         });
 
