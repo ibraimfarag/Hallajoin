@@ -197,6 +197,13 @@
         color: #fff;
     }
 
+
+
+
+     body.dark-mode .container-fluid {
+    background: #0f1c2e;
+}
+
 </style>
 
 
