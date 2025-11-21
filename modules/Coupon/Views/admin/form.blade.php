@@ -16,7 +16,7 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>{{ __('Coupon Amount') }} <span class="text-danger">*</span></label>
+                    <label>{{ __('Amount') }} <span class="text-danger">*</span></label>
                     <input type="number" required step="0.1" min="0" value="{{ $row->amount }}" placeholder="0"
                         name="amount" class="form-control">
                 </div>
@@ -28,10 +28,10 @@
                     <label>{{ __('Discount Type') }} </label>
                     <select class="form-control" name="discount_type">
                         <option @if ($row->discount_type && $row->discount_type == 'fixed') selected @endif
-                            value="fixed">{{ __('Amount') }}
+                            value="fixed">{{ __('Fixed') }}
                         </option>
                         <option @if ($row->discount_type && $row->discount_type == 'percent') selected @endif
-                            value="percent">{{ __('Percent') }}
+                            value="percent">{{ __('Percentage') }}
                         </option>
                     </select>
                 </div>

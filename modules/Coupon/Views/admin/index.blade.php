@@ -258,6 +258,10 @@
         font-size: 19px !important;
     }
 
+    body.dark-mode .promotion-container {
+    background: #0f1c2e;
+}
+
 </style>
 
 
@@ -273,7 +277,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A1 1 0 007.6 17h8.8a1 1 0 00.95-.68L21 13M7 13V6h13" />
                     </svg>
-                    <span style="vertical-align:middle;letter-spacing:1px;font-weight:600;text-transform:uppercase;">Add
+                    <span style="vertical-align:middle;letter-spacing:1px;font-weight:600;text-transform:uppercase;">
                         New Promotion</span>
                 </a>
             @endif
@@ -325,13 +329,13 @@
                         <option value="">Apply Coupon To</option>
                         <option value="specific_user"
                             {{ request('apply_to') == 'specific_user' ? 'selected' : '' }}>
-                            Specific User</option>
+                            Per-User</option>
                         <option value="first_user"
                             {{ request('apply_to') == 'first_user' ? 'selected' : '' }}>
-                            First User</option>
+                            First-User </option>
                         <option value="everyone"
                             {{ request('apply_to') == 'everyone' ? 'selected' : '' }}>
-                            Everyone</option>
+                            Public</option>
                     </select>
                 </div>
                 <div class="col-md-2 mb-2">
@@ -382,7 +386,7 @@
                             <thead>
                                 <tr>
                                     <!-- <th width="45px"><input type="checkbox" class="check-all"></th> -->
-                                    <th>{{ __('Name') }}</th>
+                                    <th>{{ __('Activity') }}</th>
                                     <th>{{ __('Code') }}</th>
                                     <th>{{ __('Amount') }}</th>
                                     <th>{{ __('Status') }}</th>

@@ -219,11 +219,11 @@
             @include('Language::admin.navigation')
         @endif
         <div class="lang-content-box">
-            <div class="row">
-                <div class="col-md-9">
+            <div class="create-order-layout">
+                <div class="activities-section">
                     @include('Coupon::admin.form')
                 </div>
-                <div class="col-md-3">
+                <div class="cart-section">
                     <div class="panel">
                         <div class="panel-title"
                             style="display: flex;align-items: center;gap: 10px;border-bottom: 0;border-radius: 14px;">
@@ -271,7 +271,7 @@
                                             @if(!empty($row->apply_to) && $row->apply_to == 'specific_user') checked
                                         @endif>
                                         <span class="checkmark"></span>
-                                        {{ __('Specific User') }}
+                                        {{ __('Per-User') }}
                                     </label>
                                     <label class="custom-radio">
                                         <input type="radio" name="apply_to" value="first_user"
@@ -284,7 +284,7 @@
                                         <input type="radio" name="apply_to" value="everyone" @if(!empty($row->apply_to)
                                         && $row->apply_to == 'everyone') checked @endif>
                                         <span class="checkmark"></span>
-                                        {{ __('Everyone') }}
+                                        {{ __('Public') }}
                                     </label>
                                 </div>
                                 <small
