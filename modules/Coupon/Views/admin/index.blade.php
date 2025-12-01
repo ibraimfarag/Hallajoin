@@ -108,12 +108,7 @@
         margin-bottom: 0;
     }
 
-    .coupon-filters-ui .form-control:focus {
-        background: #232b43;
-        color: var(--cart-text-primary);
-        border-color: #6c63ff;
-        box-shadow: 0 0 0 2px #6c63ff33;
-    }
+
 
     .coupon-filters-ui .form-check {
         display: flex;
@@ -225,6 +220,18 @@
 
     body.dark-mode .table-hover tbody tr:hover {
         transform: none;
+    }
+
+    /* Select dropdown styling for dark mode */
+    body.dark-mode select.form-control option {
+        background: #232b43;
+        color: #ffffff;
+    }
+
+
+    body:not(.dark-mode) select.form-control option {
+        background: #ffffff;
+        color: #374151;
     }
 
     .panel {
