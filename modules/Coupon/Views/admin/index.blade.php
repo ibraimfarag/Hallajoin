@@ -6,8 +6,8 @@
     [data-theme="dark"],
     body.dark-mode {
         /* Dark Mode Colors (Default) */
-        --cart-bg-primary: #0f1c2e;
-        --cart-bg-secondary: #1a2942;
+        --cart-bg-primary: #132438;
+        --cart-bg-secondary: #132438;
         --cart-bg-hover: rgba(99, 179, 237, 0.1);
         --cart-text-primary: #ffffff;
         --cart-text-secondary: #e2e8f0;
@@ -224,7 +224,7 @@
 
     /* Select dropdown styling for dark mode */
     body.dark-mode select.form-control option {
-        background: #232b43;
+        background: #122438;
         color: #ffffff;
     }
 
