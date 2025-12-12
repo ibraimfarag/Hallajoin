@@ -42,7 +42,7 @@ class ModuleProvider extends ModuleServiceProvider
     }
 
 
-    public static function getAdminSubmenu()
+    public static function getAdminSubMenu()
     {
         return [
             /*[
@@ -53,6 +53,14 @@ class ModuleProvider extends ModuleServiceProvider
                 'icon'=>'icon ion-md-download',
                 'permission'=>'system_log_view'
             ],*/
+            [
+                'id' => 'send-notification',
+                'parent' => 'marketing',
+                'position' => 52,
+                'url' => 'admin/module/core/send-notification',
+                'title' => __('Notifications'),
+                'icon' => '',
+            ],
             [
                 'id'=>'plugin',
                 'parent'=>'tools',

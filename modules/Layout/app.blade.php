@@ -13,7 +13,7 @@
 
     @if ($favicon)
         @php
-            $file = (new \Modules\Media\Models\MediaFile())->findById($favicon);
+            $file = new \Modules\Media\Models\MediaFile()->findById($favicon);
         @endphp
         @if (!empty($file))
             <link rel="icon" type="{{ $file['file_type'] }}" href="{{ asset('uploads/' . $file['file_path']) }}" />
@@ -112,252 +112,196 @@
     </script>
 
     <script>
-        $(document).ready(function () {
-            var header = $("#bravo-header");
-            var headerOffset = header.offset().top;
-            var searchResults = $(".search-results");
+        document.addEventListener('DOMContentLoaded', function() {
+            var header = document.getElementById('bravo-header');
+            if (header) {
+                var headerOffset = header.offsetTop;
+                var searchResults = document.querySelector('.search-results');
 
-            $(window).scroll(function () {
-                if ($(window).scrollTop() > headerOffset) {
-                    header.addClass("fixed-header");
-                    searchResults.css("top", "8vh");
-                } else {
-                    header.removeClass("fixed-header");
-                    searchResults.css("top", "14vh");
-                }
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            var inputEl = $('.search-input');
-            var resultsContainer = $('.search-results');
-
-            inputEl.on('input', function () {
-                var query = $(this).val().trim();
-
-                // Clear previous results
-                resultsContainer.html('');
-
-                if (query.length > 0) {
-                    $.ajax({
-                        url: '/searchTours',
-                        type: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            query: query
-                        }),
-                        success: function (response) {
-                            if (response.tours.length > 0) {
-                                response.tours.forEach(function (tour) {
-                                    var resultEl = $('<a>')
-                                        .addClass('result-item')
-                                        .attr('href', '/tour/' + tour.slug)
-                                        .css({
-                                            display: 'flex', // Use flexbox for layout
-                                            alignItems: 'center', // Align items vertically
-                                            padding: '10px',
-                                            borderBottom: '1px solid #ccc',
-                                            textDecoration: 'none',
-                                            color: '#000'
-                                        });
-
-                                    // Create a div for the image column
-                                    var imageColumnEl = $('<div>')
-                                        .addClass('image-column')
-                                        .css({
-                                            marginRight: '10px' // Add spacing between image column and text column
-                                        });
-
-                                    // Create an image element and set its source to the tour's image URL
-                                    var imageEl = $('<img>')
-                                        .addClass('tour-image')
-                                        .attr('src', tour
-                                            .image_url
-                                        ) // Set the source attribute to the tour's image URL
-                                        .css({
-                                            width: '70px', // Set image width to 70px
-                                            borderRadius: '11px' // Set border radius to 11px
-                                            // Adjust image width as needed
-                                        });
-
-                                    imageColumnEl.append(
-                                        imageEl
-                                    ); // Append the image element to the image column
-
-                                    // Create a div for the text column
-                                    var textColumnEl = $('<div>')
-                                        .addClass('text-column');
-
-                                    var titleEl = $('<div>')
-                                        .addClass('tour-title')
-                                        .text(tour.title)
-                                        .css({
-                                            fontSize: '16px',
-                                            fontWeight: 'bold'
-                                        });
-
-                                    var locationEl = $('<div>')
-                                        .addClass('tour-location')
-                                        .html(
-                                            '<i class="fas fa-flag"></i> United Emirates' +
-                                            tour.location
-                                        ) // Add UAE flag icon before location
-                                        .css({
-                                            fontSize: '14px',
-                                            color: '#555'
-                                        });
-
-                                    textColumnEl.append(titleEl);
-                                    textColumnEl.append(locationEl);
-
-                                    resultEl.append(
-                                        imageColumnEl
-                                    ); // Append the image column to the result element
-                                    resultEl.append(
-                                        textColumnEl
-                                    ); // Append the text column to the result element
-
-                                    resultsContainer.append(resultEl);
-
-                                });
-                                resultsContainer.show();
-                            } else {
-                                resultsContainer.hide();
-                            }
-                        },
-                        error: function () {
-                            resultsContainer.hide();
-                        }
-                    });
-                } else {
-                    resultsContainer.hide();
-                }
-            });
-
-            // Hide results container when clicking outside of it
-            $(document).on('click', function (event) {
-                if (!resultsContainer.is(event.target) && !inputEl.is(event.target) && resultsContainer.has(
-                    event.target).length === 0) {
-                    resultsContainer.hide();
-                }
-            });
-        });
-    </script>
-
-
-    <script>
-        $(document).ready(function () {
-            $('.locationowl').owlCarousel({
-                loop: true,
-                margin: 10,
-                responsiveClass: true,
-                responsive: {
-                    0: {
-                        items: 1,
-                    },
-                    600: {
-                        items: 3,
-                    },
-                    1000: {
-                        items: 5,
+                window.addEventListener('scroll', function() {
+                    if (window.scrollY > headerOffset) {
+                        header.classList.add('fixed-header');
+                        if (searchResults) searchResults.style.top = '8vh';
+                    } else {
+                        header.classList.remove('fixed-header');
+                        if (searchResults) searchResults.style.top = '14vh';
                     }
-                }
-            });
+                });
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var inputEl = document.querySelector('.search-input');
+            var resultsContainer = document.querySelector('.search-results');
+
+            if (inputEl && resultsContainer) {
+                inputEl.addEventListener('input', function() {
+                    var query = this.value.trim();
+                    resultsContainer.innerHTML = '';
+
+                    if (query.length > 0) {
+                        fetch('/searchTours', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    query: query
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(response => {
+                                if (response.tours && response.tours.length > 0) {
+                                    response.tours.forEach(function(tour) {
+                                        var resultEl = document.createElement('a');
+                                        resultEl.className = 'result-item';
+                                        resultEl.href = '/tour/' + tour.slug;
+                                        resultEl.style.cssText =
+                                            'display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #ccc; text-decoration: none; color: #000;';
+
+                                        var imageColumnEl = document.createElement('div');
+                                        imageColumnEl.className = 'image-column';
+                                        imageColumnEl.style.marginRight = '10px';
+
+                                        var imageEl = document.createElement('img');
+                                        imageEl.className = 'tour-image';
+                                        imageEl.src = tour.image_url;
+                                        imageEl.style.cssText =
+                                            'width: 70px; border-radius: 11px;';
+
+                                        imageColumnEl.appendChild(imageEl);
+
+                                        var textColumnEl = document.createElement('div');
+                                        textColumnEl.className = 'text-column';
+
+                                        var titleEl = document.createElement('div');
+                                        titleEl.className = 'tour-title';
+                                        titleEl.textContent = tour.title;
+                                        titleEl.style.cssText =
+                                            'font-size: 16px; font-weight: bold;';
+
+                                        var locationEl = document.createElement('div');
+                                        locationEl.className = 'tour-location';
+                                        locationEl.innerHTML =
+                                            '<i class="fas fa-flag"></i> United Emirates ' +
+                                            tour.location;
+                                        locationEl.style.cssText =
+                                            'font-size: 14px; color: #555;';
+
+                                        textColumnEl.appendChild(titleEl);
+                                        textColumnEl.appendChild(locationEl);
+
+                                        resultEl.appendChild(imageColumnEl);
+                                        resultEl.appendChild(textColumnEl);
+
+                                        resultsContainer.appendChild(resultEl);
+                                    });
+                                    resultsContainer.style.display = 'block';
+                                } else {
+                                    resultsContainer.style.display = 'none';
+                                }
+                            })
+                            .catch(() => resultsContainer.style.display = 'none');
+                    } else {
+                        resultsContainer.style.display = 'none';
+                    }
+                });
+
+                document.addEventListener('click', function(event) {
+                    if (event.target !== resultsContainer && event.target !== inputEl && !resultsContainer
+                        .contains(event.target)) {
+                        resultsContainer.style.display = 'none';
+                    }
+                });
+            }
         });
     </script>
 
 
-
-
-
     <script>
-        $(document).ready(function () {
-            var inputEl = $('.search-input-mobile');
-            var resultsContainer = $('.search-results-mobile');
+        document.addEventListener('DOMContentLoaded', function() {
+            var inputEl = document.querySelector('.search-input-mobile');
+            var resultsContainer = document.querySelector('.search-results-mobile');
+            var toggleBtn = document.getElementById('search-toggle-btn');
 
-            $('#search-toggle-btn').on('click', function () {
-                var searchInput = $('#typing-placeholder-mobile');
-                if (searchInput.css('display') === 'none') {
-                    searchInput.css('display', 'block');
-                } else {
-                    searchInput.css('display', 'none');
-                    resultsContainer.hide();
-                }
-            });
-
-            inputEl.on('input', function () {
-                var query = $(this).val().trim();
-
-                // Clear previous results
-                resultsContainer.html('');
-
-                if (query.length > 0) {
-                    $.ajax({
-                        url: '/searchTours',
-                        type: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            query: query
-                        }),
-                        success: function (response) {
-                            if (response.tours.length > 0) {
-                                response.tours.forEach(function (tour) {
-                                    var resultEl = $('<a>')
-                                        .addClass('result-item')
-                                        .attr('href', '/tour/' + tour.slug);
-
-                                    var imageColumnEl = $('<div>')
-                                        .addClass('image-column');
-
-                                    var imageEl = $('<img>')
-                                        .addClass('tour-image')
-                                        .attr('src', tour.image_url);
-
-                                    imageColumnEl.append(imageEl);
-
-                                    var textColumnEl = $('<div>')
-                                        .addClass('text-column');
-
-                                    var titleEl = $('<div>')
-                                        .addClass('tour-title')
-                                        .text(tour.title);
-
-                                    var locationEl = $('<div>')
-                                        .addClass('tour-location')
-                                        .html(
-                                            '<i class="fas fa-flag"></i> United Emirates' +
-                                            tour.location
-                                        ) // Add UAE flag icon before location
-                                    textColumnEl.append(titleEl);
-                                    textColumnEl.append(locationEl);
-
-                                    resultEl.append(imageColumnEl);
-                                    resultEl.append(textColumnEl);
-
-                                    resultsContainer.append(resultEl);
-                                });
-                                resultsContainer.show();
-                            } else {
-                                resultsContainer.hide();
-                            }
-                        },
-                        error: function () {
-                            resultsContainer.hide();
+            if (inputEl && resultsContainer && toggleBtn) {
+                toggleBtn.addEventListener('click', function() {
+                    var searchInput = document.getElementById('typing-placeholder-mobile');
+                    if (searchInput) {
+                        if (searchInput.style.display === 'none') {
+                            searchInput.style.display = 'block';
+                        } else {
+                            searchInput.style.display = 'none';
+                            resultsContainer.style.display = 'none';
                         }
-                    });
-                } else {
-                    resultsContainer.hide();
-                }
-            });
+                    }
+                });
 
-            $(document).on('click', function (event) {
-                if (!resultsContainer.is(event.target) && !inputEl.is(event.target) && resultsContainer.has(
-                    event.target).length === 0) {
-                    resultsContainer.hide();
-                }
-            });
+                inputEl.addEventListener('input', function() {
+                    var query = this.value.trim();
+                    resultsContainer.innerHTML = '';
+
+                    if (query.length > 0) {
+                        fetch('/searchTours', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    query: query
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(response => {
+                                if (response.tours && response.tours.length > 0) {
+                                    response.tours.forEach(function(tour) {
+                                        var resultEl = document.createElement('a');
+                                        resultEl.className = 'result-item';
+                                        resultEl.href = '/tour/' + tour.slug;
+
+                                        var imageColumnEl = document.createElement('div');
+                                        imageColumnEl.className = 'image-column';
+
+                                        var imageEl = document.createElement('img');
+                                        imageEl.className = 'tour-image';
+                                        imageEl.src = tour.image_url;
+
+                                        imageColumnEl.appendChild(imageEl);
+
+                                        var textColumnEl = document.createElement('div');
+                                        textColumnEl.className = 'text-column';
+
+                                        var titleEl = document.createElement('div');
+                                        titleEl.className = 'tour-title';
+                                        titleEl.textContent = tour.title;
+
+                                        var locationEl = document.createElement('div');
+                                        locationEl.className = 'tour-location';
+                                        locationEl.innerHTML =
+                                            '<i class="fas fa-flag"></i> United Emirates ' +
+                                            tour.location;
+
+                                        textColumnEl.appendChild(titleEl);
+                                        textColumnEl.appendChild(locationEl);
+
+                                        resultEl.appendChild(imageColumnEl);
+                                        resultEl.appendChild(textColumnEl);
+
+                                        resultsContainer.appendChild(resultEl);
+                                    });
+                                    resultsContainer.style.display = 'block';
+                                } else {
+                                    resultsContainer.style.display = 'none';
+                                }
+                            })
+                            .catch(() => resultsContainer.style.display = 'none');
+                    } else {
+                        resultsContainer.style.display = 'none';
+                    }
+                });
+            }
         });
     </script>
 
@@ -365,7 +309,7 @@
     <script type="module" src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.6.1/build/js/utils.js"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const phoneInput = document.querySelector("#phone");
 
             // Check if phone input exists before initializing
@@ -381,21 +325,23 @@
                 function updatePhoneNumber() {
                     const countryData = iti.getSelectedCountryData();
                     const countryCode = countryData.dialCode;
-                    const phoneNumber = phoneInput.value.replace(/^\+\d+\s*/, ''); // Remove any existing country code
-                    phoneInput.value = `+${countryCode} ${phoneNumber}`; // Update the input value with the new country code
+                    const phoneNumber = phoneInput.value.replace(/^\+\d+\s*/,
+                    ''); // Remove any existing country code
+                    phoneInput.value =
+                    `+${countryCode} ${phoneNumber}`; // Update the input value with the new country code
                 }
 
                 // Initialize phone number display
                 updatePhoneNumber();
 
                 // Add event listener for input changes
-                phoneInput.addEventListener("input", function () {
+                phoneInput.addEventListener("input", function() {
                     updatePhoneNumber();
                 });
 
                 // Polling to detect country changes
                 let previousCountryCode = iti.getSelectedCountryData().dialCode;
-                setInterval(function () {
+                setInterval(function() {
                     const currentCountryCode = iti.getSelectedCountryData().dialCode;
                     if (currentCountryCode !== previousCountryCode) {
                         previousCountryCode = currentCountryCode;
@@ -417,7 +363,7 @@
 
         // Check if login elements exist before adding event listeners
         if (login_passwordField && login_togglePassword) {
-            login_togglePassword.addEventListener('click', function () {
+            login_togglePassword.addEventListener('click', function() {
                 const type = login_passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
                 login_passwordField.setAttribute('type', type);
                 // Toggle eye icon
@@ -433,7 +379,7 @@
 
         // Check if register elements exist before adding event listeners
         if (register_passwordField && register_togglePassword) {
-            register_togglePassword.addEventListener('click', function () {
+            register_togglePassword.addEventListener('click', function() {
                 const type = register_passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
                 register_passwordField.setAttribute('type', type);
                 // Toggle eye icon
@@ -446,8 +392,6 @@
                 }
             });
         }
-
-
     </script>
 
 </body>

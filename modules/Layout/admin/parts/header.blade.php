@@ -10,7 +10,7 @@ $theme = \Modules\Theme\ThemeManager::currentProvider();
 <div class="header-logo flex-shrink-0">
     {{-- <h3 class="logo-text"><a href="{{route('admin.index')}}">{{$theme::$name}} <span
                 class="app-version">{{$theme::$version}}</span></a></h3> --}}
-    <h3 class="logo-text"><a href="{{route('admin.index')}}">HallaJoin</span></a></h3>
+    <h3 class="logo-text"><a href="{{ route('admin.index') }}">HallaJoin</span></a></h3>
 </div>
 <div class="header-widgets d-flex flex-grow-1">
     <div class="widgets-left d-flex flex-grow-1 align-items-center">
@@ -18,45 +18,48 @@ $theme = \Modules\Theme\ThemeManager::currentProvider();
             <span class="btn-toggle-admin-menu btn btn-sm btn-link"><i class="icon ion-ios-menu"></i></span>
         </div>
         <div class="header-widget search-widget">
-            {{--<input type="text" class="input-search form-control">--}}
-            <a href="{{url('/')}}" class="btn btn-link" target="_blank"><i class="fa fa-eye"></i> {{__('Home')}}
+            {{-- <input type="text" class="input-search form-control"> --}}
+            <a href="{{ url('/') }}" class="btn btn-link" target="_blank"><i class="fa fa-eye"></i>
+                {{ __('Home') }}
             </a>
         </div>
     </div>
     <div class="widgets-right flex-shrink-0 d-flex">
-        @if(!empty($languages) and is_enable_multi_lang())
+        @if (!empty($languages) and is_enable_multi_lang())
             <div class="dropdown header-widget widget-user widget-language flex-shrink-0">
                 <div data-toggle="dropdown" class="user-dropdown d-flex align-items-center" aria-haspopup="true"
                     aria-expanded="false">
-                    @foreach($languages as $language)
-                        @if($locale == $language->locale)
+                    @foreach ($languages as $language)
+                        @if ($locale == $language->locale)
                             <div class="user-info flex-grow-1 d-flex">
-                                @if($language->flag)
-                                    <span class="flag-icon mr-2 flag-icon-{{$language->flag}}"></span>
+                                @if ($language->flag)
+                                    <span class="flag-icon mr-2 flag-icon-{{ $language->flag }}"></span>
                                 @endif
-                                {{$language->name}}
+                                {{ $language->name }}
                             </div>
                         @endif
                     @endforeach
                     <i class="fa fa-angle-down"></i>
                 </div>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    @foreach($languages as $language)
-                        @php if ($language->locale == $locale)
-                        continue; @endphp
+                    @foreach ($languages as $language)
+                        @phpif ($language->locale == $locale) {
+                                continue;
+                        } @endphp
 
-                        <a class="dropdown-item" href="{{route('language.set-admin-lang', ['locale' => $language->locale])}}">
-                            @if($language->flag)
-                                <span class="flag-icon flag-icon-{{$language->flag}}"></span>
+                        <a class="dropdown-item"
+                            href="{{ route('language.set-admin-lang', ['locale' => $language->locale]) }}">
+                            @if ($language->flag)
+                                <span class="flag-icon flag-icon-{{ $language->flag }}"></span>
                             @endif
-                            {{$language->name}}
+                            {{ $language->name }}
                         </a>
                     @endforeach
                 </div>
             </div>
         @endif
         <div class="header-widget flex-shrink-0">
-            <button class="theme-toggle" id="themeToggle" title="{{__('Toggle Dark/Light Mode')}}">
+            <button class="theme-toggle" id="themeToggle" title="{{ __('Toggle Dark/Light Mode') }}">
                 <i class="fa fa-moon-o" id="themeIcon"></i>
             </button>
         </div>
@@ -64,23 +67,32 @@ $theme = \Modules\Theme\ThemeManager::currentProvider();
             <div data-toggle="dropdown" class="user-dropdown d-flex align-items-center" aria-haspopup="true"
                 aria-expanded="false">
                 <i class="fa fa-lg fa-bell m-1 p-1"></i>
-                <span class="badge badge-danger orange-bg notification-icon">{{$countUnread}}</span>
+                <span class="badge badge-danger orange-bg notification-icon">{{ $countUnread }}</span>
             </div>
             <div class="dropdown-menu overflow-auto notify-items dropdown-container dropdown-menu-right dropdown-large"
                 aria-labelledby="dropdownMenuButton">
                 <div class="dropdown-toolbar">
                     <div class="dropdown-toolbar-actions">
-                        <a href="#" class="markAllAsRead">{{__('Mark all as read')}}</a>
+                        <a href="#" class="markAllAsRead">{{ __('Mark all as read') }}</a>
                     </div>
-                    <h3 class="dropdown-toolbar-title">{{__('Notifications')}} (<span
-                            class="notif-count">{{$countUnread}}</span>)</h3>
+                    <h3 class="dropdown-toolbar-title">{{ __('Notifications') }} (<span
+                            class="notif-count">{{ $countUnread }}</span>)</h3>
                 </div>
                 <ul class="dropdown-list-items p-0 m-0">
-                    @if(count($notifications) > 0)
-                        @foreach($notifications as $oneNotification)
+                    @if (count($notifications) > 0)
+                        @foreach ($notifications as $oneNotification)
                             @php
                                 $active = $class = '';
-                                $data = json_decode($oneNotification['data']);
+                                $notifData = $oneNotification['data'];
+
+                                // Handle if data is already an object from casting
+                                if (is_object($notifData)) {
+                                    $data = $notifData;
+                                } elseif (is_string($notifData)) {
+                                    $data = json_decode($notifData);
+                                } else {
+                                    $data = (object) $notifData;
+                                }
 
                                 $idNotification = @$data->id;
                                 $forAdmin = @$data->for_admin;
@@ -88,10 +100,10 @@ $theme = \Modules\Theme\ThemeManager::currentProvider();
 
                                 $services = @$usingData->type;
                                 $idServices = @$usingData->id;
-                                $title = @$usingData->message;
+                                $title = @$usingData->message ?? @$data->title;
                                 $name = @$usingData->name;
                                 $avatar = @$usingData->avatar;
-                                $link = @$usingData->link;
+                                $link = @$usingData->link ?? @$data->link;
 
                                 if (empty($oneNotification->read_at)) {
                                     $class = 'markAsRead';
@@ -99,15 +111,18 @@ $theme = \Modules\Theme\ThemeManager::currentProvider();
                                 }
 
                             @endphp
-                            <li class="notification {{$active}}">
-                                <a class="{{$class}}" data-id="{{$idNotification}}" href="{{$link}}">
+                            <li class="notification {{ $active }}">
+                                <a class="{{ $class }}" data-id="{{ $idNotification }}"
+                                    href="{{ $link }}">
                                     <div class="media">
                                         <div class="media-left">
                                             <div class="media-object">
-                                                @if($avatar)
-                                                    <img class="image-responsive" src="{{$avatar}}" alt="{{$name ?? 'User'}}">
+                                                @if ($avatar)
+                                                    <img class="image-responsive" src="{{ $avatar }}"
+                                                        alt="{{ $name ?? 'User' }}">
                                                 @else
-                                                    <span class="avatar-text">{{$name ? ucfirst($name[0]) : 'N'}}</span>
+                                                    <span
+                                                        class="avatar-text">{{ $name ? ucfirst($name[0]) : 'N' }}</span>
                                                 @endif
                                             </div>
                                         </div>
@@ -115,7 +130,7 @@ $theme = \Modules\Theme\ThemeManager::currentProvider();
                                             {!! $title !!}
                                             <div class="notification-meta">
                                                 <small
-                                                    class="timestamp">{{format_interval($oneNotification->created_at)}}</small>
+                                                    class="timestamp">{{ format_interval($oneNotification->created_at) }}</small>
                                             </div>
                                         </div>
                                     </div>
@@ -125,7 +140,7 @@ $theme = \Modules\Theme\ThemeManager::currentProvider();
                     @endif
                 </ul>
                 <div class="dropdown-footer text-center">
-                    <a href="{{route('core.admin.notification.loadNotify')}}">{{__('View More')}}</a>
+                    <a href="{{ route('core.admin.notification.loadNotify') }}">{{ __('View More') }}</a>
                 </div>
             </div>
         </div>
@@ -133,32 +148,34 @@ $theme = \Modules\Theme\ThemeManager::currentProvider();
             <div data-toggle="dropdown" class="user-dropdown d-flex align-items-center" aria-haspopup="true"
                 aria-expanded="false">
                 <span class="user-avatar flex-shrink-0">
-                    @if($avatar_url = $user->getAvatarUrl())
-                        <div class="avatar avatar-cover" style="background-image: url('{{$user->getAvatarUrl()}}')"></div>
+                    @if ($avatar_url = $user->getAvatarUrl())
+                        <div class="avatar avatar-cover" style="background-image: url('{{ $user->getAvatarUrl() }}')">
+                        </div>
                     @else
-                        <span class="avatar-text">{{ucfirst($user->getDisplayName()[0])}}</span>
+                        <span class="avatar-text">{{ ucfirst($user->getDisplayName()[0]) }}</span>
                     @endif
                 </span>
                 <div class="user-info flex-grow-1">
-                    <div class="user-name">{{$user->getDisplayName()}}</div>
-                    <div class="user-role">{{ucfirst($user->role->name ?? '')}}</div>
+                    <div class="user-name">{{ $user->getDisplayName() }}</div>
+                    <div class="user-role">{{ ucfirst($user->role->name ?? '') }}</div>
                 </div>
                 <i class="fa fa-angle-down"></i>
             </div>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <a class="dropdown-item"
-                    href="{{route('user.admin.detail', ['id' => $user->id])}}">{{__('Edit Profile')}}</a>
+                    href="{{ route('user.admin.detail', ['id' => $user->id]) }}">{{ __('Edit Profile') }}</a>
                 <a class="dropdown-item"
-                    href="{{route('user.admin.password', ['id' => $user->id])}}">{{__('Change Password')}}</a>
+                    href="{{ route('user.admin.password', ['id' => $user->id]) }}">{{ __('Change Password') }}</a>
                 <div class="dropdown-divider"></div>
-                <h6 class="dropdown-header">{{__("Vendor Dashboard")}}</h6>
-                <a href="{{route('vendor.dashboard')}}" class="dropdown-item">{{__("Dashboard")}}</a>
+                <h6 class="dropdown-header">{{ __('Vendor Dashboard') }}</h6>
+                <a href="{{ route('vendor.dashboard') }}" class="dropdown-item">{{ __('Dashboard') }}</a>
                 <div class="dropdown-divider"></div>
-                <a href="{{url('/')}}" class="dropdown-item"><i class="fa fa-home"></i> {{__("Homepage")}}</a>
+                <a href="{{ url('/') }}" class="dropdown-item"><i class="fa fa-home"></i>
+                    {{ __('Homepage') }}</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#"
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i
-                        class="fa fa-sign-out"></i> {{__('Logout')}}
+                        class="fa fa-sign-out"></i> {{ __('Logout') }}
                 </a>
             </div>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

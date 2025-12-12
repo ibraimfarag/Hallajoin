@@ -21,4 +21,8 @@ class NotificationPush extends BaseModel
         'read_at'
     ];
 
+    protected $casts = [
+        'data' => 'json',
+    ];
+
 }

@@ -28,6 +28,10 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-const app = new Vue({
-    el: '#app'
-});
+// Check if #app element exists before initializing Vue
+const appElement = document.getElementById('app');
+if (appElement && !appElement.__vue__) {
+    const app = new Vue({
+        el: '#app'
+    });
+}

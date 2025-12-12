@@ -6,6 +6,11 @@ Route::post('markAsRead','NotificationController@markAsRead')->name('core.admin.
 Route::post('markAllAsRead','NotificationController@markAllAsRead')->name('core.admin.notification.markAllAsRead');
 Route::get('notifications','NotificationController@loadNotify')->name('core.admin.notification.loadNotify');
 
+Route::group(['prefix'=>'send-notification'],function (){
+    Route::get('/','SendNotificationController@index')->name('core.admin.send-notification.index');
+    Route::post('/store','SendNotificationController@store')->name('core.admin.send-notification.store');
+    Route::get('/getForSelect2','SendNotificationController@getForSelect2')->name('core.admin.send-notification.getForSelect2');
+});
 
 Route::group(['prefix'=>'updater'],function (){
     Route::get('/','UpdaterController@index')->name('core.admin.updater.index');
