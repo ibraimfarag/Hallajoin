@@ -393,7 +393,7 @@ body.dark-mode .notification .timestamp {
 
 /* Footer */
 body.dark-mode .main-footer {
-    background: linear-gradient(135deg, var(--dark-header-bg) 0%, var(--dark-bg-secondary) 100%);
+    background: #0f1c2e;
     border-top: 1px solid var(--dark-border);
     color: var(--dark-text-secondary);
 }

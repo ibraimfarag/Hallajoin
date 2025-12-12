@@ -6,10 +6,22 @@ Route::post('markAsRead','NotificationController@markAsRead')->name('core.admin.
 Route::post('markAllAsRead','NotificationController@markAllAsRead')->name('core.admin.notification.markAllAsRead');
 Route::get('notifications','NotificationController@loadNotify')->name('core.admin.notification.loadNotify');
 
+// Marketing page (unified notifications, SMS, email)
+Route::get('marketing','MarketingController@index')->name('core.admin.marketing.index');
+
 Route::group(['prefix'=>'send-notification'],function (){
-    Route::get('/','SendNotificationController@index')->name('core.admin.send-notification.index');
     Route::post('/store','SendNotificationController@store')->name('core.admin.send-notification.store');
     Route::get('/getForSelect2','SendNotificationController@getForSelect2')->name('core.admin.send-notification.getForSelect2');
+});
+
+Route::group(['prefix'=>'send-sms'],function (){
+    Route::post('/store','SendSmsController@store')->name('core.admin.send-sms.store');
+    Route::get('/getForSelect2','SendSmsController@getForSelect2')->name('core.admin.send-sms.getForSelect2');
+});
+
+Route::group(['prefix'=>'send-email'],function (){
+    Route::post('/store','SendEmailController@store')->name('core.admin.send-email.store');
+    Route::get('/getForSelect2','SendEmailController@getForSelect2')->name('core.admin.send-email.getForSelect2');
 });
 
 Route::group(['prefix'=>'updater'],function (){

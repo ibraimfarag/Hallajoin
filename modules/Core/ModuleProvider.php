@@ -54,11 +54,11 @@ class ModuleProvider extends ModuleServiceProvider
                 'permission'=>'system_log_view'
             ],*/
             [
-                'id' => 'send-notification',
+                'id' => 'marketing',
                 'parent' => 'marketing',
                 'position' => 52,
-                'url' => 'admin/module/core/send-notification',
-                'title' => __('Notifications'),
+                'url' => 'admin/module/core/marketing',
+                'title' => __('Marketing Messages'),
                 'icon' => '',
             ],
             [
