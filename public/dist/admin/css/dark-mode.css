@@ -251,7 +251,7 @@ body.dark-mode .panel {
     /* border: 1px solid var(--dark-border); */
     border-radius: 12px;
     color: var(--dark-text-primary);
-    box-shadow: 0 4px 16px var(--dark-shadow);
+    /* box-shadow: 0 4px 16px var(--dark-shadow); */
     backdrop-filter: blur(8px);
 }
 
@@ -778,4 +778,8 @@ body.dark-mode .stat-desc {
         padding: 18px;
         margin-bottom: 20px;
     }
+}
+
+.main-breadcrumb {
+    display: none  ;
 }
