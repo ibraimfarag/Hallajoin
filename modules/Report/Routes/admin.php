@@ -38,3 +38,4 @@ Route::get('/enquiry/{enquiry}/notes', 'EnquiryController@getNotes')->name('repo
 Route::post('/enquiry/{enquiry}/notes/store', 'EnquiryController@storeNote')->name('report.admin.enquiry.storeNote');
 Route::get('/statistic', 'StatisticController@index')->name('report.admin.statistic.index');
 Route::match(['get', 'post'], '/statistic/reloadChart', 'StatisticController@reloadChart')->name('report.admin.statistic.reloadChart');
+Route::get('/sale-rate', 'SaleRateController@index')->name('report.admin.sale-rate.index');

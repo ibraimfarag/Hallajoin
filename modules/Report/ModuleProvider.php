@@ -40,33 +40,23 @@ class ModuleProvider extends \Modules\ModuleServiceProvider
                     ],
                 ],
             ],
-            'report' => [
-                'position' => 110,
-                'url' => route('report.admin.statistic.index'),
-                'title' => __('Reports :count', ['count' => $count ? sprintf('<span class="badge badge-warning">%d</span>', $count) : '']),
+            'reports' => [
+                'position' => 22,
+                'url' => '#',
+                'title' => __('Reports'),
                 'icon' => 'icon ion-ios-pie',
+                'parent' => 'marketing',
                 'permission' => 'report_view',
                 'children' => [
-                    'statistic' => [
-                        'url' => route('report.admin.statistic.index'),
-                        'title' => __('Booking Statistic'),
-                        'icon' => 'icon ion ion-md-podium',
+                    'sale_rate' => [
+                        'url' => route('report.admin.sale-rate.index'),
+                        'title' => __('Sale Rate'),
+                        'icon' => 'fa fa-chart-line',
                         'permission' => 'report_view',
-                    ],
-                    'contact' => [
-                        'url' => route('contact.admin.index'),
-                        'title' => __('Contact Submissions'),
-                        'icon' => 'icon ion ion-md-mail',
-                        'permission' => 'contact_manage',
-                    ],
-                    'buy_credit_report' => [
-                        'parent' => 'report',
-                        'url' => route('user.admin.wallet.report'),
-                        'title' => __('Credit Purchase Report :count', ['count' => $pending_purchase ? sprintf('<span class="badge badge-warning">%d</span>', $pending_purchase) : '']),
-                        'icon' => 'fa fa-money',
                     ],
                 ],
             ],
+
         ];
     }
 }
