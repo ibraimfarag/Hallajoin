@@ -44,8 +44,8 @@ $theme = \Modules\Theme\ThemeManager::currentProvider();
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     @foreach ($languages as $language)
                         @phpif ($language->locale == $locale) {
-                                continue;
-                        } @endphp
+                                                            continue;
+                                                } @endphp ?>
 
                         <a class="dropdown-item"
                             href="{{ route('language.set-admin-lang', ['locale' => $language->locale]) }}">
@@ -83,27 +83,34 @@ $theme = \Modules\Theme\ThemeManager::currentProvider();
                         @foreach ($notifications as $oneNotification)
                             @php
                                 $active = $class = '';
-                                $notifData = $oneNotification['data'];
+                                $rawData = $oneNotification['data'];
 
-                                // Handle if data is already an object from casting
-                                if (is_object($notifData)) {
-                                    $data = $notifData;
-                                } elseif (is_string($notifData)) {
-                                    $data = json_decode($notifData);
+                                // Handle data parsing - could be array or JSON string
+                                if (is_array($rawData)) {
+                                    $data = json_decode(json_encode($rawData));
                                 } else {
-                                    $data = (object) $notifData;
+                                    $data = json_decode($rawData);
                                 }
 
-                                $idNotification = @$data->id;
-                                $forAdmin = @$data->for_admin;
-                                $usingData = @$data->notification;
+                                $idNotification = $oneNotification->id;
+
+                                // Check if data has nested notification object or direct properties
+                                if (isset($data->notification) && is_object($data->notification)) {
+                                    $usingData = $data->notification;
+                                } elseif (isset($data->notification) && is_array($data->notification)) {
+                                    $usingData = (object) $data->notification;
+                                } else {
+                                    $usingData = $data;
+                                }
 
                                 $services = @$usingData->type;
                                 $idServices = @$usingData->id;
-                                $title = @$usingData->message ?? @$data->title;
-                                $name = @$usingData->name;
+                                // Try multiple fallbacks for title/message
+                                $title = @$usingData->message ?: @$usingData->title ?: @$data->message ?: @$data->title;
+                                $name = @$usingData->name ?: @$data->title ?: '';
                                 $avatar = @$usingData->avatar;
-                                $link = @$usingData->link ?? @$data->link;
+                                // Try multiple fallbacks for link
+                                $link = @$usingData->link ?: @$data->link ?: '#';
 
                                 if (empty($oneNotification->read_at)) {
                                     $class = 'markAsRead';

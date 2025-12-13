@@ -27,21 +27,34 @@ if (!auth()->check()) {
                 @foreach ($notifications as $oneNotification)
                     @php
                         $active = $class = '';
-                        $notificationData = $oneNotification['data'];
-                        $data = is_array($notificationData)
-                            ? (object) $notificationData
-                            : json_decode($notificationData);
+                        $rawData = $oneNotification['data'];
 
-                        $idNotification = @$data->id;
-                        $forAdmin = @$data->for_admin;
-                        $usingData = @$data->notification;
+                        // Handle data parsing - could be array or JSON string
+                        if (is_array($rawData)) {
+                            $data = json_decode(json_encode($rawData));
+                        } else {
+                            $data = json_decode($rawData);
+                        }
+
+                        $idNotification = $oneNotification->id;
+
+                        // Check if data has nested notification object or direct properties
+                        if (isset($data->notification) && is_object($data->notification)) {
+                            $usingData = $data->notification;
+                        } elseif (isset($data->notification) && is_array($data->notification)) {
+                            $usingData = (object) $data->notification;
+                        } else {
+                            $usingData = $data;
+                        }
 
                         $services = @$usingData->type;
                         $idServices = @$usingData->id;
-                        $title = @$usingData->message;
-                        $name = @$usingData->name;
+                        // Try multiple fallbacks for title/message
+                        $title = @$usingData->message ?: @$usingData->title ?: @$data->message ?: @$data->title;
+                        $name = @$usingData->name ?: @$data->title ?: '';
                         $avatar = @$usingData->avatar;
-                        $link = @$usingData->link;
+                        // Try multiple fallbacks for link
+                        $link = @$usingData->link ?: @$data->link ?: '#';
 
                         if (empty($oneNotification->read_at)) {
                             $class = 'markAsRead';
