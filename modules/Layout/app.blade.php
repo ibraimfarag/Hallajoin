@@ -13,7 +13,8 @@
 
     @if ($favicon)
         @php
-            $file = new \Modules\Media\Models\MediaFile()->findById($favicon);
+            $mediaFile = new \Modules\Media\Models\MediaFile();
+            $file = $mediaFile->findById($favicon);
         @endphp
         @if (!empty($file))
             <link rel="icon" type="{{ $file['file_type'] }}" href="{{ asset('uploads/' . $file['file_path']) }}" />
