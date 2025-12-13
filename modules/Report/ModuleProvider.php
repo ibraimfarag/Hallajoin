@@ -60,6 +60,11 @@ class ModuleProvider extends \Modules\ModuleServiceProvider
                         // 'icon' => 'fa fa-search',
                         'permission' => 'report_view',
                     ],
+                    'sales_pulse' => [
+                        'url' => route('report.admin.sales-pulse.index'),
+                        'title' => __('Sales Pulse'),
+                        'permission' => 'report_view',
+                    ],
                 ],
             ],
 

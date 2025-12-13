@@ -41,3 +41,4 @@ Route::match(['get', 'post'], '/statistic/reloadChart', 'StatisticController@rel
 Route::get('/sale-rate', 'SaleRateController@index')->name('report.admin.sale-rate.index');
 Route::get('/search-history', 'SearchHistoryController@index')->name('report.admin.search-history.index');
 Route::get('/search-history/export', 'SearchHistoryController@export')->name('report.admin.search-history.export');
+Route::get('/sales-pulse', 'SalesPulseController@index')->name('report.admin.sales-pulse.index');
