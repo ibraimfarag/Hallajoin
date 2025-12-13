@@ -146,6 +146,8 @@
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                        .getAttribute('content')
                                 },
                                 body: JSON.stringify({
                                     query: query
@@ -248,6 +250,8 @@
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                        .getAttribute('content')
                                 },
                                 body: JSON.stringify({
                                     query: query
@@ -326,9 +330,9 @@
                     const countryData = iti.getSelectedCountryData();
                     const countryCode = countryData.dialCode;
                     const phoneNumber = phoneInput.value.replace(/^\+\d+\s*/,
-                    ''); // Remove any existing country code
+                        ''); // Remove any existing country code
                     phoneInput.value =
-                    `+${countryCode} ${phoneNumber}`; // Update the input value with the new country code
+                        `+${countryCode} ${phoneNumber}`; // Update the input value with the new country code
                 }
 
                 // Initialize phone number display

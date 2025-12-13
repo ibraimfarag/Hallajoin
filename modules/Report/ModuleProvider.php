@@ -54,6 +54,12 @@ class ModuleProvider extends \Modules\ModuleServiceProvider
                         'icon' => 'fa fa-chart-line',
                         'permission' => 'report_view',
                     ],
+                    'search_history' => [
+                        'url' => route('report.admin.search-history.index'),
+                        'title' => __('Search History'),
+                        // 'icon' => 'fa fa-search',
+                        'permission' => 'report_view',
+                    ],
                 ],
             ],
 
