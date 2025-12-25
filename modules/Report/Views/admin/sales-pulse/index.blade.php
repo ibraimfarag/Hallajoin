@@ -185,11 +185,10 @@
         }
 
         .sales-pulse-title {
-            font-size: 18px;
-            font-weight: 600;
-            padding: 20px 25px;
-            margin: 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 24px;
+            font-weight: 700;
+            margin: 2px -1px 45px;
+            padding-top: 26px;
         }
 
         body:not(.dark-mode) .sales-pulse-title {
@@ -317,11 +316,116 @@
                 width: 100%;
             }
         }
+
+        /* Pagination Styles - Dark Mode */
+        .pagination-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        body:not(.dark-mode) .pagination-wrapper {
+            border-top-color: #e5e7eb;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 8px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            padding: 0 12px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        /* Dark Mode Pagination */
+        body.dark-mode .page-link {
+            background: #1e3a5f;
+            color: #94a3b8;
+            border-color: #2d4a6f;
+        }
+
+        body.dark-mode .page-link:hover {
+            background: #2d4a6f;
+            color: #fff;
+            border-color: #3d5a7f;
+        }
+
+        body.dark-mode .active .page-link {
+            background: #7c3aed;
+            color: #fff;
+            border-color: #7c3aed;
+        }
+
+        body.dark-mode .disabled .page-link {
+            background: #132438;
+            color: #4a5568;
+            border-color: #1e3a5f;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* Light Mode Pagination */
+        body:not(.dark-mode) .page-link {
+            background: #f3f4f6;
+            color: #4b5563;
+            border-color: #e5e7eb;
+        }
+
+        body:not(.dark-mode) .page-link:hover {
+            background: #e5e7eb;
+            color: #1f2937;
+            border-color: #d1d5db;
+        }
+
+        body:not(.dark-mode) .active .page-link {
+            background: #7c3aed;
+            color: #fff;
+            border-color: #7c3aed;
+        }
+
+        body:not(.dark-mode) .disabled .page-link {
+            background: #f9fafb;
+            color: #9ca3af;
+            border-color: #e5e7eb;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* Pagination Info Text */
+        .pagination-info {
+            font-size: 14px;
+            color: #8b92a7;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        body:not(.dark-mode) .pagination-info {
+            color: #6b7280;
+        }
     </style>
 @endpush
 
 @section('content')
     <div class="container-fluid">
+        <h1 class="sales-pulse-title">{{ __('Sales Pulse') }}</h1>
+
+
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -405,7 +509,6 @@
 
                         {{-- Sales Pulse Table --}}
                         <div class="sales-table-container">
-                            <h3 class="sales-pulse-title">{{ __('Sales Pulse') }}</h3>
                             <table class="table table-dark table-hover align-middle">
                                 <thead>
                                     <tr>
@@ -457,6 +560,20 @@
                                     @endforelse
                                 </tbody>
                             </table>
+
+                            {{-- Pagination --}}
+                            @if ($services->hasPages())
+                                <div class="pagination-wrapper">
+                                    <div>
+                                        <p class="pagination-info">
+                                            {{ __('Showing') }} {{ $services->firstItem() }} -
+                                            {{ $services->lastItem() }} {{ __('of') }} {{ $services->total() }}
+                                            {{ __('results') }}
+                                        </p>
+                                        {{ $services->links() }}
+                                    </div>
+                                </div>
+                            @endif
                         </div>
 
                     </div>

@@ -3,6 +3,8 @@
 namespace Modules\Report\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Modules\AdminController;
 use Modules\Booking\Models\Booking;
 
@@ -23,6 +25,34 @@ class SalesPulseController extends AdminController
         $sort = $request->input('sort', 'range1_desc');
         $activitySearch = $request->input('activity_search', '');
         $orderStatus = $request->input('order_status', 'all');
+        $perPage = 15; // Items per page
+        $currentPage = $request->input('page', 1);
+
+        // Calculate days for averages
+        $range1Days = max(1, \Carbon\Carbon::parse($range1From)->diffInDays(\Carbon\Carbon::parse($range1To)) + 1);
+        $range2Days = max(1, \Carbon\Carbon::parse($range2From)->diffInDays(\Carbon\Carbon::parse($range2To)) + 1);
+
+        // Get all booking counts in ONE query using conditional aggregation
+        $bookingStatsQuery = Booking::query()
+            ->select([
+                'object_id',
+                'object_model',
+                DB::raw("SUM(CASE WHEN DATE(created_at) >= '{$range1From}' AND DATE(created_at) <= '{$range1To}' THEN 1 ELSE 0 END) as range1_sales"),
+                DB::raw("SUM(CASE WHEN DATE(created_at) >= '{$range2From}' AND DATE(created_at) <= '{$range2To}' THEN 1 ELSE 0 END) as range2_sales"),
+            ])
+            ->where(function ($q) use ($range1From, $range1To, $range2From, $range2To) {
+                $q->whereBetween(DB::raw('DATE(created_at)'), [$range1From, $range1To])
+                    ->orWhereBetween(DB::raw('DATE(created_at)'), [$range2From, $range2To]);
+            });
+
+        if ($orderStatus !== 'all') {
+            $bookingStatsQuery->where('status', $orderStatus);
+        }
+
+        $bookingStats = $bookingStatsQuery
+            ->groupBy('object_id', 'object_model')
+            ->get()
+            ->keyBy(fn($item) => $item->object_model . '_' . $item->object_id);
 
         // Get all bookable services
         $services = [];
@@ -53,32 +83,12 @@ class SalesPulseController extends AdminController
 
             $items = $query->get();
 
-            // Calculate days for averages
-            $range1Days = max(1, \Carbon\Carbon::parse($range1From)->diffInDays(\Carbon\Carbon::parse($range1To)) + 1);
-            $range2Days = max(1, \Carbon\Carbon::parse($range2From)->diffInDays(\Carbon\Carbon::parse($range2To)) + 1);
-
             foreach ($items as $item) {
-                // Get Range 1 sales count
-                $range1Query = Booking::where('object_id', $item->id)
-                    ->where('object_model', $type)
-                    ->whereDate('created_at', '>=', $range1From)
-                    ->whereDate('created_at', '<=', $range1To);
+                $key = $type . '_' . $item->id;
+                $stats = $bookingStats->get($key);
 
-                if ($orderStatus !== 'all') {
-                    $range1Query->where('status', $orderStatus);
-                }
-                $range1Sales = $range1Query->count();
-
-                // Get Range 2 sales count
-                $range2Query = Booking::where('object_id', $item->id)
-                    ->where('object_model', $type)
-                    ->whereDate('created_at', '>=', $range2From)
-                    ->whereDate('created_at', '<=', $range2To);
-
-                if ($orderStatus !== 'all') {
-                    $range2Query->where('status', $orderStatus);
-                }
-                $range2Sales = $range2Query->count();
+                $range1Sales = $stats ? (int) $stats->range1_sales : 0;
+                $range2Sales = $stats ? (int) $stats->range2_sales : 0;
 
                 $range1Avg = round($range1Sales / $range1Days, 1);
                 $range2Avg = round($range2Sales / $range2Days, 1);
@@ -114,12 +124,22 @@ class SalesPulseController extends AdminController
             }
         });
 
-        // Filter out items with no sales in both ranges (optional - keep all for now)
-        // $services = array_filter($services, fn($s) => $s['range1_sales'] > 0 || $s['range2_sales'] > 0);
+        // Manual pagination
+        $total = count($services);
+        $offset = ($currentPage - 1) * $perPage;
+        $paginatedServices = array_slice($services, $offset, $perPage);
+        
+        $pagination = new LengthAwarePaginator(
+            $paginatedServices,
+            $total,
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
         $data = [
             'page_title' => __('Sales Pulse'),
-            'services' => $services,
+            'services' => $pagination,
             'activity_types' => $allTypes,
             'filters' => [
                 'range1_from' => $range1From,
