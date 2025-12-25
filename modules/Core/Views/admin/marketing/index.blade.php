@@ -57,7 +57,6 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            padding-top: 30px;
         }
 
         .form-group {
@@ -195,72 +194,143 @@
         .user-search-dropdown {
             position: absolute;
             background: #fff;
-            border: 1px solid #059669;
-            border-radius: 6px;
-            max-height: 200px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            max-height: 280px;
             overflow-y: auto;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
             z-index: 1000;
             display: none;
-            margin-top: 5px;
-            min-width: 250px;
+            margin-top: 8px;
+            min-width: 320px;
         }
 
         body.dark-mode .user-search-dropdown {
-            background: #0f1c2e;
-            border-color: #059669;
+            background: #1a2d42;
+            border-color: #2d4a6a;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
         }
 
         .user-search-item {
-            padding: 10px 12px;
+            padding: 12px 16px;
             cursor: pointer;
-            border-bottom: 1px solid #f0f0f0;
-            transition: background 0.2s;
-            font-size: 13px;
+            border-bottom: 1px solid #f3f4f6;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 14px;
         }
 
         body.dark-mode .user-search-item {
-            border-bottom-color: #2a3f5f;
+            border-bottom-color: #2d4a6a;
+        }
+
+        .user-search-item:last-child {
+            border-bottom: none;
         }
 
         .user-search-item:hover {
-            background: #f8f9fa;
+            background: #f0f9ff;
         }
 
         body.dark-mode .user-search-item:hover {
-            background: #1e3a5f;
+            background: #243b53;
+        }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #e5e7eb;
+            flex-shrink: 0;
+        }
+
+        body.dark-mode .user-avatar {
+            border-color: #3d5a80;
+        }
+
+        .user-info {
+            flex: 1;
+            min-width: 0;
         }
 
         .user-name {
             font-weight: 600;
-            color: #333;
-            margin-bottom: 3px;
+            color: #1f2937;
+            font-size: 14px;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         body.dark-mode .user-name {
-            color: #e0e0e0;
+            color: #f3f4f6;
         }
 
-        .user-details {
+        .user-phone {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .user-phone i {
             font-size: 11px;
-            color: #666;
+            color: #9ca3af;
         }
 
-        body.dark-mode .user-details {
-            color: #999;
+        body.dark-mode .user-phone {
+            color: #9ca3af;
+        }
+
+        body.dark-mode .user-phone i {
+            color: #6b7280;
+        }
+
+        .user-email {
+            font-size: 11px;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-email i {
+            font-size: 10px;
+            color: #d1d5db;
+        }
+
+        body.dark-mode .user-email {
+            color: #6b7280;
+        }
+
+        body.dark-mode .user-email i {
+            color: #4b5563;
         }
 
         .dropdown-loading,
         .dropdown-no-results {
-            padding: 10px 12px;
+            padding: 20px 16px;
             text-align: center;
-            color: #666;
-            font-size: 12px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .dropdown-loading i,
+        .dropdown-no-results i {
+            margin-right: 8px;
         }
 
         body.dark-mode .dropdown-loading,
         body.dark-mode .dropdown-no-results {
-            color: #999;
+            color: #9ca3af;
         }
 
         .tags-wrapper {
@@ -282,39 +352,77 @@
         }
 
         .btn {
-            color: #333;
             font-weight: 600;
             font-size: 13px;
-            padding: 8px 20px;
-            border: none;
+            padding: 10px 24px;
+            border: 2px solid #e0e0e0;
             background: transparent;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            color: #6b7280;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn:hover {
-            background: transparent;
+            border-color: #dc3545;
+            color: #dc3545;
+            background: rgba(220, 53, 69, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
         }
 
         body.dark-mode .btn {
-            color: #e0e0e0;
+            color: #9ca3af;
+            border-color: #3d5a80;
+        }
+
+        body.dark-mode .btn:hover {
+            border-color: #f87171;
+            color: #f87171;
+            background: rgba(248, 113, 113, 0.1);
         }
 
         .btn-submit {
-            background: #224162;
+            background: linear-gradient(135deg, #224162 0%, #1a3a5c 100%);
             color: #fff;
             font-weight: 600;
             font-size: 13px;
-            padding: 8px 20px;
+            padding: 10px 28px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(34, 65, 98, 0.3);
         }
 
         .btn-submit:hover {
-            background: #1a2e4a;
+            background: linear-gradient(135deg, #1a3a5c 0%, #0f2840 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(34, 65, 98, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(34, 65, 98, 0.3);
+        }
+
+        body.dark-mode .btn-submit {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        body.dark-mode .btn-submit:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
         }
 
         small.text-muted {
@@ -337,13 +445,66 @@
         .checkbox-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
+        /* Modern Custom Checkbox */
         .checkbox-group input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkbox-group .custom-checkbox {
+            position: relative;
+            width: 22px;
+            height: 22px;
+            border: 2px solid #b3b3b3;
+            border-radius: 6px;
             cursor: pointer;
-            width: 18px;
-            height: 18px;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+        }
+
+        .checkbox-group .custom-checkbox:hover {
+            border-color: #224162;
+            transform: scale(1.05);
+        }
+
+        .checkbox-group input[type="checkbox"]:checked+.custom-checkbox {
+            background: linear-gradient(135deg, #224162 0%, #1a3a5c 100%);
+            border-color: #224162;
+        }
+
+        .checkbox-group .custom-checkbox::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 11px;
+            border: solid white;
+            border-width: 0 2.5px 2.5px 0;
+            transform: rotate(45deg) scale(0);
+            transition: transform 0.2s ease;
+            margin-top: -2px;
+        }
+
+        .checkbox-group input[type="checkbox"]:checked+.custom-checkbox::after {
+            transform: rotate(45deg) scale(1);
+        }
+
+        /* Dark mode checkbox */
+        body.dark-mode .checkbox-group .custom-checkbox {
+            border-color: #3d5a80;
+        }
+
+        body.dark-mode .checkbox-group .custom-checkbox:hover {
+            border-color: #4a90d9;
+        }
+
+        body.dark-mode .checkbox-group input[type="checkbox"]:checked+.custom-checkbox {
+            background: linear-gradient(135deg, #4a90d9 0%, #3d7ac7 100%);
+            border-color: #4a90d9;
         }
 
         .checkbox-group label {
@@ -351,6 +512,7 @@
             font-weight: 600;
             color: #333;
             cursor: pointer;
+            user-select: none;
         }
 
         body.dark-mode .checkbox-group label {
@@ -449,6 +611,7 @@
 
                     <div class="form-right">
                         <div class="form-group">
+                            <label>{{ __('Customer') }}</label>
                             <div class="tags-wrapper">
                                 <div class="tags-input-container" id="notif_tagsContainer">
                                     <input type="text" id="notif_tag_input" class="tag-input"
@@ -466,6 +629,7 @@
                         <div class="form-group">
                             <div class="checkbox-group">
                                 <input type="checkbox" id="notif_send_to_all" name="send_to_all" value="1">
+                                <span class="custom-checkbox"></span>
                                 <label for="notif_send_to_all">{{ __('Send To All') }}</label>
                             </div>
                         </div>
@@ -500,6 +664,7 @@
 
                     <div class="form-right">
                         <div class="form-group">
+                            <label>{{ __('Customer') }}</label>
                             <div class="tags-wrapper">
                                 <div class="tags-input-container" id="sms_tagsContainer">
                                     <input type="text" id="sms_tag_input" class="tag-input"
@@ -517,6 +682,7 @@
                         <div class="form-group">
                             <div class="checkbox-group">
                                 <input type="checkbox" id="sms_send_to_all" name="send_to_all" value="1">
+                                <span class="custom-checkbox"></span>
                                 <label for="sms_send_to_all">{{ __('Send To All') }}</label>
                             </div>
                         </div>
@@ -556,6 +722,7 @@
 
                     <div class="form-right">
                         <div class="form-group">
+                            <label>{{ __('Customer') }}</label>
                             <div class="tags-wrapper">
                                 <div class="tags-input-container" id="email_tagsContainer">
                                     <input type="text" id="email_tag_input" class="tag-input"
@@ -573,6 +740,7 @@
                         <div class="form-group">
                             <div class="checkbox-group">
                                 <input type="checkbox" id="email_send_to_all" name="send_to_all" value="1">
+                                <span class="custom-checkbox"></span>
                                 <label for="email_send_to_all">{{ __('Send To All') }}</label>
                             </div>
                         </div>
@@ -591,6 +759,15 @@
     </div>
 
     <script>
+        // Custom checkbox click handler
+        document.querySelectorAll('.custom-checkbox').forEach(function(checkbox) {
+            checkbox.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                input.checked = !input.checked;
+                input.dispatchEvent(new Event('change'));
+            });
+        });
+
         // Initialize SMS character counter
         const smsInput = document.getElementById('sms_message');
         const smsCharCount = document.getElementById('sms_charCount');
@@ -656,7 +833,9 @@
                 }
 
                 currentSearchTerm = query;
-                showDropdown('<div class="dropdown-loading">{{ __('Searching...') }}</div>');
+                showDropdown(
+                    '<div class="dropdown-loading"><i class="fa fa-spinner fa-spin"></i>{{ __('Searching...') }}</div>'
+                );
 
                 const routeUrl = form.action.includes('notification') ?
                     '{{ route('core.admin.send-notification.getForSelect2') }}' :
@@ -671,25 +850,38 @@
                         if (data.results && data.results.length > 0) {
                             let html = '';
                             data.results.forEach(user => {
+                                const avatar = user.avatar || '{{ asset('images/avatar.png') }}';
+                                const phone = user.phone || '';
+                                const email = user.email || '';
+
                                 html += '<div class="user-search-item" data-id="' + user.id + '" data-name="' +
                                     user.text + '">';
+                                html += '<img src="' + avatar + '" alt="' + user.text +
+                                    '" class="user-avatar" onerror="this.src=\'{{ asset('images/avatar.png') }}\'">';
+                                html += '<div class="user-info">';
                                 html += '<div class="user-name">' + user.text + '</div>';
-                                if (user.email || user.phone) {
-                                    html += '<div class="user-details">';
-                                    if (user.email) html += user.email;
-                                    if (user.email && user.phone) html += ' • ';
-                                    if (user.phone) html += user.phone;
-                                    html += '</div>';
+                                if (phone) {
+                                    html += '<div class="user-phone"><i class="fa fa-phone"></i>' + phone +
+                                        '</div>';
                                 }
+                                if (email) {
+                                    html += '<div class="user-email"><i class="fa fa-envelope"></i>' + email +
+                                        '</div>';
+                                }
+                                html += '</div>';
                                 html += '</div>';
                             });
                             showDropdown(html);
                         } else {
-                            showDropdown('<div class="dropdown-no-results">{{ __('No users found') }}</div>');
+                            showDropdown(
+                                '<div class="dropdown-no-results"><i class="fa fa-search"></i>{{ __('No users found') }}</div>'
+                            );
                         }
                     })
                     .catch(() => {
-                        showDropdown('<div class="dropdown-no-results">{{ __('Error loading users') }}</div>');
+                        showDropdown(
+                            '<div class="dropdown-no-results"><i class="fa fa-exclamation-circle"></i>{{ __('Error loading users') }}</div>'
+                        );
                     });
             }
 

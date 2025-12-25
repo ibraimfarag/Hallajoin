@@ -75,19 +75,40 @@
         }
 
         .btn-submit {
-            background: #224162;
+            background: linear-gradient(135deg, #224162 0%, #1a3a5c 100%);
             color: #fff;
             border: none;
-            padding: 10px 30px;
-            border-radius: 4px;
+            padding: 10px 28px;
+            border-radius: 8px;
             font-weight: 600;
             font-size: 14px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(34, 65, 98, 0.3);
         }
 
         .btn-submit:hover {
-            background: #1a2e4a;
+            background: linear-gradient(135deg, #1a3a5c 0%, #0f2840 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(34, 65, 98, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(34, 65, 98, 0.3);
+        }
+
+        body.dark-mode .btn-submit {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        body.dark-mode .btn-submit:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
         }
 
         .btn-secondary {
@@ -107,27 +128,40 @@
         }
 
         .btn {
-            color: #333;
             font-weight: 600;
             font-size: 14px;
-            padding: 10px 30px;
-            border: none;
+            padding: 10px 24px;
+            border: 2px solid #e0e0e0;
             background: transparent;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            color: #6b7280;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn:hover {
-            background: transparent;
+            border-color: #dc3545;
+            color: #dc3545;
+            background: rgba(220, 53, 69, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
         }
 
         body.dark-mode .btn {
-            color: #e0e0e0;
+            color: #9ca3af;
+            border-color: #3d5a80;
         }
 
         body.dark-mode .btn:hover {
-            background: transparent;
+            border-color: #f87171;
+            color: #f87171;
+            background: rgba(248, 113, 113, 0.1);
         }
 
         small.text-muted {
@@ -236,26 +270,31 @@
             position: absolute;
             background: #fff;
             border: 1px solid #059669;
-            border-radius: 6px;
-            max-height: 250px;
+            border-radius: 8px;
+            max-height: 300px;
             overflow-y: auto;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
             z-index: 1000;
             display: none;
             margin-top: 5px;
-            min-width: 300px;
+            min-width: 320px;
+            width: 100%;
         }
 
         body.dark-mode .user-search-dropdown {
             background: #0f1c2e;
             border-color: #059669;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
 
         .user-search-item {
             padding: 12px 15px;
             cursor: pointer;
             border-bottom: 1px solid #f0f0f0;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         body.dark-mode .user-search-item {
@@ -263,7 +302,7 @@
         }
 
         .user-search-item:hover {
-            background: #f8f9fa;
+            background: #f0fdf4;
         }
 
         body.dark-mode .user-search-item:hover {
@@ -274,23 +313,76 @@
             border-bottom: none;
         }
 
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #e5e7eb;
+            flex-shrink: 0;
+        }
+
+        body.dark-mode .user-avatar {
+            border-color: #374151;
+        }
+
+        .user-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
         .user-name {
             font-weight: 600;
-            color: #333;
-            margin-bottom: 4px;
+            color: #1f2937;
+            font-size: 14px;
+            line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         body.dark-mode .user-name {
-            color: #e0e0e0;
+            color: #f3f4f6;
         }
 
-        .user-details {
+        .user-phone {
             font-size: 12px;
-            color: #666;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        body.dark-mode .user-details {
-            color: #999;
+        .user-phone i {
+            font-size: 10px;
+            color: #059669;
+        }
+
+        body.dark-mode .user-phone {
+            color: #9ca3af;
+        }
+
+        .user-email {
+            font-size: 11px;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-email i {
+            font-size: 10px;
+            color: #059669;
+        }
+
+        body.dark-mode .user-email {
+            color: #6b7280;
         }
 
         .dropdown-loading,
@@ -357,6 +449,7 @@
                 <!-- Right Side -->
                 <div class="bg-form">
                     <div class="form-group">
+                        <label for="tag_input">{{ __('Customer') }}</label>
                         <div class="tags-wrapper">
                             <div class="tags-input-container" id="tagsContainer">
                                 <input type="text" id="tag_input" class="tag-input"
@@ -485,16 +578,22 @@
                     if (data.results && data.results.length > 0) {
                         let html = '';
                         data.results.forEach(user => {
+                            const avatarUrl = user.avatar || '{{ asset('images/avatar.png') }}';
                             html += '<div class="user-search-item" data-id="' + user.id +
                                 '" data-name="' + user.text + '">';
+                            html += '<img src="' + avatarUrl +
+                                '" alt="" class="user-avatar" onerror="this.src=\'{{ asset('images/avatar.png') }}\'">';
+                            html += '<div class="user-info">';
                             html += '<div class="user-name">' + user.text + '</div>';
-                            if (user.email || user.phone) {
-                                html += '<div class="user-details">';
-                                if (user.email) html += user.email;
-                                if (user.email && user.phone) html += ' • ';
-                                if (user.phone) html += user.phone;
-                                html += '</div>';
+                            if (user.phone) {
+                                html += '<div class="user-phone"><i class="fa fa-phone"></i> ' + user.phone +
+                                    '</div>';
                             }
+                            if (user.email) {
+                                html += '<div class="user-email"><i class="fa fa-envelope"></i> ' + user.email +
+                                    '</div>';
+                            }
+                            html += '</div>';
                             html += '</div>';
                         });
                         showDropdown(html);

@@ -41,6 +41,7 @@ class SendEmailController extends AdminController
                 'name' => $user->name,
                 'email' => $user->email,
                 'phone' => $user->phone,
+                'avatar' => $user->avatar_url ?? ($user->getAvatarUrl() ?? asset('images/avatar.png')),
             ];
         }
         
