@@ -1,5 +1,19 @@
 /* Dark Mode Styles for Admin Panel - Inspired by Modern Blue-Gray Design */
 
+/* ============================================
+   CRITICAL: Instant Dark Mode Prevention (FOUC Fix)
+   These rules apply BEFORE body is available
+   ============================================ */
+html.dark-mode {
+    background-color: #061928 !important;
+    color: #f8fafc !important;
+}
+
+html.dark-mode body {
+    background-color: #061928 !important;
+    color: #f8fafc !important;
+}
+
 /* Dark Mode Variables */
 :root {
     --primary-color: #263a53;
@@ -279,7 +293,7 @@ body.dark-mode .table {
 
 body.dark-mode .table thead th {
     background: transparent;
-        border: 0 transparent;
+    border: 0 transparent;
     /* border-bottom: 2px solid var(--dark-accent-blue); */
     color: var(--dark-text-primary);
     font-weight: 600;
@@ -781,5 +795,5 @@ body.dark-mode .stat-desc {
 }
 
 .main-breadcrumb {
-    display: none  ;
+    display: none;
 }

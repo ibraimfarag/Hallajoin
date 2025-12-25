@@ -61,12 +61,26 @@ class SaleRateController extends AdminController
                 ->sum('total_guests');
 
             // Get total views (from visitors field or default)
-            $totalViews = $tour->visitors ?? 0;
-            $webViews = intval($totalViews * 0.2); // Approximate 20% web
-            $mobileViews = intval($totalViews * 0.8); // Approximate 80% mobile
+            $totalViews = (int) ($tour->visitors ?? 0);
+            
+            // Calculate web/mobile views (ensure they add up to total)
+            if ($totalViews > 0) {
+                $webViews = (int) ceil($totalViews * 0.2); // 20% web (round up)
+                $mobileViews = $totalViews - $webViews; // Rest is mobile
+            } else {
+                $webViews = 0;
+                $mobileViews = 0;
+            }
 
-            // Calculate order rate
-            $orderRate = $totalViews > 0 ? round(($totalTickets / $totalViews) * 100, 0) : 0;
+            // Calculate order rate (conversion rate) - capped at 100%
+            // Order Rate = (Number of Orders / Total Views) * 100
+            if ($totalViews > 0) {
+                $orderRate = round(($totalTickets / $totalViews) * 100, 1);
+                // Cap at 100% max for display purposes
+                $orderRate = min($orderRate, 100);
+            } else {
+                $orderRate = 0;
+            }
 
             $tour->total_tickets = $totalTickets;
             $tour->order_rate = $orderRate;

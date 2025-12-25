@@ -111,6 +111,9 @@ class TourController extends Controller
             return redirect('/');
         }
 
+        // Increment visitors count for this tour
+        $this->incrementVisitors($row);
+
         // Record visit as search history
         $translation = $row->translate();
         if ($translation && ! empty($translation->title)) {
@@ -150,6 +153,29 @@ class TourController extends Controller
 
         // dd($data);
         return view('Tour::frontend.detail', $data);
+    }
+
+    /**
+     * Increment visitors count for a tour (prevents duplicate counting per session)
+     *
+     * @param Tour $tour
+     * @return void
+     */
+    protected function incrementVisitors(Tour $tour): void
+    {
+        $sessionKey = 'tour_visited_' . $tour->id;
+        
+        // Check if user has already visited this tour in this session
+        if (!session()->has($sessionKey)) {
+            // Increment visitors count
+            $currentVisitors = (int) ($tour->visitors ?? 0);
+            $tour->visitors = $currentVisitors + 1;
+            $tour->timestamps = false; // Don't update updated_at
+            $tour->save();
+            
+            // Mark as visited in session (expires with session)
+            session()->put($sessionKey, true);
+        }
     }
 
     /**

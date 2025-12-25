@@ -1,5 +1,14 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="">
+<script>
+    // Instant Dark Mode - MUST be before any rendering
+    (function() {
+        var savedTheme = localStorage.getItem('admin-theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark-mode');
+        }
+    })();
+</script>
 
 <head>
     <meta charset="utf-8">
@@ -8,19 +17,19 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $page_title ?? 'Dashboard'}} - {{setting_item('site_title') ?? 'HallaJoin'}}</title>
+    <title>{{ $page_title ?? 'Dashboard' }} - {{ setting_item('site_title') ?? 'HallaJoin' }}</title>
 
     @php
         $favicon = setting_item('site_favicon');
     @endphp
-    @if($favicon)
+    @if ($favicon)
         @php
             $file = (new \Modules\Media\Models\MediaFile())->findById($favicon);
         @endphp
-        @if(!empty($file))
-            <link rel="icon" type="{{$file['file_type']}}" href="{{asset('uploads/' . $file['file_path'])}}" />
-        @else:
-            <link rel="icon" type="image/png" href="{{url('images/favicon.png')}}" />
+        @if (!empty($file))
+            <link rel="icon" type="{{ $file['file_type'] }}" href="{{ asset('uploads/' . $file['file_path']) }}" />
+        @else
+            <link rel="icon" type="image/png" href="{{ url('images/favicon.png') }}" />
         @endif
     @endif
 
@@ -31,7 +40,7 @@
     <!-- Styles -->
     <link href="{{ asset('libs/select2/css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('libs/flags/css/flag-icon.min.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="{{url('libs/daterange/daterangepicker.css')}}" />
+    <link rel="stylesheet" href="{{ url('libs/daterange/daterangepicker.css') }}" />
     <link href="{{ asset('themes/admin/libs/bootstrap-4.6.2-dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('themes/admin/libs/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
     <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
@@ -39,83 +48,84 @@
     <link href="{{ asset('dist/admin/css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('dist/admin/css/dark-mode.css') }}" rel="stylesheet">
 
-    <!-- Prevent flash of light mode when dark mode is active -->
+    <!-- Instant Dark Mode Styles - Prevent FOUC -->
     <style>
-        html.dark-mode-instant {
+        /* Apply dark mode instantly to html and body */
+        html.dark-mode,
+        html.dark-mode body {
             background-color: #1a1d29 !important;
             color: #ffffff !important;
         }
 
-        html.dark-mode-instant body {
-            background-color: #1a1d29 !important;
-            color: #ffffff !important;
+        /* Hide body until styles are ready */
+        html:not(.styles-ready) body {
+            visibility: hidden;
         }
 
-        /* Force immediate dark background on HTML */
-        html.dark-mode-instant * {
-            background-color: transparent !important;
+        html.styles-ready body {
+            visibility: visible;
         }
     </style>
     {!! \App\Helpers\Assets::css() !!}
     {!! \App\Helpers\Assets::js() !!}
     <script>
         var bookingCore = {
-            url: '{{url('/')}}',
-            admin_url: '{{route('admin.index')}}',
-            map_provider: '{{setting_item('map_provider')}}',
-            map_gmap_key: '{{setting_item('map_gmap_key')}}',
-            csrf: '{{csrf_token()}}',
-            date_format: '{{get_moment_date_format()}}',
-            markAsRead: '{{route('core.admin.notification.markAsRead')}}',
-            markAllAsRead: '{{route('core.admin.notification.markAllAsRead')}}',
-            loadNotify: '{{route('core.admin.notification.loadNotify')}}',
-            pusher_api_key: '{{setting_item("pusher_api_key")}}',
-            pusher_cluster: '{{setting_item("pusher_cluster")}}',
-            isAdmin: {{is_admin() ? 1 : 0}},
-            currentUser: {{(int) Auth::id()}},
+            url: '{{ url('/') }}',
+            admin_url: '{{ route('admin.index') }}',
+            map_provider: '{{ setting_item('map_provider') }}',
+            map_gmap_key: '{{ setting_item('map_gmap_key') }}',
+            csrf: '{{ csrf_token() }}',
+            date_format: '{{ get_moment_date_format() }}',
+            markAsRead: '{{ route('core.admin.notification.markAsRead') }}',
+            markAllAsRead: '{{ route('core.admin.notification.markAllAsRead') }}',
+            loadNotify: '{{ route('core.admin.notification.loadNotify') }}',
+            pusher_api_key: '{{ setting_item('pusher_api_key') }}',
+            pusher_cluster: '{{ setting_item('pusher_cluster') }}',
+            isAdmin: {{ is_admin() ? 1 : 0 }},
+            currentUser: {{ (int) Auth::id() }},
             media: {
                 groups: {!! json_encode(config('bc.media.groups')) !!},
             },
             language: '{{ app()->getLocale() }}',
         };
         var i18n = {
-            warning: "{{__("Warning")}}",
-            success: "{{__("Success")}}",
-            confirm_delete: "{{__("Do you want to delete?")}}",
-            confirm_recovery: "{{__("Do you want to restore?")}}",
-            confirm: "{{__("Confirm")}}",
-            cancel: "{{__("Cancel")}}",
+            warning: "{{ __('Warning') }}",
+            success: "{{ __('Success') }}",
+            confirm_delete: "{{ __('Do you want to delete?') }}",
+            confirm_recovery: "{{ __('Do you want to restore?') }}",
+            confirm: "{{ __('Confirm') }}",
+            cancel: "{{ __('Cancel') }}",
         };
         var daterangepickerLocale = {
-            "applyLabel": "{{__('Apply')}}",
-            "cancelLabel": "{{__('Cancel')}}",
-            "fromLabel": "{{__('From')}}",
-            "toLabel": "{{__('To')}}",
-            "customRangeLabel": "{{__('Custom')}}",
-            "weekLabel": "{{__('W')}}",
-            "first_day_of_week": {{ setting_item("site_first_day_of_the_weekin_calendar", "1") }},
+            "applyLabel": "{{ __('Apply') }}",
+            "cancelLabel": "{{ __('Cancel') }}",
+            "fromLabel": "{{ __('From') }}",
+            "toLabel": "{{ __('To') }}",
+            "customRangeLabel": "{{ __('Custom') }}",
+            "weekLabel": "{{ __('W') }}",
+            "first_day_of_week": {{ setting_item('site_first_day_of_the_weekin_calendar', '1') }},
             "daysOfWeek": [
-                "{{__('Su')}}",
-                "{{__('Mo')}}",
-                "{{__('Tu')}}",
-                "{{__('We')}}",
-                "{{__('Th')}}",
-                "{{__('Fr')}}",
-                "{{__('Sa')}}"
+                "{{ __('Su') }}",
+                "{{ __('Mo') }}",
+                "{{ __('Tu') }}",
+                "{{ __('We') }}",
+                "{{ __('Th') }}",
+                "{{ __('Fr') }}",
+                "{{ __('Sa') }}"
             ],
             "monthNames": [
-                "{{__('January')}}",
-                "{{__('February')}}",
-                "{{__('March')}}",
-                "{{__('April')}}",
-                "{{__('May')}}",
-                "{{__('June')}}",
-                "{{__('July')}}",
-                "{{__('August')}}",
-                "{{__('September')}}",
-                "{{__('October')}}",
-                "{{__('November')}}",
-                "{{__('December')}}"
+                "{{ __('January') }}",
+                "{{ __('February') }}",
+                "{{ __('March') }}",
+                "{{ __('April') }}",
+                "{{ __('May') }}",
+                "{{ __('June') }}",
+                "{{ __('July') }}",
+                "{{ __('August') }}",
+                "{{ __('September') }}",
+                "{{ __('October') }}",
+                "{{ __('November') }}",
+                "{{ __('December') }}"
             ],
         };
 
@@ -123,56 +133,56 @@
             language: '{{ app()->getLocale() }}',
             translations: {
                 {{ app()->getLocale() }}: {
-            'header.image_editor_title': '{{ __('Image Editor') }}',
-                'header.toggle_fullscreen': '{{ __('Toggle fullscreen') }}',
+                    'header.image_editor_title': '{{ __('Image Editor') }}',
+                    'header.toggle_fullscreen': '{{ __('Toggle fullscreen') }}',
                     'header.close': '{{ __('Close') }}',
-                        'header.close_modal': '{{ __('Close window') }}',
-                            'toolbar.download': '{{ __('Save Change') }}',
-                                'toolbar.save': '{{ __('Save') }}',
-                                    'toolbar.apply': '{{ __('Apply') }}',
-                                        'toolbar.saveAsNewImage': '{{ __('Save As New Image') }}',
-                                            'toolbar.cancel': '{{ __('Cancel') }}',
-                                                'toolbar.go_back': '{{ __('Go Back') }}',
-                                                    'toolbar.adjust': '{{ __('Adjust') }}',
-                                                        'toolbar.effects': '{{ __('Effects') }}',
-                                                            'toolbar.filters': '{{ __('Filters') }}',
-                                                                'toolbar.orientation': '{{ __('Orientation') }}',
-                                                                    'toolbar.crop': '{{ __('Crop') }}',
-                                                                        'toolbar.resize': '{{ __('Resize') }}',
-                                                                            'toolbar.watermark': '{{ __('Watermark') }}',
-                                                                                'toolbar.focus_point': '{{ __('Focus point') }}',
-                                                                                    'toolbar.shapes': '{{ __('Shapes') }}',
-                                                                                        'toolbar.image': '{{ __('Image') }}',
-                                                                                            'toolbar.text': '{{ __('Text') }}',
-                                                                                                'adjust.brightness': '{{ __('Brightness') }}',
-                                                                                                    'adjust.contrast': '{{ __('Contrast') }}',
-                                                                                                        'adjust.exposure': '{{ __('Exposure') }}',
-                                                                                                            'adjust.saturation': '{{ __('Saturation') }}',
-                                                                                                                'orientation.rotate_l': '{{ __('Rotate Left') }}',
-                                                                                                                    'orientation.rotate_r': '{{ __('Rotate Right') }}',
-                                                                                                                        'orientation.flip_h': '{{ __('Flip Horizontally') }}',
-                                                                                                                            'orientation.flip_v': '{{ __('Flip Vertically') }}',
-                                                                                                                                'pre_resize.title': '{{ __('Would you like to reduce resolution before editing the image?') }}',
-                                                                                                                                    'pre_resize.keep_original_resolution': '{{ __('Keep original resolution') }}',
-                                                                                                                                        'pre_resize.resize_n_continue': '{{ __('Resize & Continue') }}',
-                                                                                                                                            'footer.reset': '{{ __('Reset') }}',
-                                                                                                                                                'footer.undo': '{{ __('Undo') }}',
-                                                                                                                                                    'footer.redo': '{{ __('Redo') }}',
-                                                                                                                                                        'spinner.label': '{{ __('Processing...') }}',
-                                                                                                                                                            'warning.too_big_resolution': '{{ __('The resolution of the image is too big for the web. It can cause problems with Image Editor performance.') }}',
-                                                                                                                                                                'common.x': '{{ __('x') }}',
-                                                                                                                                                                    'common.y': '{{ __('y') }}',
-                                                                                                                                                                        'common.width': '{{ __('width') }}',
-                                                                                                                                                                            'common.height': '{{ __('height') }}',
-                                                                                                                                                                                'common.custom': '{{ __('custom') }}',
-                                                                                                                                                                                    'common.original': '{{ __('original') }}',
-                                                                                                                                                                                        'common.square': '{{ __('square') }}',
-                                                                                                                                                                                            'common.opacity': '{{ __('Opacity') }}',
-                                                                                                                                                                                                'common.apply_watermark': '{{ __('Apply watermark') }}',
-                                                                                                                                                                                                    'common.url': '{{ __('URL') }}',
-                                                                                                                                                                                                        'common.upload': '{{ __('Upload') }}',
-                                                                                                                                                                                                            'common.gallery': '{{ __('Gallery') }}',
-                                                                                                                                                                                                                'common.text': '{{ __('Text') }}',
+                    'header.close_modal': '{{ __('Close window') }}',
+                    'toolbar.download': '{{ __('Save Change') }}',
+                    'toolbar.save': '{{ __('Save') }}',
+                    'toolbar.apply': '{{ __('Apply') }}',
+                    'toolbar.saveAsNewImage': '{{ __('Save As New Image') }}',
+                    'toolbar.cancel': '{{ __('Cancel') }}',
+                    'toolbar.go_back': '{{ __('Go Back') }}',
+                    'toolbar.adjust': '{{ __('Adjust') }}',
+                    'toolbar.effects': '{{ __('Effects') }}',
+                    'toolbar.filters': '{{ __('Filters') }}',
+                    'toolbar.orientation': '{{ __('Orientation') }}',
+                    'toolbar.crop': '{{ __('Crop') }}',
+                    'toolbar.resize': '{{ __('Resize') }}',
+                    'toolbar.watermark': '{{ __('Watermark') }}',
+                    'toolbar.focus_point': '{{ __('Focus point') }}',
+                    'toolbar.shapes': '{{ __('Shapes') }}',
+                    'toolbar.image': '{{ __('Image') }}',
+                    'toolbar.text': '{{ __('Text') }}',
+                    'adjust.brightness': '{{ __('Brightness') }}',
+                    'adjust.contrast': '{{ __('Contrast') }}',
+                    'adjust.exposure': '{{ __('Exposure') }}',
+                    'adjust.saturation': '{{ __('Saturation') }}',
+                    'orientation.rotate_l': '{{ __('Rotate Left') }}',
+                    'orientation.rotate_r': '{{ __('Rotate Right') }}',
+                    'orientation.flip_h': '{{ __('Flip Horizontally') }}',
+                    'orientation.flip_v': '{{ __('Flip Vertically') }}',
+                    'pre_resize.title': '{{ __('Would you like to reduce resolution before editing the image?') }}',
+                    'pre_resize.keep_original_resolution': '{{ __('Keep original resolution') }}',
+                    'pre_resize.resize_n_continue': '{{ __('Resize & Continue') }}',
+                    'footer.reset': '{{ __('Reset') }}',
+                    'footer.undo': '{{ __('Undo') }}',
+                    'footer.redo': '{{ __('Redo') }}',
+                    'spinner.label': '{{ __('Processing...') }}',
+                    'warning.too_big_resolution': '{{ __('The resolution of the image is too big for the web. It can cause problems with Image Editor performance.') }}',
+                    'common.x': '{{ __('x') }}',
+                    'common.y': '{{ __('y') }}',
+                    'common.width': '{{ __('width') }}',
+                    'common.height': '{{ __('height') }}',
+                    'common.custom': '{{ __('custom') }}',
+                    'common.original': '{{ __('original') }}',
+                    'common.square': '{{ __('square') }}',
+                    'common.opacity': '{{ __('Opacity') }}',
+                    'common.apply_watermark': '{{ __('Apply watermark') }}',
+                    'common.url': '{{ __('URL') }}',
+                    'common.upload': '{{ __('Upload') }}',
+                    'common.gallery': '{{ __('Gallery') }}',
+                    'common.text': '{{ __('Text') }}',
                 }
             }
         };
@@ -183,32 +193,29 @@
 
     <!-- Prevent FOUC (Flash of Unstyled Content) for dark mode -->
     <script>
-        // Apply dark mode to HTML immediately
-        (function () {
-            const savedTheme = localStorage.getItem('admin-theme');
+        // Apply dark mode class to html element and mark styles ready
+        (function() {
+            var savedTheme = localStorage.getItem('admin-theme');
             if (savedTheme === 'dark') {
-                document.documentElement.classList.add('dark-mode-instant');
-                document.documentElement.style.backgroundColor = '#1a1d29';
+                document.documentElement.classList.add('dark-mode');
             }
+            // Mark styles as ready to show body
+            document.documentElement.classList.add('styles-ready');
         })();
     </script>
 
 </head>
 
 <body
-    class="{{($enable_multi_lang ?? '') ? 'enable_multi_lang' : '' }} @if(setting_item('site_enable_multi_lang')) site_enable_multi_lang @endif"
+    class="{{ $enable_multi_lang ?? '' ? 'enable_multi_lang' : '' }} @if (setting_item('site_enable_multi_lang')) site_enable_multi_lang @endif"
     data-theme-check="true">
 
-    <!-- Apply dark mode immediately when body is available -->
+    <!-- Apply dark mode class to body immediately -->
     <script>
-        (function () {
-            const savedTheme = localStorage.getItem('admin-theme');
+        (function() {
+            var savedTheme = localStorage.getItem('admin-theme');
             if (savedTheme === 'dark') {
                 document.body.classList.add('dark-mode');
-                document.body.style.backgroundColor = '#1a1d29';
-                document.body.style.color = '#ffffff';
-                document.documentElement.classList.remove('dark-mode-instant');
-                document.documentElement.style.backgroundColor = '#1a1d29';
             }
         })();
     </script>
@@ -226,7 +233,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-6 copy-right">
-                            {{date('Y')}} &copy; {{__('HallaJoin ')}}
+                            {{ date('Y') }} &copy; {{ __('HallaJoin ') }}
                             {{-- {{date('Y')}} &copy; {{__('HallaJoin by')}} <a
                                 href="{{__('https://www.bookingcore.org')}}" target="_blank">{{__('BookingCore
                                 Team')}}</a> --}}
@@ -253,10 +260,12 @@
     <script src="{{ asset('dist/admin/js/manifest.js?_ver=' . config('app.asset_version')) }}"></script>
     <script src="{{ asset('libs/jquery-3.6.3.min.js?_ver=' . config('app.asset_version')) }}"></script>
     <script
-        src="{{ asset('themes/admin/libs/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js?_ver=' . config('app.asset_version')) }}"></script>
+        src="{{ asset('themes/admin/libs/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js?_ver=' . config('app.asset_version')) }}">
+    </script>
     <script src="{{ asset('dist/admin/js/vendor.js?_ver=' . config('app.asset_version')) }}"></script>
     <script
-        src="{{ asset('libs/filerobot-image-editor/filerobot-image-editor.min.js?_ver=' . config('app.asset_version')) }}"></script>
+        src="{{ asset('libs/filerobot-image-editor/filerobot-image-editor.min.js?_ver=' . config('app.asset_version')) }}">
+    </script>
 
     <script src="{{ asset('dist/admin/js/app.js?_ver=' . config('app.asset_version')) }}"></script>
     <script src="{{ asset('libs/vue/vue' . (!env('APP_DEBUG') ? '.min' : '') . '.js') }}"></script>
@@ -264,88 +273,100 @@
     <script src="{{ asset('libs/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('libs/bootbox/bootbox.min.js') }}"></script>
 
-    <script src="{{url('libs/daterange/moment.min.js')}}"></script>
-    <script src="{{url('libs/daterange/daterangepicker.min.js?_ver=' . config('app.asset_version'))}}"></script>
+    <script src="{{ url('libs/daterange/moment.min.js') }}"></script>
+    <script src="{{ url('libs/daterange/daterangepicker.min.js?_ver=' . config('app.asset_version')) }}"></script>
 
     {!! \App\Helpers\Assets::js(true) !!}
 
     <script>
         // Dark Mode Toggle Script
-        document.addEventListener('DOMContentLoaded', function () {
-            const themeToggle = document.getElementById('themeToggle');
-            const themeIcon = document.getElementById('themeIcon');
-            const body = document.body;
-
-            // Remove instant loading class if it exists
-            document.documentElement.classList.remove('dark-mode-instant');
+        document.addEventListener('DOMContentLoaded', function() {
+            var themeToggle = document.getElementById('themeToggle');
+            var themeIcon = document.getElementById('themeIcon');
+            var body = document.body;
+            var html = document.documentElement;
 
             // Check for saved theme preference or default to light mode
-            const currentTheme = localStorage.getItem('admin-theme') || 'light';
+            var currentTheme = localStorage.getItem('admin-theme') || 'light';
 
             // Apply saved theme and ensure proper icon display
             if (currentTheme === 'dark') {
-                if (!body.classList.contains('dark-mode')) {
-                    body.classList.add('dark-mode');
+                html.classList.add('dark-mode');
+                body.classList.add('dark-mode');
+                if (themeIcon) {
+                    themeIcon.className = 'fa fa-sun-o';
                 }
-                themeIcon.className = 'fa fa-sun-o';
-
-                // Remove any inline styles that were added for instant loading
-                body.style.backgroundColor = '';
-                body.style.color = '';
-                document.documentElement.style.backgroundColor = '';
-                document.documentElement.style.color = '';
             } else {
+                html.classList.remove('dark-mode');
                 body.classList.remove('dark-mode');
-                themeIcon.className = 'fa fa-moon-o';
+                if (themeIcon) {
+                    themeIcon.className = 'fa fa-moon-o';
+                }
             }
 
             // Theme toggle functionality
-            themeToggle.addEventListener('click', function () {
-                body.classList.toggle('dark-mode');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    var isDark = body.classList.toggle('dark-mode');
+                    html.classList.toggle('dark-mode');
 
-                if (body.classList.contains('dark-mode')) {
-                    // Switch to light mode icon when in dark mode
-                    themeIcon.className = 'fa fa-sun-o';
-                    localStorage.setItem('admin-theme', 'dark');
+                    if (isDark) {
+                        // Switch to light mode icon when in dark mode
+                        if (themeIcon) {
+                            themeIcon.className = 'fa fa-sun-o';
+                        }
+                        localStorage.setItem('admin-theme', 'dark');
 
-                    // Show notification
-                    if (typeof toastr !== 'undefined') {
-                        toastr.info('{{__('Dark mode enabled')}}');
+                        // Show notification
+                        if (typeof toastr !== 'undefined') {
+                            toastr.info('{{ __('Dark mode enabled') }}');
+                        }
+                    } else {
+                        // Switch to dark mode icon when in light mode
+                        if (themeIcon) {
+                            themeIcon.className = 'fa fa-moon-o';
+                        }
+                        localStorage.setItem('admin-theme', 'light');
+
+                        // Show notification
+                        if (typeof toastr !== 'undefined') {
+                            toastr.info('{{ __('Light mode enabled') }}');
+                        }
                     }
-                } else {
-                    // Switch to dark mode icon when in light mode
-                    themeIcon.className = 'fa fa-moon-o';
-                    localStorage.setItem('admin-theme', 'light');
-
-                    // Show notification
-                    if (typeof toastr !== 'undefined') {
-                        toastr.info('{{__('Light mode enabled')}}');
-                    }
-                }
-            });
+                });
+            }
 
             // Optional: Listen for system theme changes
             if (window.matchMedia) {
-                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                var mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
                 // Only apply system theme if user hasn't set a preference
                 if (!localStorage.getItem('admin-theme')) {
                     if (mediaQuery.matches) {
+                        html.classList.add('dark-mode');
                         body.classList.add('dark-mode');
-                        themeIcon.className = 'fa fa-sun-o';
+                        if (themeIcon) {
+                            themeIcon.className = 'fa fa-sun-o';
+                        }
                     }
                 }
 
                 // Listen for changes
-                mediaQuery.addListener(function (e) {
+                mediaQuery.addListener(function(e) {
                     // Only auto-switch if user hasn't manually set a preference
                     if (!localStorage.getItem('admin-theme')) {
                         if (e.matches) {
+                            html.classList.add('dark-mode');
                             body.classList.add('dark-mode');
-                            themeIcon.className = 'fa fa-sun-o';
+                            if (themeIcon) {
+                                themeIcon.className = 'fa fa-sun-o';
+                            }
                         } else {
+                            html.classList.remove('dark-mode');
                             body.classList.remove('dark-mode');
-                            themeIcon.className = 'fa fa-moon-o';
+                            if (themeIcon) {
+                                themeIcon.className = 'fa fa-moon-o';
+                            }
                         }
                     }
                 });
