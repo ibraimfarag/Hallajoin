@@ -161,6 +161,21 @@
             color: #374151;
         }
 
+        /* Dark mode dropdown options */
+        body.dark-mode .custom-select {
+            background-color: #132438;
+        }
+
+        body.dark-mode .custom-select option {
+            background-color: #1a2942;
+            color: #c5c5c5;
+        }
+
+        body.dark-mode .custom-select option:hover,
+        body.dark-mode .custom-select option:checked {
+            background-color: #2d4a6f;
+        }
+
         .btn-filter {
             background: #7c3aed;
             color: #fff;
