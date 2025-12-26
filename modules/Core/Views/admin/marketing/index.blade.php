@@ -351,7 +351,7 @@
             border-top-color: #25466ad6;
         }
 
-        .btn {
+        .marketing-btn {
             font-weight: 600;
             font-size: 13px;
             padding: 10px 24px;
@@ -366,29 +366,29 @@
             gap: 8px;
         }
 
-        .btn:hover {
+        .marketing-marketing-btn:hover {
             border-color: #dc3545;
             color: #dc3545;
             background: rgba(220, 53, 69, 0.05);
             transform: translateY(-1px);
         }
 
-        .btn:active {
+        .marketing-btn:active {
             transform: translateY(0);
         }
 
-        body.dark-mode .btn {
+        body.dark-mode .marketing-btn {
             color: #9ca3af;
             border-color: #3d5a80;
         }
 
-        body.dark-mode .btn:hover {
+        body.dark-mode .marketing-btn:hover {
             border-color: #f87171;
             color: #f87171;
             background: rgba(248, 113, 113, 0.1);
         }
 
-        .btn-submit {
+        .marketing-btn-submit {
             background: linear-gradient(135deg, #224162 0%, #1a3a5c 100%);
             color: #fff;
             font-weight: 600;
@@ -404,23 +404,23 @@
             box-shadow: 0 4px 12px rgba(34, 65, 98, 0.3);
         }
 
-        .btn-submit:hover {
+        .marketing-btn-submit:hover {
             background: linear-gradient(135deg, #1a3a5c 0%, #0f2840 100%);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(34, 65, 98, 0.4);
         }
 
-        .btn-submit:active {
+        .marketing-btn-submit:active {
             transform: translateY(0);
             box-shadow: 0 2px 8px rgba(34, 65, 98, 0.3);
         }
 
-        body.dark-mode .btn-submit {
+        body.dark-mode .marketing-btn-submit {
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
-        body.dark-mode .btn-submit:hover {
+        body.dark-mode .marketing-btn-submit:hover {
             background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
         }
@@ -635,8 +635,8 @@
                         </div>
 
                         <div style="margin-top: auto; display: flex; gap: 10px; justify-content: flex-end;">
-                            <button type="reset" class="btn">{{ __('CLEAR') }}</button>
-                            <button type="submit" class="btn btn-submit">{{ __('Send') }}</button>
+                            <button type="reset" class="marketing-btn">{{ __('CLEAR') }}</button>
+                            <button type="submit" class="marketing-btn marketing-btn-submit">{{ __('Send') }}</button>
                         </div>
                     </div>
                 </form>
@@ -688,8 +688,9 @@
                         </div>
 
                         <div style="margin-top: auto; display: flex; gap: 10px; justify-content: flex-end;">
-                            <button type="reset" class="btn">{{ __('CLEAR') }}</button>
-                            <button type="submit" class="btn btn-submit">{{ __('Send') }}</button>
+                            <button type="reset" class="marketing-btn">{{ __('CLEAR') }}</button>
+                            <button type="submit"
+                                class="marketing-btn marketing-btn-submit">{{ __('Send') }}</button>
                         </div>
                     </div>
                 </form>
@@ -746,8 +747,9 @@
                         </div>
 
                         <div style="margin-top: auto; display: flex; gap: 10px; justify-content: flex-end;">
-                            <button type="reset" class="btn">{{ __('CLEAR') }}</button>
-                            <button type="submit" class="btn btn-submit">{{ __('Send') }}</button>
+                            <button type="reset" class="marketing-btn">{{ __('CLEAR') }}</button>
+                            <button type="submit"
+                                class="marketing-btn marketing-btn-submit">{{ __('Send') }}</button>
                         </div>
                     </div>
                 </form>
