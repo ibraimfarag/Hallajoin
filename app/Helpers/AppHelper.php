@@ -20,7 +20,7 @@ function setting_item($item, $default = '', $isArray = false)
 
     $res = Settings::item($item, $default);
 
-    if ($isArray and !is_array($res)) {
+    if ($isArray and ! is_array($res)) {
         $res = (array) json_decode($res, true);
     }
 
@@ -53,7 +53,7 @@ function setting_item_with_lang($item, $locale = '', $default = '', $withOrigin 
         $locale = '';
     }
 
-    return Settings::item($item . ($locale ? '_' . $locale : ''), $withOrigin ? setting_item($item, $default) : $default);
+    return Settings::item($item.($locale ? '_'.$locale : ''), $withOrigin ? setting_item($item, $default) : $default);
 
 }
 function setting_item_with_lang_raw($item, $locale = '', $default = '')
@@ -77,7 +77,7 @@ function setting_update_item($item, $val)
 
     $s->save();
 
-    Cache::forget('setting_' . $item);
+    Cache::forget('setting_'.$item);
 
     return $s;
 }
@@ -85,7 +85,7 @@ function setting_update_item($item, $val)
 function app_get_locale($locale = false, $before = false, $after = false)
 {
     if (setting_item('site_enable_multi_lang') and app()->getLocale() != setting_item('site_locale')) {
-        return $locale ? $before . $locale . $after : $before . app()->getLocale() . $after;
+        return $locale ? $before.$locale.$after : $before.app()->getLocale().$after;
     }
 
     return '';
@@ -124,7 +124,7 @@ function format_money_with_svg($price, $main_currency = false)
     $svgSymbol = get_current_currency_svg();
 
     // إذا كان هناك رمز SVG، استخدمه
-    if (!empty($svgSymbol)) {
+    if (! empty($svgSymbol)) {
         // الحصول على إعدادات العملة
         $currency_main = get_current_currency('currency_main', '');
         $currency_format = get_current_currency('currency_format', 'left');
@@ -134,7 +134,7 @@ function format_money_with_svg($price, $main_currency = false)
 
         $exchange_rate = $main_currency ? 1 : get_current_currency('rate', 1);
         $exchange_rate = (float) $exchange_rate;
-        if (!$exchange_rate) {
+        if (! $exchange_rate) {
             $exchange_rate = 1;
         }
 
@@ -145,15 +145,15 @@ function format_money_with_svg($price, $main_currency = false)
         // تنسيق مع رمز SVG - السعر أولاً ثم الرمز
         switch ($currency_format) {
             case 'right_space':
-                return $s . ' ' . $svgSymbol;
+                return $s.' '.$svgSymbol;
             case 'right':
-                return $s . $svgSymbol;
+                return $s.$svgSymbol;
             case 'left':
-                return $s . $svgSymbol;  // تم تغييرها لتكون السعر أولاً
+                return $s.$svgSymbol;  // تم تغييرها لتكون السعر أولاً
             case 'left_space':
-                return $s . ' ' . $svgSymbol;  // تم تغييرها لتكون السعر أولاً
+                return $s.' '.$svgSymbol;  // تم تغييرها لتكون السعر أولاً
             default:
-                return $s . $svgSymbol;
+                return $s.$svgSymbol;
         }
     }
 
@@ -171,7 +171,7 @@ function get_current_currency_svg()
     $current_currency = get_current_currency('currency_main');
 
     // البحث عن SVG للعملة الحالية
-    $svg = setting_item('currency_svg_' . strtolower($current_currency));
+    $svg = setting_item('currency_svg_'.strtolower($current_currency));
 
     // إذا لم يجد SVG للعملة الحالية، استخدم الافتراضي
     if (empty($svg)) {
@@ -204,7 +204,7 @@ function generate_menu($location = '', $options = [])
 
     $setting = json_decode(setting_item('menu_locations'), true);
 
-    if (!empty($setting)) {
+    if (! empty($setting)) {
         foreach ($setting as $l => $menuId) {
             if ($l == $location and $menuId) {
                 $menu = (new \Modules\Core\Models\Menu)->findById($menuId);
@@ -212,7 +212,7 @@ function generate_menu($location = '', $options = [])
 
                 $walker = new $options['walker']($translation);
 
-                if (!empty($translation)) {
+                if (! empty($translation)) {
                     $walker->generate($options);
                 }
             }
@@ -240,7 +240,7 @@ function get_exceprt($string, $length = 200, $more = '[...]')
                         $excerpt .= $more;
                         break;
                     }
-                    $excerpt .= ' ' . $str;
+                    $excerpt .= ' '.$str;
                 }
             }
         }
@@ -275,11 +275,11 @@ function get_image_tag($image_id, $size = 'thumb', $options = [])
         $alt = $options['alt'] ?? '';
         $attr = '';
         $class = $options['class'] ?? '';
-        if (!empty($options['lazy'])) {
+        if (! empty($options['lazy'])) {
             $class .= ' lazy';
-            $attr .= ' data-src=' . e($url) . ' ';
+            $attr .= ' data-src='.e($url).' ';
         } else {
-            $attr .= " src='" . e($url) . "' ";
+            $attr .= " src='".e($url)."' ";
         }
 
         return sprintf("<img class='%s' %s alt='%s'>", e($class), $attr, e($alt));
@@ -366,10 +366,10 @@ function display_datetime($time)
     }
 
     if (is_object($time)) {
-        return $time->format(get_date_format() . ' H:i');
+        return $time->format(get_date_format().' H:i');
     }
 
-    return date(get_date_format() . ' H:i', $time);
+    return date(get_date_format().' H:i', $time);
 }
 
 function human_time_diff($from, $to = false)
@@ -467,7 +467,7 @@ function human_time_diff($from, $to = false)
 
 function human_time_diff_short($from, $to = false)
 {
-    if (!$to) {
+    if (! $to) {
         $to = time();
     }
     $today = strtotime(date('Y-m-d 00:00:00', $to));
@@ -770,7 +770,7 @@ function get_payment_gateway_obj($payment_gateway)
 
     $gateways = get_payment_gateways();
 
-    if (empty($gateways[$payment_gateway]) or !class_exists($gateways[$payment_gateway])) {
+    if (empty($gateways[$payment_gateway]) or ! class_exists($gateways[$payment_gateway])) {
         return false;
     }
 
@@ -794,21 +794,21 @@ function add_query_arg($args, $uri = false)
 
     $query = request()->query();
 
-    if (!empty($args)) {
+    if (! empty($args)) {
         foreach ($args as $k => $arg) {
             $query[$k] = $arg;
         }
     }
 
-    return $uri . '?' . http_build_query($query);
+    return $uri.'?'.http_build_query($query);
 }
 
 function is_default_lang($lang = '')
 {
-    if (!$lang) {
+    if (! $lang) {
         $lang = request()->query('lang');
     }
-    if (!$lang) {
+    if (! $lang) {
         $lang = request()->route('lang');
     }
 
@@ -828,7 +828,7 @@ function get_lang_switcher_url($locale = false)
 
     $url = url()->current();
 
-    $url .= '?' . http_build_query($data);
+    $url .= '?'.http_build_query($data);
 
     return url($url);
 }
@@ -841,7 +841,7 @@ function get_currency_switcher_url($code = false)
 
     $url = url()->current();
 
-    $url .= '?' . http_build_query($data);
+    $url .= '?'.http_build_query($data);
 
     return url($url);
 }
@@ -859,7 +859,7 @@ function translate_or_origin($key, $settings = [], $locale = '')
     if (empty($locale)) {
         return $settings[$key] ?? '';
     } else {
-        return $settings[$key . '_' . $locale] ?? '';
+        return $settings[$key.'_'.$locale] ?? '';
     }
 }
 
@@ -870,7 +870,7 @@ function get_bookable_services()
 
     // Modules
     $custom_modules = \Modules\ServiceProvider::getActivatedModules();
-    if (!empty($custom_modules)) {
+    if (! empty($custom_modules)) {
         foreach ($custom_modules as $moduleData) {
             $moduleClass = $moduleData['class'];
             if (class_exists($moduleClass)) {
@@ -883,9 +883,9 @@ function get_bookable_services()
 
     // Plugin Menu
     $plugins_modules = \Plugins\ServiceProvider::getModules();
-    if (!empty($plugins_modules)) {
+    if (! empty($plugins_modules)) {
         foreach ($plugins_modules as $module) {
-            $moduleClass = '\\Plugins\\' . ucfirst($module) . '\\ModuleProvider';
+            $moduleClass = '\\Plugins\\'.ucfirst($module).'\\ModuleProvider';
             if (class_exists($moduleClass)) {
                 $services = call_user_func([$moduleClass, 'getBookableServices']);
                 $all = array_merge($all, $services);
@@ -904,7 +904,7 @@ function get_payable_services()
 
     // Modules
     $custom_modules = \Modules\ServiceProvider::getActivatedModules();
-    if (!empty($custom_modules)) {
+    if (! empty($custom_modules)) {
         foreach ($custom_modules as $moduleData) {
             $moduleClass = $moduleData['class'];
             if (class_exists($moduleClass)) {
@@ -927,7 +927,7 @@ function get_reviewable_services()
     $all = get_bookable_services();
     // Modules
     $custom_modules = \Modules\ServiceProvider::getActivatedModules();
-    if (!empty($custom_modules)) {
+    if (! empty($custom_modules)) {
         foreach ($custom_modules as $moduleData) {
             $moduleClass = $moduleData['class'];
             if (class_exists($moduleClass)) {
@@ -978,10 +978,10 @@ function size_unit_format($number = '')
 {
     switch (setting_item('size_unit')) {
         case 'm2':
-            return $number . ' m<sup>2</sup>';
+            return $number.' m<sup>2</sup>';
             break;
         default:
-            return $number . ' ' . __('sqft');
+            return $number.' '.__('sqft');
             break;
     }
 }
@@ -991,12 +991,12 @@ function get_payment_gateways()
     $gateways = config('payment.gateways');
     // Modules
     $custom_modules = \Modules\ServiceProvider::getModules();
-    if (!empty($custom_modules)) {
+    if (! empty($custom_modules)) {
         foreach ($custom_modules as $module) {
-            $moduleClass = '\\Modules\\' . ucfirst($module) . '\\ModuleProvider';
+            $moduleClass = '\\Modules\\'.ucfirst($module).'\\ModuleProvider';
             if (class_exists($moduleClass)) {
                 $gateway = call_user_func([$moduleClass, 'getPaymentGateway']);
-                if (!empty($gateway)) {
+                if (! empty($gateway)) {
                     $gateways = array_merge($gateways, $gateway);
                 }
             }
@@ -1004,12 +1004,12 @@ function get_payment_gateways()
     }
     // Plugin
     $plugin_modules = \Plugins\ServiceProvider::getModules();
-    if (!empty($plugin_modules)) {
+    if (! empty($plugin_modules)) {
         foreach ($plugin_modules as $module) {
-            $moduleClass = '\\Plugins\\' . ucfirst($module) . '\\ModuleProvider';
+            $moduleClass = '\\Plugins\\'.ucfirst($module).'\\ModuleProvider';
             if (class_exists($moduleClass)) {
                 $gateway = call_user_func([$moduleClass, 'getPaymentGateway']);
-                if (!empty($gateway)) {
+                if (! empty($gateway)) {
                     $gateways = array_merge($gateways, $gateway);
                 }
             }
@@ -1043,7 +1043,7 @@ function booking_status_to_text($status)
         case 'complete':
             return __('Completed');
             break;
-        // Keep some legacy statuses for backward compatibility
+            // Keep some legacy statuses for backward compatibility
         case 'draft':
             return __('Draft');
             break;
@@ -1153,15 +1153,15 @@ function duration_format($duration, $duration_unit, $is_full = false)
     $tmp = '';
 
     if ($day) {
-        $tmp = $day . __('D');
+        $tmp = $day.__('D');
     }
 
     if ($hour) {
-        $tmp .= $hour . ($duration_unit == 'hours' ? __('H') : __('H'));
+        $tmp .= $hour.($duration_unit == 'hours' ? __('H') : __('H'));
     }
 
     if ($minute) {
-        $tmp .= $minute . __('M');
+        $tmp .= $minute.__('M');
     }
 
     if ($is_full) {
@@ -1201,15 +1201,15 @@ function is_enable_guest_checkout()
 
 function handleVideoUrl($string, $video_id = false)
 {
-    if ($video_id && !empty($string)) {
+    if ($video_id && ! empty($string)) {
         parse_str(parse_url($string, PHP_URL_QUERY), $values);
 
         return $values['v'];
     }
     if (strpos($string, 'youtu') !== false) {
         preg_match("#(?<=v=)[a-zA-Z0-9-]+(?=&)|(?<=v\/)[^&\n]+|(?<=v=)[^&\n]+|(?<=youtu.be/)[^&\n]+#", $string, $matches);
-        if (!empty($matches[0])) {
-            return 'https://www.youtube.com/embed/' . e($matches[0]);
+        if (! empty($matches[0])) {
+            return 'https://www.youtube.com/embed/'.e($matches[0]);
         }
     }
 
@@ -1251,7 +1251,7 @@ function clean_by_key($object, $keyIndex, $children = 'children')
         if (isset($object[$keyIndex])) {
             $newClean = clean($object[$keyIndex]);
             $object[$keyIndex] = $newClean;
-            if (!empty($object[$children])) {
+            if (! empty($object[$children])) {
                 $object[$children] = clean_by_key($object[$children], $keyIndex);
             }
 
@@ -1262,7 +1262,7 @@ function clean_by_key($object, $keyIndex, $children = 'children')
                     $object[$key][$keyIndex] = $newClean;
                 }
 
-                if (!empty($oneObject[$children])) {
+                if (! empty($oneObject[$children])) {
                     $object[$key][$children] = clean_by_key($oneObject[$children], $keyIndex);
                 }
             }
@@ -1293,7 +1293,7 @@ function _fixTextScanTranslations()
 
 function is_admin()
 {
-    if (!auth()->check()) {
+    if (! auth()->check()) {
         return false;
     }
     if (auth()->user()->hasPermission('dashboard_access')) {
@@ -1304,7 +1304,7 @@ function is_admin()
 }
 function is_vendor()
 {
-    if (!auth()->check()) {
+    if (! auth()->check()) {
         return false;
     }
     if (auth()->user()->hasPermission('dashboard_vendor_access')) {
@@ -1316,8 +1316,8 @@ function is_vendor()
 
 function get_link_detail_services($services, $id, $action = 'edit')
 {
-    if (Route::has($services . '.admin.' . $action)) {
-        return route($services . '.admin.' . $action, ['id' => $id]);
+    if (Route::has($services.'.admin.'.$action)) {
+        return route($services.'.admin.'.$action, ['id' => $id]);
     } else {
         return '#';
     }
@@ -1326,8 +1326,8 @@ function get_link_detail_services($services, $id, $action = 'edit')
 
 function get_link_vendor_detail_services($services, $id, $action = 'edit')
 {
-    if (Route::has($services . '.vendor.' . $action)) {
-        return route($services . '.vendor.' . $action, ['id' => $id]);
+    if (Route::has($services.'.vendor.'.$action)) {
+        return route($services.'.vendor.'.$action, ['id' => $id]);
     } else {
         return '#';
     }
@@ -1337,7 +1337,7 @@ function get_link_vendor_detail_services($services, $id, $action = 'edit')
 function format_interval($d1, $d2 = '')
 {
     $first_date = new DateTime($d1);
-    if (!empty($d2)) {
+    if (! empty($d2)) {
         $second_date = new DateTime($d2);
     } else {
         $second_date = new DateTime;
@@ -1370,15 +1370,15 @@ function format_interval($d1, $d2 = '')
 function generate_timezone_list()
 {
     static $regions = [
-    DateTimeZone::AFRICA,
-    DateTimeZone::AMERICA,
-    DateTimeZone::ANTARCTICA,
-    DateTimeZone::ASIA,
-    DateTimeZone::ATLANTIC,
-    DateTimeZone::AUSTRALIA,
-    DateTimeZone::EUROPE,
-    DateTimeZone::INDIAN,
-    DateTimeZone::PACIFIC,
+        DateTimeZone::AFRICA,
+        DateTimeZone::AMERICA,
+        DateTimeZone::ANTARCTICA,
+        DateTimeZone::ASIA,
+        DateTimeZone::ATLANTIC,
+        DateTimeZone::AUSTRALIA,
+        DateTimeZone::EUROPE,
+        DateTimeZone::INDIAN,
+        DateTimeZone::PACIFIC,
     ];
 
     $timezones = [];
@@ -1413,7 +1413,7 @@ function is_string_match($string, $wildcard)
     $pattern = preg_quote($wildcard, '/');
     $pattern = str_replace('\*', '.*', $pattern);
 
-    return preg_match('/^' . $pattern . '$/i', $string);
+    return preg_match('/^'.$pattern.'$/i', $string);
 }
 function getNotify()
 {
@@ -1455,7 +1455,7 @@ function getWishlist()
 }
 function is_enable_registration()
 {
-    return !setting_item('user_disable_register');
+    return ! setting_item('user_disable_register');
 }
 function is_enable_vendor_team()
 {

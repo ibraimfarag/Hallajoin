@@ -26,9 +26,10 @@ class ValidCaptcha implements Rule
      */
     public function passes($attribute, $value)
     {
-        if (!$value or !ReCaptchaEngine::verify($value)) {
+        if (! $value or ! ReCaptchaEngine::verify($value)) {
             return false;
         }
+
         return true;
     }
 

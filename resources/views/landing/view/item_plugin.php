@@ -8,7 +8,7 @@
 ?>
 <div class="col-lg-6 col-md-6">
     <div class="item">
-        <img src="<?php echo $url . '/img/plugin/' . $v['thumb']; ?>" alt="Plugin"/>
+        <img src="<?php echo $url.'/img/plugin/'.$v['thumb']; ?>" alt="Plugin"/>
         <div class="plugin-info">
             <h5><?php echo $v['heading']; ?></h5>
             <div class="desc"><?php echo $v['desc']; ?></div>

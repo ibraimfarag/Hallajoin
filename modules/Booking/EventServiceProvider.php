@@ -8,9 +8,8 @@ use Modules\Booking\Listeners\SendEnquiryReplyNotification;
 class EventServiceProvider extends \Illuminate\Foundation\Support\Providers\EventServiceProvider
 {
     protected $listen = [
-        EnquiryReplyCreated::class=>[
-            SendEnquiryReplyNotification::class
-        ]
+        EnquiryReplyCreated::class => [
+            SendEnquiryReplyNotification::class,
+        ],
     ];
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Core\Admin;
 
 use Illuminate\Http\Request;
@@ -17,19 +18,20 @@ class PluginsController extends AdminController
         $this->checkPermission('plugin_manage');
         $plugins = Plugins::getAllPlugins();
         $data = [
-            'rows'               => $plugins,
-            'breadcrumbs'        => [
+            'rows' => $plugins,
+            'breadcrumbs' => [
                 [
                     'name' => __('Plugins'),
-                    'url'  => route('core.admin.plugins.index')
+                    'url' => route('core.admin.plugins.index'),
                 ],
                 [
-                    'name'  => __('All'),
-                    'class' => 'active'
+                    'name' => __('All'),
+                    'class' => 'active',
                 ],
             ],
-            'page_title'=>__("Plugin Management")
+            'page_title' => __('Plugin Management'),
         ];
+
         return view('Core::admin.plugins.index', $data);
     }
 
@@ -38,19 +40,21 @@ class PluginsController extends AdminController
         $this->checkPermission('plugin_manage');
         $ids = $request->input('ids');
         $action = $request->input('action');
-        if (empty($ids) or !is_array($ids)) {
+        if (empty($ids) or ! is_array($ids)) {
             return redirect()->back()->with('error', __('No items selected!'));
         }
         if (empty($action)) {
             return redirect()->back()->with('error', __('Please select an action!'));
         }
-        switch ($action){
-            case "active":
+        switch ($action) {
+            case 'active':
                 Plugins::updateActivePlugins($ids);
+
                 return redirect()->back()->with('success', __('Active success!'));
                 break;
-            case "deactivate":
+            case 'deactivate':
                 Plugins::updateDeactivatePlugins($ids);
+
                 return redirect()->back()->with('success', __('Deactivate success!'));
                 break;
             default:

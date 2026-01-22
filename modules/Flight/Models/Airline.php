@@ -1,24 +1,23 @@
 <?php
 
+namespace Modules\Flight\Models;
 
-    namespace Modules\Flight\Models;
+use App\BaseModel;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Flight\Factories\AirLineFactory;
 
+class Airline extends BaseModel
+{
+    use HasFactory;
+    use SoftDeletes;
 
-    use App\BaseModel;
-    use Illuminate\Database\Eloquent\Factories\HasFactory;
-    use Illuminate\Database\Eloquent\SoftDeletes;
-    use Modules\Flight\Factories\AirLineFactory;
+    protected $table = 'bravo_airline';
 
-    class Airline extends BaseModel
+    protected $fillable = ['name', 'image_id'];
+
+    protected static function newFactory()
     {
-        use HasFactory;
-        use SoftDeletes;
-
-        protected $table ='bravo_airline';
-        protected $fillable = ['name','image_id'];
-
-        protected static function newFactory()
-        {
-            return AirLineFactory::new();
-        }
+        return AirLineFactory::new();
     }
+}

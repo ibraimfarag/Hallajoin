@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class UpdateFrom110To120 extends Migration
 {
@@ -14,25 +14,25 @@ class UpdateFrom110To120 extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            if(!Schema::hasColumn('users','locale')) {
+            if (! Schema::hasColumn('users', 'locale')) {
                 $table->string('locale', 10)->nullable();
             }
         });
 
         Schema::table('core_news_category', function (Blueprint $table) {
-            if(!Schema::hasColumn('core_news_category','origin_id')) {
+            if (! Schema::hasColumn('core_news_category', 'origin_id')) {
                 $table->bigInteger('origin_id')->nullable();
                 $table->string('lang', 10)->nullable();
             }
         });
 
         Schema::table('bravo_attrs', function (Blueprint $table) {
-            if(!Schema::hasColumn('bravo_attrs','deleted_at')) {
+            if (! Schema::hasColumn('bravo_attrs', 'deleted_at')) {
                 $table->softDeletes();
             }
         });
         Schema::table('bravo_terms', function (Blueprint $table) {
-            if(!Schema::hasColumn('bravo_terms','deleted_at')) {
+            if (! Schema::hasColumn('bravo_terms', 'deleted_at')) {
                 $table->softDeletes();
                 $table->integer('image_id')->nullable();
             }
@@ -41,16 +41,17 @@ class UpdateFrom110To120 extends Migration
         $this->createTranslationTables();
     }
 
-    public function createTranslationTables(){
+    public function createTranslationTables()
+    {
 
         Schema::create('bravo_tour_translations', function (\Illuminate\Database\Schema\Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('origin_id')->nullable();
-            $table->string('locale',10)->nullable();
+            $table->string('locale', 10)->nullable();
 
-            //Tour info
+            // Tour info
             $table->string('title', 255)->nullable();
-            $table->string('slug',255)->charset('utf8')->index();
+            $table->string('slug', 255)->charset('utf8')->index();
             $table->text('content')->nullable();
             $table->text('short_desc')->nullable();
             $table->string('address', 255)->nullable();
@@ -63,13 +64,12 @@ class UpdateFrom110To120 extends Migration
             $table->timestamps();
         });
 
-
         Schema::create('bravo_tour_category_translations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('origin_id')->nullable();
-            $table->string('locale',10)->nullable();
+            $table->string('locale', 10)->nullable();
 
-            $table->string('name',255)->nullable();
+            $table->string('name', 255)->nullable();
             $table->text('content')->nullable();
 
             $table->integer('create_user')->nullable();
@@ -77,9 +77,6 @@ class UpdateFrom110To120 extends Migration
             $table->unique(['origin_id', 'locale']);
             $table->timestamps();
         });
-
-
-
 
     }
 

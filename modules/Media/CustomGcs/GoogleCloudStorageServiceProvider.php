@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\Media\CustomGcs;
-
 
 use Google\Cloud\Storage\StorageClient;
 use Illuminate\Filesystem\FilesystemManager;
@@ -10,7 +8,6 @@ use Illuminate\Support\Arr;
 
 class GoogleCloudStorageServiceProvider extends \Spatie\GoogleCloudStorage\GoogleCloudStorageServiceProvider
 {
-
     public function boot()
     {
         $factory = $this->app->make('filesystem');
@@ -27,10 +24,11 @@ class GoogleCloudStorageServiceProvider extends \Spatie\GoogleCloudStorage\Googl
             return $this->createFilesystem($adapter, $config);
         });
     }
+
     /**
      * Create a new StorageClient
      *
-     * @param  mixed $config
+     * @param  mixed  $config
      * @return \Google\Cloud\Storage\StorageClient
      */
     private function createClient2($config)
@@ -46,9 +44,10 @@ class GoogleCloudStorageServiceProvider extends \Spatie\GoogleCloudStorage\Googl
         if (! is_array($keyFile)) {
             $keyFile = [];
         }
+
         return new StorageClient([
             'projectId' => $config['project_id'],
-            'keyFile' => array_merge(["project_id" => $config['project_id']], $keyFile)
+            'keyFile' => array_merge(['project_id' => $config['project_id']], $keyFile),
         ]);
     }
 }

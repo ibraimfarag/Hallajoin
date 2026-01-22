@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateCoreNewsTable extends Migration
 {
@@ -15,19 +15,19 @@ class CreateCoreNewsTable extends Migration
     {
         Schema::create('core_news', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('title',255)->nullable();
+            $table->string('title', 255)->nullable();
             $table->text('content')->nullable();
-            $table->string('slug',255)->nullable();
-            $table->string('status',50)->nullable();
+            $table->string('slug', 255)->nullable();
+            $table->string('status', 50)->nullable();
             $table->integer('cat_id')->nullable();
             $table->integer('image_id')->nullable();
             $table->integer('create_user')->nullable();
             $table->integer('update_user')->nullable();
             $table->softDeletes();
 
-            //Languages
+            // Languages
             $table->bigInteger('origin_id')->nullable();
-            $table->string('lang',10)->nullable();
+            $table->string('lang', 10)->nullable();
 
             $table->timestamps();
         });

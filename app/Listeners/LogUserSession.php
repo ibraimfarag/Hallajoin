@@ -13,7 +13,7 @@ class LogUserSession
     /**
      * Create the event listener.
      */
-    public function __construct(Request $request = null)
+    public function __construct(?Request $request = null)
     {
         $this->request = $request ?: request();
     }
@@ -38,7 +38,7 @@ class LogUserSession
             'ip_address' => $ipAddress,
             'brand' => $deviceInfo['brand'],
             'model' => $deviceInfo['model'],
-            'device_id' => md5($userAgent . $ipAddress),
+            'device_id' => md5($userAgent.$ipAddress),
             'os' => $deviceInfo['os'],
             'browser' => $deviceInfo['browser'],
             'language' => $this->request->getPreferredLanguage(['en', 'ar']) ?? 'en',
@@ -53,23 +53,23 @@ class LogUserSession
     private function getRealIpAddress()
     {
         // Check for CloudFlare
-        if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+        if (! empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
             $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
         }
         // Check for shared internet/proxy
-        elseif (!empty($_SERVER['HTTP_X_REAL_IP'])) {
+        elseif (! empty($_SERVER['HTTP_X_REAL_IP'])) {
             $ip = $_SERVER['HTTP_X_REAL_IP'];
         }
         // Check for IP passed from proxy
-        elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        elseif (! empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             // Can contain multiple IPs, get the first one
             $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
             $ip = trim($ips[0]);
         }
         // Check for remote address
-        elseif (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        elseif (! empty($_SERVER['HTTP_CLIENT_IP'])) {
             $ip = $_SERVER['HTTP_CLIENT_IP'];
-        } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
+        } elseif (! empty($_SERVER['REMOTE_ADDR'])) {
             $ip = $_SERVER['REMOTE_ADDR'];
         } else {
             $ip = request()->ip();
@@ -78,7 +78,7 @@ class LogUserSession
         // If we get a local IP, try to get public IP from external service
         if (
             in_array($ip, ['127.0.0.1', '::1', 'localhost']) ||
-            !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)
+            ! filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)
         ) {
             try {
                 // Try multiple IP detection services
@@ -86,7 +86,7 @@ class LogUserSession
                     'https://api.ipify.org',
                     'https://ipinfo.io/ip',
                     'https://icanhazip.com',
-                    'http://checkip.amazonaws.com'
+                    'http://checkip.amazonaws.com',
                 ];
 
                 foreach ($services as $service) {
@@ -94,8 +94,8 @@ class LogUserSession
                         $context = stream_context_create([
                             'http' => [
                                 'timeout' => 3,
-                                'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-                            ]
+                                'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                            ],
                         ]);
 
                         $publicIp = trim(file_get_contents($service, false, $context));
@@ -143,7 +143,7 @@ class LogUserSession
             $brand = 'PC';
         } elseif (preg_match('/Mac OS X ([\d_]+)/i', $userAgent, $matches)) {
             $version = str_replace('_', '.', $matches[1]);
-            $os = 'Mac OS ' . $version;
+            $os = 'Mac OS '.$version;
             $model = 'Mac';
             $brand = 'Apple';
         } elseif (preg_match('/iPhone/i', $userAgent)) {
@@ -151,29 +151,29 @@ class LogUserSession
             $brand = 'Apple';
             // Try to detect iPhone model
             if (preg_match('/iPhone(\d+)[,_](\d+)/i', $userAgent, $matches)) {
-                $model = 'iPhone ' . $matches[1];
+                $model = 'iPhone '.$matches[1];
             } else {
                 $model = 'iPhone';
             }
             // Get iOS version
             if (preg_match('/OS ([\d_]+)/i', $userAgent, $matches)) {
-                $os .= ' ' . str_replace('_', '.', $matches[1]);
+                $os .= ' '.str_replace('_', '.', $matches[1]);
             }
         } elseif (preg_match('/iPad/i', $userAgent)) {
             $os = 'iOS';
             $brand = 'Apple';
             $model = 'iPad';
             if (preg_match('/OS ([\d_]+)/i', $userAgent, $matches)) {
-                $os .= ' ' . str_replace('_', '.', $matches[1]);
+                $os .= ' '.str_replace('_', '.', $matches[1]);
             }
         } elseif (preg_match('/Android ([\d.]+)/i', $userAgent, $matches)) {
-            $os = 'Android ' . $matches[1];
+            $os = 'Android '.$matches[1];
 
             // Detect Android brand and model
             if (preg_match('/Samsung|SM-/i', $userAgent)) {
                 $brand = 'Samsung';
                 if (preg_match('/SM-([A-Z0-9]+)/i', $userAgent, $matches)) {
-                    $model = 'Galaxy ' . $matches[1];
+                    $model = 'Galaxy '.$matches[1];
                 } else {
                     $model = 'Samsung Device';
                 }
@@ -205,23 +205,23 @@ class LogUserSession
 
         // Detect Browser with version (order matters!)
         if (preg_match('/Edg\/([\d.]+)/i', $userAgent, $matches)) {
-            $browser = 'Edge ' . $matches[1];
-        } elseif (preg_match('/Chrome\/([\d.]+)/i', $userAgent, $matches) && !preg_match('/Edg/i', $userAgent)) {
-            $browser = 'Chrome ' . $matches[1];
-        } elseif (preg_match('/Safari\/([\d.]+)/i', $userAgent, $matches) && !preg_match('/Chrome|Edg/i', $userAgent)) {
+            $browser = 'Edge '.$matches[1];
+        } elseif (preg_match('/Chrome\/([\d.]+)/i', $userAgent, $matches) && ! preg_match('/Edg/i', $userAgent)) {
+            $browser = 'Chrome '.$matches[1];
+        } elseif (preg_match('/Safari\/([\d.]+)/i', $userAgent, $matches) && ! preg_match('/Chrome|Edg/i', $userAgent)) {
             if (preg_match('/Version\/([\d.]+)/i', $userAgent, $versionMatches)) {
-                $browser = 'Safari ' . $versionMatches[1];
+                $browser = 'Safari '.$versionMatches[1];
             } else {
-                $browser = 'Safari ' . $matches[1];
+                $browser = 'Safari '.$matches[1];
             }
         } elseif (preg_match('/Firefox\/([\d.]+)/i', $userAgent, $matches)) {
-            $browser = 'Firefox ' . $matches[1];
+            $browser = 'Firefox '.$matches[1];
         } elseif (preg_match('/MSIE ([\d.]+)|Trident.*rv:([\d.]+)/i', $userAgent, $matches)) {
             $version = $matches[1] ?? $matches[2] ?? '';
-            $browser = 'IE ' . $version;
+            $browser = 'IE '.$version;
         } elseif (preg_match('/Opera|OPR\/([\d.]+)/i', $userAgent, $matches)) {
             $version = $matches[1] ?? '';
-            $browser = 'Opera ' . $version;
+            $browser = 'Opera '.$version;
         }
 
         return [

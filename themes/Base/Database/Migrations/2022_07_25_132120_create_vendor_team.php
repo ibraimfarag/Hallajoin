@@ -19,7 +19,7 @@ class CreateVendorTeam extends Migration
             $table->bigInteger('member_id');
             $table->text('permissions')->nullable();
 
-            $table->string('status',50)->nullable();
+            $table->string('status', 50)->nullable();
 
             $table->integer('create_user')->nullable();
             $table->integer('update_user')->nullable();

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateBravoToursMetaTable extends Migration
 {
@@ -28,7 +28,6 @@ class CreateBravoToursMetaTable extends Migration
 
             $table->tinyInteger('enable_open_hours')->nullable();
             $table->text('open_hours')->nullable();
-
 
             $table->integer('create_user')->nullable();
             $table->integer('update_user')->nullable();

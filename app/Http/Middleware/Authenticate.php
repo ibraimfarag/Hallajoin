@@ -16,25 +16,22 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        if (!$request->expectsJson()) {
+        if (! $request->expectsJson()) {
             return route('login', ['redirect' => $request->getRequestUri()]);
         }
     }
-
 
     public function handle($request, Closure $next, ...$guards)
     {
         try {
             $this->authenticate($request, $guards);
-        }catch (AuthenticationException $exception)
-        {
-            if($request->expectsJson() or $request->segment(1) == 'api')
-            {
+        } catch (AuthenticationException $exception) {
+            if ($request->expectsJson() or $request->segment(1) == 'api') {
                 return response()->json([
-                    'status'=>0,
-                    'message'=>$exception->getMessage(),
-                    'require_login'=>1
-                ],401);
+                    'status' => 0,
+                    'message' => $exception->getMessage(),
+                    'require_login' => 1,
+                ], 401);
             }
 
             return redirect(route('login', ['redirect' => $request->getRequestUri()]));
@@ -43,6 +40,4 @@ class Authenticate extends Middleware
 
         return $next($request);
     }
-
-
 }

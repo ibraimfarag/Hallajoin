@@ -14,7 +14,7 @@ class Update242To243 extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            if (!Schema::hasColumn('users', 'need_update_pw')) {
+            if (! Schema::hasColumn('users', 'need_update_pw')) {
                 $table->tinyInteger('need_update_pw')->nullable()->default(0);
             }
         });
@@ -26,7 +26,5 @@ class Update242To243 extends Migration
      *
      * @return void
      */
-    public function down()
-    {
-    }
+    public function down() {}
 }

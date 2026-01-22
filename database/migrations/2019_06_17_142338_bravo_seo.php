@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class BravoSeo extends Migration
 {
@@ -16,7 +16,7 @@ class BravoSeo extends Migration
         Schema::create('bravo_seo', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('object_id')->nullable();
-            $table->string('object_model',255)->nullable();
+            $table->string('object_model', 255)->nullable();
             $table->tinyInteger('seo_index')->nullable();
             $table->string('seo_title', 255)->nullable();
             $table->text('seo_desc')->nullable();
@@ -25,9 +25,9 @@ class BravoSeo extends Migration
             $table->text('seo_share')->nullable();
             $table->bigInteger('create_user')->nullable();
             $table->bigInteger('update_user')->nullable();
-            //Languages
+            // Languages
             $table->bigInteger('origin_id')->nullable();
-            $table->string('lang',10)->nullable();
+            $table->string('lang', 10)->nullable();
             $table->timestamps();
         });
 

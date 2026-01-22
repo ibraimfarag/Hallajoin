@@ -1,4 +1,5 @@
 <?php
+
 return [
-    'Users' => __('Users')
+    'Users' => __('Users'),
 ];

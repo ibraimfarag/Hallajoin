@@ -1,8 +1,9 @@
 <?php
+
 namespace Plugins\PaymentTwoCheckout;
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class RouterServiceProvider extends ServiceProvider
 {
@@ -11,7 +12,8 @@ class RouterServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $moduleNamespace      = 'Plugins\PaymentTwoCheckout\Controllers';
+    protected $moduleNamespace = 'Plugins\PaymentTwoCheckout\Controllers';
+
     protected $adminModuleNamespace = 'Plugins\PaymentTwoCheckout\Admin';
 
     /**
@@ -48,7 +50,7 @@ class RouterServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
-        Route::middleware('web')->namespace($this->moduleNamespace)->group(__DIR__ . '/Routes/web.php');
+        Route::middleware('web')->namespace($this->moduleNamespace)->group(__DIR__.'/Routes/web.php');
     }
 
     /**
@@ -62,8 +64,8 @@ class RouterServiceProvider extends ServiceProvider
     {
         Route::middleware([
             'web',
-            'dashboard'
-        ])->namespace($this->adminModuleNamespace)->prefix('admin/module/PaymentTwoCheckout')->group(__DIR__ . '/Routes/admin.php');
+            'dashboard',
+        ])->namespace($this->adminModuleNamespace)->prefix('admin/module/PaymentTwoCheckout')->group(__DIR__.'/Routes/admin.php');
     }
 
     /**
@@ -75,7 +77,7 @@ class RouterServiceProvider extends ServiceProvider
      */
     protected function mapLanguageRoutes()
     {
-        Route::middleware('web')->namespace($this->moduleNamespace)->prefix(app()->getLocale())->group(__DIR__ . '/Routes/language.php');
+        Route::middleware('web')->namespace($this->moduleNamespace)->prefix(app()->getLocale())->group(__DIR__.'/Routes/language.php');
     }
 
     /**
@@ -87,6 +89,6 @@ class RouterServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        Route::prefix('api')->middleware('api')->namespace($this->moduleNamespace)->group(__DIR__ . '/Routes/api.php');
+        Route::prefix('api')->middleware('api')->namespace($this->moduleNamespace)->group(__DIR__.'/Routes/api.php');
     }
 }

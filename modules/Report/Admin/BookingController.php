@@ -24,52 +24,52 @@ class BookingController extends AdminController
         // Advanced Filters
 
         // Order Number
-        if (!empty($request->order_number)) {
+        if (! empty($request->order_number)) {
             $query->where(function ($q) use ($request) {
-                $q->where('code', 'like', '%' . $request->order_number . '%')
+                $q->where('code', 'like', '%'.$request->order_number.'%')
                     ->orWhere('id', $request->order_number);
             });
         }
 
         // Date Range (Created Date)
-        if (!empty($request->from_date)) {
+        if (! empty($request->from_date)) {
             $query->whereDate('created_at', '>=', $request->from_date);
         }
-        if (!empty($request->to_date)) {
+        if (! empty($request->to_date)) {
             $query->whereDate('created_at', '<=', $request->to_date);
         }
 
         // Schedule Range (Booking Dates)
-        if (!empty($request->schedule_from)) {
+        if (! empty($request->schedule_from)) {
             $query->whereDate('start_date', '>=', $request->schedule_from);
         }
-        if (!empty($request->schedule_to)) {
+        if (! empty($request->schedule_to)) {
             $query->whereDate('end_date', '<=', $request->schedule_to);
         }
 
         // Order Status
-        if (!empty($request->order_status)) {
+        if (! empty($request->order_status)) {
             $query->where('status', $request->order_status);
         }
 
         // Payment Gateway
-        if (!empty($request->gateway)) {
+        if (! empty($request->gateway)) {
             $query->where('gateway', $request->gateway);
         }
 
         // Payment ID
-        if (!empty($request->payment_id)) {
+        if (! empty($request->payment_id)) {
             $query->where('payment_id', $request->payment_id);
         }
 
         // Phone Number
-        if (!empty($request->phone_number)) {
-            $query->where('phone', 'like', '%' . $request->phone_number . '%');
+        if (! empty($request->phone_number)) {
+            $query->where('phone', 'like', '%'.$request->phone_number.'%');
         }
 
         // Activity (Service Title) - Search across all service types
-        if (!empty($request->activity)) {
-            $searchTerm = '%' . $request->activity . '%';
+        if (! empty($request->activity)) {
+            $searchTerm = '%'.$request->activity.'%';
             $bookableServices = get_bookable_services();
 
             $query->where(function ($q) use ($searchTerm, $bookableServices) {
@@ -90,47 +90,47 @@ class BookingController extends AdminController
         }
 
         // Note (Customer Notes)
-        if (!empty($request->note)) {
-            $query->where('customer_notes', 'like', '%' . $request->note . '%');
+        if (! empty($request->note)) {
+            $query->where('customer_notes', 'like', '%'.$request->note.'%');
         }
 
         // Reservation (Code or ID)
-        if (!empty($request->reservation)) {
+        if (! empty($request->reservation)) {
             $query->where(function ($q) use ($request) {
-                $q->where('code', 'like', '%' . $request->reservation . '%')
+                $q->where('code', 'like', '%'.$request->reservation.'%')
                     ->orWhere('id', $request->reservation);
             });
         }
 
         // Confirm Type
-        if (!empty($request->confirm_type)) {
+        if (! empty($request->confirm_type)) {
             $query->where('confirm_type', $request->confirm_type);
         }
 
         // Salesman
-        if (!empty($request->salesman_id)) {
+        if (! empty($request->salesman_id)) {
             $query->where('salesman_id', $request->salesman_id);
         }
 
         // Legacy search
-        if (!empty($request->s)) {
+        if (! empty($request->s)) {
             if (is_numeric($request->s)) {
                 $query->Where('id', '=', $request->s);
             } else {
                 $query->where(function ($query) use ($request) {
-                    $query->where('first_name', 'like', '%' . $request->s . '%')
-                        ->orWhere('last_name', 'like', '%' . $request->s . '%')
-                        ->orWhere('email', 'like', '%' . $request->s . '%')
-                        ->orWhere('phone', 'like', '%' . $request->s . '%')
-                        ->orWhere('address', 'like', '%' . $request->s . '%')
-                        ->orWhere('address2', 'like', '%' . $request->s . '%');
+                    $query->where('first_name', 'like', '%'.$request->s.'%')
+                        ->orWhere('last_name', 'like', '%'.$request->s.'%')
+                        ->orWhere('email', 'like', '%'.$request->s.'%')
+                        ->orWhere('phone', 'like', '%'.$request->s.'%')
+                        ->orWhere('address', 'like', '%'.$request->s.'%')
+                        ->orWhere('address2', 'like', '%'.$request->s.'%');
                 });
             }
         }
 
         // Vendor Filter
         if ($this->hasPermission('booking_manage_others')) {
-            if (!empty($request->vendor_id)) {
+            if (! empty($request->vendor_id)) {
                 $query->where('vendor_id', $request->vendor_id);
             }
         } else {
@@ -171,7 +171,7 @@ class BookingController extends AdminController
             ->orderBy('first_name')
             ->get()
             ->mapWithKeys(function ($user) {
-                return [$user->id => $user->first_name . ' ' . $user->last_name];
+                return [$user->id => $user->first_name.' '.$user->last_name];
             });
 
         // Confirm types
@@ -201,7 +201,7 @@ class BookingController extends AdminController
     {
         $ids = $request->input('ids');
         $action = $request->input('action');
-        if (empty($ids) or !is_array($ids)) {
+        if (empty($ids) or ! is_array($ids)) {
             return redirect()->back()->with('error', __('No items selected'));
         }
         if (empty($action)) {
@@ -210,11 +210,11 @@ class BookingController extends AdminController
         if ($action == 'delete') {
             foreach ($ids as $id) {
                 $query = Booking::where('id', $id);
-                if (!$this->hasPermission('booking_manage_others')) {
+                if (! $this->hasPermission('booking_manage_others')) {
                     $query->where('vendor_id', Auth::id());
                 }
                 $row = $query->first();
-                if (!empty($row)) {
+                if (! empty($row)) {
                     $row->delete();
                     event(new BookingUpdatedEvent($row));
 
@@ -223,12 +223,12 @@ class BookingController extends AdminController
         } else {
             foreach ($ids as $id) {
                 $query = Booking::where('id', $id);
-                if (!$this->hasPermission('booking_manage_others')) {
+                if (! $this->hasPermission('booking_manage_others')) {
                     $query->where('vendor_id', Auth::id());
                     $this->checkPermission('booking_update');
                 }
                 $item = $query->first();
-                if (!empty($item)) {
+                if (! empty($item)) {
                     $item->status = $action;
                     $item->save();
 
@@ -270,7 +270,7 @@ class BookingController extends AdminController
                 foreach ($request->file('attachments') as $file) {
                     $originalName = $file->getClientOriginalName();
                     $extension = $file->getClientOriginalExtension();
-                    $filename = time() . '_' . uniqid() . '.' . $extension;
+                    $filename = time().'_'.uniqid().'.'.$extension;
 
                     // Store file
                     $path = $file->storeAs($uploadPath, $filename, 'public');
@@ -288,7 +288,7 @@ class BookingController extends AdminController
                 'booking_id' => $request->booking_id,
                 'user_id' => Auth::id(),
                 'note' => $request->note,
-                'attachments' => !empty($attachmentPaths) ? $attachmentPaths : null,
+                'attachments' => ! empty($attachmentPaths) ? $attachmentPaths : null,
             ]);
 
             // Get booking
@@ -296,7 +296,7 @@ class BookingController extends AdminController
 
             // Extract mentions from note (@username)
             preg_match_all('/@([^\s]+)/', $request->note, $matches);
-            if (!empty($matches[1])) {
+            if (! empty($matches[1])) {
                 $mentionedUsernames = $matches[1];
 
                 // Find users by display name and send notifications
@@ -334,7 +334,7 @@ class BookingController extends AdminController
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => __('Failed to add note: ') . $e->getMessage(),
+                'message' => __('Failed to add note: ').$e->getMessage(),
             ], 500);
         }
     }
@@ -351,14 +351,14 @@ class BookingController extends AdminController
 
         try {
             $bookingId = $request->booking_id;
-            \Log::info('Looking for notes for booking ID: ' . $bookingId);
+            \Log::info('Looking for notes for booking ID: '.$bookingId);
 
             $notes = \Modules\Booking\Models\BookingNote::where('booking_id', $bookingId)
                 ->with('user')
                 ->orderBy('created_at', 'desc')
                 ->get();
 
-            \Log::info('Found ' . $notes->count() . ' notes for booking ' . $bookingId);
+            \Log::info('Found '.$notes->count().' notes for booking '.$bookingId);
 
             $formattedNotes = $notes->map(function ($note) {
                 $attachments = [];
@@ -366,7 +366,7 @@ class BookingController extends AdminController
                     foreach ($note->attachments as $attachment) {
                         $attachments[] = [
                             'path' => $attachment['path'],
-                            'url' => asset('storage/' . $attachment['path']),
+                            'url' => asset('storage/'.$attachment['path']),
                             'original_name' => $attachment['original_name'],
                             'size' => $attachment['size'],
                             'mime_type' => $attachment['mime_type'],
@@ -392,12 +392,12 @@ class BookingController extends AdminController
                 'booking_id' => $bookingId,
             ]);
         } catch (\Exception $e) {
-            \Log::error('Error in getNotes: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            \Log::error('Error in getNotes: '.$e->getMessage());
+            \Log::error('Stack trace: '.$e->getTraceAsString());
 
             return response()->json([
                 'success' => false,
-                'message' => __('Failed to load notes: ') . $e->getMessage(),
+                'message' => __('Failed to load notes: ').$e->getMessage(),
             ], 500);
         }
     }
@@ -416,7 +416,7 @@ class BookingController extends AdminController
         try {
             $booking = \Modules\Booking\Models\Booking::find($request->booking_id);
 
-            if (!$booking) {
+            if (! $booking) {
                 return response()->json([
                     'success' => false,
                     'message' => __('Booking not found'),
@@ -440,7 +440,7 @@ class BookingController extends AdminController
 
                 $originalName = $file->getClientOriginalName();
                 $extension = $file->getClientOriginalExtension();
-                $filename = 'ticket_' . time() . '_' . uniqid() . '.' . $extension;
+                $filename = 'ticket_'.time().'_'.uniqid().'.'.$extension;
 
                 // Store file
                 $ticketPath = $file->storeAs($uploadPath, $filename, 'public');
@@ -458,7 +458,7 @@ class BookingController extends AdminController
             $noteText = __('Order confirmed by :user', ['user' => Auth::user()->getDisplayName()]);
 
             if ($request->has_ticket) {
-                $noteText .= "\n" . __('Customer will receive ticket via :method', [
+                $noteText .= "\n".__('Customer will receive ticket via :method', [
                     'method' => $request->send_method === 'whatsapp' ? 'WhatsApp' : 'Email',
                 ]);
             }
@@ -500,14 +500,14 @@ class BookingController extends AdminController
                     $encodedMessage = rawurlencode(mb_convert_encoding($message, 'UTF-8', 'UTF-8'));
                     $whatsappUrl = "https://wa.me/{$phone}?text={$encodedMessage}";
                     $responseData['whatsapp_url'] = $whatsappUrl;
-                    $responseData['message'] .= ' ' . __('WhatsApp will open to send details to customer.');
+                    $responseData['message'] .= ' '.__('WhatsApp will open to send details to customer.');
                 } else {
-                    $responseData['message'] .= ' ' . __('Warning: Customer phone number not found for WhatsApp.');
+                    $responseData['message'] .= ' '.__('Warning: Customer phone number not found for WhatsApp.');
                 }
             } elseif ($request->send_method === 'email') {
                 // Send email
                 $this->sendConfirmationEmail($booking, $ticketPath);
-                $responseData['message'] .= ' ' . __('Confirmation email sent to customer.');
+                $responseData['message'] .= ' '.__('Confirmation email sent to customer.');
             }
 
             return response()->json($responseData);
@@ -515,7 +515,7 @@ class BookingController extends AdminController
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => __('Failed to confirm order: ') . $e->getMessage(),
+                'message' => __('Failed to confirm order: ').$e->getMessage(),
             ], 500);
         }
     }
@@ -524,7 +524,7 @@ class BookingController extends AdminController
     {
         try {
             $orderNumber = $booking->code ?: $booking->id;
-            $customerName = trim(($booking->first_name ?? '') . ' ' . ($booking->last_name ?? '')) ?: __('Customer');
+            $customerName = trim(($booking->first_name ?? '').' '.($booking->last_name ?? '')) ?: __('Customer');
 
             // Get all bookings with same payment_id (cart items)
             $relatedBookings = collect([$booking]); // Default to current booking
@@ -535,7 +535,7 @@ class BookingController extends AdminController
                         ->orderBy('id')
                         ->get();
 
-                    if (!$cartBookings->isEmpty()) {
+                    if (! $cartBookings->isEmpty()) {
                         $relatedBookings = $cartBookings;
                     }
                 } catch (\Exception $e) {
@@ -569,14 +569,14 @@ class BookingController extends AdminController
 
                 // Add date if available
                 if ($relBooking->start_date) {
-                    $message .= '   *Date*: ' . display_date($relBooking->start_date) . "\n";
+                    $message .= '   *Date*: '.display_date($relBooking->start_date)."\n";
                 }
 
                 // Add guest info if available
                 $personTypes = $relBooking->getMeta('person_types');
                 if ($personTypes) {
                     $personTypes = json_decode($personTypes, true);
-                    if (is_array($personTypes) && !empty($personTypes)) {
+                    if (is_array($personTypes) && ! empty($personTypes)) {
                         $adults = 0;
                         $children = 0;
                         foreach ($personTypes as $type) {
@@ -604,10 +604,10 @@ class BookingController extends AdminController
                 $message .= "   *Service* *Total*: {$serviceAmount}\n\n";
             }
 
-            $message .= '*Services* *Total*: *' . format_money_simple($totalAmount) . "*\n\n";
+            $message .= '*Services* *Total*: *'.format_money_simple($totalAmount)."*\n\n";
 
             if ($ticketPath) {
-                $ticketUrl = asset('storage/' . $ticketPath);
+                $ticketUrl = asset('storage/'.$ticketPath);
                 $message .= "🎫 *Your* *ticket*: {$ticketUrl}\n\n";
             }
 
@@ -627,7 +627,7 @@ class BookingController extends AdminController
 
     private function formatPhoneForWhatsApp($phone)
     {
-        if (!$phone) {
+        if (! $phone) {
             return null;
         }
 
@@ -635,10 +635,10 @@ class BookingController extends AdminController
         $phone = preg_replace('/[^0-9]/', '', $phone);
 
         // Add country code if not present (assuming Egypt +20)
-        if (strlen($phone) === 10 && !str_starts_with($phone, '20')) {
-            $phone = '20' . $phone;
+        if (strlen($phone) === 10 && ! str_starts_with($phone, '20')) {
+            $phone = '20'.$phone;
         } elseif (strlen($phone) === 11 && str_starts_with($phone, '0')) {
-            $phone = '20' . substr($phone, 1);
+            $phone = '20'.substr($phone, 1);
         }
 
         return $phone;
@@ -651,7 +651,7 @@ class BookingController extends AdminController
 
         try {
             $customerEmail = $booking->email;
-            if (!$customerEmail) {
+            if (! $customerEmail) {
                 throw new \Exception('Customer email not found');
             }
 
@@ -673,7 +673,7 @@ class BookingController extends AdminController
                 'relatedBookings' => $relatedBookings,
                 'totalAmount' => $relatedBookings->sum('total'),
                 'ticketPath' => $ticketPath,
-                'ticketUrl' => $ticketPath ? asset('storage/' . $ticketPath) : null,
+                'ticketUrl' => $ticketPath ? asset('storage/'.$ticketPath) : null,
             ];
 
             // You can implement your email sending logic here
@@ -685,7 +685,7 @@ class BookingController extends AdminController
                 'customer_email' => $customerEmail,
                 'total_activities' => $relatedBookings->count(),
                 'total_amount' => $relatedBookings->sum('total'),
-                'has_ticket' => !empty($ticketPath),
+                'has_ticket' => ! empty($ticketPath),
                 'activities' => $relatedBookings->map(function ($b) {
                     return $b->service ? $b->service->title : 'Unknown Service';
                 })->toArray(),
@@ -711,7 +711,7 @@ class BookingController extends AdminController
         try {
             $booking = \Modules\Booking\Models\Booking::find($request->booking_id);
 
-            if (!$booking) {
+            if (! $booking) {
                 return response()->json([
                     'success' => false,
                     'message' => __('Booking not found'),
@@ -721,7 +721,7 @@ class BookingController extends AdminController
             return response()->json([
                 'success' => true,
                 'customer' => [
-                    'name' => $booking->first_name . ' ' . $booking->last_name,
+                    'name' => $booking->first_name.' '.$booking->last_name,
                     'email' => $booking->email,
                     'phone' => $booking->phone,
                 ],
@@ -730,7 +730,7 @@ class BookingController extends AdminController
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => __('Failed to get customer info: ') . $e->getMessage(),
+                'message' => __('Failed to get customer info: ').$e->getMessage(),
             ], 500);
         }
     }
@@ -746,7 +746,7 @@ class BookingController extends AdminController
         try {
             $booking = \Modules\Booking\Models\Booking::find($request->booking_id);
 
-            if (!$booking) {
+            if (! $booking) {
                 return response()->json([
                     'success' => false,
                     'message' => __('Booking not found'),
@@ -754,7 +754,7 @@ class BookingController extends AdminController
             }
 
             // Check if booking is already pending
-            if ($booking->confirm_type === 'pending' || !$booking->confirm_type) {
+            if ($booking->confirm_type === 'pending' || ! $booking->confirm_type) {
                 return response()->json([
                     'success' => false,
                     'message' => __('This order is already pending'),
@@ -778,7 +778,7 @@ class BookingController extends AdminController
 
             if ($previousMethod) {
                 $methodName = $previousMethod === 'whatsapp' ? 'WhatsApp' : 'Email';
-                $noteText .= "\n" . __('Previously confirmed via :method on :date', [
+                $noteText .= "\n".__('Previously confirmed via :method on :date', [
                     'method' => $methodName,
                     'date' => $previousConfirmedAt ? date('d/m/Y H:i', strtotime($previousConfirmedAt)) : 'N/A',
                 ]);
@@ -798,7 +798,7 @@ class BookingController extends AdminController
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => __('Failed to change order status: ') . $e->getMessage(),
+                'message' => __('Failed to change order status: ').$e->getMessage(),
             ], 500);
         }
     }
@@ -836,7 +836,7 @@ class BookingController extends AdminController
             if (class_exists($serviceClass)) {
                 $query = $serviceClass::query()
                     ->where('status', 'publish')
-                    ->where('title', 'like', '%' . $searchTerm . '%')
+                    ->where('title', 'like', '%'.$searchTerm.'%')
                     ->limit(10);
 
                 // Eager load category relationship if exists
@@ -891,11 +891,11 @@ class BookingController extends AdminController
             ]);
         }
 
-        $customer = \App\User::where('phone', 'like', '%' . $phone . '%')
+        $customer = \App\User::where('phone', 'like', '%'.$phone.'%')
             ->orWhere('phone', $phone)
             ->first();
 
-        if (!$customer) {
+        if (! $customer) {
             return response()->json([
                 'success' => false,
                 'message' => __('Customer not found'),
@@ -929,7 +929,7 @@ class BookingController extends AdminController
 
         $bookableServices = get_bookable_services();
 
-        if (!isset($bookableServices[$activityType])) {
+        if (! isset($bookableServices[$activityType])) {
             return response()->json([
                 'success' => false,
                 'message' => __('Invalid activity type'),
@@ -939,7 +939,7 @@ class BookingController extends AdminController
         $serviceClass = $bookableServices[$activityType];
         $service = $serviceClass::find($activityId);
 
-        if (!$service) {
+        if (! $service) {
             return response()->json([
                 'success' => false,
                 'message' => __('Activity not found'),
@@ -981,7 +981,7 @@ class BookingController extends AdminController
             }
 
             // Get available time slots for events
-            if (!empty($service->start_time) && !empty($service->end_time) && !empty($service->duration)) {
+            if (! empty($service->start_time) && ! empty($service->end_time) && ! empty($service->duration)) {
                 $availableTimes = $this->generateTimeSlots(
                     $service->start_time,
                     $service->end_time,
@@ -1004,7 +1004,7 @@ class BookingController extends AdminController
         // Get person types from service meta (for tours and events)
         if (in_array($activityType, ['tour', 'event'])) {
             $meta = $service->meta;
-            if ($meta && !empty($meta->enable_person_types) && !empty($meta->person_types)) {
+            if ($meta && ! empty($meta->enable_person_types) && ! empty($meta->person_types)) {
                 foreach ($meta->person_types as $type) {
                     $personTypes[] = [
                         'name' => $type['name'] ?? '',
@@ -1056,7 +1056,7 @@ class BookingController extends AdminController
         $activityType = $request->input('activity_type');
         $selectedDate = $request->input('date');
 
-        if (!$selectedDate) {
+        if (! $selectedDate) {
             return response()->json([
                 'success' => false,
                 'message' => __('Date is required'),
@@ -1065,7 +1065,7 @@ class BookingController extends AdminController
 
         $bookableServices = get_bookable_services();
 
-        if (!isset($bookableServices[$activityType])) {
+        if (! isset($bookableServices[$activityType])) {
             return response()->json([
                 'success' => false,
                 'message' => __('Invalid activity type'),
@@ -1075,7 +1075,7 @@ class BookingController extends AdminController
         $serviceClass = $bookableServices[$activityType];
         $service = $serviceClass::find($activityId);
 
-        if (!$service) {
+        if (! $service) {
             return response()->json([
                 'success' => false,
                 'message' => __('Activity not found'),
@@ -1091,11 +1091,11 @@ class BookingController extends AdminController
         if ($activityType === 'tour') {
             $meta = $service->meta;
 
-            if ($meta && !empty($meta->enable_open_hours) && !empty($meta->open_hours)) {
+            if ($meta && ! empty($meta->enable_open_hours) && ! empty($meta->open_hours)) {
                 $openHours = $meta->open_hours;
 
                 // Check if this day is enabled
-                if (isset($openHours[$dayOfWeek]) && !empty($openHours[$dayOfWeek]['enable'])) {
+                if (isset($openHours[$dayOfWeek]) && ! empty($openHours[$dayOfWeek]['enable'])) {
                     $dayHours = $openHours[$dayOfWeek];
                     $fromTime = $dayHours['from'] ?? null;
                     $toTime = $dayHours['to'] ?? null;
@@ -1109,7 +1109,7 @@ class BookingController extends AdminController
         }
         // For events, use start_time and end_time with duration
         elseif ($activityType === 'event') {
-            if (!empty($service->start_time) && !empty($service->end_time) && !empty($service->duration)) {
+            if (! empty($service->start_time) && ! empty($service->end_time) && ! empty($service->duration)) {
                 $availableTimes = $this->generateTimeSlots(
                     $service->start_time,
                     $service->end_time,
@@ -1154,7 +1154,7 @@ class BookingController extends AdminController
             $slots[] = [
                 'start' => $slotStart,
                 'end' => $slotEnd,
-                'display' => $slotStart . ' - ' . $slotEnd,
+                'display' => $slotStart.' - '.$slotEnd,
             ];
 
             $current += $durationSeconds;
@@ -1189,7 +1189,7 @@ class BookingController extends AdminController
             }
 
             $customer = \App\User::find($customerId);
-            if (!$customer) {
+            if (! $customer) {
                 return response()->json([
                     'success' => false,
                     'message' => __('Customer not found'),
@@ -1197,7 +1197,7 @@ class BookingController extends AdminController
             }
 
             // Generate payment_id for grouping cart items
-            $paymentId = 'OP_' . time() . '_' . $customerId;
+            $paymentId = 'OP_'.time().'_'.$customerId;
             $createdBookings = [];
             $sharedOrderCode = null; // Will store the code for all bookings in this order
 
@@ -1239,12 +1239,12 @@ class BookingController extends AdminController
                 }
 
                 // Store person types as meta
-                if (!empty($item['person_types'])) {
+                if (! empty($item['person_types'])) {
                     $booking->addMeta('person_types', $item['person_types']);
                 }
 
                 // Store time if available
-                if (!empty($item['time'])) {
+                if (! empty($item['time'])) {
                     $booking->addMeta('selected_time', $item['time']);
                 }
 
@@ -1272,7 +1272,7 @@ class BookingController extends AdminController
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => __('Failed to create order: ') . $e->getMessage(),
+                'message' => __('Failed to create order: ').$e->getMessage(),
             ], 500);
         }
     }
@@ -1285,7 +1285,7 @@ class BookingController extends AdminController
         $this->checkPermission('booking_update');
 
         $booking = \Modules\Booking\Models\Booking::find($id);
-        if (!$booking) {
+        if (! $booking) {
             return response()->json(['success' => false, 'message' => __('Booking not found')], 404);
         }
 
@@ -1333,7 +1333,7 @@ class BookingController extends AdminController
         try {
             $booking = \Modules\Booking\Models\Booking::find($request->booking_id);
 
-            if (!$booking) {
+            if (! $booking) {
                 return response()->json([
                     'success' => false,
                     'message' => __('Booking not found'),
@@ -1348,7 +1348,7 @@ class BookingController extends AdminController
                         ->orderBy('id')
                         ->get();
 
-                    if (!$cartBookings->isEmpty()) {
+                    if (! $cartBookings->isEmpty()) {
                         $relatedBookings = $cartBookings;
                     }
                 } catch (\Exception $e) {
@@ -1425,11 +1425,11 @@ class BookingController extends AdminController
                     $personTypes = $relBooking->getMeta('person_types');
                     if ($personTypes) {
                         $personTypes = json_decode($personTypes, true);
-                        if (is_array($personTypes) && !empty($personTypes)) {
+                        if (is_array($personTypes) && ! empty($personTypes)) {
                             $personTypesHtml = '<div style="font-size: 13px; margin-top: 4px;">';
                             foreach ($personTypes as $type) {
                                 if (isset($type['number']) && $type['number'] > 0) {
-                                    $personTypesHtml .= '<i class="fa fa-user"></i> ' . $type['number'] . ' × ' . ($type['name'] ?? 'Guest') . '<br>';
+                                    $personTypesHtml .= '<i class="fa fa-user"></i> '.$type['number'].' × '.($type['name'] ?? 'Guest').'<br>';
                                 }
                             }
                             $personTypesHtml .= '</div>';
@@ -1486,12 +1486,12 @@ class BookingController extends AdminController
             ]);
 
         } catch (\Exception $e) {
-            \Log::error('Error in getBookingDetails: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            \Log::error('Error in getBookingDetails: '.$e->getMessage());
+            \Log::error('Stack trace: '.$e->getTraceAsString());
 
             return response()->json([
                 'success' => false,
-                'message' => __('Failed to load booking details: ') . $e->getMessage(),
+                'message' => __('Failed to load booking details: ').$e->getMessage(),
             ], 500);
         }
     }

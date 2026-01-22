@@ -1,11 +1,10 @@
 <?php
+
 namespace Modules\News\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Modules\AdminController;
 use Modules\News\Models\NewsCategory;
-use Illuminate\Support\Str;
 use Modules\News\Models\NewsCategoryTranslation;
 
 class CategoryController extends AdminController
@@ -21,26 +20,27 @@ class CategoryController extends AdminController
 
         $catlist = new NewsCategory;
         if ($catename = $request->query('s')) {
-            $catlist = $catlist->where('name', 'LIKE', '%' . $catename . '%');
+            $catlist = $catlist->where('name', 'LIKE', '%'.$catename.'%');
         }
         $catlist = $catlist->orderby('name', 'asc');
         $rows = $catlist->get();
 
         $data = [
-            'rows'        => $rows->toTree(),
-            'row'         => new NewsCategory(),
+            'rows' => $rows->toTree(),
+            'row' => new NewsCategory,
             'breadcrumbs' => [
                 [
                     'name' => __('News'),
-                    'url'  => route('news.admin.index')
+                    'url' => route('news.admin.index'),
                 ],
                 [
-                    'name'  => __('Category'),
-                    'class' => 'active'
+                    'name' => __('Category'),
+                    'class' => 'active',
                 ],
             ],
-            'translation'=>new NewsCategoryTranslation()
+            'translation' => new NewsCategoryTranslation,
         ];
+
         return view('News::admin.category.index', $data);
     }
 
@@ -49,41 +49,43 @@ class CategoryController extends AdminController
         $this->checkPermission('news_manage_others');
         $row = NewsCategory::find($id);
 
-        $translation = $row->translate($request->query('lang',get_main_lang()));
+        $translation = $row->translate($request->query('lang', get_main_lang()));
 
         if (empty($row)) {
             return redirect(route('news.admin.category.index'));
         }
         $data = [
-            'row'     => $row,
-            'translation'     => $translation,
+            'row' => $row,
+            'translation' => $translation,
             'parents' => NewsCategory::get()->toTree(),
-            'enable_multi_lang'=>true
+            'enable_multi_lang' => true,
         ];
+
         return view('News::admin.category.detail', $data);
     }
 
-    public function store(Request $request, $id){
+    public function store(Request $request, $id)
+    {
         $this->checkPermission('news_manage_others');
 
-        if($id>0){
+        if ($id > 0) {
             $row = NewsCategory::find($id);
             if (empty($row)) {
                 return redirect(route('news.admin.category.index'));
             }
-        }else{
-            $row = new NewsCategory();
-            $row->status = "publish";
+        } else {
+            $row = new NewsCategory;
+            $row->status = 'publish';
         }
 
         $row->fill($request->input());
         $res = $row->saveOriginOrTranslation($request->input('lang'));
 
         if ($res) {
-            if($id > 0 ){
-                return back()->with('success',  __('Category updated') );
-            }else{
-                return redirect(route('news.admin.category.index'))->with('success', __('Category created') );
+            if ($id > 0) {
+                return back()->with('success', __('Category updated'));
+            } else {
+                return redirect(route('news.admin.category.index'))->with('success', __('Category created'));
             }
         }
     }
@@ -93,7 +95,7 @@ class CategoryController extends AdminController
         $this->checkPermission('news_manage_others');
         $ids = $request->input('ids');
         $action = $request->input('action');
-        if (empty($ids) or !is_array($ids)) {
+        if (empty($ids) or ! is_array($ids)) {
             return redirect()->back()->with('error', __('Please select at least 1 item!'));
         }
         if (empty($action)) {
@@ -101,12 +103,13 @@ class CategoryController extends AdminController
         }
         if ($action == 'delete') {
             foreach ($ids as $id) {
-                $query = NewsCategory::where("id", $id)->first();
-                if(!empty($query)){
+                $query = NewsCategory::where('id', $id)->first();
+                if (! empty($query)) {
                     $query->delete();
                 }
             }
         }
+
         return redirect()->back()->with('success', __('Update success!'));
     }
 
@@ -115,26 +118,27 @@ class CategoryController extends AdminController
         $pre_selected = $request->query('pre_selected');
         $selected = $request->query('selected');
 
-        if($pre_selected && $selected){
+        if ($pre_selected && $selected) {
             $item = NewsCategory::find($selected);
-            if(empty($item)){
+            if (empty($item)) {
                 return response()->json([
-                    'text'=>''
+                    'text' => '',
                 ]);
-            }else{
+            } else {
                 return response()->json([
-                    'text'=>$item->name
+                    'text' => $item->name,
                 ]);
             }
         }
         $q = $request->query('q');
-        $query = NewsCategory::select('id', 'name as text')->where("status","publish");
+        $query = NewsCategory::select('id', 'name as text')->where('status', 'publish');
         if ($q) {
-            $query->where('name', 'like', '%' . $q . '%');
+            $query->where('name', 'like', '%'.$q.'%');
         }
         $res = $query->orderBy('id', 'desc')->limit(20)->get();
+
         return response()->json([
-            'results' => $res
+            'results' => $res,
         ]);
     }
 }

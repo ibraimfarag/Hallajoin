@@ -14,7 +14,9 @@ class EnquiryMentionNotification extends Notification implements ShouldQueue
     use Queueable;
 
     protected $enquiry;
+
     protected $note;
+
     protected $mentionedBy;
 
     /**
@@ -49,7 +51,7 @@ class EnquiryMentionNotification extends Notification implements ShouldQueue
             ->greeting(__('Hello!'))
             ->line(__(':name mentioned you in enquiry #:id', [
                 'name' => $this->mentionedBy->getDisplayName(true),
-                'id' => $this->enquiry->id
+                'id' => $this->enquiry->id,
             ]))
             ->line($this->note->content)
             ->action(__('View Enquiry'), $url)

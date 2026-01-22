@@ -2,12 +2,11 @@
 
 namespace Modules\Core\Admin;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
-use Modules\AdminController;
-use Modules\Core\Models\NotificationPush;
 use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Modules\AdminController;
 
 class SendNotificationController extends AdminController
 {
@@ -16,25 +15,26 @@ class SendNotificationController extends AdminController
         $data = [
             'page_title' => __('Send Notifications'),
         ];
+
         return view('Core::admin.send-notification.index', $data);
     }
 
     public function getForSelect2(Request $request)
     {
         $q = $request->query('q', '');
-        
+
         $query = User::query();
-        
-        if (!empty($q)) {
-            $query->where(function($query) use ($q) {
-                $query->where('name', 'like', '%' . $q . '%')
-                      ->orWhere('email', 'like', '%' . $q . '%')
-                      ->orWhere('phone', 'like', '%' . $q . '%');
+
+        if (! empty($q)) {
+            $query->where(function ($query) use ($q) {
+                $query->where('name', 'like', '%'.$q.'%')
+                    ->orWhere('email', 'like', '%'.$q.'%')
+                    ->orWhere('phone', 'like', '%'.$q.'%');
             });
         }
-        
+
         $users = $query->limit(20)->get();
-        
+
         $results = [];
         foreach ($users as $user) {
             $results[] = [
@@ -46,7 +46,7 @@ class SendNotificationController extends AdminController
                 'avatar' => $user->avatar_url ?? ($user->getAvatarUrl() ?? asset('images/avatar.png')),
             ];
         }
-        
+
         return response()->json([
             'results' => $results,
         ]);
@@ -86,10 +86,12 @@ class SendNotificationController extends AdminController
             // Send to specific users
             $userIdsString = $request->input('user_ids');
             $userIds = array_map('trim', explode(',', $userIdsString));
-            
+
             foreach ($userIds as $userId) {
-                if (empty($userId)) continue;
-                
+                if (empty($userId)) {
+                    continue;
+                }
+
                 $user = User::find($userId);
                 if ($user) {
                     DB::table('notifications')->insert([
@@ -112,6 +114,6 @@ class SendNotificationController extends AdminController
         }
 
         return redirect()->route('core.admin.send-notification.index')
-                        ->with('success', __('Notifications sent successfully'));
+            ->with('success', __('Notifications sent successfully'));
     }
 }

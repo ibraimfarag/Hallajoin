@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTourAttrsTable extends Migration
 {
@@ -16,9 +16,9 @@ class CreateTourAttrsTable extends Migration
         Schema::create('bravo_attrs', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('name',255)->nullable();
-            $table->string('slug',255)->nullable();
-            $table->string('service',50)->nullable();
+            $table->string('name', 255)->nullable();
+            $table->string('slug', 255)->nullable();
+            $table->string('service', 50)->nullable();
 
             $table->bigInteger('create_user')->nullable();
             $table->bigInteger('update_user')->nullable();
@@ -28,27 +28,26 @@ class CreateTourAttrsTable extends Migration
         Schema::create('bravo_terms', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('name',255)->nullable();
+            $table->string('name', 255)->nullable();
             $table->text('content')->nullable();
             $table->integer('attr_id')->nullable();
-            $table->string('slug',255)->nullable();
+            $table->string('slug', 255)->nullable();
 
             $table->bigInteger('create_user')->nullable();
             $table->bigInteger('update_user')->nullable();
 
-            //Languages
+            // Languages
             $table->bigInteger('origin_id')->nullable();
-            $table->string('lang',10)->nullable();
-
+            $table->string('lang', 10)->nullable();
 
             $table->timestamps();
         });
         Schema::create('bravo_attrs_translations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('origin_id')->nullable();
-            $table->string('locale',10)->nullable();
+            $table->string('locale', 10)->nullable();
 
-            $table->string('name',255)->nullable();
+            $table->string('name', 255)->nullable();
 
             $table->bigInteger('create_user')->nullable();
             $table->bigInteger('update_user')->nullable();
@@ -59,9 +58,9 @@ class CreateTourAttrsTable extends Migration
         Schema::create('bravo_terms_translations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('origin_id')->nullable();
-            $table->string('locale',10)->nullable();
+            $table->string('locale', 10)->nullable();
 
-            $table->string('name',255)->nullable();
+            $table->string('name', 255)->nullable();
             $table->text('content')->nullable();
 
             $table->bigInteger('create_user')->nullable();
@@ -73,15 +72,15 @@ class CreateTourAttrsTable extends Migration
         $this->createTranslationTables();
     }
 
-
-    public function createTranslationTables(){
+    public function createTranslationTables()
+    {
 
         Schema::create('core_page_translations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('origin_id')->unsigned();
             $table->string('locale')->index();
 
-            $table->string('title',255)->nullable();
+            $table->string('title', 255)->nullable();
             $table->text('content')->nullable();
             $table->text('short_desc')->nullable();
 
@@ -98,7 +97,7 @@ class CreateTourAttrsTable extends Migration
             $table->integer('origin_id')->unsigned();
             $table->string('locale')->index();
 
-            $table->string('title',255)->nullable();
+            $table->string('title', 255)->nullable();
             $table->text('content')->nullable();
 
             $table->integer('create_user')->nullable();
@@ -111,7 +110,7 @@ class CreateTourAttrsTable extends Migration
             $table->integer('origin_id')->unsigned();
             $table->string('locale')->index();
 
-            $table->string('name',255)->nullable();
+            $table->string('name', 255)->nullable();
             $table->text('content')->nullable();
 
             $table->integer('create_user')->nullable();
@@ -124,7 +123,7 @@ class CreateTourAttrsTable extends Migration
             $table->integer('origin_id')->unsigned();
             $table->string('locale')->index();
 
-            $table->string('name',255)->nullable();
+            $table->string('name', 255)->nullable();
             $table->text('content')->nullable();
 
             $table->integer('create_user')->nullable();
@@ -148,7 +147,7 @@ class CreateTourAttrsTable extends Migration
             $table->integer('origin_id')->unsigned();
             $table->string('locale')->index();
 
-            $table->string('title',255)->nullable();
+            $table->string('title', 255)->nullable();
             $table->longText('content')->nullable();
 
             $table->integer('create_user')->nullable();
@@ -160,9 +159,9 @@ class CreateTourAttrsTable extends Migration
             $table->bigIncrements('id');
 
             $table->bigInteger('origin_id')->nullable();
-            $table->string('locale',10)->nullable();
+            $table->string('locale', 10)->nullable();
 
-            $table->string('name',255)->nullable();
+            $table->string('name', 255)->nullable();
             $table->text('content')->nullable();
 
             $table->integer('create_user')->nullable();

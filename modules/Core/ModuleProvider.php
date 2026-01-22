@@ -1,5 +1,7 @@
 <?php
+
 namespace Modules\Core;
+
 use Illuminate\Support\Facades\Event;
 use Modules\Core\Events\CreatedServicesEvent;
 use Modules\Core\Events\CreateReviewEvent;
@@ -13,16 +15,16 @@ use Modules\ModuleServiceProvider;
 
 class ModuleProvider extends ModuleServiceProvider
 {
+    public function boot()
+    {
 
-    public function boot(){
-
-        $this->loadMigrationsFrom(__DIR__ . '/Migrations');
-        Event::listen(CreatedServicesEvent::class,CreatedServicesListen::class);
-        Event::listen(UpdatedServiceEvent::class,UpdatedServicesListen::class);
-        Event::listen(CreateReviewEvent::class,CreateReviewListen::class);
-
+        $this->loadMigrationsFrom(__DIR__.'/Migrations');
+        Event::listen(CreatedServicesEvent::class, CreatedServicesListen::class);
+        Event::listen(UpdatedServiceEvent::class, UpdatedServicesListen::class);
+        Event::listen(CreateReviewEvent::class, CreateReviewListen::class);
 
     }
+
     /**
      * Register bindings in the container.
      *
@@ -33,14 +35,13 @@ class ModuleProvider extends ModuleServiceProvider
         $this->app->register(RouterServiceProvider::class);
         $this->app->register(BladeServiceProvider::class);
 
-        $this->app->singleton(SitemapHelper::class,function($app){
-            return new SitemapHelper();
+        $this->app->singleton(SitemapHelper::class, function ($app) {
+            return new SitemapHelper;
         });
-        $this->app->singleton('hook_manager',function(){
+        $this->app->singleton('hook_manager', function () {
             return $this->app->make(HookManager::class);
         });
     }
-
 
     public static function getAdminSubMenu()
     {
@@ -62,13 +63,13 @@ class ModuleProvider extends ModuleServiceProvider
                 'icon' => '',
             ],
             [
-                'id'=>'plugin',
-                'parent'=>'tools',
-                'title'=>__("Plugins"),
-                'url'=>route('core.admin.plugins.index'),
-                'icon'=>'icon ion-md-color-wand',
-                'permission'=>'plugin_manage'
-            ]
+                'id' => 'plugin',
+                'parent' => 'tools',
+                'title' => __('Plugins'),
+                'url' => route('core.admin.plugins.index'),
+                'icon' => 'icon ion-md-color-wand',
+                'permission' => 'plugin_manage',
+            ],
         ];
     }
 }

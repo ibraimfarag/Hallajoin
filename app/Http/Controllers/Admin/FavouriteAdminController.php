@@ -47,7 +47,7 @@ class FavouriteAdminController extends Controller
             $items = $favourites->map(function ($favourite) {
                 $service = $favourite->service;
 
-                if (!$service) {
+                if (! $service) {
                     return null;
                 }
 
@@ -74,7 +74,7 @@ class FavouriteAdminController extends Controller
 
                 // Get price
                 $price = $service->sale_price ?? $service->price ?? 0;
-                $priceText = number_format($price, 2) . get_current_currency_svg();
+                $priceText = number_format($price, 2).get_current_currency_svg();
 
                 // Get location
                 $location = '';

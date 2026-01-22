@@ -1,5 +1,7 @@
 <?php
+
 namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 
 class SocialSeeder extends Seeder
@@ -9,8 +11,5 @@ class SocialSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
-
-    }
+    public function run() {}
 }

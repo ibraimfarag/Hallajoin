@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Modules\Booking\Models\Enquiry;
 use App\User;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Modules\Booking\Models\Enquiry;
 
 class GenerateRandomEnquiries extends Command
 {
@@ -38,6 +38,7 @@ class GenerateRandomEnquiries extends Command
 
         if (empty($users)) {
             $this->error('No users found in database!');
+
             return 1;
         }
 
@@ -111,6 +112,7 @@ class GenerateRandomEnquiries extends Command
 
         if (empty($activities)) {
             $this->error('No activities found in database!');
+
             return 1;
         }
 
@@ -148,7 +150,7 @@ class GenerateRandomEnquiries extends Command
                 'object_model' => $randomActivity['model'],
                 'name' => $user->getDisplayName(true),
                 'email' => $user->email,
-                'phone' => $user->phone ?? '+20100' . rand(1000000, 9999999),
+                'phone' => $user->phone ?? '+20100'.rand(1000000, 9999999),
                 'note' => $messages[array_rand($messages)],
                 'status' => 'pending',
                 'created_at' => now()->subDays(rand(0, 30)),

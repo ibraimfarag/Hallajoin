@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\User;
 use Illuminate\Console\Command;
 use Modules\Booking\Models\Service;
 use Modules\User\Models\UserPlan;
@@ -20,38 +19,36 @@ class ScanUserPlanExpiredCommand extends Command
             ->where('end_date', '>=', now())
             ->groupBy('user_id')->get();
 
-        if (!empty($userActivePlans)) {
+        if (! empty($userActivePlans)) {
             foreach ($userActivePlans as $userPlan) {
                 $serviceActive = Service::where('status', 'publish')
                     ->where('author_id', $userPlan->user_id)
-                    ->orderBy('created_at','asc')
+                    ->orderBy('created_at', 'asc')
                     ->with('service')
                     ->get();
                 $totalServiceActive = $serviceActive->count();
-                $number = (int)$totalServiceActive - (int)$userPlan->max_service_active;
-                if (!empty($number)) {
+                $number = (int) $totalServiceActive - (int) $userPlan->max_service_active;
+                if (! empty($number)) {
                     $this->deactivateService($serviceActive, $number);
                 }
             }
-        }
-        else {
-            $users = UserPlan::selectRaw("user_id")->groupBy('user_id')->get()->pluck('user_id')->toArray();
-            if(!empty($users)) {
+        } else {
+            $users = UserPlan::selectRaw('user_id')->groupBy('user_id')->get()->pluck('user_id')->toArray();
+            if (! empty($users)) {
                 $serviceActive = Service::where('status', 'publish')
                     ->whereIn('author_id', $users)
                     ->orderBy('created_at')
                     ->with('service')
                     ->get();
                 $number = $serviceActive->count();
-                if (!empty($number)) {
+                if (! empty($number)) {
                     $this->deactivateService($serviceActive, $number);
                 }
-            }else{
+            } else {
                 $this->info('No vendor!');
             }
         }
         $this->info('Scan user plan expired completed successfully');
-
 
     }
 
@@ -59,14 +56,14 @@ class ScanUserPlanExpiredCommand extends Command
     {
         $services = $services->take($limit);
 
-        $objectService = $services->mapToGroups(function($item){
-            return [$item->object_model=>$item->object_id];;
+        $objectService = $services->mapToGroups(function ($item) {
+            return [$item->object_model => $item->object_id];
         });
 
         $all = get_bookable_services();
-        foreach ($objectService as $objectType => $object){
-            if(!empty($all[$objectType])){
-               $a =  $all[$objectType]::whereIn('id', $object)->update(['status'=> 'draft']);
+        foreach ($objectService as $objectType => $object) {
+            if (! empty($all[$objectType])) {
+                $a = $all[$objectType]::whereIn('id', $object)->update(['status' => 'draft']);
             }
         }
 

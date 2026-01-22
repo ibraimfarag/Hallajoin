@@ -1,5 +1,7 @@
 <?php
+
 namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 use Modules\User\Helpers\PermissionHelper;
 use Modules\User\Models\Role;
@@ -14,23 +16,23 @@ class RolesAndPermissionsSeeder extends Seeder
     public function run()
     {
         $admin = Role::firstOrCreate([
-            'code'=>'administrator',
-            'name'=>'administrator'
+            'code' => 'administrator',
+            'name' => 'administrator',
         ]);
 
         $admin->givePermission(PermissionHelper::all());
-
 
         // this can be done as separate statements
         $this->initVendor();
 
         // this can be done as separate statements
-        $customer = Role::firstOrCreate(['name'=>'customer','code'=>'customer']);
+        $customer = Role::firstOrCreate(['name' => 'customer', 'code' => 'customer']);
     }
 
-    public function initVendor(){
+    public function initVendor()
+    {
 
-        $vendor = Role::firstOrCreate(['name'=>'vendor','code'=>'vendor']);
+        $vendor = Role::firstOrCreate(['name' => 'vendor', 'code' => 'vendor']);
 
         $vendor->givePermission('media_upload');
         $vendor->givePermission('tour_view');

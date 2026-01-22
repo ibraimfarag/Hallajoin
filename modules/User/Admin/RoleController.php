@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\User\Admin;
 
 use App\User;
@@ -8,11 +9,12 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Modules\AdminController;
 use Modules\User\Helpers\PermissionHelper;
-use \Modules\User\Models\Role;
+use Modules\User\Models\Role;
 
 class RoleController extends AdminController
 {
     protected $role_class;
+
     public function __construct()
     {
         $this->role_class = Role::class;
@@ -24,32 +26,34 @@ class RoleController extends AdminController
         $this->checkPermission('role_manage');
         $this->checkPermission('role_manage');
         $data = [
-            'rows' => Role::paginate(20)
+            'rows' => Role::paginate(20),
         ];
+
         return view('User::admin.role.index', $data);
     }
 
     public function create(Request $request)
     {
-        $row = new User();
+        $row = new User;
         $row->fill([
-            'status' => 'publish'
+            'status' => 'publish',
         ]);
 
         $data = [
-            'row' => $row
+            'row' => $row,
         ];
+
         return view('User::admin.role.detail', $data);
     }
 
     public function edit(Request $request, $id)
     {
         $this->checkPermission('role_manage');
-        $row = Role::find((int)$id);
+        $row = Role::find((int) $id);
         if (empty($row)) {
             return redirect(route('user.admin.role.index'));
         }
-        if (!empty($request->input())) {
+        if (! empty($request->input())) {
             $row->fill($request->input());
             if ($row->save()) {
 
@@ -57,74 +61,80 @@ class RoleController extends AdminController
             }
         }
         $data = [
-            'row' => $row
+            'row' => $row,
         ];
+
         return view('User::admin.role.detail', $data);
     }
 
-    public function store(Request $request, $id){
-        if(is_demo_mode()){
-            return back()->with('danger',  __('DEMO Mode: You can not do this') );
+    public function store(Request $request, $id)
+    {
+        if (is_demo_mode()) {
+            return back()->with('danger', __('DEMO Mode: You can not do this'));
         }
         $rules = [
-            'name'=>'required',
-            'code'=>[
+            'name' => 'required',
+            'code' => [
                 'required',
                 'alpha',
-            ]
+            ],
         ];
         $this->checkPermission('role_manage');
-        if($id>0){
+        if ($id > 0) {
             $row = Role::whereId($id)->first();
             if (empty($row)) {
                 return redirect(route('user.admin.role.index'));
             }
-            $rules['code'][] = Rule::unique(Role::getTableName(),'code')->ignore($row->id);
-        }else{
-            $row = new Role();
-            $rules['code'][] = Rule::unique(Role::getTableName(),'code');
+            $rules['code'][] = Rule::unique(Role::getTableName(), 'code')->ignore($row->id);
+        } else {
+            $row = new Role;
+            $rules['code'][] = Rule::unique(Role::getTableName(), 'code');
         }
-        $this->validate($request,$rules);
+        $this->validate($request, $rules);
 
         $row->fill($request->input());
         $res = $row->save();
         if ($res) {
-            if($id > 0 ){
-                return back()->with('success',  __('Role updated') );
-            }else{
-                return redirect(route('user.admin.role.detail',['id' => $row->id]))->with('success', __('Role created') );
+            if ($id > 0) {
+                return back()->with('success', __('Role updated'));
+            } else {
+                return redirect(route('user.admin.role.detail', ['id' => $row->id]))->with('success', __('Role created'));
             }
         }
     }
 
-    public function verifyFields(Request $request){
+    public function verifyFields(Request $request)
+    {
 
         $this->checkPermission('role_manage');
         $this->setActiveMenu(route('user.admin.index'));
 
         $data = [
             'roles' => Role::all(),
-            'fields'=>setting_item_array('role_verify_fields'),
+            'fields' => setting_item_array('role_verify_fields'),
             'breadcrumbs' => [
                 [
                     'name' => __('User'),
-                    'url'  => route('user.admin.index')
+                    'url' => route('user.admin.index'),
                 ],
                 [
                     'name' => __('Role Management'),
-                    'url'  => route('user.admin.role.index')
+                    'url' => route('user.admin.role.index'),
                 ],
                 [
                     'name' => __('Verify Configs'),
-                    'url'  => route('user.admin.role.verifyFields'),
-                    'active'=>1
+                    'url' => route('user.admin.role.verifyFields'),
+                    'active' => 1,
                 ],
-            ]
+            ],
         ];
+
         return view('User::admin.role.verifyFields', $data);
 
     }
-    public function verifyFieldsEdit(Request $request,$id){
+
+    public function verifyFieldsEdit(Request $request, $id)
+    {
 
         $this->checkPermission('role_manage');
 
@@ -133,114 +143,120 @@ class RoleController extends AdminController
         $all = setting_item_array('role_verify_fields');
         $row = $all[$id] ?? [];
 
-        if(empty($row)) return redirect()->back()->with("error",__("Field not found"));
+        if (empty($row)) {
+            return redirect()->back()->with('error', __('Field not found'));
+        }
 
         $row['id'] = $id;
 
         $data = [
             'roles' => Role::all(),
-            'row'=>$row,
+            'row' => $row,
             'breadcrumbs' => [
                 [
                     'name' => __('User'),
-                    'url'  => route('user.admin.index')
+                    'url' => route('user.admin.index'),
                 ],
                 [
                     'name' => __('Role Management'),
-                    'url'  => route('user.admin.role.index')
+                    'url' => route('user.admin.role.index'),
                 ],
                 [
                     'name' => __('Verify Configs'),
-                    'url'  => route('user.admin.role.verifyFields'),
+                    'url' => route('user.admin.role.verifyFields'),
                 ],
                 [
-                    'name' => __('Edit field: :name',['name'=>$row['name'] ?? $id]),
-                    'active'=>1
+                    'name' => __('Edit field: :name', ['name' => $row['name'] ?? $id]),
+                    'active' => 1,
                 ],
-            ]
+            ],
         ];
+
         return view('User::admin.role.verifyFieldsEdit', $data);
 
     }
 
-    public function verifyFieldsStore(){
-        if(is_demo_mode()){
-            return back()->with('danger',  __('DEMO Mode: You can not do this') );
+    public function verifyFieldsStore()
+    {
+        if (is_demo_mode()) {
+            return back()->with('danger', __('DEMO Mode: You can not do this'));
         }
 
         $this->checkPermission('role_manage');
 
-        $all = setting_item_array('role_verify_fields',[]);
+        $all = setting_item_array('role_verify_fields', []);
         $id = \request()->input('id');
         $id = Str::snake($id);
-        if(empty($id))
-        {
+        if (empty($id)) {
             return redirect()->back()->withInput();
         }
-        $isAdd = !isset($all[$id]);
+        $isAdd = ! isset($all[$id]);
         $all[$id] = [
-            'name'=>\request()->input('name'),
-            'type'=>\request()->input('type'),
-            'roles'=>\request()->input('roles'),
-            'required'=>\request()->input('required'),
-            'order'=>\request()->input('order'),
-            'icon'=>\request()->input('icon'),
+            'name' => \request()->input('name'),
+            'type' => \request()->input('type'),
+            'roles' => \request()->input('roles'),
+            'required' => \request()->input('required'),
+            'order' => \request()->input('order'),
+            'icon' => \request()->input('icon'),
         ];
 
         $languages = \Modules\Language\Models\Language::getActive();
-        if(!empty($languages) && setting_item('site_enable_multi_lang') && setting_item('site_locale'))
-        {
-            foreach($languages as $language){
-                $key_lang = setting_item('site_locale') != $language->locale ? "_".$language->locale : "";
+        if (! empty($languages) && setting_item('site_enable_multi_lang') && setting_item('site_locale')) {
+            foreach ($languages as $language) {
+                $key_lang = setting_item('site_locale') != $language->locale ? '_'.$language->locale : '';
                 $all[$id]['name'.$key_lang] = \request()->input('name'.$key_lang);
             }
         }
 
-        setting_update_item('role_verify_fields',$all);
+        setting_update_item('role_verify_fields', $all);
 
-        return redirect()->back()->with('success', $isAdd? __("Field created") : __("Field saved"));
+        return redirect()->back()->with('success', $isAdd ? __('Field created') : __('Field saved'));
     }
 
-	public function bulkEdit(Request $request)
-	{
-        if(is_demo_mode()){
-            return back()->with('error',"Demo mode: disabled");
+    public function bulkEdit(Request $request)
+    {
+        if (is_demo_mode()) {
+            return back()->with('error', 'Demo mode: disabled');
         }
         $this->checkPermission('role_manage');
 
-		$ids = $request->input('ids');
-		$action = $request->input('action');
-		if (empty($ids))
-			return redirect()->back()->with('error', __('Select at leas 1 item!'));
-		if (empty($action))
-			return redirect()->back()->with('error', __('Select an Action!'));
-		if ($action == 'delete') {
-			$all = setting_item_array('role_verify_fields',[]);
-			$new = Arr::except($all,$ids);
-			setting_update_item('role_verify_fields',$new);
-		}
-		return redirect()->back()->with('success', __('Updated successfully!'));
-	}
+        $ids = $request->input('ids');
+        $action = $request->input('action');
+        if (empty($ids)) {
+            return redirect()->back()->with('error', __('Select at leas 1 item!'));
+        }
+        if (empty($action)) {
+            return redirect()->back()->with('error', __('Select an Action!'));
+        }
+        if ($action == 'delete') {
+            $all = setting_item_array('role_verify_fields', []);
+            $new = Arr::except($all, $ids);
+            setting_update_item('role_verify_fields', $new);
+        }
 
+        return redirect()->back()->with('success', __('Updated successfully!'));
+    }
 
-	public function permission_matrix()
+    public function permission_matrix()
     {
         $this->checkPermission('role_manage');
 
         $permissions = PermissionHelper::all();
         $permissions_group = [
-            'other' => []
+            'other' => [],
         ];
-        if (!empty($permissions)) {
+        if (! empty($permissions)) {
             foreach ($permissions as $permission) {
                 $sCheck = strpos($permission, '_');
                 if ($sCheck == false) {
                     $permissions_group['other'][] = $permission;
+
                     continue;
                 }
                 $grName = substr($permission, 0, $sCheck);
-                if (!isset($permissions_group[$grName]))
+                if (! isset($permissions_group[$grName])) {
                     $permissions_group[$grName] = [];
+                }
                 $permissions_group[$grName][] = $permission;
             }
         }
@@ -249,26 +265,27 @@ class RoleController extends AdminController
         }
         $roles = Role::all();
         $selectedIds = [];
-        if (!empty($roles)) {
+        if (! empty($roles)) {
             foreach ($roles as $role) {
                 $selectedIds[$role->id] = $role->permissions->pluck('permission')->all();
             }
         }
 
         $data = [
-            'permissions'       => $permissions,
-            'roles'             => $roles,
+            'permissions' => $permissions,
+            'roles' => $roles,
             'permissions_group' => $permissions_group,
-            'selectedIds'       => $selectedIds,
-            'role'              => $role
+            'selectedIds' => $selectedIds,
+            'role' => $role,
         ];
+
         return view('User::admin.role.permission_matrix', $data);
     }
 
     public function save_permissions(Request $request)
     {
-        if(is_demo_mode()){
-            return back()->with('danger',  __('DEMO Mode: You can not do this') );
+        if (is_demo_mode()) {
+            return back()->with('danger', __('DEMO Mode: You can not do this'));
         }
         $this->checkPermission('role_manage');
 
@@ -276,15 +293,16 @@ class RoleController extends AdminController
         $matrix = is_array($matrix) ? $matrix : [];
 
         $roles = Role::query()->get();
-        foreach ($roles as $role){
-            if(empty($matrix[$role->id]))
-            {
+        foreach ($roles as $role) {
+            if (empty($matrix[$role->id])) {
                 $role->syncPermissions();
+
                 continue;
             }
             $permissions = $matrix[$role->id];
             $role->syncPermissions($permissions);
         }
+
         return redirect()->back()->with('success', __('Permission Matrix updated'));
     }
 
@@ -293,26 +311,27 @@ class RoleController extends AdminController
         $pre_selected = $request->query('pre_selected');
         $selected = $request->query('selected');
 
-        if($pre_selected && $selected){
-            $item = $this->role_class::where('name',$selected)->first();
-            if(empty($item)){
+        if ($pre_selected && $selected) {
+            $item = $this->role_class::where('name', $selected)->first();
+            if (empty($item)) {
                 return response()->json([
-                    'text'=>''
+                    'text' => '',
                 ]);
-            }else{
+            } else {
                 return response()->json([
-                    'text'=>$item->name
+                    'text' => $item->name,
                 ]);
             }
         }
         $q = $request->query('q');
         $query = $this->role_class::select('name as id', 'name as text');
         if ($q) {
-            $query->where('name', 'like', '%' . $q . '%');
+            $query->where('name', 'like', '%'.$q.'%');
         }
         $res = $query->orderBy('id', 'desc')->limit(20)->get();
+
         return response()->json([
-            'results' => $res
+            'results' => $res,
         ]);
     }
 }

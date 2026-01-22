@@ -1,4 +1,5 @@
 <?php
+
 namespace Plugins\PaymentTwoCheckout;
 
 use Modules\Core\Abstracts\BaseSettingsClass;

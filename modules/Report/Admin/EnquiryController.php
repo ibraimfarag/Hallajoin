@@ -290,7 +290,7 @@ class EnquiryController extends AdminController
             'note' => [
                 'id' => $note->id,
                 'content' => $note->content,
-                'user_name' => trim(auth()->user()->first_name . ' ' . auth()->user()->last_name),
+                'user_name' => trim(auth()->user()->first_name.' '.auth()->user()->last_name),
                 'created_at' => $note->created_at->format('d/M/Y H:i'),
                 'attachment' => $note->attachment ? asset($note->attachment) : null,
             ],

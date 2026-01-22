@@ -8,7 +8,7 @@ use Modules\Vendor\Models\VendorTeam;
 
 class VendorTeamRequestCreatedEvent
 {
-    use SerializesModels, Dispatchable;
+    use Dispatchable, SerializesModels;
 
     public $vendor_team;
 

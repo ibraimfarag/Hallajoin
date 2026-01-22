@@ -2,10 +2,9 @@
 
 namespace Modules\Core\Admin;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Modules\AdminController;
 use App\User;
+use Illuminate\Http\Request;
+use Modules\AdminController;
 
 class SendEmailController extends AdminController
 {
@@ -14,25 +13,26 @@ class SendEmailController extends AdminController
         $data = [
             'page_title' => __('Send Email'),
         ];
+
         return view('Core::admin.send-email.index', $data);
     }
 
     public function getForSelect2(Request $request)
     {
         $q = $request->query('q', '');
-        
+
         $query = User::query();
-        
-        if (!empty($q)) {
-            $query->where(function($query) use ($q) {
-                $query->where('name', 'like', '%' . $q . '%')
-                      ->orWhere('email', 'like', '%' . $q . '%')
-                      ->orWhere('phone', 'like', '%' . $q . '%');
+
+        if (! empty($q)) {
+            $query->where(function ($query) use ($q) {
+                $query->where('name', 'like', '%'.$q.'%')
+                    ->orWhere('email', 'like', '%'.$q.'%')
+                    ->orWhere('phone', 'like', '%'.$q.'%');
             });
         }
-        
+
         $users = $query->limit(20)->get();
-        
+
         $results = [];
         foreach ($users as $user) {
             $results[] = [
@@ -44,7 +44,7 @@ class SendEmailController extends AdminController
                 'avatar' => $user->avatar_url ?? ($user->getAvatarUrl() ?? asset('images/avatar.png')),
             ];
         }
-        
+
         return response()->json([
             'results' => $results,
         ]);
@@ -71,7 +71,7 @@ class SendEmailController extends AdminController
         } else {
             // Send to specific users
             $ids = array_filter(array_map('trim', explode(',', $userIds)));
-            if (!empty($ids)) {
+            if (! empty($ids)) {
                 // TODO: Implement Email sending to specific users
                 \Log::info('Email: Sending to users', ['user_ids' => $ids, 'subject' => $subject]);
             }

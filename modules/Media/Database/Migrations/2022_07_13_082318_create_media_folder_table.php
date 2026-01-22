@@ -22,17 +22,17 @@ class CreateMediaFolderTable extends Migration
             $table->integer('create_user')->nullable();
             $table->integer('update_user')->nullable();
 
-            $table->unique(['parent_id','name']);
+            $table->unique(['parent_id', 'name']);
 
             $table->timestamps();
         });
 
         Schema::table('media_files', function (Blueprint $table) {
-            if (!Schema::hasColumn('media_files', 'folder_id')) {
+            if (! Schema::hasColumn('media_files', 'folder_id')) {
                 $table->bigInteger('folder_id')->nullable()->default(0);
             }
-            if (!Schema::hasColumn('media_files', 'driver')) {
-                $table->string('driver',255)->nullable();
+            if (! Schema::hasColumn('media_files', 'driver')) {
+                $table->string('driver', 255)->nullable();
             }
         });
     }

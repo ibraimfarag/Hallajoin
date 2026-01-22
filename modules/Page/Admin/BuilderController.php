@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\Page\Admin;
-
 
 use Illuminate\Http\Request;
 use Modules\AdminController;
@@ -20,24 +18,25 @@ class BuilderController extends AdminController
             return redirect(route('page.admin.index'));
         }
 
-        $translation = $row->translate($request->query('lang',get_main_lang()));
+        $translation = $row->translate($request->query('lang', get_main_lang()));
 
         $data = [
-            'translation'  => $translation,
-            'row'            =>$row,
-            'templates'   => Template::orderBy('id', 'desc')->limit(100)->get(),
+            'translation' => $translation,
+            'row' => $row,
+            'templates' => Template::orderBy('id', 'desc')->limit(100)->get(),
             'breadcrumbs' => [
                 [
                     'name' => __('Pages'),
-                    'url'  => route('page.admin.index')
+                    'url' => route('page.admin.index'),
                 ],
                 [
-                    'name'  => __('Edit Page With Builder'),
-                    'class' => 'active'
+                    'name' => __('Edit Page With Builder'),
+                    'class' => 'active',
                 ],
             ],
-            'enable_multi_lang'=>true
+            'enable_multi_lang' => true,
         ];
+
         return view('Page::admin.builder.detail', $data);
     }
 }

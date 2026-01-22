@@ -7,7 +7,6 @@ use Modules\Booking\Models\Payment;
 
 class PlanPayment extends Payment
 {
-
     public function plan()
     {
         return $this->belongsTo(Plan::class, 'object_id');
@@ -17,6 +16,4 @@ class PlanPayment extends Payment
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
-
 }

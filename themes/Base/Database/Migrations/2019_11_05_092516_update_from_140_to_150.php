@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class UpdateFrom140To150 extends Migration
 {
@@ -14,7 +14,7 @@ class UpdateFrom140To150 extends Migration
     public function up()
     {
         Schema::table('bravo_bookings', function (Blueprint $table) {
-            if (!Schema::hasColumn('bravo_bookings', 'number')) {
+            if (! Schema::hasColumn('bravo_bookings', 'number')) {
                 $table->smallInteger('number')->nullable();
             }
         });
@@ -22,39 +22,39 @@ class UpdateFrom140To150 extends Migration
         Schema::create('bravo_cars', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            //Info
+            // Info
             $table->string('title', 255)->nullable();
-            $table->string('slug',255)->charset('utf8')->index();
+            $table->string('slug', 255)->charset('utf8')->index();
             $table->text('content')->nullable();
             $table->integer('image_id')->nullable();
             $table->integer('banner_image_id')->nullable();
             $table->integer('location_id')->nullable();
             $table->string('address', 255)->nullable();
-            $table->string('map_lat',20)->nullable();
-            $table->string('map_lng',20)->nullable();
+            $table->string('map_lat', 20)->nullable();
+            $table->string('map_lng', 20)->nullable();
             $table->integer('map_zoom')->nullable();
             $table->tinyInteger('is_featured')->nullable();
             $table->string('gallery', 255)->nullable();
             $table->string('video', 255)->nullable();
             $table->text('faqs')->nullable();
 
-            //Price
+            // Price
             $table->tinyInteger('number')->nullable();
-            $table->decimal('price', 12,2)->nullable();
-            $table->decimal('sale_price', 12,2)->nullable();
+            $table->decimal('price', 12, 2)->nullable();
+            $table->decimal('sale_price', 12, 2)->nullable();
             $table->tinyInteger('is_instant')->default(0)->nullable();
 
             $table->tinyInteger('enable_extra_price')->nullable();
             $table->text('extra_price')->nullable();
             $table->text('discount_by_days')->nullable();
 
-            //Extra Info
+            // Extra Info
             $table->tinyInteger('passenger')->default(0)->nullable();
             $table->string('gear')->default(0)->nullable();
             $table->tinyInteger('baggage')->default(0)->nullable();
             $table->tinyInteger('door')->default(0)->nullable();
 
-            $table->string('status',50)->nullable();
+            $table->string('status', 50)->nullable();
             $table->tinyInteger('default_state')->default(1)->nullable();
 
             $table->bigInteger('create_user')->nullable();
@@ -69,7 +69,7 @@ class UpdateFrom140To150 extends Migration
             $table->integer('origin_id')->unsigned();
             $table->string('locale')->index();
 
-            //Info
+            // Info
             $table->string('title', 255)->nullable();
             $table->text('content')->nullable();
             $table->text('faqs')->nullable();
@@ -101,7 +101,7 @@ class UpdateFrom140To150 extends Migration
 
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
-            $table->decimal('price',12,2)->nullable();
+            $table->decimal('price', 12, 2)->nullable();
             $table->tinyInteger('number')->nullable();
             $table->tinyInteger('active')->default(0)->nullable();
             $table->text('note_to_customer')->nullable();

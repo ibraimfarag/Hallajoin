@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Tour\Models;
 
 use App\BaseModel;
@@ -6,6 +7,7 @@ use App\BaseModel;
 class TourTranslation extends BaseModel
 {
     protected $table = 'bravo_tour_translations';
+
     protected $fillable = [
         'title',
         'content',
@@ -20,11 +22,15 @@ class TourTranslation extends BaseModel
         'itinerary',
         'surrounding',
     ];
-    protected $slugField     = false;
+
+    protected $slugField = false;
+
     protected $seo_type = 'tour_translation';
+
     protected $cleanFields = [
-        'content'
+        'content',
     ];
+
     protected $casts = [
         'faqs' => 'array',
         'include' => 'array',
@@ -35,10 +41,14 @@ class TourTranslation extends BaseModel
         'itinerary' => 'array',
         'surrounding' => 'array',
     ];
-    public function getSeoType(){
+
+    public function getSeoType()
+    {
         return $this->seo_type;
     }
-    public function getRecordRoot(){
-        return $this->belongsTo(Tour::class,'origin_id');
+
+    public function getRecordRoot()
+    {
+        return $this->belongsTo(Tour::class, 'origin_id');
     }
 }

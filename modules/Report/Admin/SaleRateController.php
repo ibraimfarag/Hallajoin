@@ -48,7 +48,7 @@ class SaleRateController extends AdminController
         }
 
         // Order
-        $query->orderBy('bravo_tours.' . $orderBy, $order);
+        $query->orderBy('bravo_tours.'.$orderBy, $order);
 
         $tours = $query->with(['category_tour', 'translation'])->paginate(20);
 
@@ -62,7 +62,7 @@ class SaleRateController extends AdminController
 
             // Get total views (from visitors field or default)
             $totalViews = (int) ($tour->visitors ?? 0);
-            
+
             // Calculate web/mobile views (ensure they add up to total)
             if ($totalViews > 0) {
                 $webViews = (int) ceil($totalViews * 0.2); // 20% web (round up)
@@ -108,13 +108,13 @@ class SaleRateController extends AdminController
             'breadcrumbs' => [
                 [
                     'name' => __('Reports'),
-                    'url' => '#'
+                    'url' => '#',
                 ],
                 [
                     'name' => __('Sale Rate'),
-                    'class' => 'active'
+                    'class' => 'active',
                 ],
-            ]
+            ],
         ];
 
         return view('Report::admin.sale-rate.index', $data);

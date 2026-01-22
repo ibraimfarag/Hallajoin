@@ -38,7 +38,7 @@ class Bookable extends BaseModel
 
     public function sendSuccess($data = [], $message = '')
     {
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = 1;
         }
         $data['message'] = $message;
@@ -55,7 +55,7 @@ class Bookable extends BaseModel
 
         // Get the authenticated user
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             return $this->sendError(__('You need to login to add items to cart'));
         }
 
@@ -121,9 +121,7 @@ class Bookable extends BaseModel
         ];
     }
 
-    public function createDraftBooking()
-    {
-    }
+    public function createDraftBooking() {}
 
     public function getSubTotal(Booking $booking)
     {
@@ -137,18 +135,18 @@ class Bookable extends BaseModel
     {
 
         $sub_total = $this->getSubTotal($booking);
-        if (!$sub_total or $sub_total < 0) {
+        if (! $sub_total or $sub_total < 0) {
             return 0;
         }
         $discountBeforeTax = $this->calDiscountFromTotal($this->getDiscountBeforeTax($booking), $sub_total);
         $sub_total -= $discountBeforeTax;
         $tax = $this->calTaxFromTotal($this->getTaxArray($booking), $sub_total);
-        if (!$this->isTaxIncluded()) {
+        if (! $this->isTaxIncluded()) {
             $sub_total += $tax;
         }
         $discountAfterTax = $this->calDiscountFromTotal($this->getDiscountAfterTax($booking), $sub_total);
         $sub_total -= $discountAfterTax;
-        if (!$sub_total or $sub_total < 0) {
+        if (! $sub_total or $sub_total < 0) {
             return 0;
         }
 
@@ -169,15 +167,15 @@ class Bookable extends BaseModel
     {
 
         $sub_total = $this->getSubTotal($booking);
-        if (!$sub_total or $sub_total < 0) {
+        if (! $sub_total or $sub_total < 0) {
             return 0;
         }
         $sub_total -= $this->calDiscountFromTotal($this->getDiscountBeforeTax($booking), $sub_total);
-        if (!$this->isTaxIncluded()) {
+        if (! $this->isTaxIncluded()) {
             $sub_total += $this->calTaxFromTotal($this->getTaxArray($booking), $sub_total);
         }
         $sub_total -= $this->calDiscountFromTotal($this->getDiscountAfterTax($booking), $sub_total);
-        if (!$sub_total or $sub_total < 0) {
+        if (! $sub_total or $sub_total < 0) {
             return 0;
         }
 
@@ -234,18 +232,18 @@ class Bookable extends BaseModel
 
             return $a['order'] < $b['order'] ? -1 : 1;
         });
-        if (!empty($discounts)) {
+        if (! empty($discounts)) {
             foreach ($discounts as $item) {
-                if (!isset($item['on_total'])) {
+                if (! isset($item['on_total'])) {
                     $item['on_total'] = false;
                 }
-                if (!isset($item['type'])) {
+                if (! isset($item['type'])) {
                     $item['type'] = 'percent';
                 }
-                if (!isset($item['amount'])) {
+                if (! isset($item['amount'])) {
                     $item['amount'] = 0;
                 }
-                if (!is_array($item) or empty($item['type']) or !isset($item['on_total'])) {
+                if (! is_array($item) or empty($item['type']) or ! isset($item['on_total'])) {
                     continue;
                 }
                 switch ($item['type']) {
@@ -284,18 +282,18 @@ class Bookable extends BaseModel
 
             return $a['order'] < $b['order'] ? -1 : 1;
         });
-        if (!empty($discounts)) {
+        if (! empty($discounts)) {
             foreach ($discounts as $item) {
-                if (!isset($item['on_total'])) {
+                if (! isset($item['on_total'])) {
                     $item['on_total'] = false;
                 }
-                if (!isset($item['type'])) {
+                if (! isset($item['type'])) {
                     $item['type'] = 'percent';
                 }
-                if (!isset($item['amount'])) {
+                if (! isset($item['amount'])) {
                     $item['amount'] = 0;
                 }
-                if (!is_array($item) or empty($item['type']) or !isset($item['on_total'])) {
+                if (! is_array($item) or empty($item['type']) or ! isset($item['on_total'])) {
                     continue;
                 }
                 switch ($item['type']) {
@@ -389,7 +387,7 @@ class Bookable extends BaseModel
 
     public function getDisplayPriceAttribute()
     {
-        if (!empty($this->price) and $this->price > 0 and !empty($this->sale_price) and $this->sale_price > 0 and $this->price > $this->sale_price) {
+        if (! empty($this->price) and $this->price > 0 and ! empty($this->sale_price) and $this->sale_price > 0 and $this->price > $this->sale_price) {
             return format_money($this->sale_price);
         }
 
@@ -398,7 +396,7 @@ class Bookable extends BaseModel
 
     public function getDisplayPriceAdminAttribute()
     {
-        if (!empty($this->price) and $this->price > 0 and !empty($this->sale_price) and $this->sale_price > 0 and $this->price > $this->sale_price) {
+        if (! empty($this->price) and $this->price > 0 and ! empty($this->sale_price) and $this->sale_price > 0 and $this->price > $this->sale_price) {
             return format_money_main($this->sale_price);
         }
 
@@ -407,7 +405,7 @@ class Bookable extends BaseModel
 
     public function getDisplaySalePriceAttribute()
     {
-        if (!empty($this->price) and $this->price > 0 and !empty($this->sale_price) and $this->sale_price > 0 and $this->price > $this->sale_price) {
+        if (! empty($this->price) and $this->price > 0 and ! empty($this->sale_price) and $this->sale_price > 0 and $this->price > $this->sale_price) {
             return format_money($this->price);
         }
 
@@ -416,16 +414,14 @@ class Bookable extends BaseModel
 
     public function getDisplaySalePriceAdminAttribute()
     {
-        if (!empty($this->price) and $this->price > 0 and !empty($this->sale_price) and $this->sale_price > 0 and $this->price > $this->sale_price) {
+        if (! empty($this->price) and $this->price > 0 and ! empty($this->sale_price) and $this->sale_price > 0 and $this->price > $this->sale_price) {
             return format_money_main($this->price);
         }
 
         return false;
     }
 
-    public function getBookingsInRange($from, $to)
-    {
-    }
+    public function getBookingsInRange($from, $to) {}
 
     public static function getVendorServicesQuery($user_id)
     {
@@ -439,7 +435,7 @@ class Bookable extends BaseModel
     {
         $percent = 0;
         $dataTotalReview = $this->reviewClass::selectRaw(' 	COUNT( id ) AS total_review, COUNT( CASE WHEN rate_number >= 4 THEN 1 ELSE null END )  as total_review_recommend ')->where('object_id', $this->id)->where('object_model', $this->type)->where('status', 'approved')->first();
-        if (!empty($dataTotalReview['total_review'])) {
+        if (! empty($dataTotalReview['total_review'])) {
             $percent = ceil((100 / $dataTotalReview['total_review']) * $dataTotalReview['total_review_recommend']);
         }
 
@@ -505,7 +501,7 @@ class Bookable extends BaseModel
             $data['map_lng'] = $this->map_lng;
             $data['map_zoom'] = $this->map_zoom;
             $data['banner_image'] = get_file_url($this->banner_image_id, 'full');
-            if (!empty($this->gallery)) {
+            if (! empty($this->gallery)) {
                 $galleries = explode(',', $this->gallery);
                 foreach ($galleries as $item) {
                     $data['gallery'][] = get_file_url($item, 'full');
@@ -537,15 +533,15 @@ class Bookable extends BaseModel
     public function calculateServiceFees($list_buyer_fees, $amount, $guests)
     {
         $total_amount_fee = 0;
-        if (!empty($list_buyer_fees)) {
+        if (! empty($list_buyer_fees)) {
             foreach ($list_buyer_fees as $item) {
                 // for Fixed
                 $fee_price = $item['price'];
                 // for Percent
-                if (!empty($item['unit']) and $item['unit'] == 'percent') {
+                if (! empty($item['unit']) and $item['unit'] == 'percent') {
                     $fee_price = ($amount / 100) * $item['price'];
                 }
-                if (!empty($item['per_person']) and $item['per_person'] == 'on') {
+                if (! empty($item['per_person']) and $item['per_person'] == 'on') {
                     $total_amount_fee += $fee_price * $guests;
                 } else {
                     $total_amount_fee += $fee_price;
@@ -563,7 +559,7 @@ class Bookable extends BaseModel
 
     public function getDisplayPriceOnlyAttribute()
     {
-        if (!empty($this->price) and $this->price > 0 and !empty($this->sale_price) and $this->sale_price > 0 and $this->price > $this->sale_price) {
+        if (! empty($this->price) and $this->price > 0 and ! empty($this->sale_price) and $this->sale_price > 0 and $this->price > $this->sale_price) {
             return format_price_only($this->sale_price);
         }
 
@@ -572,7 +568,7 @@ class Bookable extends BaseModel
 
     public function getDisplaySalePriceOnlyAttribute()
     {
-        if (!empty($this->price) and $this->price > 0 and !empty($this->sale_price) and $this->sale_price > 0 and $this->price > $this->sale_price) {
+        if (! empty($this->price) and $this->price > 0 and ! empty($this->sale_price) and $this->sale_price > 0 and $this->price > $this->sale_price) {
             return format_price_only($this->price);
         }
 

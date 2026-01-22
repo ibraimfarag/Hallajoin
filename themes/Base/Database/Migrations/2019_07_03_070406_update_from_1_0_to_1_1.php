@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class UpdateFrom10To11 extends Migration
 {
@@ -15,7 +15,7 @@ class UpdateFrom10To11 extends Migration
     {
         Schema::table('core_languages', function (Blueprint $table) {
 
-            if (!Schema::hasColumn('core_languages', 'last_build_at')) {
+            if (! Schema::hasColumn('core_languages', 'last_build_at')) {
                 $table->timestamp('last_build_at')->nullable();
             }
         });
@@ -26,8 +26,5 @@ class UpdateFrom10To11 extends Migration
      *
      * @return void
      */
-    public function down()
-    {
-
-    }
+    public function down() {}
 }

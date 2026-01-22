@@ -27,9 +27,9 @@ return new class extends Migration
             'bravo_flight_seat',
             'bravo_seat_type',
         ];
-        foreach ($tableAddAuthorId as $tbName){
-            Schema::table($tbName,function(Blueprint $blueprint) use ($tbName){
-                if(!Schema::hasColumn($tbName,'author_id')){
+        foreach ($tableAddAuthorId as $tbName) {
+            Schema::table($tbName, function (Blueprint $blueprint) use ($tbName) {
+                if (! Schema::hasColumn($tbName, 'author_id')) {
                     $blueprint->bigInteger('author_id')->nullable();
                 }
             });
@@ -42,8 +42,5 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
-    {
-
-    }
+    public function down() {}
 };

@@ -52,7 +52,7 @@ class SalesPulseController extends AdminController
         $bookingStats = $bookingStatsQuery
             ->groupBy('object_id', 'object_model')
             ->get()
-            ->keyBy(fn($item) => $item->object_model . '_' . $item->object_id);
+            ->keyBy(fn ($item) => $item->object_model.'_'.$item->object_id);
 
         // Get all bookable services
         $services = [];
@@ -84,7 +84,7 @@ class SalesPulseController extends AdminController
             $items = $query->get();
 
             foreach ($items as $item) {
-                $key = $type . '_' . $item->id;
+                $key = $type.'_'.$item->id;
                 $stats = $bookingStats->get($key);
 
                 $range1Sales = $stats ? (int) $stats->range1_sales : 0;
@@ -128,7 +128,7 @@ class SalesPulseController extends AdminController
         $total = count($services);
         $offset = ($currentPage - 1) * $perPage;
         $paginatedServices = array_slice($services, $offset, $perPage);
-        
+
         $pagination = new LengthAwarePaginator(
             $paginatedServices,
             $total,

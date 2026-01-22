@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Contact;
 
 use Modules\ModuleServiceProvider;
@@ -7,7 +8,7 @@ class ModuleProvider extends ModuleServiceProvider
 {
     public function boot()
     {
-        $this->loadMigrationsFrom(__DIR__ . '/Migrations');
+        $this->loadMigrationsFrom(__DIR__.'/Migrations');
     }
 
     /**
@@ -20,9 +21,10 @@ class ModuleProvider extends ModuleServiceProvider
         $this->app->register(RouterServiceProvider::class);
     }
 
-    public static function getTemplateBlocks(){
+    public static function getTemplateBlocks()
+    {
         return [
-            'contact_block'=>"\\Modules\\Contact\\Blocks\\Contact",
+            'contact_block' => '\\Modules\\Contact\\Blocks\\Contact',
         ];
     }
 }

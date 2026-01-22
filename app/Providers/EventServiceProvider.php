@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
+use App\Listeners\LogUserSession;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use App\Listeners\LogUserSession;
 use Modules\Booking\Events\EnquirySendEvent;
 use Modules\Booking\Listeners\EnquiryNotifyListen;
 use Modules\Booking\Listeners\EnquirySendListen;
@@ -39,27 +39,27 @@ class EventServiceProvider extends ServiceProvider
         ],
         SendMailUserRegistered::class => [
             SendMailUserRegisteredListen::class,
-            SendNotifyRegisteredListen::class
+            SendNotifyRegisteredListen::class,
         ],
         VendorApproved::class => [
             SendVendorApprovedMail::class,
-            SendNotifyApproved::class
+            SendNotifyApproved::class,
         ],
         NewVendorRegistered::class => [
             SendVendorRegisterdEmail::class,
-            SendNotifyRegistered::class
+            SendNotifyRegistered::class,
         ],
-            //        VendorLogPayment::class =>[
-//            VendorLogPaymentListen::class
-//        ]
+        //        VendorLogPayment::class =>[
+        //            VendorLogPaymentListen::class
+        //        ]
         PayoutRequestEvent::class => [
             PayoutRequestNotificationListener::class,
-            PayoutNotifyListener::class
+            PayoutNotifyListener::class,
         ],
         EnquirySendEvent::class => [
             EnquirySendListen::class,
-            EnquiryNotifyListen::class
-        ]
+            EnquiryNotifyListen::class,
+        ],
     ];
 
     /**

@@ -1,8 +1,9 @@
 <?php
+
 namespace Modules\Theme;
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class RouterServiceProvider extends ServiceProvider
 {
@@ -54,8 +55,9 @@ class RouterServiceProvider extends ServiceProvider
     {
         Route::middleware('web')
             ->namespace($this->moduleNamespace)
-            ->group(__DIR__ . '/Routes/web.php');
+            ->group(__DIR__.'/Routes/web.php');
     }
+
     /**
      * Define the "web" routes for the application.
      *
@@ -68,7 +70,7 @@ class RouterServiceProvider extends ServiceProvider
         Route::middleware('web')
             ->namespace($this->moduleNamespace)
             ->prefix(app()->getLocale())
-            ->group(__DIR__ . '/Routes/language.php');
+            ->group(__DIR__.'/Routes/language.php');
     }
 
     /**
@@ -80,10 +82,10 @@ class RouterServiceProvider extends ServiceProvider
      */
     protected function mapAdminRoutes()
     {
-        Route::middleware(['web','dashboard'])
+        Route::middleware(['web', 'dashboard'])
             ->namespace($this->adminModuleNamespace)
             ->prefix('admin/module/theme')
-            ->group(__DIR__ . '/Routes/admin.php');
+            ->group(__DIR__.'/Routes/admin.php');
     }
 
     /**
@@ -97,6 +99,6 @@ class RouterServiceProvider extends ServiceProvider
     {
         Route::prefix('api')
             ->namespace('Modules\User\Api')
-            ->group(__DIR__ . '/Routes/api.php');
+            ->group(__DIR__.'/Routes/api.php');
     }
 }

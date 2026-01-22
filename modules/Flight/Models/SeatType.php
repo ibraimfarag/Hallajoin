@@ -1,16 +1,15 @@
 <?php
 
+namespace Modules\Flight\Models;
 
-    namespace Modules\Flight\Models;
+use App\BaseModel;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
+class SeatType extends BaseModel
+{
+    use SoftDeletes;
 
-    use App\BaseModel;
-    use Illuminate\Database\Eloquent\SoftDeletes;
+    protected $table = 'bravo_seat_type';
 
-    class SeatType extends BaseModel
-    {
-        use SoftDeletes;
-        protected $table = 'bravo_seat_type';
-        protected $fillable  = ['name','code'];
-
-    }
+    protected $fillable = ['name', 'code'];
+}

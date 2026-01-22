@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateCoreSubscribersTable extends Migration
 {
@@ -15,9 +15,9 @@ class CreateCoreSubscribersTable extends Migration
     {
         Schema::create('core_subscribers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('email',255)->nullable();
-            $table->string('first_name',255)->nullable();
-            $table->string('last_name',255)->nullable();
+            $table->string('email', 255)->nullable();
+            $table->string('first_name', 255)->nullable();
+            $table->string('last_name', 255)->nullable();
             $table->integer('create_user')->nullable();
             $table->integer('update_user')->nullable();
             $table->softDeletes();

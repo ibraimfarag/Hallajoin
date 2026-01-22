@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateMediaFilesTable extends Migration
 {
@@ -15,12 +15,12 @@ class CreateMediaFilesTable extends Migration
     {
         Schema::create('media_files', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('file_name',255)->nullable();
-            $table->string('file_path',255)->nullable();
-            $table->string('file_size',255)->nullable();
-            $table->string('file_type',255)->nullable();
-            $table->string('file_extension',255)->nullable();
-            $table->string('driver',255)->nullable();
+            $table->string('file_name', 255)->nullable();
+            $table->string('file_path', 255)->nullable();
+            $table->string('file_size', 255)->nullable();
+            $table->string('file_type', 255)->nullable();
+            $table->string('file_extension', 255)->nullable();
+            $table->string('driver', 255)->nullable();
             $table->integer('create_user')->nullable();
             $table->integer('update_user')->nullable();
             $table->softDeletes();

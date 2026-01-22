@@ -1,20 +1,20 @@
 <?php
 
-
 namespace Modules\Admin;
-
 
 abstract class BaseCrudModule
 {
-
-    static $version = "1.0";
+    public static $version = '1.0';
 
     public $model;
 
-    public function index(){
-        return  [];
+    public function index()
+    {
+        return [];
     }
-    public function create(){
-        return  [];
+
+    public function create()
+    {
+        return [];
     }
 }

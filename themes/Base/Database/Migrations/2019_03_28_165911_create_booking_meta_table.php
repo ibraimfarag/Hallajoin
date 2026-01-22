@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateBookingMetaTable extends Migration
 {
@@ -17,9 +17,8 @@ class CreateBookingMetaTable extends Migration
             $table->bigIncrements('id');
 
             $table->integer('booking_id')->nullable();
-            $table->string('name',255)->nullable();
+            $table->string('name', 255)->nullable();
             $table->text('val')->nullable();
-
 
             $table->integer('create_user')->nullable();
             $table->integer('update_user')->nullable();

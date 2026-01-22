@@ -1,28 +1,26 @@
 <?php
+
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
-if(!empty($_SERVER['REQUEST_URI'])){
-	if(strpos($_SERVER['REQUEST_URI'],'/install') !== false){
-		if(!file_exists(__DIR__.'/../.env')){
-			copy(__DIR__.'/../.env.example',__DIR__.'/../.env');
-		}
-	}
+
+if (! empty($_SERVER['REQUEST_URI'])) {
+    if (strpos($_SERVER['REQUEST_URI'], '/install') !== false) {
+        if (! file_exists(__DIR__.'/../.env')) {
+            copy(__DIR__.'/../.env.example', __DIR__.'/../.env');
+        }
+    }
 }
-if (!version_compare(phpversion(), '8.0.2', '>'))
-{
-    die("Current PHP version: ".phpversion()."<br>You must upgrade PHP version 8.0.2 and later");
+if (! version_compare(phpversion(), '8.0.2', '>')) {
+    exit('Current PHP version: '.phpversion().'<br>You must upgrade PHP version 8.0.2 and later');
 }
-if(file_exists(__DIR__.'/../storage/bc.php'))
-{
+if (file_exists(__DIR__.'/../storage/bc.php')) {
     require __DIR__.'/../storage/bc.php';
 }
 /**
  * Laravel - A PHP Framework For Web Artisans
  *
- * @package  Laravel
  * @author   Taylor Otwell <taylor@laravel.com>
  */
-
 define('LARAVEL_START', microtime(true));
 
 /*

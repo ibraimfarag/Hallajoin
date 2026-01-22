@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -9,19 +10,19 @@ class Dashboard
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
-     * @param  string|null $guard
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string|null  $guard
      * @return mixed
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if(!Auth::check()){
+        if (! Auth::check()) {
             return redirect(route('login', ['redirect' => $request->getRequestUri()]));
         }
-        if (!Auth::check() or !Auth::user()->hasPermission('dashboard_access')) {
+        if (! Auth::check() or ! Auth::user()->hasPermission('dashboard_access')) {
             return redirect('/');
         }
+
         return $next($request);
     }
 }

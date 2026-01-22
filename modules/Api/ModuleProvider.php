@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Api;
 
 use Modules\ModuleServiceProvider;
@@ -7,7 +8,7 @@ class ModuleProvider extends ModuleServiceProvider
 {
     public function boot()
     {
-        $this->loadMigrationsFrom(__DIR__ . '/Migrations');
+        $this->loadMigrationsFrom(__DIR__.'/Migrations');
     }
 
     /**
@@ -19,5 +20,4 @@ class ModuleProvider extends ModuleServiceProvider
     {
         $this->app->register(RouterServiceProvider::class);
     }
-
 }

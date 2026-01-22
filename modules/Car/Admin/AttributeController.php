@@ -1,24 +1,25 @@
 <?php
+
 namespace Modules\Car\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Modules\AdminController;
-use Modules\Car\Models\Car;
 use Modules\Core\Models\Attributes;
 use Modules\Core\Models\AttributesTranslation;
 use Modules\Core\Models\Terms;
 use Modules\Core\Models\TermsTranslation;
-use Illuminate\Support\Facades\DB;
 
 class AttributeController extends AdminController
 {
     protected $attributesClass;
+
     protected $termsClass;
+
     private AttributesTranslation $attributesTranslation;
+
     private TermsTranslation $termsTranslation;
 
-    public function __construct(Attributes $attributesClass, Terms $termsClass,AttributesTranslation $attributesTranslation, TermsTranslation $termsTranslation)
+    public function __construct(Attributes $attributesClass, Terms $termsClass, AttributesTranslation $attributesTranslation, TermsTranslation $termsTranslation)
     {
         $this->setActiveMenu(route('car.admin.index'));
         $this->attributesClass = $attributesClass;
@@ -30,26 +31,27 @@ class AttributeController extends AdminController
     public function index(Request $request)
     {
         $this->checkPermission('car_manage_attributes');
-        $listAttr = $this->attributesClass::where("service", 'car');
-        if (!empty($search = $request->query('s'))) {
-            $listAttr->where('name', 'LIKE', '%' . $search . '%');
+        $listAttr = $this->attributesClass::where('service', 'car');
+        if (! empty($search = $request->query('s'))) {
+            $listAttr->where('name', 'LIKE', '%'.$search.'%');
         }
         $listAttr->orderBy('created_at', 'desc');
         $data = [
-            'rows'        => $listAttr->get(),
-            'row'         => new $this->attributesClass(),
-            'translation'    => new $this->attributesTranslation,
+            'rows' => $listAttr->get(),
+            'row' => new $this->attributesClass,
+            'translation' => new $this->attributesTranslation,
             'breadcrumbs' => [
                 [
                     'name' => __('Car'),
-                    'url'  => route('car.admin.index')
+                    'url' => route('car.admin.index'),
                 ],
                 [
-                    'name'  => __('Attributes'),
-                    'class' => 'active'
+                    'name' => __('Attributes'),
+                    'class' => 'active',
                 ],
-            ]
+            ],
         ];
+
         return view('Car::admin.attribute.index', $data);
     }
 
@@ -59,28 +61,29 @@ class AttributeController extends AdminController
         if (empty($row)) {
             return redirect()->back()->with('error', __('Attributes not found!'));
         }
-        $translation = $row->translate($request->query('lang',get_main_lang()));
+        $translation = $row->translate($request->query('lang', get_main_lang()));
         $this->checkPermission('car_manage_attributes');
         $data = [
-            'translation'    => $translation,
-            'enable_multi_lang'=>true,
-            'rows'        => $this->attributesClass::where("service", 'Car')->get(),
-            'row'         => $row,
+            'translation' => $translation,
+            'enable_multi_lang' => true,
+            'rows' => $this->attributesClass::where('service', 'Car')->get(),
+            'row' => $row,
             'breadcrumbs' => [
                 [
                     'name' => __('Car'),
-                    'url'  => route('car.admin.index')
+                    'url' => route('car.admin.index'),
                 ],
                 [
                     'name' => __('Attributes'),
-                    'url'  => route('car.admin.attribute.index')
+                    'url' => route('car.admin.attribute.index'),
                 ],
                 [
-                    'name'  => __('Attribute: :name', ['name' => $row->name]),
-                    'class' => 'active'
+                    'name' => __('Attribute: :name', ['name' => $row->name]),
+                    'class' => 'active',
                 ],
-            ]
+            ],
         ];
+
         return view('Car::admin.attribute.detail', $data);
     }
 
@@ -88,7 +91,7 @@ class AttributeController extends AdminController
     {
         $this->checkPermission('car_manage_attributes');
         $this->validate($request, [
-            'name' => 'required'
+            'name' => 'required',
         ]);
         $id = $request->input('id');
         if ($id) {
@@ -112,21 +115,22 @@ class AttributeController extends AdminController
         $this->checkPermission('car_manage_attributes');
         $ids = $request->input('ids');
         $action = $request->input('action');
-        if (empty($ids) or !is_array($ids)) {
+        if (empty($ids) or ! is_array($ids)) {
             return redirect()->back()->with('error', __('Select at least 1 item!'));
         }
         if (empty($action)) {
             return redirect()->back()->with('error', __('Select an Action!'));
         }
-        if ($action == "delete") {
+        if ($action == 'delete') {
             foreach ($ids as $id) {
-                $query = $this->attributesClass::where("id", $id);
+                $query = $this->attributesClass::where('id', $id);
                 $query->first();
-                if(!empty($query)){
+                if (! empty($query)) {
                     $query->delete();
                 }
             }
         }
+
         return redirect()->back()->with('success', __('Updated success!'));
     }
 
@@ -137,31 +141,32 @@ class AttributeController extends AdminController
         if (empty($row)) {
             return redirect()->back()->with('error', __('Term not found'));
         }
-        $listTerms = $this->termsClass::where("attr_id", $attr_id);
-        if (!empty($search = $request->query('s'))) {
-            $listTerms->where('name', 'LIKE', '%' . $search . '%');
+        $listTerms = $this->termsClass::where('attr_id', $attr_id);
+        if (! empty($search = $request->query('s'))) {
+            $listTerms->where('name', 'LIKE', '%'.$search.'%');
         }
         $listTerms->orderBy('created_at', 'desc');
         $data = [
-            'rows'        => $listTerms->paginate(20),
-            'attr'        => $row,
-            "row"         => new $this->termsClass(),
-            'translation'    => new $this->termsTranslation(),
+            'rows' => $listTerms->paginate(20),
+            'attr' => $row,
+            'row' => new $this->termsClass,
+            'translation' => new $this->termsTranslation,
             'breadcrumbs' => [
                 [
                     'name' => __('Car'),
-                    'url'  => route('car.admin.index')
+                    'url' => route('car.admin.index'),
                 ],
                 [
                     'name' => __('Attributes'),
-                    'url'  => route('car.admin.attribute.index')
+                    'url' => route('car.admin.attribute.index'),
                 ],
                 [
-                    'name'  => __('Attribute: :name', ['name' => $row->name]),
-                    'class' => 'active'
+                    'name' => __('Attribute: :name', ['name' => $row->name]),
+                    'class' => 'active',
                 ],
-            ]
+            ],
         ];
+
         return view('Car::admin.terms.index', $data);
     }
 
@@ -172,31 +177,32 @@ class AttributeController extends AdminController
         if (empty($row)) {
             return redirect()->back()->with('error', __('Term not found'));
         }
-        $translation = $row->translate($request->query('lang',get_main_lang()));
+        $translation = $row->translate($request->query('lang', get_main_lang()));
         $attr = $this->attributesClass::find($row->attr_id);
         $data = [
-            'row'         => $row,
-            'translation'    => $translation,
-            'enable_multi_lang'=>true,
+            'row' => $row,
+            'translation' => $translation,
+            'enable_multi_lang' => true,
             'breadcrumbs' => [
                 [
                     'name' => __('Car'),
-                    'url'  => route('car.admin.index')
+                    'url' => route('car.admin.index'),
                 ],
                 [
                     'name' => __('Attributes'),
-                    'url'  => route('car.admin.attribute.index')
+                    'url' => route('car.admin.attribute.index'),
                 ],
                 [
                     'name' => $attr->name,
-                    'url'  => route('car.admin.attribute.term.index',['id'=>$row->attr_id])
+                    'url' => route('car.admin.attribute.term.index', ['id' => $row->attr_id]),
                 ],
                 [
-                    'name'  => __('Term: :name', ['name' => $row->name]),
-                    'class' => 'active'
+                    'name' => __('Term: :name', ['name' => $row->name]),
+                    'class' => 'active',
                 ],
-            ]
+            ],
         ];
+
         return view('Car::admin.terms.detail', $data);
     }
 
@@ -204,7 +210,7 @@ class AttributeController extends AdminController
     {
         $this->checkPermission('car_manage_attributes');
         $this->validate($request, [
-            'name' => 'required'
+            'name' => 'required',
         ]);
         $id = $request->input('id');
         if ($id) {
@@ -229,21 +235,22 @@ class AttributeController extends AdminController
         $this->checkPermission('car_manage_attributes');
         $ids = $request->input('ids');
         $action = $request->input('action');
-        if (empty($ids) or !is_array($ids)) {
+        if (empty($ids) or ! is_array($ids)) {
             return redirect()->back()->with('error', __('Select at least 1 item!'));
         }
         if (empty($action)) {
             return redirect()->back()->with('error', __('Select an Action!'));
         }
-        if ($action == "delete") {
+        if ($action == 'delete') {
             foreach ($ids as $id) {
-                $query = $this->termsClass::where("id", $id);
+                $query = $this->termsClass::where('id', $id);
                 $query->first();
-                if(!empty($query)){
+                if (! empty($query)) {
                     $query->delete();
                 }
             }
         }
+
         return redirect()->back()->with('success', __('Updated success!'));
     }
 
@@ -252,31 +259,32 @@ class AttributeController extends AdminController
         $pre_selected = $request->query('pre_selected');
         $selected = $request->query('selected');
 
-        if($pre_selected && $selected){
-            if(is_array($selected))
-            {
+        if ($pre_selected && $selected) {
+            if (is_array($selected)) {
                 $query = $this->termsClass::getForSelect2Query('Car');
-                $items = $query->whereIn('bravo_terms.id',$selected)->take(50)->get();
+                $items = $query->whereIn('bravo_terms.id', $selected)->take(50)->get();
+
                 return response()->json([
-                    'items'=>$items
+                    'items' => $items,
                 ]);
             }
 
-            if(empty($item)){
+            if (empty($item)) {
                 return response()->json([
-                    'text'=>''
+                    'text' => '',
                 ]);
-            }else{
+            } else {
                 return response()->json([
-                    'text'=>$item->name
+                    'text' => $item->name,
                 ]);
             }
         }
         $q = $request->query('q');
-        $query = $this->termsClass::getForSelect2Query('Car',$q);
+        $query = $this->termsClass::getForSelect2Query('Car', $q);
         $res = $query->orderBy('bravo_terms.id', 'desc')->limit(20)->get();
+
         return response()->json([
-            'results' => $res
+            'results' => $res,
         ]);
     }
 }

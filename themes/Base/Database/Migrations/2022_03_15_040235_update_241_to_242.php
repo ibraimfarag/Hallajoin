@@ -14,9 +14,9 @@ class Update241To242 extends Migration
     public function up()
     {
         Schema::table(\Modules\Flight\Models\Airport::getTableName(), function (Blueprint $table) {
-            if(!Schema::hasColumn(\Modules\Flight\Models\Airport::getTableName(),'country')){
-                $table->string('country',20)->nullable();
-                $table->string('status',30)->nullable()->default('publish');
+            if (! Schema::hasColumn(\Modules\Flight\Models\Airport::getTableName(), 'country')) {
+                $table->string('country', 20)->nullable();
+                $table->string('status', 30)->nullable()->default('publish');
             }
         });
     }
@@ -26,8 +26,5 @@ class Update241To242 extends Migration
      *
      * @return void
      */
-    public function down()
-    {
-
-    }
+    public function down() {}
 }

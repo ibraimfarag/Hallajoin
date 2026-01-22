@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Admin;
 
 use Modules\ModuleServiceProvider;
@@ -8,7 +9,7 @@ class ModuleProvider extends ModuleServiceProvider
     public function boot()
     {
         Crud::register([
-            'test'=>TestCrud::class
+            'test' => TestCrud::class,
         ]);
     }
 
@@ -19,7 +20,6 @@ class ModuleProvider extends ModuleServiceProvider
      */
     public function register()
     {
-        //$this->app->register(RouterServiceProvider::class);
+        // $this->app->register(RouterServiceProvider::class);
     }
-
 }

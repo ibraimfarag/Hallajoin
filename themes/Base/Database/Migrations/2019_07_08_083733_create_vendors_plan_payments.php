@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateVendorsPlanPayments extends Migration
 {
@@ -13,7 +13,7 @@ class CreateVendorsPlanPayments extends Migration
      */
     public function up()
     {
-        if(!Schema::hasTable('vendors_plan_payments')) {
+        if (! Schema::hasTable('vendors_plan_payments')) {
             Schema::create('vendors_plan_payments', function (Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->integer('vendor_id');

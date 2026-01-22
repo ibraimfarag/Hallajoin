@@ -28,7 +28,7 @@ class Enquiry extends BaseModel
 
     public function fill(array $attributes)
     {
-        if (!empty($attributes)) {
+        if (! empty($attributes)) {
             foreach ($this->fillable as $item) {
                 $attributes[$item] = $attributes[$item] ?? null;
             }
@@ -40,7 +40,7 @@ class Enquiry extends BaseModel
     public function service()
     {
         $all = get_bookable_services();
-        if ($this->object_model and !empty($all[$this->object_model])) {
+        if ($this->object_model and ! empty($all[$this->object_model])) {
             return $this->hasOne($all[$this->object_model], 'id', 'object_id');
         }
 

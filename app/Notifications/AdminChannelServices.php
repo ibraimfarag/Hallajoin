@@ -4,11 +4,8 @@ namespace App\Notifications;
 
 use App\Events\PusherNotificationAdminEvent;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Auth;
-use Modules\Core\Models\NotificationPush;
 
 class AdminChannelServices extends Notification
 {
@@ -18,7 +15,6 @@ class AdminChannelServices extends Notification
 
     /**
      * AdminChannelServices constructor.
-     * @param $data
      */
     public function __construct($data)
     {
@@ -45,9 +41,9 @@ class AdminChannelServices extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->line('The introduction to the notification.')
+            ->action('Notification Action', url('/'))
+            ->line('Thank you for using our application!');
     }
 
     /**
@@ -72,9 +68,10 @@ class AdminChannelServices extends Notification
     public function toDatabase($notifiable)
     {
         event(new PusherNotificationAdminEvent($this->id, $this->data, $notifiable));
+
         return [
-            'id' =>  $this->id,
-            'for_admin' =>  1,
+            'id' => $this->id,
+            'for_admin' => 1,
             'notification' => $this->data,
         ];
     }

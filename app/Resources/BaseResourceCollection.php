@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Resources;
-
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -12,8 +10,8 @@ class BaseResourceCollection extends AnonymousResourceCollection
 
     public function toArray($request)
     {
-        $this->collection->map(function($item){
-           $item->needs = $this->needs;
+        $this->collection->map(function ($item) {
+            $item->needs = $this->needs;
         });
 
         return $this->collection->map->toArray($request)->all();

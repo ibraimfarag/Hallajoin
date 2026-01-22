@@ -1,14 +1,11 @@
 <?php
 
-
 namespace Modules\Coupon\Models;
-
 
 use App\BaseModel;
 
 class CouponServices extends BaseModel
 {
-
     protected $table = 'bravo_coupon_services';
 
     protected $fillable = [
@@ -18,10 +15,11 @@ class CouponServices extends BaseModel
         'service_id',
     ];
 
-    public function clean($coupon_id){
-        $query = $this->where("coupon_id", $coupon_id);
+    public function clean($coupon_id)
+    {
+        $query = $this->where('coupon_id', $coupon_id);
         $query->get();
-        if(!empty($query)){
+        if (! empty($query)) {
             $query->delete();
         }
     }

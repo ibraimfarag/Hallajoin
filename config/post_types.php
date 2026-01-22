@@ -1,4 +1,5 @@
 <?php
+
 return [
     'news' => Modules\News\Models\News::class,
     'news_category' => Modules\News\Models\NewsCategory::class,

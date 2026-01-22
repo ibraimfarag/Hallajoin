@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateCoreSettingTable extends Migration
 {
@@ -15,15 +15,15 @@ class CreateCoreSettingTable extends Migration
     {
         Schema::create('core_settings', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name',255)->nullable();
-            $table->string('group',50)->nullable();
+            $table->string('name', 255)->nullable();
+            $table->string('group', 50)->nullable();
             $table->text('val')->nullable();
             $table->tinyInteger('autoload')->nullable();
 
             $table->integer('create_user')->nullable();
             $table->integer('update_user')->nullable();
 
-            $table->string('lang',10)->nullable();
+            $table->string('lang', 10)->nullable();
 
             $table->timestamps();
         });

@@ -10,7 +10,7 @@ class EventServiceProvider extends \Illuminate\Foundation\Support\Providers\Even
     protected $listen = [
         VendorTeamRequestCreatedEvent::class => [
             VendorTeamRequestCreatedListener::class,
-        ]
+        ],
     ];
 
     /**

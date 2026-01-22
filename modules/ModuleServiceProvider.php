@@ -1,22 +1,24 @@
 <?php
+
 namespace Modules;
+
 use Illuminate\Contracts\Foundation\CachesConfiguration;
 
 class ModuleServiceProvider extends \Illuminate\Support\ServiceProvider
 {
-
-
     /**
      * @return array
      */
-    public static function getAdminMenu(){
+    public static function getAdminMenu()
+    {
         return [];
     }
 
     /**
      * @return array
      */
-    public static function getAdminSubmenu(){
+    public static function getAdminSubmenu()
+    {
         return [];
     }
 
@@ -31,67 +33,79 @@ class ModuleServiceProvider extends \Illuminate\Support\ServiceProvider
     /**
      * @return array
      */
-    public static function getPayableServices(){
+    public static function getPayableServices()
+    {
         return [];
     }
 
     /**
      * @return array
      */
-    public static function getReviewableServices(){
+    public static function getReviewableServices()
+    {
         return [];
     }
 
-    public static function getMenuBuilderTypes(){
+    public static function getMenuBuilderTypes()
+    {
         return [];
     }
 
-    public static function adminUserMenu(){
+    public static function adminUserMenu()
+    {
         return [];
     }
 
-    public static function adminUserSubMenu(){
+    public static function adminUserSubMenu()
+    {
         return [];
     }
 
-    public static function getUserMenu(){
+    public static function getUserMenu()
+    {
         return [];
     }
 
-    public static function getUserSubMenu(){
+    public static function getUserSubMenu()
+    {
         return [];
     }
 
-    public static function getTemplateBlocks(){
-        return [];
-    }
-    public static function getPaymentGateway(){
-        return [];
-    }
-
-    public static function getActionsHook(){
-        return [];
-    }
-    public static function getFiltersHook(){
+    public static function getTemplateBlocks()
+    {
         return [];
     }
 
-    function register()
+    public static function getPaymentGateway()
+    {
+        return [];
+    }
+
+    public static function getActionsHook()
+    {
+        return [];
+    }
+
+    public static function getFiltersHook()
+    {
+        return [];
+    }
+
+    public function register()
     {
         $actions = static::getActionsHook();
-        if(!empty($actions)){
-            foreach ($actions as $args){
-                call_user_func_array('add_action',$args);
+        if (! empty($actions)) {
+            foreach ($actions as $args) {
+                call_user_func_array('add_action', $args);
             }
         }
         $filters = static::getFiltersHook();
-        if(!empty($filters)){
-            foreach ($filters as $args){
-                call_user_func_array('add_filter',$args);
+        if (! empty($filters)) {
+            foreach ($filters as $args) {
+                call_user_func_array('add_filter', $args);
             }
         }
     }
-
 
     /**
      * Merge the given configuration with the existing configuration.
@@ -107,7 +121,7 @@ class ModuleServiceProvider extends \Illuminate\Support\ServiceProvider
 
             // Allow overwrite config
             $config->set($key, array_merge(
-                $config->get($key, []),require $path,
+                $config->get($key, []), require $path,
             ));
         }
     }

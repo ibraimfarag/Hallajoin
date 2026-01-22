@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: Admin
@@ -7,11 +8,11 @@
  */
 use Illuminate\Support\Facades\Route;
 
-Route::get('/','SocialController@index')->name('social.admin.index');
+Route::get('/', 'SocialController@index')->name('social.admin.index');
 
-Route::prefix('forum')->group(function (){
-    Route::get('/','ForumController@index')->name('social.admin.forum.index');
-    Route::get('/edit/{id}','ForumController@edit')->name('social.admin.forum.edit');
-    Route::post('/store/{?id}','ForumController@store')->name('social.admin.forum.store');
-    Route::post('/bulkEdit','ForumController@bulkEdit')->name('social.admin.forum.bulkEdit');
+Route::prefix('forum')->group(function () {
+    Route::get('/', 'ForumController@index')->name('social.admin.forum.index');
+    Route::get('/edit/{id}', 'ForumController@edit')->name('social.admin.forum.edit');
+    Route::post('/store/{?id}', 'ForumController@store')->name('social.admin.forum.store');
+    Route::post('/bulkEdit', 'ForumController@bulkEdit')->name('social.admin.forum.bulkEdit');
 });

@@ -1,12 +1,9 @@
 <?php
+
 namespace Modules\User;
-use App\Helpers\ReCaptchaEngine;
+
 use App\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\MessageBag;
-use Laravel\Fortify\Fortify;
-use Laravel\Fortify\Http\Requests\LoginRequest;
 use Modules\ModuleServiceProvider;
 use Modules\User\Models\Plan;
 use Modules\User\Models\PlanPayment;
@@ -14,12 +11,13 @@ use Modules\Vendor\Models\VendorRequest;
 
 class ModuleProvider extends ModuleServiceProvider
 {
+    public function boot()
+    {
 
-    public function boot(){
-
-        $this->loadMigrationsFrom(__DIR__ . '/Migrations');
+        $this->loadMigrationsFrom(__DIR__.'/Migrations');
 
     }
+
     /**
      * Register bindings in the container.
      *
@@ -34,7 +32,7 @@ class ModuleProvider extends ModuleServiceProvider
 
     public static function getPayableServices()
     {
-        return ['plan'=>Plan::class];
+        return ['plan' => Plan::class];
     }
 
     public static function getAdminMenu()
@@ -44,75 +42,76 @@ class ModuleProvider extends ModuleServiceProvider
         $noti = $noti_verify;
 
         $options = [
-            "position"=>100,
-            'url'        => route('user.admin.index'),
-            'title'      => __('Users :count',['count'=>$noti ? sprintf('<span class="badge badge-warning">%d</span>',$noti) : '']),
-            'icon'       => 'icon ion-ios-contacts',
+            'position' => 100,
+            'url' => route('user.admin.index'),
+            'title' => __('Users :count', ['count' => $noti ? sprintf('<span class="badge badge-warning">%d</span>', $noti) : '']),
+            'icon' => 'icon ion-ios-contacts',
             'permission' => 'user_view',
-            'children'   => [
-                'user'=>[
-                    'url'   => route('user.admin.index'),
+            'children' => [
+                'user' => [
+                    'url' => route('user.admin.index'),
                     'title' => __('All Users'),
-                    'icon'  => 'fa fa-user',
+                    'icon' => 'fa fa-user',
                 ],
-                'role'=>[
-                    'url'        => route('user.admin.role.index'),
-                    'title'      => __('Role Manager'),
+                'role' => [
+                    'url' => route('user.admin.role.index'),
+                    'title' => __('Role Manager'),
                     'permission' => 'role_view',
-                    'icon'       => 'fa fa-lock',
+                    'icon' => 'fa fa-lock',
                 ],
-                'subscriber'=>[
-                    'url'        => route('user.admin.subscriber.index'),
-                    'title'      => __('Subscribers'),
+                'subscriber' => [
+                    'url' => route('user.admin.subscriber.index'),
+                    'title' => __('Subscribers'),
                     'permission' => 'newsletter_manage',
                 ],
-                'userUpgradeRequest'=>[
-                    'url'        => route('user.admin.upgrade'),
-                    'title'      => __('Upgrade Request :count',['count'=>$noti_upgrade ? sprintf('<span class="badge badge-warning">%d</span>',$noti_upgrade) : '']),
+                'userUpgradeRequest' => [
+                    'url' => route('user.admin.upgrade'),
+                    'title' => __('Upgrade Request :count', ['count' => $noti_upgrade ? sprintf('<span class="badge badge-warning">%d</span>', $noti_upgrade) : '']),
                     'permission' => 'user_view',
                 ],
-            ]
+            ],
         ];
 
         $is_disable_verification_feature = setting_item('user_disable_verification_feature');
-        if(empty($is_disable_verification_feature)){
+        if (empty($is_disable_verification_feature)) {
             $options['children']['user_verification'] = [
-                'url'        => route('user.admin.verification.index'),
-                'title'      => __('Verification Request :count',['count'=>$noti_verify ? sprintf('<span class="badge badge-warning">%d</span>',$noti_verify) : '']),
+                'url' => route('user.admin.verification.index'),
+                'title' => __('Verification Request :count', ['count' => $noti_verify ? sprintf('<span class="badge badge-warning">%d</span>', $noti_verify) : '']),
                 'permission' => 'user_view',
             ];
         }
 
+        $count = PlanPayment::query()->where('object_model', 'plan')->where('status', 'processing')->count();
 
-        $count = PlanPayment::query()->where('object_model','plan')->where('status','processing')->count();
         return [
-            'users'=> $options,
-            'plan'=>[
-                "position"=>50,
-                'url'        => route('user.admin.plan.index'),
-                'title'      => __('User Plans :count',['count'=>$count ? sprintf('<span class="badge badge-warning">%d</span>',$count) : '']),
-                'icon'       => 'fa fa-list-alt',
+            'users' => $options,
+            'plan' => [
+                'position' => 50,
+                'url' => route('user.admin.plan.index'),
+                'title' => __('User Plans :count', ['count' => $count ? sprintf('<span class="badge badge-warning">%d</span>', $count) : '']),
+                'icon' => 'fa fa-list-alt',
                 'permission' => 'dashboard_access',
-                'children'   => [
-                    'user-plan'=>[
-                        'url'   => route('user.admin.plan.index'),
+                'children' => [
+                    'user-plan' => [
+                        'url' => route('user.admin.plan.index'),
                         'title' => __('User Plans'),
                         'permission' => 'dashboard_access',
                     ],
-                    'plan-report'=>[
-                        'url'        => route('user.admin.plan_report.index'),
-                        'title'      => __('Plan Report'),
+                    'plan-report' => [
+                        'url' => route('user.admin.plan_report.index'),
+                        'title' => __('Plan Report'),
                         'permission' => 'dashboard_access',
                     ],
-                    'plan-request'=>[
-                        'url'        => route('user.admin.plan_request.index'),
-                        'title'      => __('Plan Request :count',['count'=>$count ? sprintf('<span class="badge badge-warning">%d</span>',$count) : '']),
+                    'plan-request' => [
+                        'url' => route('user.admin.plan_request.index'),
+                        'title' => __('Plan Request :count', ['count' => $count ? sprintf('<span class="badge badge-warning">%d</span>', $count) : '']),
                         'permission' => 'dashboard_access',
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
     }
+
     public static function getUserMenu()
     {
         /**
@@ -122,58 +121,54 @@ class ModuleProvider extends ModuleServiceProvider
         $user = Auth::user();
 
         $is_wallet_module_disable = setting_item('wallet_module_disable');
-        if(empty($is_wallet_module_disable))
-        {
-            $res['wallet']= [
-                'position'   => 85,
-                'icon'       => 'fa fa-money',
-                'url'        => route('user.wallet'),
-                'title'      => __("My Wallet"),
+        if (empty($is_wallet_module_disable)) {
+            $res['wallet'] = [
+                'position' => 85,
+                'icon' => 'fa fa-money',
+                'url' => route('user.wallet'),
+                'title' => __('My Wallet'),
             ];
         }
 
         $is_disable_verification_feature = setting_item('user_disable_verification_feature');
-        if(!empty($user->verification_fields) and empty($is_disable_verification_feature))
-        {
-            $res['verification']= [
-                'url'        => route('user.verification.index'),
-                'title'      => __("Verifications"),
-                'icon'       => 'fa fa-handshake-o',
-                'position'   => 85,
+        if (! empty($user->verification_fields) and empty($is_disable_verification_feature)) {
+            $res['verification'] = [
+                'url' => route('user.verification.index'),
+                'title' => __('Verifications'),
+                'icon' => 'fa fa-handshake-o',
+                'position' => 85,
             ];
         }
 
-        if(setting_item('inbox_enable')) {
+        if (setting_item('inbox_enable')) {
             $count = auth()->user()->unseen_message_count;
             $res['chat'] = [
                 'position' => 90,
                 'icon' => 'fa fa-comments',
                 'url' => route('user.chat'),
-                'title' => __("Messages :count",['count'=>$count ? sprintf('<span class="badge badge-danger">%d</span>',$count) : '']),
+                'title' => __('Messages :count', ['count' => $count ? sprintf('<span class="badge badge-danger">%d</span>', $count) : '']),
             ];
         }
-        if(setting_item('user_enable_2fa'))
-        {
+        if (setting_item('user_enable_2fa')) {
             $res['chat'] = [
                 'position' => 110,
                 'icon' => 'fa fa-lock',
                 'url' => route('user.2fa'),
-                'title' => __("2F Authentication"),
+                'title' => __('2F Authentication'),
             ];
         }
 
-        if(is_enable_plan())
-        $res['my_plan'] = [
-            'url' => 'user/my-plan',
-            'title' => __("My Plans"),
-            'icon' => 'fa fa-list-alt',
-            'permission' => 'dashboard_vendor_access',
-            'enable' => true,
-            'position' => 95,
-        ];
+        if (is_enable_plan()) {
+            $res['my_plan'] = [
+                'url' => 'user/my-plan',
+                'title' => __('My Plans'),
+                'icon' => 'fa fa-list-alt',
+                'permission' => 'dashboard_vendor_access',
+                'enable' => true,
+                'position' => 95,
+            ];
+        }
 
         return $res;
     }
-
-
 }

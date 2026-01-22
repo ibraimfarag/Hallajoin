@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateMessagesTable extends Migration
 {
@@ -13,7 +13,7 @@ class CreateMessagesTable extends Migration
      */
     public function up()
     {
-        if(!Schema::hasTable('ch_messages')) {
+        if (! Schema::hasTable('ch_messages')) {
             Schema::create('ch_messages', function (Blueprint $table) {
                 $table->bigInteger('id');
                 $table->string('type');

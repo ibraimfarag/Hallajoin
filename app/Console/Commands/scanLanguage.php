@@ -44,6 +44,6 @@ class scanLanguage extends Command
         $count = $this->controller->findTranslations();
         $this->controller->genDefault();
 
-        $this->info('Scan completed, found '.$count. ' text!');
+        $this->info('Scan completed, found '.$count.' text!');
     }
 }

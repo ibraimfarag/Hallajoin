@@ -9,7 +9,7 @@ class MarketingController extends AdminController
     public function index()
     {
         $data = [
-            'page_title' => __('Marketing Messages')
+            'page_title' => __('Marketing Messages'),
         ];
 
         return view('Core::admin.marketing.index', $data);

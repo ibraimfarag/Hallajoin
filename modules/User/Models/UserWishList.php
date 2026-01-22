@@ -1,14 +1,17 @@
 <?php
+
 namespace Modules\User\Models;
+
 use App\BaseModel;
 
 class UserWishList extends BaseModel
 {
     protected $table = 'user_wishlist';
+
     protected $fillable = [
         'object_id',
         'object_model',
-        'user_id'
+        'user_id',
     ];
 
     public function service()
@@ -17,8 +20,9 @@ class UserWishList extends BaseModel
         $objectModel = $this->object_model ?: 'tour';
 
         $module = $allServices[$objectModel];
+
         // dd( $module);
-        return $this->hasOne($module, "id", 'object_id')->where("deleted_at", null);
+        return $this->hasOne($module, 'id', 'object_id')->where('deleted_at', null);
     }
 
     public function user()

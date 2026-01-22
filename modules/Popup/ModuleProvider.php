@@ -1,15 +1,18 @@
 <?php
+
 namespace Modules\Popup;
+
 use Modules\ModuleServiceProvider;
 
 class ModuleProvider extends ModuleServiceProvider
 {
+    public function boot()
+    {
 
-    public function boot(){
-
-        $this->loadMigrationsFrom(__DIR__ . '/Migrations');
+        $this->loadMigrationsFrom(__DIR__.'/Migrations');
 
     }
+
     /**
      * Register bindings in the container.
      *
@@ -43,8 +46,7 @@ class ModuleProvider extends ModuleServiceProvider
                 'url' => route('popup.admin.index'),
                 'title' => __('Popup'),
                 'icon' => '',
-            ]
+            ],
         ];
     }
-
 }

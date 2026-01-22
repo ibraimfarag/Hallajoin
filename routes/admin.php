@@ -45,16 +45,17 @@ Route::group(['prefix' => config('admin.admin_route_prefix'), 'middleware' => ['
     // Test routes
     Route::get('/test-toggle-block/{id}', function ($id) {
         $user = App\User::find($id);
-        if (!$user)
+        if (! $user) {
             return response()->json(['error' => 'User not found'], 404);
+        }
 
-        $user->blocked = !$user->blocked;
+        $user->blocked = ! $user->blocked;
         $user->save();
 
         return response()->json([
             'success' => true,
             'message' => 'Block status toggled successfully',
-            'blocked' => $user->blocked
+            'blocked' => $user->blocked,
         ]);
     })->name('admin.test.toggle.block');
 

@@ -24,7 +24,7 @@ class CurrencyController extends Controller
         $currencySvgs = [];
         foreach ($activeCurrencies as $currency) {
             $code = strtolower($currency['currency_main']);
-            $currencySvgs[$code] = setting_item('currency_svg_' . $code);
+            $currencySvgs[$code] = setting_item('currency_svg_'.$code);
         }
 
         return view('Core::admin.currency.index', compact('activeCurrencies', 'currentCurrency', 'currentSvgSymbol', 'currencySvgs'));
@@ -57,7 +57,7 @@ class CurrencyController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ أثناء تحديث رمز العملة: ' . $e->getMessage(),
+                'message' => 'حدث خطأ أثناء تحديث رمز العملة: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -107,12 +107,12 @@ class CurrencyController extends Controller
 
         try {
             $currencyCode = strtolower($request->currency_code);
-            $settingName = 'currency_svg_' . $currencyCode;
+            $settingName = 'currency_svg_'.$currencyCode;
 
             // تحديث أو إنشاء إعداد SVG للعملة
             $setting = \Modules\Core\Models\Settings::where('name', $settingName)->first();
 
-            if (!$setting) {
+            if (! $setting) {
                 $setting = new \Modules\Core\Models\Settings;
                 $setting->name = $settingName;
             }
@@ -126,13 +126,13 @@ class CurrencyController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'تم تحديث رمز العملة ' . strtoupper($currencyCode) . ' بنجاح',
+                'message' => 'تم تحديث رمز العملة '.strtoupper($currencyCode).' بنجاح',
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ أثناء تحديث رمز العملة: ' . $e->getMessage(),
+                'message' => 'حدث خطأ أثناء تحديث رمز العملة: '.$e->getMessage(),
             ], 500);
         }
     }

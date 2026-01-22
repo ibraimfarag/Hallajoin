@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -9,16 +10,16 @@ class TranslationManager
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
-     * @param  string|null $guard
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string|null  $guard
      * @return mixed
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if (!Auth::user()->hasPermission('translations_manage')) {
+        if (! Auth::user()->hasPermission('translations_manage')) {
             return redirect('/');
         }
+
         return $next($request);
     }
 }

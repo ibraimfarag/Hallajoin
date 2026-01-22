@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateCoreTagsTable extends Migration
 {
@@ -15,16 +15,16 @@ class CreateCoreTagsTable extends Migration
     {
         Schema::create('core_tags', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name',255)->nullable();
-            $table->string('slug',255)->nullable();
-            $table->string('content',255)->nullable();
-            $table->string('create_user',255)->nullable();
-            $table->string('update_user',255)->nullable();
+            $table->string('name', 255)->nullable();
+            $table->string('slug', 255)->nullable();
+            $table->string('content', 255)->nullable();
+            $table->string('create_user', 255)->nullable();
+            $table->string('update_user', 255)->nullable();
             $table->softDeletes();
 
-            //Languages
+            // Languages
             $table->bigInteger('origin_id')->nullable();
-            $table->string('lang',10)->nullable();
+            $table->string('lang', 10)->nullable();
 
             $table->timestamps();
         });

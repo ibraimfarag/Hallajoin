@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateUserMetaTable extends Migration
 {
@@ -13,7 +13,7 @@ class CreateUserMetaTable extends Migration
      */
     public function up()
     {
-        if(!Schema::hasTable('user_meta')) {
+        if (! Schema::hasTable('user_meta')) {
             Schema::create('user_meta', function (Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->integer('user_id')->nullable();

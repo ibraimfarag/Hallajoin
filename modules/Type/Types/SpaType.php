@@ -7,31 +7,30 @@ use Modules\Type\Abstracts\BaseType;
 
 class SpaType extends BaseType
 {
-
     public $model = Tour::class;
 
     public array $permissions = [
-        'manage' => 'tour_manage_others'
+        'manage' => 'tour_manage_others',
     ];
 
-    public function adminActions():array
+    public function adminActions(): array
     {
         return [
-            'view'=>[
-                'permission'=>'tour_create',
-                'title'=>__('Spa')
+            'view' => [
+                'permission' => 'tour_create',
+                'title' => __('Spa'),
             ],
-            'edit'=>[
-                'permission'=>'tour_update',
-            ]
+            'edit' => [
+                'permission' => 'tour_update',
+            ],
         ];
     }
 
     protected function getLabels(): array
     {
         return [
-            'name'=>__("Spa"),
-            'plural'=>__("Spas"),
+            'name' => __('Spa'),
+            'plural' => __('Spas'),
         ];
     }
 }

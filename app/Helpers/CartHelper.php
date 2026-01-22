@@ -3,7 +3,7 @@
 use App\Models\Cart;
 use Illuminate\Support\Facades\Auth;
 
-if (!function_exists('getUserCartData')) {
+if (! function_exists('getUserCartData')) {
     /**
      * Get the current user's cart items and total price for the dropdown.
      *
@@ -12,11 +12,11 @@ if (!function_exists('getUserCartData')) {
     function getUserCartData(): array
     {
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             return ['items' => [], 'total' => 0];
         }
         $cart = Cart::getActiveCartForUser($user->id);
-        if (!$cart) {
+        if (! $cart) {
             return ['items' => [], 'total' => 0];
         }
         $items = $cart->items()->get()->map(function ($item) {
@@ -26,26 +26,26 @@ if (!function_exists('getUserCartData')) {
             $bookingInfo = [];
             $data = $item->booking_data ?? [];
             // التاريخ أو الموعد
-            if (!empty($data['start_date'])) {
-                $bookingInfo[] = __('Date') . ': ' . $data['start_date'];
-            } elseif (!empty($data['date'])) {
-                $bookingInfo[] = __('Date') . ': ' . $data['date'];
-            } elseif (!empty($data['time'])) {
-                $bookingInfo[] = __('Time') . ': ' . $data['time'];
+            if (! empty($data['start_date'])) {
+                $bookingInfo[] = __('Date').': '.$data['start_date'];
+            } elseif (! empty($data['date'])) {
+                $bookingInfo[] = __('Date').': '.$data['date'];
+            } elseif (! empty($data['time'])) {
+                $bookingInfo[] = __('Time').': '.$data['time'];
             }
             // أنواع وعدد الأفراد
-            if (!empty($data['person_types']) && is_array($data['person_types'])) {
+            if (! empty($data['person_types']) && is_array($data['person_types'])) {
                 $types = [];
                 foreach ($data['person_types'] as $type) {
-                    if (!empty($type['name']) && !empty($type['number']) && $type['number'] > 0) {
-                        $types[] = $type['name'] . ': ' . $type['number'];
+                    if (! empty($type['name']) && ! empty($type['number']) && $type['number'] > 0) {
+                        $types[] = $type['name'].': '.$type['number'];
                     }
                 }
                 if ($types) {
-                    $bookingInfo[] = __('Persons') . ': ' . implode(', ', $types);
+                    $bookingInfo[] = __('Persons').': '.implode(', ', $types);
                 }
-            } elseif (!empty($data['guests'])) {
-                $bookingInfo[] = __('Guests') . ': ' . $data['guests'];
+            } elseif (! empty($data['guests'])) {
+                $bookingInfo[] = __('Guests').': '.$data['guests'];
             }
 
             return [

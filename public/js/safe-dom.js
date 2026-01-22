@@ -60,15 +60,25 @@
         }
     }
 
-    // Safe jQuery operations
+    // Safe jQuery operations - can be used as a callback or getter
     function safeJQuery(callback) {
-        whenReady(function () {
+        if (typeof callback === 'function') {
+            // Used as callback: SafeDOM.jQuery(function($) { ... })
+            whenReady(function () {
+                if (typeof $ === 'undefined') {
+                    console.error('jQuery is not available');
+                    return;
+                }
+                callback($);
+            });
+        } else {
+            // Used as getter: var $ = SafeDOM.jQuery();
             if (typeof $ === 'undefined') {
                 console.error('jQuery is not available');
-                return;
+                return undefined;
             }
-            callback($);
-        });
+            return $;
+        }
     }
 
     // Export to global scope

@@ -9,7 +9,7 @@ use Modules\Booking\Models\EnquiryReply;
 
 class EnquiryReplyCreated
 {
-    use SerializesModels, Dispatchable;
+    use Dispatchable, SerializesModels;
 
     public $_reply;
 
@@ -21,5 +21,4 @@ class EnquiryReplyCreated
         $this->_enquiry = $enquiry;
         $this->_reply = $reply;
     }
-
 }

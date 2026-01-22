@@ -1,6 +1,6 @@
 <?php
-namespace Modules\User;
 
+namespace Modules\User;
 
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -32,30 +32,30 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         UserVerificationSubmit::class => [
             SendUserSubmitVerifyDataEmail::class,
-            SendNotifyVerificationData::class
+            SendNotifyVerificationData::class,
         ],
         AdminUpdateVerificationData::class => [
             SendAdminUpdateVerifyDataEmail::class,
-            SendNotifyUpdateVerificationData::class
+            SendNotifyUpdateVerificationData::class,
         ],
         RequestCreditPurchase::class => [
-            SendNotifyRequestCreditPurchase::class
+            SendNotifyRequestCreditPurchase::class,
         ],
         UpdateCreditPurchase::class => [
-            SendNotifyUpdateCreditPurchase::class
+            SendNotifyUpdateCreditPurchase::class,
         ],
         UserSubscriberSubmit::class => [
-            UserSubscriberSubmitListeners::class
+            UserSubscriberSubmitListeners::class,
         ],
-        PasswordReset::class=>[
-            ClearUserTokens::class
+        PasswordReset::class => [
+            ClearUserTokens::class,
         ],
         CreatePlanRequest::class => [
-            SendNotifyCreatePlanRequest::class
+            SendNotifyCreatePlanRequest::class,
         ],
         UpdatePlanRequest::class => [
-            SendNotifyUpdatePlanRequest::class
-        ]
+            SendNotifyUpdatePlanRequest::class,
+        ],
     ];
 
     /**

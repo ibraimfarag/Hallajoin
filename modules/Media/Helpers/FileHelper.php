@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Media\Helpers;
 
 use Illuminate\Support\Facades\Storage;
@@ -9,65 +10,68 @@ class FileHelper
     public static $defaultSize = [
         'thumb' => [
             150,
-            150
+            150,
         ],
         'medium' => [
             600,
-            600
+            600,
         ],
         'large' => [
             1024,
-            1024
+            1024,
         ],
         'max_large' => [
             2500,
-            2500
+            2500,
         ],
     ];
 
-
-    public static function list_size(){
+    public static function list_size()
+    {
         $sizes = [];
-        foreach (self::$defaultSize as $size){
+        foreach (self::$defaultSize as $size) {
             $sizes[] = $size[0];
         }
+
         return $sizes;
     }
 
-    public static function url($fileId, $size = 'medium',$resize = true)
+    public static function url($fileId, $size = 'medium', $resize = true)
     {
         if ($fileId instanceof MediaFile) {
             $file = $fileId;
         } else {
-            $file = (new MediaFile())->findById($fileId);
+            $file = (new MediaFile)->findById($fileId);
         }
         if (empty($file)) {
             return false;
         }
-        switch ($file->driver){
+        switch ($file->driver) {
             case 's3':
             case 'gcs':
-                if(config('filesystems.default')!=$file->driver){
+                if (config('filesystems.default') != $file->driver) {
                     $url = '';
-                }else{
-                    $url = static::maybeResizeS3($file, $size,$resize);
+                } else {
+                    $url = static::maybeResizeS3($file, $size, $resize);
                 }
-            break;
+                break;
             default:
                 $url = $file->view_url;
                 if (static::isImage($file) and Storage::disk('uploads')->exists($file->file_path)) {
-                    if(config('bc.cf_enable_image_resize') and !in_array(strtolower($file->file_extension),['svg']))
-                    {
+                    if (config('bc.cf_enable_image_resize') and ! in_array(strtolower($file->file_extension), ['svg'])) {
                         $width = static::$defaultSize[$size][0] ?? $size;
-                        if($width == 'full') $width = '';
+                        if ($width == 'full') {
+                            $width = '';
+                        }
+
                         return '/cdn-cgi/image/'.($width ? 'width='.$width : '').',quality=70,f=auto/uploads/'.$file->file_path;
-                    }else{
-                        $url = static::maybeResize($file, $size,$resize);
+                    } else {
+                        $url = static::maybeResize($file, $size, $resize);
                     }
                 }
         }
-        return $url;
 
+        return $url;
 
     }
 
@@ -76,83 +80,88 @@ class FileHelper
         if ($fileId instanceof MediaFile) {
             $file = $fileId;
         } else {
-            $file = (new MediaFile())->findById($fileId);
+            $file = (new MediaFile)->findById($fileId);
         }
+
         return sprintf("<img src='%' align='%s'>", static::url($file, $size), $file->file_name);
     }
 
-    protected static function maybeResize($fileObj, $size = '',$resize = true)
+    protected static function maybeResize($fileObj, $size = '', $resize = true)
     {
 
-        if ($size == 'full' or in_array(strtolower($fileObj->file_extension),['svg','bmp']))
-            return asset('uploads/' . $fileObj->file_path);
-        if (!isset($size, static::$defaultSize))
+        if ($size == 'full' or in_array(strtolower($fileObj->file_extension), ['svg', 'bmp'])) {
+            return asset('uploads/'.$fileObj->file_path);
+        }
+        if (! isset($size, static::$defaultSize)) {
             $size = 'medium';
+        }
         $sizeData = static::$defaultSize[$size];
         if ($sizeData[0] >= $fileObj->file_width) {
-            return asset('uploads/' . $fileObj->file_path);
+            return asset('uploads/'.$fileObj->file_path);
         }
-        $resizeFile = substr($fileObj->file_path, 0, strrpos($fileObj->file_path, '.')) . '-' . $sizeData[0] . '.' . $fileObj->file_extension;
+        $resizeFile = substr($fileObj->file_path, 0, strrpos($fileObj->file_path, '.')).'-'.$sizeData[0].'.'.$fileObj->file_extension;
 
         if (Storage::disk('uploads')->exists($resizeFile)) {
-            return asset('uploads/' . $resizeFile);
-        }elseif(!$resize){
-            return asset('uploads/' . $fileObj->file_path);
+            return asset('uploads/'.$resizeFile);
+        } elseif (! $resize) {
+            return asset('uploads/'.$fileObj->file_path);
         } else {
 
-            $image_path = public_path('uploads/' . $fileObj->file_path);
+            $image_path = public_path('uploads/'.$fileObj->file_path);
 
             $mime = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $image_path);
-            if(in_array($mime,['image/x-ms-bmp'])){
-                return asset('uploads/' . $fileObj->file_path);
+            if (in_array($mime, ['image/x-ms-bmp'])) {
+                return asset('uploads/'.$fileObj->file_path);
             }
 
-            if(config('bc.resize_simple'))
-            {
-                return static::resizeSimple($fileObj,$size);
+            if (config('bc.resize_simple')) {
+                return static::resizeSimple($fileObj, $size);
             }
+
             return $fileObj->view_url;
 
         }
     }
 
-    protected static function maybeResizeS3($fileObj, $size = '',$resize = true){
-
+    protected static function maybeResizeS3($fileObj, $size = '', $resize = true)
+    {
 
         $imageOriginUrl = $fileObj->view_url;
 
-        if ($size == 'full' or in_array(strtolower($fileObj->file_extension),['svg','bmp']))
+        if ($size == 'full' or in_array(strtolower($fileObj->file_extension), ['svg', 'bmp'])) {
             return $imageOriginUrl;
-        if (!isset($size, static::$defaultSize))
+        }
+        if (! isset($size, static::$defaultSize)) {
             $size = 'medium';
+        }
         $sizeData = static::$defaultSize[$size];
         if ($sizeData[0] >= $fileObj->file_width) {
             return $imageOriginUrl;
         }
 
-        $resizeFile = substr($fileObj->file_path, 0, strrpos($fileObj->file_path, '.')) . '-' . $sizeData[0] . '.' . $fileObj->file_extension;
+        $resizeFile = substr($fileObj->file_path, 0, strrpos($fileObj->file_path, '.')).'-'.$sizeData[0].'.'.$fileObj->file_extension;
 
         if (Storage::disk($fileObj->driver)->exists($resizeFile)) {
-            return (new MediaFile())->generateUrl($resizeFile);
-        }elseif(!$resize){
+            return (new MediaFile)->generateUrl($resizeFile);
+        } elseif (! $resize) {
             return $imageOriginUrl;
         } else {
 
-            if(in_array($fileObj->file_type,['image/x-ms-bmp'])){
+            if (in_array($fileObj->file_type, ['image/x-ms-bmp'])) {
                 return $imageOriginUrl;
             }
 
-            if(config('bc.resize_simple'))
-            {
-                return static::resizeSimpleS3($fileObj,$size);
+            if (config('bc.resize_simple')) {
+                return static::resizeSimpleS3($fileObj, $size);
             }
+
             return $imageOriginUrl;
 
         }
     }
 
-    protected static function resizeSimpleS3($fileObj,$size = ''){
-
+    protected static function resizeSimpleS3($fileObj, $size = '')
+    {
 
         $subFolder = 's3_dump/';
         $pathDumpFile = $subFolder.$fileObj->file_path;
@@ -162,38 +171,38 @@ class FileHelper
             Storage::disk($fileObj->driver)->get($fileObj->file_path)
         );
 
-
         $resize = new ResizeImage(public_path('uploads/'.$pathDumpFile));
 
         $sizeData = static::$defaultSize[$size];
-        $resizeFilePath = substr($fileObj->file_path, 0, strrpos($fileObj->file_path, '.')) . '-' . $sizeData[0] . '.' . $fileObj->file_extension;
+        $resizeFilePath = substr($fileObj->file_path, 0, strrpos($fileObj->file_path, '.')).'-'.$sizeData[0].'.'.$fileObj->file_extension;
 
         $resize->resizeTo($sizeData[0], $sizeData[0], 'maxWidth');
-        $resize->saveImage(public_path('uploads/'.$subFolder.$resizeFilePath), "100");
+        $resize->saveImage(public_path('uploads/'.$subFolder.$resizeFilePath), '100');
 
-        Storage::drive($fileObj->driver)->put($resizeFilePath,Storage::drive('uploads')->get($subFolder.$resizeFilePath));
-        Storage::drive('uploads')->delete([$pathDumpFile,$resizeFilePath]);
+        Storage::drive($fileObj->driver)->put($resizeFilePath, Storage::drive('uploads')->get($subFolder.$resizeFilePath));
+        Storage::drive('uploads')->delete([$pathDumpFile, $resizeFilePath]);
 
-        return (new MediaFile())->generateUrl($resizeFilePath);
+        return (new MediaFile)->generateUrl($resizeFilePath);
     }
 
-    protected static function resizeSimple($fileObj,$size = ''){
+    protected static function resizeSimple($fileObj, $size = '')
+    {
 
         $resize = new ResizeImage(public_path('uploads/'.$fileObj->file_path));
 
         $sizeData = static::$defaultSize[$size];
-        $resizeFile = substr($fileObj->file_path, 0, strrpos($fileObj->file_path, '.')) . '-' . $sizeData[0] . '.' . $fileObj->file_extension;
+        $resizeFile = substr($fileObj->file_path, 0, strrpos($fileObj->file_path, '.')).'-'.$sizeData[0].'.'.$fileObj->file_extension;
 
         $resize->resizeTo($sizeData[0], $sizeData[0], 'maxWidth');
 
-        $resize->saveImage(public_path('uploads/'.$resizeFile), "100");
+        $resize->saveImage(public_path('uploads/'.$resizeFile), '100');
 
-        return asset('uploads/' . $resizeFile);
+        return asset('uploads/'.$resizeFile);
     }
 
     public static function isImage($fileObj)
     {
-        if (false !== mb_strpos($fileObj->file_type, "image") and in_array($fileObj->file_type,['image/jpg','image/jpeg','image/png','image/gif'])) {
+        if (mb_strpos($fileObj->file_type, 'image') !== false and in_array($fileObj->file_type, ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'])) {
 
             return true;
         } else {
@@ -205,7 +214,7 @@ class FileHelper
     public static function checkMimeIsImage($mime)
     {
 
-        if (false !== mb_strpos($mime, "image") and $mime != "image/webp") {
+        if (mb_strpos($mime, 'image') !== false and $mime != 'image/webp') {
 
             return true;
         } else {
@@ -214,16 +223,19 @@ class FileHelper
         }
     }
 
-    public static function fieldUpload($inputId = '', $oldValue = '',$nameAttr='name')
+    public static function fieldUpload($inputId = '', $oldValue = '', $nameAttr = 'name')
     {
 
-        if(!empty($oldValue))
-            $file = (new MediaFile())->findById($oldValue);
+        if (! empty($oldValue)) {
+            $file = (new MediaFile)->findById($oldValue);
+        }
         ob_start();
         ?>
-        <div class="dungdt-upload-box dungdt-upload-box-normal <?php if (!empty($file)) echo 'active' ?>" data-val="<?php echo $oldValue ?>">
+        <div class="dungdt-upload-box dungdt-upload-box-normal <?php if (! empty($file)) {
+            echo 'active';
+        } ?>" data-val="<?php echo $oldValue ?>">
             <div class="upload-box" v-show="!value">
-                <input type="hidden" <?php echo $nameAttr;?>="<?php echo $inputId ?>" v-model="value" value="<?php echo $oldValue ?>">
+                <input type="hidden" <?php echo $nameAttr; ?>="<?php echo $inputId ?>" v-model="value" value="<?php echo $oldValue ?>">
                 <div class="text-center">
                     <svg id="next-dropzone" width="100%" height="100%">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 20">
@@ -276,19 +288,21 @@ class FileHelper
                     </svg>
                 </div>
                 <div class="text-center">
-                    <span class="btn btn-primary btn-field-upload" @click="openUploader"><?php echo __("Upload image") ?></span>
+                    <span class="btn btn-primary btn-field-upload" @click="openUploader"><?php echo __('Upload image') ?></span>
                 </div>
             </div>
             <div class="attach-demo" title="Change file">
-                <?php if (!empty($file)) {
+                <?php if (! empty($file)) {
                     printf('<img src="%s" class="image-responsive">', FileHelper::url($oldValue, 'thumb'));
                 } ?>
             </div>
             <div class="upload-actions justify-content-between" v-show="value">
                 <?php
                 $oldPath = '';
-                if (!empty($file)){$oldPath = $file->getEditPath();}
-                ?>
+        if (! empty($file)) {
+            $oldPath = $file->getEditPath();
+        }
+        ?>
                 <a class="edit-img btn btn-sm btn-primary edit-single" data-file="<?php echo $oldPath ?>"><i class="fa fa-edit"></i></a>
                 <a class="delete btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
             </div>
@@ -297,7 +311,7 @@ class FileHelper
         return ob_get_clean();
     }
 
-    public static function fieldGalleryUpload($inputId = '', $oldValue = '',$options = [])
+    public static function fieldGalleryUpload($inputId = '', $oldValue = '', $options = [])
     {
         $is_tailwind = $options['tailwind'] ?? 0;
 
@@ -308,15 +322,17 @@ class FileHelper
             <div class="attach-demo d-flex">
                 <?php
                 foreach ($oldIds as $id) {
-                    $file = (new MediaFile())->findById($id);
-                    if (!empty($file)) {
+                    $file = (new MediaFile)->findById($id);
+                    if (! empty($file)) {
                         ?>
                         <div class="image-item">
                             <div class="inner">
                                 <?php
                                 $oldPath = '';
-                                if (!empty($file)){$oldPath = $file->getEditPath();}
-                                ?>
+                        if (! empty($file)) {
+                            $oldPath = $file->getEditPath();
+                        }
+                        ?>
                                 <a class="edit-img btn btn-sm btn-primary edit-multiple" data-id="<?php echo $id ?>"  data-file="<?php echo $oldPath ?>"><i class="fa fa-edit"></i></a>
                                 <span class="delete btn btn-sm btn-danger"><i class="fa fa-trash"></i></span><img src="<?php echo FileHelper::url($file, 'thumb') ?>" class="image-responsive image-preview">
                             </div>
@@ -324,12 +340,12 @@ class FileHelper
                         <?php
                     }
                 }
-                ?>
+        ?>
             </div>
             <div class="upload-box" v-show="!value">
                 <input type="hidden" name="<?php echo $inputId ?>" v-model="value" value="<?php echo htmlspecialchars($oldValue) ?>">
                 <div class="text-left">
-                    <span class="btn btn-info btn-sm btn-field-upload" @click="openUploader"><i class="fa fa-plus-circle"></i> <?php echo __("Select images") ?></span>
+                    <span class="btn btn-info btn-sm btn-field-upload" @click="openUploader"><i class="fa fa-plus-circle"></i> <?php echo __('Select images') ?></span>
                 </div>
             </div>
         </div>

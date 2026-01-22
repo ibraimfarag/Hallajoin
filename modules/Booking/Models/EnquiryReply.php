@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Booking\Models;
 
 use App\BaseModel;
@@ -14,7 +15,7 @@ class EnquiryReply extends BaseModel
         'content',
         'attachment',
         'create_user',
-        'update_user'
+        'update_user',
     ];
 
     public function enquiry()

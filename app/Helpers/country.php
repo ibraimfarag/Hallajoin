@@ -1,5 +1,6 @@
 <?php
-if (!function_exists('countryName')) {
+
+if (! function_exists('countryName')) {
     function countryName($codeOrName)
     {
         $map = [
@@ -41,6 +42,7 @@ if (!function_exists('countryName')) {
         if (in_array($codeOrName, $map)) {
             return $codeOrName;
         }
+
         // إذا كانت كود دولة، أرجع الاسم
         return $map[$codeOrName] ?? $codeOrName;
     }

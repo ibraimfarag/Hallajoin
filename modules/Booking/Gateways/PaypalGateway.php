@@ -1,22 +1,22 @@
 <?php
+
 namespace Modules\Booking\Gateways;
 
-use App\Currency;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Mockery\Exception;
 use Modules\Booking\Events\BookingCreatedEvent;
-use Modules\Booking\Events\BookingUpdatedEvent;
 use Modules\Booking\Models\Booking;
 use Modules\Booking\Models\Payment;
 use Omnipay\Omnipay;
 use Omnipay\PayPal\ExpressGateway;
-use Illuminate\Support\Facades\Log;
 
 class PaypalGateway extends BaseGateway
 {
     public $name = 'Paypal Express Checkout';
+
     /**
-     * @var $gateway ExpressGateway
+     * @var ExpressGateway
      */
     protected $gateway;
 
@@ -24,84 +24,84 @@ class PaypalGateway extends BaseGateway
     {
         return [
             [
-                'type'  => 'checkbox',
-                'id'    => 'enable',
-                'label' => __('Enable Paypal Standard?')
+                'type' => 'checkbox',
+                'id' => 'enable',
+                'label' => __('Enable Paypal Standard?'),
             ],
             [
-                'type'       => 'input',
-                'id'         => 'name',
-                'label'      => __('Custom Name'),
-                'std'        => __("Paypal"),
-                'multi_lang' => "1"
+                'type' => 'input',
+                'id' => 'name',
+                'label' => __('Custom Name'),
+                'std' => __('Paypal'),
+                'multi_lang' => '1',
             ],
             [
-                'type'  => 'upload',
-                'id'    => 'logo_id',
+                'type' => 'upload',
+                'id' => 'logo_id',
                 'label' => __('Custom Logo'),
             ],
             [
-                'type'  => 'editor',
-                'id'    => 'html',
+                'type' => 'editor',
+                'id' => 'html',
                 'label' => __('Custom HTML Description'),
-                'multi_lang' => "1"
+                'multi_lang' => '1',
             ],
             [
-                'type'  => 'checkbox',
-                'id'    => 'test',
-                'label' => __('Enable Sandbox Mod?')
+                'type' => 'checkbox',
+                'id' => 'test',
+                'label' => __('Enable Sandbox Mod?'),
             ],
             [
-                'type'    => 'select',
-                'id'      => 'convert_to',
-                'label'   => __('Convert To'),
-                'desc'    => __('In case of main currency does not support by PayPal. You must select currency and input exchange_rate to currency that PayPal support'),
-                'options' => $this->supportedCurrency()
+                'type' => 'select',
+                'id' => 'convert_to',
+                'label' => __('Convert To'),
+                'desc' => __('In case of main currency does not support by PayPal. You must select currency and input exchange_rate to currency that PayPal support'),
+                'options' => $this->supportedCurrency(),
             ],
             [
-                'type'       => 'input',
+                'type' => 'input',
                 'input_type' => 'number',
-                'id'         => 'exchange_rate',
-                'label'      => __('Exchange Rate'),
-                'desc'       => __('Example: Main currency is VND (which does not support by PayPal), you may want to convert it to USD when customer checkout, so the exchange rate must be 23400 (1 USD ~ 23400 VND)'),
+                'id' => 'exchange_rate',
+                'label' => __('Exchange Rate'),
+                'desc' => __('Example: Main currency is VND (which does not support by PayPal), you may want to convert it to USD when customer checkout, so the exchange rate must be 23400 (1 USD ~ 23400 VND)'),
             ],
             [
-                'type'      => 'input',
-                'id'        => 'test_account',
-                'label'     => __('Sandbox API Username'),
-                'condition' => 'g_paypal_test:is(1)'
+                'type' => 'input',
+                'id' => 'test_account',
+                'label' => __('Sandbox API Username'),
+                'condition' => 'g_paypal_test:is(1)',
             ],
             [
-                'type'      => 'input',
-                'id'        => 'test_client_id',
-                'label'     => __('Sandbox API Password'),
-                'condition' => 'g_paypal_test:is(1)'
+                'type' => 'input',
+                'id' => 'test_client_id',
+                'label' => __('Sandbox API Password'),
+                'condition' => 'g_paypal_test:is(1)',
             ],
             [
-                'type'      => 'input',
-                'id'        => 'test_client_secret',
-                'label'     => __('Sandbox Signature'),
-                'std'       => '',
-                'condition' => 'g_paypal_test:is(1)'
+                'type' => 'input',
+                'id' => 'test_client_secret',
+                'label' => __('Sandbox Signature'),
+                'std' => '',
+                'condition' => 'g_paypal_test:is(1)',
             ],
             [
-                'type'      => 'input',
-                'id'        => 'account',
-                'label'     => __('API Username'),
-                'condition' => 'g_paypal_test:is()'
+                'type' => 'input',
+                'id' => 'account',
+                'label' => __('API Username'),
+                'condition' => 'g_paypal_test:is()',
             ],
             [
-                'type'      => 'input',
-                'id'        => 'client_id',
-                'label'     => __('API Password'),
-                'condition' => 'g_paypal_test:is()'
+                'type' => 'input',
+                'id' => 'client_id',
+                'label' => __('API Password'),
+                'condition' => 'g_paypal_test:is()',
             ],
             [
-                'type'      => 'input',
-                'id'        => 'client_secret',
-                'label'     => __('Signature'),
-                'std'       => '',
-                'condition' => 'g_paypal_test:is()'
+                'type' => 'input',
+                'id' => 'client_secret',
+                'label' => __('Signature'),
+                'std' => '',
+                'condition' => 'g_paypal_test:is()',
             ],
         ];
     }
@@ -111,22 +111,22 @@ class PaypalGateway extends BaseGateway
         if (in_array($booking->status, [
             $booking::PAID,
             $booking::COMPLETED,
-            $booking::CANCELLED
+            $booking::CANCELLED,
         ])) {
 
-            throw new Exception(__("Booking status does need to be paid"));
+            throw new Exception(__('Booking status does need to be paid'));
         }
-        if (!$booking->pay_now) {
-            throw new Exception(__("Booking total is zero. Can not process payment gateway!"));
+        if (! $booking->pay_now) {
+            throw new Exception(__('Booking total is zero. Can not process payment gateway!'));
         }
         $this->getGateway();
-        $payment = new Payment();
+        $payment = new Payment;
         $payment->booking_id = $booking->id;
         $payment->payment_gateway = $this->id;
         $payment->status = 'draft';
         $data = $this->handlePurchaseData([
-            'amount'        => (float)$booking->pay_now,
-            'transactionId' => $booking->code . '.' . time()
+            'amount' => (float) $booking->pay_now,
+            'transactionId' => $booking->code.'.'.time(),
         ], $booking, $payment);
         $response = $this->gateway->purchase($data)->send();
         if ($response->isRedirect()) {
@@ -134,17 +134,17 @@ class PaypalGateway extends BaseGateway
             $booking->status = $booking::UNPAID;
             $booking->payment_id = $payment->id;
             $booking->save();
-            try{
+            try {
                 event(new BookingCreatedEvent($booking));
-            } catch(\Swift_TransportException $e){
+            } catch (\Swift_TransportException $e) {
                 Log::warning($e->getMessage());
             }
             // redirect to offsite payment gateway
             response()->json([
-                'url' => $response->getRedirectUrl()
+                'url' => $response->getRedirectUrl(),
             ])->send();
         } else {
-            throw new Exception('Paypal Gateway: ' . $response->getMessage());
+            throw new Exception('Paypal Gateway: '.$response->getMessage());
         }
     }
 
@@ -152,11 +152,11 @@ class PaypalGateway extends BaseGateway
     {
         $c = $request->query('c');
         $booking = Booking::where('code', $c)->first();
-        if (!empty($booking) and in_array($booking->status, [$booking::UNPAID])) {
+        if (! empty($booking) and in_array($booking->status, [$booking::UNPAID])) {
             $this->getGateway();
             $data = $this->handlePurchaseData([
-                'amount'        => (float)$booking->pay_now,
-                'transactionId' => $booking->code . '.' . time()
+                'amount' => (float) $booking->pay_now,
+                'transactionId' => $booking->code.'.'.time(),
             ], $booking);
             $response = $this->gateway->completePurchase($data)->send();
             if ($response->isSuccessful()) {
@@ -166,16 +166,17 @@ class PaypalGateway extends BaseGateway
                     $payment->logs = \GuzzleHttp\json_encode($response->getData());
                     $payment->save();
                 }
-                try{
-//                    $oldPaynow = (float)$booking->pay_now;
-                    $booking->paid += (float)$booking->pay_now;
-//                    $booking->pay_now = (float)($oldPaynow - $data['originalAmount'] < 0 ? 0 : $oldPaynow - $data['originalAmount']);
+                try {
+                    //                    $oldPaynow = (float)$booking->pay_now;
+                    $booking->paid += (float) $booking->pay_now;
+                    //                    $booking->pay_now = (float)($oldPaynow - $data['originalAmount'] < 0 ? 0 : $oldPaynow - $data['originalAmount']);
                     $booking->markAsPaid();
 
-                } catch(\Swift_TransportException $e){
+                } catch (\Swift_TransportException $e) {
                     Log::warning($e->getMessage());
                 }
-                return redirect($booking->getDetailUrl())->with("success", __("You payment has been processed successfully"));
+
+                return redirect($booking->getDetailUrl())->with('success', __('You payment has been processed successfully'));
             } else {
 
                 $payment = $booking->payment;
@@ -184,16 +185,17 @@ class PaypalGateway extends BaseGateway
                     $payment->logs = \GuzzleHttp\json_encode($response->getData());
                     $payment->save();
                 }
-                try{
+                try {
                     $booking->markAsPaymentFailed();
 
-                } catch(\Swift_TransportException $e){
+                } catch (\Swift_TransportException $e) {
                     Log::warning($e->getMessage());
                 }
-                return redirect($booking->getDetailUrl())->with("error", __("Payment Failed"));
+
+                return redirect($booking->getDetailUrl())->with('error', __('Payment Failed'));
             }
         }
-        if (!empty($booking)) {
+        if (! empty($booking)) {
             return redirect($booking->getDetailUrl(false));
         } else {
             return redirect(url('/'));
@@ -209,11 +211,11 @@ class PaypalGateway extends BaseGateway
         $c = $request->query('pid');
         $payment = Payment::where('code', $c)->first();
 
-        if (!empty($payment) and in_array($payment->status,['draft'])) {
+        if (! empty($payment) and in_array($payment->status, ['draft'])) {
             $this->getGateway();
             $data = $this->handlePurchaseDataNormal([
-                'amount'        => (float)$payment->amount,
-                'transactionId' => $payment->code . '.' . time()
+                'amount' => (float) $payment->amount,
+                'transactionId' => $payment->code.'.'.time(),
             ], $payment);
             $response = $this->gateway->completePurchase($data)->send();
             if ($response->isSuccessful()) {
@@ -223,32 +225,32 @@ class PaypalGateway extends BaseGateway
                 return $payment->markAsFailed(\GuzzleHttp\json_encode($response->getData()));
             }
         }
-        if($payment){
-            if($payment->status == 'cancel'){
-                return [false,__("Your payment has been canceled")];
+        if ($payment) {
+            if ($payment->status == 'cancel') {
+                return [false, __('Your payment has been canceled')];
             }
         }
+
         return [false];
     }
-
 
     public function processNormal($payment)
     {
         $this->getGateway();
         $payment->payment_gateway = $this->id;
         $data = $this->handlePurchaseDataNormal([
-            'amount'        => (float)$payment->amount,
-            'transactionId' => $payment->code . '.' . time()
-        ],  $payment);
+            'amount' => (float) $payment->amount,
+            'transactionId' => $payment->code.'.'.time(),
+        ], $payment);
 
         $response = $this->gateway->purchase($data)->send();
 
-        if($response->isSuccessful()){
+        if ($response->isSuccessful()) {
             return [true];
-        }elseif($response->isRedirect()){
-            return [true,false,$response->getRedirectUrl()];
-        }else{
-            return [false,$response->getMessage()];
+        } elseif ($response->isRedirect()) {
+            return [true, false, $response->getRedirectUrl()];
+        } else {
+            return [false, $response->getMessage()];
         }
     }
 
@@ -256,12 +258,12 @@ class PaypalGateway extends BaseGateway
     {
         $c = $request->query('c');
         $booking = Booking::where('code', $c)->first();
-        if (!empty($booking) and in_array($booking->status, [$booking::UNPAID])) {
+        if (! empty($booking) and in_array($booking->status, [$booking::UNPAID])) {
             $payment = $booking->payment;
             if ($payment) {
                 $payment->status = 'cancel';
                 $payment->logs = \GuzzleHttp\json_encode([
-                    'customer_cancel' => 1
+                    'customer_cancel' => 1,
                 ]);
                 $payment->save();
             }
@@ -269,9 +271,9 @@ class PaypalGateway extends BaseGateway
             // Refund without check status
             $booking->tryRefundToWallet(false);
 
-            return redirect($booking->getDetailUrl())->with("error", __("You cancelled the payment"));
+            return redirect($booking->getDetailUrl())->with('error', __('You cancelled the payment'));
         }
-        if (!empty($booking)) {
+        if (! empty($booking)) {
             return redirect($booking->getDetailUrl());
         } else {
             return redirect(url('/'));
@@ -300,14 +302,14 @@ class PaypalGateway extends BaseGateway
         $supported = $this->supportedCurrency();
         $convert_to = $this->getOption('convert_to');
         $data['currency'] = $main_currency;
-        $data['returnUrl'] = $this->getReturnUrl(true) . '?pid=' . $payment->code;
-        $data['cancelUrl'] = $this->getCancelUrl(true) . '?pid=' . $payment->code;
-        if (!array_key_exists($main_currency, $supported)) {
-            if (!$convert_to) {
-                throw new Exception(__("PayPal does not support currency: :name", ['name' => $main_currency]));
+        $data['returnUrl'] = $this->getReturnUrl(true).'?pid='.$payment->code;
+        $data['cancelUrl'] = $this->getCancelUrl(true).'?pid='.$payment->code;
+        if (! array_key_exists($main_currency, $supported)) {
+            if (! $convert_to) {
+                throw new Exception(__('PayPal does not support currency: :name', ['name' => $main_currency]));
             }
-            if (!$exchange_rate = $this->getOption('exchange_rate')) {
-                throw new Exception(__("Exchange rate to :name must be specific. Please contact site owner", ['name' => $convert_to]));
+            if (! $exchange_rate = $this->getOption('exchange_rate')) {
+                throw new Exception(__('Exchange rate to :name must be specific. Please contact site owner', ['name' => $convert_to]));
             }
             if ($payment) {
                 $payment->converted_currency = $convert_to;
@@ -315,66 +317,69 @@ class PaypalGateway extends BaseGateway
                 $payment->exchange_rate = $exchange_rate;
                 $payment->save();
             }
-            $data['amount'] = number_format( $payment->amount / $exchange_rate , 2 );
+            $data['amount'] = number_format($payment->amount / $exchange_rate, 2);
             $data['currency'] = $convert_to;
         }
+
         return $data;
     }
+
     public function handlePurchaseData($data, $booking, &$payment = null)
     {
         $main_currency = setting_item('currency_main');
         $supported = $this->supportedCurrency();
         $convert_to = $this->getOption('convert_to');
         $data['currency'] = $main_currency;
-        $data['returnUrl'] = $this->getReturnUrl() . '?c=' . $booking->code;
-        $data['cancelUrl'] = $this->getCancelUrl() . '?c=' . $booking->code;
-        if (!array_key_exists($main_currency, $supported)) {
-            if (!$convert_to) {
-                throw new Exception(__("PayPal does not support currency: :name", ['name' => $main_currency]));
+        $data['returnUrl'] = $this->getReturnUrl().'?c='.$booking->code;
+        $data['cancelUrl'] = $this->getCancelUrl().'?c='.$booking->code;
+        if (! array_key_exists($main_currency, $supported)) {
+            if (! $convert_to) {
+                throw new Exception(__('PayPal does not support currency: :name', ['name' => $main_currency]));
             }
-            if (!$exchange_rate = $this->getOption('exchange_rate')) {
-                throw new Exception(__("Exchange rate to :name must be specific. Please contact site owner", ['name' => $convert_to]));
+            if (! $exchange_rate = $this->getOption('exchange_rate')) {
+                throw new Exception(__('Exchange rate to :name must be specific. Please contact site owner', ['name' => $convert_to]));
             }
             if ($payment) {
                 $payment->converted_currency = $convert_to;
                 $payment->converted_amount = $booking->pay_now / $exchange_rate;
                 $payment->exchange_rate = $exchange_rate;
             }
-            $data['originalAmount'] = (float)$booking->pay_now;
-            $data['amount'] = number_format( (float)$booking->pay_now / $exchange_rate , 2 );
+            $data['originalAmount'] = (float) $booking->pay_now;
+            $data['amount'] = number_format((float) $booking->pay_now / $exchange_rate, 2);
             $data['currency'] = $convert_to;
         }
+
         return $data;
     }
 
     public function supportedCurrency()
     {
         return [
-            "aud" => "Australian dollar",
-            "brl" => "Brazilian real 2",
-            "cad" => "Canadian dollar",
-            "cny" => "Chinese Renmenbi 3",
-            "czk" => "Czech koruna",
-            "dkk" => "Danish krone",
-            "eur" => "Euro",
-            "hkd" => "Hong Kong dollar",
-            "huf" => "Hungarian forint 1",
-            "ils" => "Israeli new shekel",
-            "jpy" => "Japanese yen 1",
-            "myr" => "Malaysian ringgit 2",
-            "mxn" => "Mexican peso",
-            "twd" => "New Taiwan dollar 1",
-            "nzd" => "New Zealand dollar",
-            "nok" => "Norwegian krone",
-            "php" => "Philippine peso",
-            "pln" => "Polish złoty",
-            "gbp" => "Pound sterling",
-            "rub" => "Russian ruble",
-            "sgd" => "Singapore dollar ",
-            "sek" => "Swedish krona",
-            "chf" => "Swiss franc",
-            "thb" => "Thai baht",
-            "usd" => "United States dollar",
+            'aud' => 'Australian dollar',
+            'brl' => 'Brazilian real 2',
+            'cad' => 'Canadian dollar',
+            'cny' => 'Chinese Renmenbi 3',
+            'czk' => 'Czech koruna',
+            'dkk' => 'Danish krone',
+            'eur' => 'Euro',
+            'hkd' => 'Hong Kong dollar',
+            'huf' => 'Hungarian forint 1',
+            'ils' => 'Israeli new shekel',
+            'jpy' => 'Japanese yen 1',
+            'myr' => 'Malaysian ringgit 2',
+            'mxn' => 'Mexican peso',
+            'twd' => 'New Taiwan dollar 1',
+            'nzd' => 'New Zealand dollar',
+            'nok' => 'Norwegian krone',
+            'php' => 'Philippine peso',
+            'pln' => 'Polish złoty',
+            'gbp' => 'Pound sterling',
+            'rub' => 'Russian ruble',
+            'sgd' => 'Singapore dollar ',
+            'sek' => 'Swedish krona',
+            'chf' => 'Swiss franc',
+            'thb' => 'Thai baht',
+            'usd' => 'United States dollar',
         ];
     }
 }

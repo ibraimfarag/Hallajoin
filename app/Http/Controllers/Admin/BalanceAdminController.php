@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class BalanceAdminController extends Controller
 {
@@ -38,13 +37,13 @@ class BalanceAdminController extends Controller
             if ($user->avatar_id) {
                 $avatar = \Modules\Media\Models\MediaFile::find($user->avatar_id);
                 if ($avatar && $avatar->file_path) {
-                    $avatarUrl = asset('uploads/' . $avatar->file_path);
+                    $avatarUrl = asset('uploads/'.$avatar->file_path);
                     $hasAvatar = true;
                 }
             }
 
             // Get first letter for placeholder
-            $userName = trim($user->first_name . ' ' . $user->last_name) ?: 'N/A';
+            $userName = trim($user->first_name.' '.$user->last_name) ?: 'N/A';
             $firstLetter = strtoupper(mb_substr($userName, 0, 1));
 
             return [
@@ -69,17 +68,17 @@ class BalanceAdminController extends Controller
 
         $data = [
             'users' => $users,
-            'page_title' => __("User Balances"),
+            'page_title' => __('User Balances'),
             'breadcrumbs' => [
                 [
                     'name' => __('Members'),
-                    'url' => route('admin.users.index')
+                    'url' => route('admin.users.index'),
                 ],
                 [
                     'name' => __('Balance'),
-                    'class' => 'active'
+                    'class' => 'active',
                 ],
-            ]
+            ],
         ];
 
         return view('admin.balance.index', $data);

@@ -20,11 +20,11 @@ class SetupCurrencySvgs extends Command
         ];
 
         foreach ($currencies as $currency => $svg) {
-            $setting = Settings::where('name', 'currency_svg_' . $currency)->first();
+            $setting = Settings::where('name', 'currency_svg_'.$currency)->first();
 
-            if (!$setting) {
+            if (! $setting) {
                 $setting = new Settings;
-                $setting->name = 'currency_svg_' . $currency;
+                $setting->name = 'currency_svg_'.$currency;
             }
 
             $setting->val = $svg;

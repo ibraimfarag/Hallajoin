@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateCoreVendorPlans extends Migration
 {
@@ -17,7 +17,7 @@ class CreateCoreVendorPlans extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->integer('base_commission');
-            $table->string('status',20)->nullable();
+            $table->string('status', 20)->nullable();
             $table->dateTime('publish_date')->nullable();
             $table->bigInteger('create_user')->nullable();
             $table->bigInteger('update_user')->nullable();

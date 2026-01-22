@@ -12,7 +12,6 @@ use Modules\News\Models\NewsTranslation;
 
 class VendorNewsController extends FrontendController
 {
-
     public function __construct()
     {
         $this->setActiveMenu(route('news.vendor.index'));
@@ -23,59 +22,60 @@ class VendorNewsController extends FrontendController
     {
         $this->checkPermission('news_view');
 
-        $dataNews = News::query()->where('author_id',auth()->id())->orderBy('id', 'desc');
+        $dataNews = News::query()->where('author_id', auth()->id())->orderBy('id', 'desc');
         $post_name = $request->query('s');
         $cate = $request->query('cate_id');
         if ($cate) {
             $dataNews->where('cat_id', $cate);
         }
         if ($post_name) {
-            $dataNews->where('title', 'LIKE', '%' . $post_name . '%');
+            $dataNews->where('title', 'LIKE', '%'.$post_name.'%');
             $dataNews->orderBy('title', 'asc');
         }
-
 
         $this->filterLang($dataNews);
 
         $data = [
-            'rows'        => $dataNews->with("author")->with("category")->paginate(20),
-            'categories'  => NewsCategory::get(),
+            'rows' => $dataNews->with('author')->with('category')->paginate(20),
+            'categories' => NewsCategory::get(),
             'breadcrumbs' => [
                 [
                     'name' => __('News'),
-                    'url'  => route('news.vendor.index')
+                    'url' => route('news.vendor.index'),
                 ],
                 [
-                    'name'  => __('All'),
-                    'class' => 'active'
+                    'name' => __('All'),
+                    'class' => 'active',
                 ],
             ],
-            "languages"=>Language::getActive(false),
-            "locale"=>\App::getLocale(),
-            'page_title'=>__("News Management")
+            'languages' => Language::getActive(false),
+            'locale' => \App::getLocale(),
+            'page_title' => __('News Management'),
         ];
+
         return view('News::frontend.vendor.index', $data);
     }
 
     public function create(Request $request)
     {
         $this->checkPermission('news_create');
-        $row = new News();
+        $row = new News;
         $data = [
-            'categories'        => NewsCategory::get()->toTree(),
-            'row'         => $row,
+            'categories' => NewsCategory::get()->toTree(),
+            'row' => $row,
             'breadcrumbs' => [
                 [
                     'name' => __('News'),
-                    'url'  => route('news.vendor.index')
+                    'url' => route('news.vendor.index'),
                 ],
                 [
-                    'name'  => __('Add News'),
-                    'class' => 'active'
+                    'name' => __('Add News'),
+                    'class' => 'active',
                 ],
             ],
-            'translation'=>new NewsTranslation()
+            'translation' => new NewsTranslation,
         ];
+
         return view('News::frontend.vendor.detail', $data);
     }
 
@@ -91,111 +91,112 @@ class VendorNewsController extends FrontendController
 
         $translation = $row->translate($request->query('lang'));
 
-
         $data = [
-            'row'  => $row,
-            'translation'  => $translation,
+            'row' => $row,
+            'translation' => $translation,
             'categories' => NewsCategory::get()->toTree(),
             'tags' => $row->getTags(),
-            'enable_multi_lang'=>true,
+            'enable_multi_lang' => true,
             'breadcrumbs' => [
                 [
                     'name' => __('News'),
-                    'url'  => route('news.vendor.index')
+                    'url' => route('news.vendor.index'),
                 ],
                 [
-                    'name'  => __('Edit: :name',['name'=>$row->title]),
-                    'class' => 'active'
+                    'name' => __('Edit: :name', ['name' => $row->title]),
+                    'class' => 'active',
                 ],
             ],
         ];
+
         return view('News::frontend.vendor.detail', $data);
     }
 
-    public function store(Request $request, $id){
-        if(is_demo_mode()){
-            return redirect()->back()->with('danger',__("DEMO MODE: Disable update"));
+    public function store(Request $request, $id)
+    {
+        if (is_demo_mode()) {
+            return redirect()->back()->with('danger', __('DEMO MODE: Disable update'));
         }
         $request->validate([
-            'title'=>'required'
+            'title' => 'required',
         ]);
 
-        if($id>0){
+        if ($id > 0) {
             $this->checkPermission('news_update');
             $row = News::whereId($id)->whereCreateUser(auth()->id())->first();
             if (empty($row)) {
                 return redirect(route('news.vendor.index'));
             }
-        }else{
+        } else {
             $this->checkPermission('news_create');
-            $row = new News();
+            $row = new News;
             $row->author_id = auth()->id();
         }
 
         $old_status = $row->status;
         $row->fill($request->input());
-        if($request->input('slug')){
+        if ($request->input('slug')) {
             $row->slug = $request->input('slug');
         }
-        if(setting_item('news_vendor_need_approve')){
-            if($old_status != 'publish' and $row->status == 'publish'){
+        if (setting_item('news_vendor_need_approve')) {
+            if ($old_status != 'publish' and $row->status == 'publish') {
                 $row->status = 'draft';
             }
         }
 
-        $res = $row->saveOriginOrTranslation($request->query('lang'),true);
+        $res = $row->saveOriginOrTranslation($request->query('lang'), true);
 
         if ($res) {
-            if(is_default_lang($request->query('lang'))){
+            if (is_default_lang($request->query('lang'))) {
                 $row->saveTag($request->input('tag_name'), $request->input('tag_ids'));
             }
-            if($id > 0 ){
-                return back()->with('success',  __('News updated') );
-            }else{
-                return redirect(route('news.vendor.edit',$row->id))->with('success', __('News created') );
+            if ($id > 0) {
+                return back()->with('success', __('News updated'));
+            } else {
+                return redirect(route('news.vendor.edit', $row->id))->with('success', __('News created'));
             }
         }
     }
 
     public function bulkEdit(Request $request)
     {
-        if(is_demo_mode()){
-            return redirect()->back()->with('danger',__("DEMO MODE: Disable update"));
+        if (is_demo_mode()) {
+            return redirect()->back()->with('danger', __('DEMO MODE: Disable update'));
         }
         $this->checkPermission('news_update');
         $ids = $request->input('ids');
         $action = $request->input('action');
-        if (empty($ids) or !is_array($ids)) {
+        if (empty($ids) or ! is_array($ids)) {
             return redirect()->back()->with('error', __('No items selected!'));
         }
-        $allowedActions = ['delete','draft','pending'];
-        if(!setting_item('news_vendor_need_approve'))
-        {
+        $allowedActions = ['delete', 'draft', 'pending'];
+        if (! setting_item('news_vendor_need_approve')) {
             $allowedActions[] = 'publish';
         }
-        if (!in_array($action,$allowedActions)) {
+        if (! in_array($action, $allowedActions)) {
             return redirect()->back()->with('error', __('Please select an action!'));
         }
-        if ($action == "delete") {
+        if ($action == 'delete') {
             $this->checkPermission('news_delete');
             foreach ($ids as $id) {
-                $query = News::where("id", $id);
-                $query->where("create_user", Auth::id());
+                $query = News::where('id', $id);
+                $query->where('create_user', Auth::id());
 
                 $query->first();
-                if(!empty($query)){
+                if (! empty($query)) {
                     $query->delete();
                 }
             }
         } else {
             $this->checkPermission('news_update');
             foreach ($ids as $id) {
-                $query = News::where("id", $id);
-                $query->where("create_user", Auth::id());
+                $query = News::where('id', $id);
+                $query->where('create_user', Auth::id());
 
                 $query->update(['status' => $action]);
             }
         }
+
         return redirect()->back()->with('success', __('Update success!'));
     }
 }

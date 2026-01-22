@@ -1,23 +1,31 @@
 <?php
+
 namespace App\Helpers;
+
 use Illuminate\Support\HtmlString;
 
 class ReCaptchaEngine
 {
-    protected static $version = "v2";
+    protected static $version = 'v2';
+
     protected static $api_key;
+
     protected static $api_secret;
+
     protected static $is_init;
+
     protected static $actions = [];
+
     protected static $is_enable = false;
 
     public static function scripts()
     {
-        if (!self::isEnable() OR empty(static::$actions))
+        if (! self::isEnable() or empty(static::$actions)) {
             return false;
+        }
 
-        if(self::$version=='v3'){
-            return  self::scriptsV3();
+        if (self::$version == 'v3') {
+            return self::scriptsV3();
         }
         ?>
         <script src="https://www.google.com/recaptcha/api.js?render=<?php e(self::$api_key) ?>&onload=BravoReCaptchaCallBack" async defer></script>
@@ -56,26 +64,26 @@ class ReCaptchaEngine
         <?php
     }
 
-
     public static function captcha($action = 'default')
     {
-        if (!self::isEnable())
+        if (! self::isEnable()) {
             return false;
+        }
 
-        static::$actions[$action] = $action . '_' . uniqid();
+        static::$actions[$action] = $action.'_'.uniqid();
 
-        if(self::$version=='v3'){
+        if (self::$version == 'v3') {
             return new HtmlString('<input type="hidden" name="g-recaptcha-response" class="bravo-recaptcha" id="'.e(static::$actions[$action]).'"><!--End Captcha-->');
-        }else{
+        } else {
             return new HtmlString('<div class="bravo-recaptcha" id="'.e(static::$actions[$action]).'"></div><!--End Captcha-->');
         }
     }
 
     public static function scriptsV3()
     {
-        if (!self::isEnable() OR empty(static::$actions))
+        if (! self::isEnable() or empty(static::$actions)) {
             return false;
-
+        }
 
         ?>
 
@@ -117,43 +125,45 @@ class ReCaptchaEngine
         <?php
     }
 
-
-
     public static function isEnable()
     {
         self::maybeInit();
-        if (!self::$api_key or !self::$api_secret or !self::$is_enable)
+        if (! self::$api_key or ! self::$api_secret or ! self::$is_enable) {
             return false;
+        }
+
         return true;
     }
 
     public static function maybeInit()
     {
-        if (self::$is_init)
+        if (self::$is_init) {
             return;
+        }
         self::$api_key = setting_item('recaptcha_api_key');
         self::$api_secret = setting_item('recaptcha_api_secret');
         self::$is_enable = setting_item('recaptcha_enable');
         self::$is_init = true;
-        self::$version = setting_item('recaptcha_version','v2');
+        self::$version = setting_item('recaptcha_version', 'v2');
     }
 
     public static function verify($response)
     {
-        if (!self::isEnable())
+        if (! self::isEnable()) {
             return true;
+        }
         $url = 'https://www.google.com/recaptcha/api/siteverify';
         $data = [
-            'secret'   => self::$api_secret,
-            'response' => $response
+            'secret' => self::$api_secret,
+            'response' => $response,
         ];
         $query = http_build_query($data);
         $options = [
             'http' => [
-                'header'  => "Content-Type: application/x-www-form-urlencoded\r\n" . "Content-Length: " . strlen($query) . "\r\n" . "User-Agent:MyAgent/1.0\r\n",
-                'method'  => 'POST',
-                'content' => $query
-            ]
+                'header' => "Content-Type: application/x-www-form-urlencoded\r\n".'Content-Length: '.strlen($query)."\r\n"."User-Agent:MyAgent/1.0\r\n",
+                'method' => 'POST',
+                'content' => $query,
+            ],
         ];
         $context = stream_context_create($options);
 
@@ -163,20 +173,22 @@ class ReCaptchaEngine
         if ($captchaVerify['success'] == true) {
             return true;
         }
+
         return false;
     }
 
-    public static function file_get_contents_curl($url,$isPost = false,$data = []) {
+    public static function file_get_contents_curl($url, $isPost = false, $data = [])
+    {
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
+        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
-        if($isPost){
+        if ($isPost) {
             curl_setopt($ch, CURLOPT_POST, count($data));
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         }

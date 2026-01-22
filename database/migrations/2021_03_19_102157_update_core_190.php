@@ -18,8 +18,8 @@ class UpdateCore190 extends Migration
     public function up()
     {
 
-        if (!Schema::hasTable((new LocationCategory())->getTable())) {
-            Schema::create((new LocationCategory())->getTable(), function (Blueprint $table) {
+        if (! Schema::hasTable((new LocationCategory)->getTable())) {
+            Schema::create((new LocationCategory)->getTable(), function (Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->string('name', 255)->nullable();
                 $table->string('icon_class', 255)->nullable();
@@ -32,7 +32,7 @@ class UpdateCore190 extends Migration
                 $table->integer('update_user')->nullable();
                 $table->softDeletes();
 
-                //Languages
+                // Languages
                 $table->bigInteger('origin_id')->nullable();
                 $table->string('lang', 10)->nullable();
 
@@ -40,8 +40,8 @@ class UpdateCore190 extends Migration
             });
         }
 
-        if (!Schema::hasTable((new LocationCategoryTranslation())->getTable())) {
-            Schema::create((new LocationCategoryTranslation())->getTable(), function (Blueprint $table) {
+        if (! Schema::hasTable((new LocationCategoryTranslation)->getTable())) {
+            Schema::create((new LocationCategoryTranslation)->getTable(), function (Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->bigInteger('origin_id')->nullable();
                 $table->string('locale', 10)->nullable();
@@ -55,14 +55,14 @@ class UpdateCore190 extends Migration
                 $table->timestamps();
             });
         }
-        Schema::table("users", function (Blueprint $table) {
-            if (!Schema::hasColumn("users", 'user_name')) {
+        Schema::table('users', function (Blueprint $table) {
+            if (! Schema::hasColumn('users', 'user_name')) {
                 $table->string('user_name')->nullable()->unique();
             }
         });
 
-        if (!Schema::hasTable((new Service())->getTable())) {
-            Schema::create((new Service())->getTable(), function (Blueprint $table) {
+        if (! Schema::hasTable((new Service)->getTable())) {
+            Schema::create((new Service)->getTable(), function (Blueprint $table) {
                 $table->bigIncrements('id');
 
                 $table->string('title', 255)->nullable();
@@ -74,11 +74,11 @@ class UpdateCore190 extends Migration
                 $table->string('map_lng', 20)->nullable();
                 $table->tinyInteger('is_featured')->nullable();
                 $table->tinyInteger('star_rate')->nullable();
-                //Price
+                // Price
                 $table->decimal('price', 12, 2)->nullable();
                 $table->decimal('sale_price', 12, 2)->nullable();
 
-                //Tour type
+                // Tour type
                 $table->integer('min_people')->nullable();
                 $table->integer('max_people')->nullable();
                 $table->integer('max_guests')->nullable();
@@ -96,8 +96,8 @@ class UpdateCore190 extends Migration
             });
         }
 
-        if (!Schema::hasTable((new ServiceTranslation())->getTable())) {
-            Schema::create((new ServiceTranslation())->getTable(), function (Blueprint $table) {
+        if (! Schema::hasTable((new ServiceTranslation)->getTable())) {
+            Schema::create((new ServiceTranslation)->getTable(), function (Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->bigInteger('origin_id')->nullable();
                 $table->string('locale', 10)->nullable();
@@ -112,7 +112,7 @@ class UpdateCore190 extends Migration
                 $table->timestamps();
             });
         }
-        if(!Schema::hasTable('bravo_booking_payments')) {
+        if (! Schema::hasTable('bravo_booking_payments')) {
             Schema::create('bravo_booking_payments', function (Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->string('code', 64)->nullable();
@@ -142,19 +142,19 @@ class UpdateCore190 extends Migration
             });
         }
         Schema::table('bravo_review', function (Blueprint $table) {
-            if (!Schema::hasColumn('bravo_review', 'vendor_id')) {
+            if (! Schema::hasColumn('bravo_review', 'vendor_id')) {
                 $table->bigInteger('vendor_id')->nullable();
             }
         });
         Schema::table('bravo_attrs', function (Blueprint $table) {
-            if (!Schema::hasColumn('bravo_attrs', 'display_type')) {
-                $table->string('display_type',255)->nullable();
+            if (! Schema::hasColumn('bravo_attrs', 'display_type')) {
+                $table->string('display_type', 255)->nullable();
             }
-            if (!Schema::hasColumn('bravo_attrs', 'hide_in_single')) {
+            if (! Schema::hasColumn('bravo_attrs', 'hide_in_single')) {
                 $table->tinyInteger('hide_in_single')->nullable();
             }
         });
-        if (!Schema::hasTable('user_wishlist')) {
+        if (! Schema::hasTable('user_wishlist')) {
             Schema::create('user_wishlist', function (Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->integer('object_id')->nullable();
@@ -166,10 +166,10 @@ class UpdateCore190 extends Migration
             });
         }
         Schema::table('users', function (Blueprint $table) {
-            if (!Schema::hasColumn('users', 'verify_submit_status')) {
-                $table->string('verify_submit_status',30)->nullable();
+            if (! Schema::hasColumn('users', 'verify_submit_status')) {
+                $table->string('verify_submit_status', 30)->nullable();
             }
-            if (!Schema::hasColumn('users', 'is_verified')) {
+            if (! Schema::hasColumn('users', 'is_verified')) {
                 $table->smallInteger('is_verified')->nullable();
             }
         });

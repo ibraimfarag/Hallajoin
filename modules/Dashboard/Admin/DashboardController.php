@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Dashboard\Admin;
 
 use Illuminate\Http\Request;
@@ -11,10 +12,11 @@ class DashboardController extends AdminController
     {
         $f = strtotime('monday this week');
         $data = [
-            'recent_bookings'    => Booking::getRecentBookings(),
-            'top_cards'          => Booking::getTopCardsReport(),
-            'earning_chart_data' => Booking::getDashboardChartData($f, time())
+            'recent_bookings' => Booking::getRecentBookings(),
+            'top_cards' => Booking::getTopCardsReport(),
+            'earning_chart_data' => Booking::getDashboardChartData($f, time()),
         ];
+
         return view('Dashboard::index', $data);
     }
 
@@ -22,11 +24,12 @@ class DashboardController extends AdminController
     {
         $chart = $request->input('chart');
         switch ($chart) {
-            case "earning":
+            case 'earning':
                 $from = $request->input('from');
                 $to = $request->input('to');
+
                 return $this->sendSuccess([
-                    'data' => Booking::getDashboardChartData(strtotime($from), strtotime($to))
+                    'data' => Booking::getDashboardChartData(strtotime($from), strtotime($to)),
                 ]);
                 break;
         }

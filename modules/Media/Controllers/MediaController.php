@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Media\Controllers;
 
 use App\Http\Controllers\Controller;
@@ -19,8 +20,8 @@ class MediaController extends Controller
 
     public function privateFileStore(Request $request)
     {
-        if(!$user_id = Auth::id()){
-            return $this->sendError(__("Please log in"));
+        if (! $user_id = Auth::id()) {
+            return $this->sendError(__('Please log in'));
         }
 
         $fileName = 'file';
@@ -28,35 +29,36 @@ class MediaController extends Controller
         $file = $request->file($fileName);
 
         try {
-            $this->validatePrivateFile($file,$request->input('type','default'));
+            $this->validatePrivateFile($file, $request->input('type', 'default'));
         } catch (\Exception $exception) {
             return $this->sendError($exception->getMessage());
         }
 
         $folder = 'private/'.$user_id.'/';
-        $folder = $folder . date('Y/m/d');
+        $folder = $folder.date('Y/m/d');
 
-        $newFileName = md5(microtime(true).rand(0,999));
+        $newFileName = md5(microtime(true).rand(0, 999));
 
         $i = 0;
         do {
-            $newFileName2 = $newFileName . ($i ? $i : '');
-            $testPath = $folder . '/' . $newFileName2 . '.' . $file->getClientOriginalExtension();
+            $newFileName2 = $newFileName.($i ? $i : '');
+            $testPath = $folder.'/'.$newFileName2.'.'.$file->getClientOriginalExtension();
             $i++;
         } while (Storage::disk('local')->exists($testPath));
 
-        $check = $file->storeAs( $folder, $newFileName2 . '.' . $file->getClientOriginalExtension(),'local');
+        $check = $file->storeAs($folder, $newFileName2.'.'.$file->getClientOriginalExtension(), 'local');
 
         if ($check) {
             try {
-                $path = str_replace('private/','',$check);
+                $path = str_replace('private/', '', $check);
+
                 return $this->sendSuccess(['data' => [
-                    'path'=>$path,
-                    'name'=>Str::slug($file->getClientOriginalName()),
-                    'size'=>$file->getSize(),
-                    'file_type'=>$file->getMimeType(),
-                    'file_extension'=> $file->getClientOriginalExtension(),
-                    'download'=>route('media.private.view',['path'=>$path]),
+                    'path' => $path,
+                    'name' => Str::slug($file->getClientOriginalName()),
+                    'size' => $file->getSize(),
+                    'file_type' => $file->getMimeType(),
+                    'file_extension' => $file->getClientOriginalExtension(),
+                    'download' => route('media.private.view', ['path' => $path]),
                 ]]);
 
             } catch (\Exception $exception) {
@@ -66,18 +68,18 @@ class MediaController extends Controller
                 return $this->sendError($exception->getMessage());
             }
         }
-        return $this->sendError(__("Can not upload the file"));
+
+        return $this->sendError(__('Can not upload the file'));
     }
 
     /**
-     * @param $file UploadedFile
-     * @param $group string
-     *
+     * @param  $file  UploadedFile
+     * @param  $group  string
      * @return bool
      *
      * @throws \Exception
      */
-    public function validatePrivateFile($file, $group = "default")
+    public function validatePrivateFile($file, $group = 'default')
     {
         $allowedExts = [
             'jpg',
@@ -111,45 +113,45 @@ class MediaController extends Controller
             'bmp',
             'png',
             'gif',
-            'pdf'
+            'pdf',
         ];
-        $allowedMimeTypes  = [];
+        $allowedMimeTypes = [];
         $uploadConfigs = [
             'default' => [
-                'types'    => $allowedExts,
-                "max_size" => 20000000,
-                "max_width"=>2500,
-                "max_height"=>2500,
+                'types' => $allowedExts,
+                'max_size' => 20000000,
+                'max_width' => 2500,
+                'max_height' => 2500,
                 // 20MB
             ],
-            'image'=>[
-                'types'    => $allowedExtsImage,
-                "max_size" => 20000000,
-                "max_width"=>2500,
-                "max_height"=>2500
-            ]
+            'image' => [
+                'types' => $allowedExtsImage,
+                'max_size' => 20000000,
+                'max_width' => 2500,
+                'max_height' => 2500,
+            ],
         ];
         $config = isset($uploadConfigs[$group]) ? $uploadConfigs[$group] : $uploadConfigs['default'];
 
-        if (!in_array(strtolower($file->getClientOriginalExtension()), $config['types'])) {
-            throw new \Exception(__("File type are not allowed"));
+        if (! in_array(strtolower($file->getClientOriginalExtension()), $config['types'])) {
+            throw new \Exception(__('File type are not allowed'));
         }
         if ($file->getSize() > $config['max_size']) {
-            throw new \Exception(__("Maximum upload file size is :max_size B", ['max_size' => $config['max_size']]));
+            throw new \Exception(__('Maximum upload file size is :max_size B', ['max_size' => $config['max_size']]));
         }
 
-        if(in_array($file_extension = strtolower($file->getClientOriginalExtension()), $allowedExtsImage)) {
+        if (in_array($file_extension = strtolower($file->getClientOriginalExtension()), $allowedExtsImage)) {
 
-            if (!empty($config['max_width']) or !empty($config['max_width'])) {
+            if (! empty($config['max_width']) or ! empty($config['max_width'])) {
                 $imagedata = getimagesize($file->getPathname());
                 if (empty($imagedata)) {
-                    throw new \Exception(__("Can not get image dimensions"));
+                    throw new \Exception(__('Can not get image dimensions'));
                 }
-                if (!empty($config['max_width']) and $imagedata[0] > $config['max_width']) {
-                    throw new \Exception(__("Maximum width allowed is: :number", ['number' => $config['max_width']]));
+                if (! empty($config['max_width']) and $imagedata[0] > $config['max_width']) {
+                    throw new \Exception(__('Maximum width allowed is: :number', ['number' => $config['max_width']]));
                 }
-                if (!empty($config['max_height']) and $imagedata[1] > $config['max_height']) {
-                    throw new \Exception(__("Maximum height allowed is: :number", ['number' => $config['max_height']]));
+                if (! empty($config['max_height']) and $imagedata[1] > $config['max_height']) {
+                    throw new \Exception(__('Maximum height allowed is: :number', ['number' => $config['max_height']]));
                 }
             }
         }
@@ -157,13 +159,14 @@ class MediaController extends Controller
         return true;
     }
 
-    public function privateFileView(){
+    public function privateFileView()
+    {
 
         $path = 'private/'.\request()->get('path');
 
-        if(Storage::disk('public')->exists($path)) {
+        if (Storage::disk('public')->exists($path)) {
 
-            header('Content-Type: ' . mime_content_type(Storage::disk('public')->path($path)));
+            header('Content-Type: '.mime_content_type(Storage::disk('public')->path($path)));
 
             echo Storage::disk('public')->get($path);
             exit;
@@ -172,18 +175,20 @@ class MediaController extends Controller
         abort(404);
     }
 
-    public function editImage(Request $request){
+    public function editImage(Request $request)
+    {
         $validate = [
-            'image'     => 'required',
-            'image_id'  => 'required',
+            'image' => 'required',
+            'image_id' => 'required',
         ];
         $request->validate($validate);
 
-        if (!Auth::user()->hasPermission("media_upload")) {
+        if (! Auth::user()->hasPermission('media_upload')) {
             $result = [
                 'message' => __('403'),
-                'status'=>0
+                'status' => 0,
             ];
+
             return $result;
         }
 
@@ -192,6 +197,7 @@ class MediaController extends Controller
 
         $file = MediaFile::find($image_id);
         $res = $file->editImage($image_data);
+
         return $this->sendSuccess($res);
     }
 }

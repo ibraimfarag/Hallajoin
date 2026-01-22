@@ -2,8 +2,7 @@
  * Bootstrap Dropdown Fix
  * This script fixes common dropdown issues by ensuring proper IDs and attributes
  */
-SafeDOM.whenReady(function () {
-    var $ = SafeDOM.jQuery();
+SafeDOM.jQuery(function ($) {
     if (!$) {
         console.warn('Bootstrap dropdown fix: jQuery not available');
         return;

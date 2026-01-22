@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Resources;
-
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MissingValue;
@@ -11,10 +9,12 @@ class BaseJsonResource extends JsonResource
 {
     public $needs = [];
 
-    public function __construct($resource,$needs = [])
+    public function __construct($resource, $needs = [])
     {
         parent::__construct($resource);
-        if(is_array($needs)) $this->needs = $needs;
+        if (is_array($needs)) {
+            $this->needs = $needs;
+        }
     }
 
     /**
@@ -27,7 +27,7 @@ class BaseJsonResource extends JsonResource
      */
     protected function whenNeed($key, $value, $default = null)
     {
-        if (in_array($key,$this->needs)) {
+        if (in_array($key, $this->needs)) {
             return value($value);
         }
 
@@ -39,10 +39,9 @@ class BaseJsonResource extends JsonResource
      *
      * @param  mixed  $resource
      * @param  array  $needs
-     *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public static function collection($resource,$needs = [])
+    public static function collection($resource, $needs = [])
     {
         return tap(new BaseResourceCollection($resource, static::class), function ($collection) use ($needs) {
             $collection->needs = $needs;
@@ -51,5 +50,4 @@ class BaseJsonResource extends JsonResource
             }
         });
     }
-
 }

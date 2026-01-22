@@ -18,13 +18,13 @@ class CreateUserPlanTable extends Migration
 
             $table->string('title')->nullable();
             $table->text('content')->nullable();
-            $table->decimal('price',12,2)->nullable();
-            $table->integer('duration' )->nullable()->default(0);
-            $table->string('duration_type',30)->nullable();
-            $table->decimal('annual_price',12,2)->nullable();
+            $table->decimal('price', 12, 2)->nullable();
+            $table->integer('duration')->nullable()->default(0);
+            $table->string('duration_type', 30)->nullable();
+            $table->decimal('annual_price', 12, 2)->nullable();
             $table->integer('max_service')->nullable()->default(0);
 
-            $table->string('status',30)->nullable();
+            $table->string('status', 30)->nullable();
 
             $table->bigInteger('role_id')->nullable();
             $table->tinyInteger('is_recommended')->nullable()->default(1);
@@ -46,7 +46,7 @@ class CreateUserPlanTable extends Migration
             $table->integer('origin_id')->unsigned();
             $table->string('locale')->index();
 
-            $table->unique(['origin_id','locale']);
+            $table->unique(['origin_id', 'locale']);
 
             $table->softDeletes();
 
@@ -60,8 +60,8 @@ class CreateUserPlanTable extends Migration
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
             $table->integer('max_service')->nullable()->default(0);
-            $table->decimal('price',12,2)->nullable();
-            $table->text("plan_data")->nullable();
+            $table->decimal('price', 12, 2)->nullable();
+            $table->text('plan_data')->nullable();
 
             $table->tinyInteger('status')->nullable()->default(1);
 

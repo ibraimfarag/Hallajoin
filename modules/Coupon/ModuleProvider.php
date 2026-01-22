@@ -8,21 +8,20 @@ use Modules\User\Helpers\PermissionHelper;
 
 class ModuleProvider extends ModuleServiceProvider
 {
-
     public function boot(SitemapHelper $sitemapHelper)
     {
 
-        $this->loadMigrationsFrom(__DIR__ . '/Migrations');
-
+        $this->loadMigrationsFrom(__DIR__.'/Migrations');
 
         PermissionHelper::add([
-            //Coupon
+            // Coupon
             'coupon_view',
             'coupon_create',
             'coupon_update',
             'coupon_delete',
         ]);
     }
+
     /**
      * Register bindings in the container.
      *

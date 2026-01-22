@@ -1,9 +1,8 @@
 <?php
 
-namespace  Modules\Space;
+namespace Modules\Space;
 
 use Modules\Core\Abstracts\BaseSettingsClass;
-use Modules\Core\Models\Settings;
 
 class SettingClass extends BaseSettingsClass
 {
@@ -12,10 +11,10 @@ class SettingClass extends BaseSettingsClass
         $configs = [
             'space' => [
                 'id' => 'space',
-                'title' => __("Space Settings"),
+                'title' => __('Space Settings'),
                 'position' => 20,
-                'view' => "Space::admin.settings.space",
-                "keys" => [
+                'view' => 'Space::admin.settings.space',
+                'keys' => [
                     'space_disable',
                     'space_page_search_title',
                     'space_page_search_banner',
@@ -63,9 +62,10 @@ class SettingClass extends BaseSettingsClass
 
                 ],
                 'filter_demo_mode' => [
-                ]
-            ]
+                ],
+            ],
         ];
-        return apply_filters(Hook::SPACE_SETTING_CONFIG,$configs);
+
+        return apply_filters(Hook::SPACE_SETTING_CONFIG, $configs);
     }
 }

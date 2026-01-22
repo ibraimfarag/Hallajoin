@@ -1,5 +1,6 @@
 <?php
-namespace  Modules\Booking;
+
+namespace Modules\Booking;
 
 use Modules\Core\Abstracts\BaseSettingsClass;
 
@@ -13,27 +14,30 @@ class SettingClass extends BaseSettingsClass
             'currency_decimal',
             'currency_thousand',
             'currency_no_decimal',
-            'extra_currency'
+            'extra_currency',
         ];
         $all = get_payment_gateways();
         $languages = \Modules\Language\Models\Language::getActive();
-        if (!empty($all)) {
+        if (! empty($all)) {
             foreach ($all as $k => $gateway) {
-                if (!class_exists($gateway))
+                if (! class_exists($gateway)) {
                     continue;
+                }
                 $obj = new $gateway($k);
                 $options = $obj->getOptionsConfigs();
-                if (!empty($options)) {
+                if (! empty($options)) {
                     foreach ($options as $option) {
-                        $keys[] = 'g_' . $k . '_' . $option['id'];
-                        if( !empty($option['multi_lang']) && !empty($languages) && setting_item('site_enable_multi_lang') && setting_item('site_locale')){
-                            foreach($languages as $language){
-                                if( setting_item('site_locale') == $language->locale) continue;
-                                $keys[] = 'g_' . $k . '_' . $option['id'].'_'.$language->locale;
+                        $keys[] = 'g_'.$k.'_'.$option['id'];
+                        if (! empty($option['multi_lang']) && ! empty($languages) && setting_item('site_enable_multi_lang') && setting_item('site_locale')) {
+                            foreach ($languages as $language) {
+                                if (setting_item('site_locale') == $language->locale) {
+                                    continue;
+                                }
+                                $keys[] = 'g_'.$k.'_'.$option['id'].'_'.$language->locale;
                             }
                         }
                         if ($option['type'] == 'textarea' && $option['type'] == 'editor') {
-                            $htmlKeys[] = 'g_' . $k . '_' . $option['id'];
+                            $htmlKeys[] = 'g_'.$k.'_'.$option['id'];
                         }
                     }
                 }
@@ -41,12 +45,12 @@ class SettingClass extends BaseSettingsClass
         }
 
         $configs = [
-            'booking'=>[
-                'id'   => 'booking',
-                'title' => __("Booking Settings"),
-                'position'=>40,
-                'view'=>"Booking::admin.settings.booking",
-                "keys"=>[
+            'booking' => [
+                'id' => 'booking',
+                'title' => __('Booking Settings'),
+                'position' => 40,
+                'view' => 'Booking::admin.settings.booking',
+                'keys' => [
                     'booking_enable_recaptcha',
                     'booking_term_conditions',
                     'email_footer',
@@ -57,32 +61,32 @@ class SettingClass extends BaseSettingsClass
                     'booking_guest_checkout',
                     'booking_enable_ticket_guest_info',
                 ],
-                'html_keys'=>[
+                'html_keys' => [
 
                 ],
-                'filter_demo_mode'=>[
+                'filter_demo_mode' => [
                     'booking_term_conditions',
                     'email_footer',
                     'email_header',
                     'invoice_company_info',
-                ]
+                ],
             ],
-            'payment'=>[
-                'id'   => 'payment',
-                'title' => __("Payment Settings"),
-                'position'=>60,
-                'view'=>"Booking::admin.settings.payment",
-                "keys"=>$keys,
-                'html_keys'=>[
+            'payment' => [
+                'id' => 'payment',
+                'title' => __('Payment Settings'),
+                'position' => 60,
+                'view' => 'Booking::admin.settings.payment',
+                'keys' => $keys,
+                'html_keys' => [
 
-                ]
+                ],
             ],
-            'enquiry'=>[
-                'id'   => 'enquiry',
-                'title' => __("Enquiry Settings"),
-                'position'=>41,
-                'view'=>"Booking::admin.settings.enquiry",
-                "keys"=>[
+            'enquiry' => [
+                'id' => 'enquiry',
+                'title' => __('Enquiry Settings'),
+                'position' => 41,
+                'view' => 'Booking::admin.settings.enquiry',
+                'keys' => [
                     'booking_enquiry_for_hotel',
                     'booking_enquiry_for_tour',
                     'booking_enquiry_for_space',
@@ -104,15 +108,16 @@ class SettingClass extends BaseSettingsClass
                     'booking_enquiry_mail_to_admin_content',
                     'booking_enquiry_enable_recaptcha',
                 ],
-                'html_keys'=>[
+                'html_keys' => [
 
                 ],
-                'filter_demo_mode'=>[
+                'filter_demo_mode' => [
                     'booking_enquiry_mail_to_vendor_content',
                     'booking_enquiry_mail_to_admin_content',
-                ]
-            ]
+                ],
+            ],
         ];
-        return apply_filters(Hook::BOOKING_SETTING_CONFIG,$configs);
+
+        return apply_filters(Hook::BOOKING_SETTING_CONFIG, $configs);
     }
 }

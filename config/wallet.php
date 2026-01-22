@@ -1,19 +1,19 @@
 <?php
 
+use Bavix\Wallet\Models\Transaction;
+use Bavix\Wallet\Models\Transfer;
+use Bavix\Wallet\Models\Wallet;
 use Bavix\Wallet\Objects\Bring;
 use Bavix\Wallet\Objects\Cart;
 use Bavix\Wallet\Objects\EmptyLock;
 use Bavix\Wallet\Objects\Operation;
-use Bavix\Wallet\Services\ExchangeService;
 use Bavix\Wallet\Services\CommonService;
-use Bavix\Wallet\Services\WalletService;
+use Bavix\Wallet\Services\ExchangeService;
 use Bavix\Wallet\Services\LockService;
-use Bavix\Wallet\Models\Transaction;
-use Bavix\Wallet\Models\Transfer;
-use Bavix\Wallet\Models\Wallet;
+use Bavix\Wallet\Services\WalletService;
+use Bavix\Wallet\Simple\BrickMath;
 use Bavix\Wallet\Simple\Rate;
 use Bavix\Wallet\Simple\Store;
-use Bavix\Wallet\Simple\BrickMath;
 
 $bcLoaded = extension_loaded('bcmath');
 
@@ -41,6 +41,7 @@ return [
      *
      * If you want to replace the default cache with another,
      * then write the name of the driver cache in the key `wallet.lock.cache`.
+     *
      * @see https://laravel.com/docs/6.x/cache#driver-prerequisites
      *
      * @example

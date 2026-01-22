@@ -14,7 +14,7 @@ class CartController extends Controller
      */
     public function index()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             // للضيوف، إظهار صفحة فارغة مع رسالة تسجيل دخول
             $cart = (object) [
                 'id' => null,
@@ -27,7 +27,7 @@ class CartController extends Controller
 
         $cart = Cart::getActiveCartForUser(Auth::id());
 
-        if (!$cart) {
+        if (! $cart) {
             $cart = Cart::getOrCreateForUser(Auth::id());
         }
 
@@ -127,6 +127,7 @@ class CartController extends Controller
             if (request()->wantsJson()) {
                 return response()->json(['error' => 'Unauthorized'], 403);
             }
+
             return redirect()->route('cart.index')->with('error', __('Unauthorized'));
         }
 
@@ -150,13 +151,14 @@ class CartController extends Controller
      */
     public function clear()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             if (request()->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => __('Please login to manage your cart'),
                 ], 401);
             }
+
             return redirect()->route('login')->with('error', __('Please login to manage your cart'));
         }
 
@@ -186,11 +188,11 @@ class CartController extends Controller
             'id' => 'required|integer',
         ]);
         $cart = Cart::getActiveCartForUser(Auth::id());
-        if (!$cart) {
+        if (! $cart) {
             return response()->json(['error' => 'Cart not found'], 404);
         }
         $item = $cart->items()->where('id', $request->id)->first();
-        if (!$item) {
+        if (! $item) {
             return response()->json(['error' => 'Item not found'], 404);
         }
         $item->delete();
@@ -210,7 +212,7 @@ class CartController extends Controller
      */
     public function getCount()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return response()->json(['count' => 0]);
         }
 

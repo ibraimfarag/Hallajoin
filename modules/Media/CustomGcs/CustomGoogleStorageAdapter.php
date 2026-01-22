@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\Media\CustomGcs;
-
 
 use League\Flysystem\Config;
 use Spatie\GoogleCloudStorage\GoogleCloudStorageAdapter;
@@ -26,10 +24,10 @@ class CustomGoogleStorageAdapter extends GoogleCloudStorageAdapter
 
         return true;
     }
+
     /**
      * Returns an array of options from the config.
      *
-     * @param Config $config
      *
      * @return array
      */

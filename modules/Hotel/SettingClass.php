@@ -1,9 +1,8 @@
 <?php
 
-namespace  Modules\Hotel;
+namespace Modules\Hotel;
 
 use Modules\Core\Abstracts\BaseSettingsClass;
-use Modules\Core\Models\Settings;
 
 class SettingClass extends BaseSettingsClass
 {
@@ -12,10 +11,10 @@ class SettingClass extends BaseSettingsClass
         $configs = [
             'hotel' => [
                 'id' => 'hotel',
-                'title' => __("Hotel Settings"),
+                'title' => __('Hotel Settings'),
                 'position' => 20,
-                'view' => "Hotel::admin.settings.hotel",
-                "keys" => [
+                'view' => 'Hotel::admin.settings.hotel',
+                'keys' => [
                     'hotel_disable',
                     'hotel_page_search_title',
                     'hotel_page_search_banner',
@@ -64,9 +63,10 @@ class SettingClass extends BaseSettingsClass
 
                 ],
                 'filter_demo_mode' => [
-                ]
-            ]
+                ],
+            ],
         ];
-        return apply_filters(Hook::HOTEL_SETTING_CONFIG,$configs);
+
+        return apply_filters(Hook::HOTEL_SETTING_CONFIG, $configs);
     }
 }

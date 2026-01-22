@@ -1,31 +1,13 @@
 <?php
+
 namespace Modules\User\Controllers;
 
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rule;
-use Matrix\Exception;
-use Modules\FrontendController;
-use Modules\User\Events\NewVendorRegistered;
-use Modules\User\Events\SendMailUserRegistered;
-use Modules\User\Models\Newsletter;
-use Modules\User\Models\Subscriber;
-use Modules\User\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\MessageBag;
-use Modules\Vendor\Models\VendorRequest;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Validator;
 use Modules\Booking\Models\Booking;
-use App\Helpers\ReCaptchaEngine;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Modules\Booking\Models\Enquiry;
+use Modules\FrontendController;
 
 class BookingController extends FrontendController
 {
-
     public function bookingInvoice($code)
     {
         $booking = Booking::where('code', $code)->first();
@@ -37,12 +19,14 @@ class BookingController extends FrontendController
             return redirect('user/booking-history');
         }
         $data = [
-            'booking'    => $booking,
-            'service'    => $booking->service,
-            'page_title' => __("Invoice")
+            'booking' => $booking,
+            'service' => $booking->service,
+            'page_title' => __('Invoice'),
         ];
+
         return view('User::frontend.bookingInvoice', $data);
     }
+
     public function ticket($code = '')
     {
         $booking = Booking::where('code', $code)->first();
@@ -54,11 +38,11 @@ class BookingController extends FrontendController
             return redirect('user/booking-history');
         }
         $data = [
-            'booking'    => $booking,
-            'service'    => $booking->service,
-            'page_title' => __("Ticket")
+            'booking' => $booking,
+            'service' => $booking->service,
+            'page_title' => __('Ticket'),
         ];
+
         return view('User::frontend.booking.ticket', $data);
     }
-
 }

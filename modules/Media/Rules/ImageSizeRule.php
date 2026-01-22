@@ -10,6 +10,7 @@ class ImageSizeRule implements Rule
      * @var int
      */
     public $maxWidth;
+
     /**
      * @var int
      */
@@ -22,7 +23,7 @@ class ImageSizeRule implements Rule
      *
      * @return void
      */
-    public function __construct(int $maxWidth,int $maxHeight)
+    public function __construct(int $maxWidth, int $maxHeight)
     {
         //
         $this->maxWidth = $maxWidth;
@@ -45,23 +46,27 @@ class ImageSizeRule implements Rule
             'png',
             'gif',
         ];
-        if(!in_array(strtolower($value->getClientOriginalExtension()), $allowedExtsImage)) {
+        if (! in_array(strtolower($value->getClientOriginalExtension()), $allowedExtsImage)) {
             // not image
             return true;
         }
         $imagedata = getimagesize($value->getPathname());
         if (empty($imagedata)) {
-            $this->lastError = __("Can not get image size");
+            $this->lastError = __('Can not get image size');
+
             return false;
         }
-        if (!empty($this->maxWidth) and $imagedata[0] > $this->maxWidth) {
-            $this->lastError = __("Maximum width allowed is: :number", ['number' => $this->maxWidth]);
+        if (! empty($this->maxWidth) and $imagedata[0] > $this->maxWidth) {
+            $this->lastError = __('Maximum width allowed is: :number', ['number' => $this->maxWidth]);
+
             return false;
         }
-        if (!empty($this->maxHeight) and $imagedata[1] > $this->maxHeight) {
-            $this->lastError = __("Maximum height allowed is: :number", ['number' => $this->maxHeight]);
+        if (! empty($this->maxHeight) and $imagedata[1] > $this->maxHeight) {
+            $this->lastError = __('Maximum height allowed is: :number', ['number' => $this->maxHeight]);
+
             return false;
         }
+
         return true;
     }
 

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'cores'=>[
+    'cores' => [
         'core',
         'booking',
         'contact',
@@ -15,7 +15,7 @@ return [
         'user',
         'template',
         'report',
-        'vendor'
+        'vendor',
     ],
-    'active'=>[]
+    'active' => [],
 ];

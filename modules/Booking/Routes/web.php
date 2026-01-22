@@ -1,5 +1,7 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
+
 // Booking
 Route::group(['prefix' => config('booking.booking_route_prefix')], function () {
     Route::post('/addToCart', 'BookingController@addToCart');
@@ -10,9 +12,9 @@ Route::group(['prefix' => config('booking.booking_route_prefix')], function () {
     Route::get('/{code}/checkout', 'BookingController@checkout')->name('booking.checkout');
     Route::get('/{code}/check-status', 'BookingController@checkStatusCheckout');
 
-    //ical
+    // ical
     Route::get('/export-ical/{type}/{id}', 'BookingController@exportIcal')->name('booking.admin.export-ical');
-    //inquiry
+    // inquiry
     Route::post('/addEnquiry', 'BookingController@addEnquiry');
     Route::post('/setPaidAmount', 'BookingController@setPaidAmount')->name('booking.setPaidAmount')->middleware(['auth', 'dashboard']);
 
@@ -28,4 +30,3 @@ Route::group(['prefix' => 'gateway'], function () {
     Route::get('/info', 'NormalCheckoutController@showInfo')->name('gateway.info');
     Route::match(['get', 'post'], '/gateway_callback/{gateway}', 'BookingController@callbackPayment')->name('gateway.webhook');
 });
-

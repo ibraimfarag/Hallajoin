@@ -118,10 +118,10 @@ class CouponController extends AdminController
         ];
 
         // Add activity (service) name for display in index table
-        if (!empty($data['rows'])) {
+        if (! empty($data['rows'])) {
             $data['rows']->getCollection()->transform(function ($item) {
                 $first = $item->couponServices()->first();
-                if (!empty($first)) {
+                if (! empty($first)) {
                     $service = Service::find($first->service_id);
                     $item->activity_name = $service ? $service->title : null;
                 } else {
@@ -164,9 +164,9 @@ class CouponController extends AdminController
 
         // جلب بيانات المستخدم من only_for_user
         $userData = null;
-        if (!empty($row->only_for_user)) {
+        if (! empty($row->only_for_user)) {
             $userIds = is_array($row->only_for_user) ? $row->only_for_user : json_decode($row->only_for_user, true);
-            if (!empty($userIds) && is_array($userIds)) {
+            if (! empty($userIds) && is_array($userIds)) {
                 $userId = $userIds[0] ?? null;
                 if ($userId) {
                     $user = \App\User::find($userId);
@@ -183,8 +183,9 @@ class CouponController extends AdminController
             }
         }
         $data['user'] = $userData;
+
         // $data['row']['only_for_user'] = $userData;
-// dd($data);
+        // dd($data);
         return view('Coupon::admin.detail', $data);
     }
 
@@ -213,7 +214,7 @@ class CouponController extends AdminController
     public function store(Request $request, $id)
     {
 
-// dd($request->all());
+        // dd($request->all());
         $request->validate([
             'code' => [
                 'required',
@@ -254,12 +255,11 @@ class CouponController extends AdminController
             'image_id',
         ];
 
-
         $row->fillByAttr($dataKeys, $request->input());
         // تأكد أن only_for_user دائماً مصفوفة
-        if (!empty($request->input('only_for_user'))) {
+        if (! empty($request->input('only_for_user'))) {
             $onlyForUser = $request->input('only_for_user');
-            if (!is_array($onlyForUser)) {
+            if (! is_array($onlyForUser)) {
                 $onlyForUser = [$onlyForUser];
             }
             // نظف القيم الفارغة

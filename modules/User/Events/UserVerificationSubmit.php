@@ -1,11 +1,13 @@
 <?php
+
 namespace Modules\User\Events;
 
 use Illuminate\Queue\SerializesModels;
 
-class  UserVerificationSubmit
+class UserVerificationSubmit
 {
     use SerializesModels;
+
     public $user;
 
     public function __construct($user)

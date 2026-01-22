@@ -18,7 +18,7 @@ class RegisterController extends \App\Http\Controllers\Auth\RegisterController
 {
     public function register(Request $request)
     {
-        if (!is_enable_registration()) {
+        if (! is_enable_registration()) {
             return $this->sendError(__('You are not allowed to register'));
         }
         $rules = [
@@ -46,7 +46,7 @@ class RegisterController extends \App\Http\Controllers\Auth\RegisterController
             ],
             'phone' => ['required', 'unique:users'],
             'term' => ['required'],
-            'birthday' => ['nullable', 'date', 'before_or_equal:' . now()->subYears(13)->format('Y-m-d')],
+            'birthday' => ['nullable', 'date', 'before_or_equal:'.now()->subYears(13)->format('Y-m-d')],
             'gender' => ['nullable', 'in:male,female,other'],
         ];
         $messages = [
@@ -63,7 +63,7 @@ class RegisterController extends \App\Http\Controllers\Auth\RegisterController
         ];
         if (ReCaptchaEngine::isEnable() and setting_item('user_enable_register_recaptcha')) {
             $codeCapcha = $request->input('g-recaptcha-response');
-            if (!$codeCapcha or !ReCaptchaEngine::verify($codeCapcha)) {
+            if (! $codeCapcha or ! ReCaptchaEngine::verify($codeCapcha)) {
                 $errors = new MessageBag(['message_error' => __('Please verify the captcha')]);
 
                 return response()->json([
@@ -87,8 +87,8 @@ class RegisterController extends \App\Http\Controllers\Auth\RegisterController
                 'password' => Hash::make($request->input('password')),
                 'status' => $request->input('publish', 'publish'),
                 'phone' => $request->input('phone'),
-                'birthday' => $request->input('birthday'), 
-                'gender' => $request->input('gender'), 
+                'birthday' => $request->input('birthday'),
+                'gender' => $request->input('gender'),
             ]);
 
             event(new Registered($user));
@@ -97,7 +97,7 @@ class RegisterController extends \App\Http\Controllers\Auth\RegisterController
                 event(new SendMailUserRegistered($user));
             } catch (Exception $exception) {
 
-                Log::warning('SendMailUserRegistered: ' . $exception->getMessage());
+                Log::warning('SendMailUserRegistered: '.$exception->getMessage());
             }
             $user->assignRole(setting_item('user_role'));
 

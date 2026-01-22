@@ -1,3 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
-Route::get('confirmTwoCheckout','TwoCheckoutController@handleCheckout')->middleware('auth');
+
+Route::get('confirmTwoCheckout', 'TwoCheckoutController@handleCheckout')->middleware('auth');

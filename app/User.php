@@ -101,7 +101,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'name' => $key,
         ])->first();
 
-        if (!empty($val)) {
+        if (! empty($val)) {
             // $this->cachedMeta[$key]  = $val->val;
             return $val->val;
         }
@@ -161,7 +161,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function batchInsertMeta($metaArrs = [])
     {
-        if (!empty($metaArrs)) {
+        if (! empty($metaArrs)) {
             foreach ($metaArrs as $key => $val) {
                 $this->addMeta($key, $val, true);
             }
@@ -192,16 +192,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public static function getUserBySocialId($provider, $socialId)
     {
         return parent::query()->select('users.*')->join('user_meta as m', 'm.user_id', 'users.id')
-            ->where('m.name', 'social_' . $provider . '_id')
+            ->where('m.name', 'social_'.$provider.'_id')
             ->where('m.val', $socialId)->first();
     }
 
     public function getAvatarUrl()
     {
-        if (!empty($this->avatar_id)) {
+        if (! empty($this->avatar_id)) {
             return get_file_url($this->avatar_id, 'thumb');
         }
-        if (!empty($meta_avatar = $this->getMeta('social_meta_avatar', false))) {
+        if (! empty($meta_avatar = $this->getMeta('social_meta_avatar', false))) {
             return $meta_avatar;
         }
 
@@ -212,7 +212,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function deleteAndGenerateAvatar()
     {
         // Define the path to the avatar
-        $avatarPath = public_path('avatars/' . $this->id . '.png');
+        $avatarPath = public_path('avatars/'.$this->id.'.png');
 
         // Delete the avatar if it exists
         if (File::exists($avatarPath)) {
@@ -256,10 +256,10 @@ class User extends Authenticatable implements MustVerifyEmail
         imagettftext($image, $fontSize, 0, $textX, $textY, $textColor, $fontFile, $initials);
 
         // Define the path to save the image in the public directory
-        $path = public_path('avatars/' . $this->id . '.png');
+        $path = public_path('avatars/'.$this->id.'.png');
 
         // Ensure the avatars directory exists
-        if (!File::exists(public_path('avatars'))) {
+        if (! File::exists(public_path('avatars'))) {
             File::makeDirectory(public_path('avatars'), 0755, true);
         }
 
@@ -268,7 +268,7 @@ class User extends Authenticatable implements MustVerifyEmail
         imagedestroy($image); // Free up memory
 
         // Return the URL to the generated image
-        return asset('avatars/' . $this->id . '.png');
+        return asset('avatars/'.$this->id.'.png');
     }
 
     private function getInitials($name)
@@ -284,7 +284,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
         foreach ($words as $word) {
             // Check if $word is not empty before accessing characters
-            if (!empty($word)) {
+            if (! empty($word)) {
                 $initials .= strtoupper($word[0]);
             }
         }
@@ -309,13 +309,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getDisplayName($email = false)
     {
         $name = $this->name ?? '';
-        if (!empty($this->first_name) or !empty($this->last_name)) {
+        if (! empty($this->first_name) or ! empty($this->last_name)) {
             $name = implode(' ', [$this->first_name, $this->last_name]);
         }
-        if (!empty($this->business_name)) {
+        if (! empty($this->business_name)) {
             $name = $this->business_name;
         }
-        if (!trim($name) and $email) {
+        if (! trim($name) and $email) {
             $name = $this->email;
         }
         if (empty($name)) {
@@ -333,10 +333,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getDisplayNameAttribute()
     {
         $name = $this->name;
-        if (!empty($this->first_name) or !empty($this->last_name)) {
+        if (! empty($this->first_name) or ! empty($this->last_name)) {
             $name = implode(' ', [$this->first_name, $this->last_name]);
         }
-        if (!empty($this->business_name)) {
+        if (! empty($this->business_name)) {
             $name = $this->business_name;
         }
 
@@ -434,7 +434,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getAvailablePayoutMethodsAttribute()
     {
         $vendor_payout_methods = json_decode(setting_item('vendor_payout_methods'));
-        if (!is_array($vendor_payout_methods)) {
+        if (! is_array($vendor_payout_methods)) {
             $vendor_payout_methods = [];
         }
 
@@ -446,11 +446,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
         $accounts = $this->payout_accounts;
 
-        if (!empty($vendor_payout_methods) and !empty($accounts)) {
+        if (! empty($vendor_payout_methods) and ! empty($accounts)) {
             foreach ($vendor_payout_methods as $vendor_payout_method) {
                 $id = $vendor_payout_method->id;
 
-                if (!empty($accounts->$id)) {
+                if (! empty($accounts->$id)) {
                     $vendor_payout_method->user = $accounts->$id;
                     $res[$id] = $vendor_payout_method;
                 }
@@ -472,18 +472,18 @@ class User extends Authenticatable implements MustVerifyEmail
         $role_id = $this->role_id;
         $res = [];
         foreach ($all as $id => $field) {
-            if (!empty($field['roles']) and is_array($field['roles']) and in_array($role_id, $field['roles'])) {
+            if (! empty($field['roles']) and is_array($field['roles']) and in_array($role_id, $field['roles'])) {
                 $field['id'] = $id;
-                $field['field_id'] = 'verify_data_' . $id;
+                $field['field_id'] = 'verify_data_'.$id;
                 $field['is_verified'] = $this->isVerifiedField($id);
-                $field['data'] = old('verify_data_' . $id, $this->getVerifyData($id));
+                $field['data'] = old('verify_data_'.$id, $this->getVerifyData($id));
 
                 switch ($field['type']) {
                     case 'multi_files':
                         $field['data'] = json_decode($field['data'], true);
-                        if (!empty($field['data'])) {
+                        if (! empty($field['data'])) {
                             foreach ($field['data'] as $k => $v) {
-                                if (!is_array($v)) {
+                                if (! is_array($v)) {
                                     $field['data'][$k] = json_decode($v, true);
                                 }
                             }
@@ -502,12 +502,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isVerifiedField($field_id)
     {
-        return (bool) $this->getMeta('is_verified_' . $field_id);
+        return (bool) $this->getMeta('is_verified_'.$field_id);
     }
 
     public function getVerifyData($field_id)
     {
-        return $this->getMeta('verify_data_' . $field_id);
+        return $this->getMeta('verify_data_'.$field_id);
     }
 
     public static function countVerifyRequest()
@@ -528,14 +528,14 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function sendEmailPermanentlyDelete()
     {
-        if (!empty(setting_item('user_enable_permanently_delete_email'))) {
+        if (! empty(setting_item('user_enable_permanently_delete_email'))) {
             //                to admin
-            if (!empty(setting_item_with_lang('user_permanently_delete_content_email_to_admin'))) {
+            if (! empty(setting_item_with_lang('user_permanently_delete_content_email_to_admin'))) {
                 $subject = setting_item_with_lang('user_permanently_delete_subject_email_to_admin');
                 $content = setting_item_with_lang('user_permanently_delete_content_email_to_admin');
                 Mail::to(setting_item('admin_email'))->send(new UserPermanentlyDelete($this, $subject, $content));
             }
-            if (!empty(setting_item_with_lang('user_permanently_delete_content_email'))) {
+            if (! empty(setting_item_with_lang('user_permanently_delete_content_email'))) {
                 $subject = setting_item_with_lang('user_permanently_delete_subject_email');
                 $content = setting_item_with_lang('user_permanently_delete_content_email');
                 Mail::to($this->email)->send(new UserPermanentlyDelete($this, $subject, $content));
@@ -581,7 +581,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getNameAttribute()
     {
-        return $this->business_name ? $this->business_name : $this->first_name . ' ' . $this->last_name;
+        return $this->business_name ? $this->business_name : $this->first_name.' '.$this->last_name;
     }
 
     public function getUnseenMessageCountAttribute()
@@ -611,7 +611,7 @@ class User extends Authenticatable implements MustVerifyEmail
         if ($is_annual) {
             $end_date = strtotime('+ 1 year');
         } else {
-            $end_date = strtotime('+ ' . $plan->duration . ' ' . $plan->duration_type);
+            $end_date = strtotime('+ '.$plan->duration.' '.$plan->duration_type);
         }
         $plan_data = $plan->toArray();
         $plan_data['is_annual'] = $is_annual;
@@ -626,7 +626,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'status' => 0,
         ];
         if ($active) {
-            if (!empty($user_plan->end_date)) {
+            if (! empty($user_plan->end_date)) {
                 unset($data['end_date']);
                 unset($data['start_date']);
                 unset($data['max_service']);
@@ -644,13 +644,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public function checkUserPlan()
     {
 
-        if (!is_enable_plan()) {
+        if (! is_enable_plan()) {
             return true;
         }
 
         $user_plans = $this->userPlans()->where('status', 1)->where('end_date', '>', now())->get();
 
-        if (!$user_plans) {
+        if (! $user_plans) {
             return false;
         }
         $end_date = $user_plans->max('end_date');

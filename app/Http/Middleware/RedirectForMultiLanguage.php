@@ -1,60 +1,61 @@
 <?php
-	/**
-	 * Created by PhpStorm.
-	 * User: Admin
-	 * Date: 7/11/2019
-	 * Time: 4:54 PM
-	 */
 
-	namespace App\Http\Middleware;
+/**
+ * Created by PhpStorm.
+ * User: Admin
+ * Date: 7/11/2019
+ * Time: 4:54 PM
+ */
 
-	use Closure;
-	use Illuminate\Support\Arr;
-	use Illuminate\Support\Facades\Config;
-	use Modules\Language\Models\Language;
+namespace App\Http\Middleware;
 
-	class RedirectForMultiLanguage
-	{
-		/**
-		 * Handle an incoming request.
-		 *
-		 * @param  \Illuminate\Http\Request $request
-		 * @param  \Closure $next
-		 * @param  string|null $guard
-		 * @return mixed
-		 */
-		public function handle($request, Closure $next, $guard = null)
-		{
+use Closure;
+use Illuminate\Support\Arr;
 
-			if (strpos($request->path(), 'install') === false && file_exists(storage_path() . '/installed') && strtolower($request->method()) === 'get' and $request->query('set_lang')) {
+class RedirectForMultiLanguage
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string|null  $guard
+     * @return mixed
+     */
+    public function handle($request, Closure $next, $guard = null)
+    {
 
-				$locale = $request->query('set_lang');
-				$firstSegment = $request->segment(1);
-				$languages = \Modules\Language\Models\Language::getActive();
-				$localeCodes = Arr::pluck($languages, 'locale');
-				$data = $request->query();
-				unset($data['set_lang']);
+        if (strpos($request->path(), 'install') === false && file_exists(storage_path().'/installed') && strtolower($request->method()) === 'get' and $request->query('set_lang')) {
 
-				if($locale != $firstSegment and in_array($locale,$localeCodes)){
+            $locale = $request->query('set_lang');
+            $firstSegment = $request->segment(1);
+            $languages = \Modules\Language\Models\Language::getActive();
+            $localeCodes = Arr::pluck($languages, 'locale');
+            $data = $request->query();
+            unset($data['set_lang']);
 
-					$segments = $request->segments();
-					if(!$firstSegment || in_array($firstSegment,$localeCodes)){
-						if($locale != setting_item('site_locale')){
-							$segments[0] = $locale;
-						}else{ unset($segments[0]);}
+            if ($locale != $firstSegment and in_array($locale, $localeCodes)) {
 
-					}else{
-						$segments = Arr::prepend($segments, $locale);
-					}
-					$url = implode('/', $segments);
-					if (!empty($data)) {
-						$url .= '?' . http_build_query($data);
-					}
+                $segments = $request->segments();
+                if (! $firstSegment || in_array($firstSegment, $localeCodes)) {
+                    if ($locale != setting_item('site_locale')) {
+                        $segments[0] = $locale;
+                    } else {
+                        unset($segments[0]);
+                    }
 
-					return redirect()->to($url);
-				}
+                } else {
+                    $segments = Arr::prepend($segments, $locale);
+                }
+                $url = implode('/', $segments);
+                if (! empty($data)) {
+                    $url .= '?'.http_build_query($data);
+                }
 
-			}
-			return $next($request);
-		}
-	}
+                return redirect()->to($url);
+            }
+
+        }
+
+        return $next($request);
+    }
+}

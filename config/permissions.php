@@ -8,13 +8,12 @@ return [
     // Contact Submissions
     'contact_manage',
 
-    //Newsletter
+    // Newsletter
     'newsletter_manage',
 
     // Language
     'language_manage',
     'language_translation',
-
 
     // Booking
     'booking_view',
@@ -26,13 +25,11 @@ return [
     'enquiry_update',
     'enquiry_manage_others',
 
-
     // Templates
     'template_view',
     'template_create',
     'template_update',
     'template_delete',
-
 
     // News
     'news_view',
@@ -60,13 +57,11 @@ return [
     // Settings
     'setting_update',
 
-
     // Menus
     'menu_view',
     'menu_create',
     'menu_update',
     'menu_delete',
-
 
     // create permissions
     'user_view',
@@ -94,14 +89,13 @@ return [
     'location_delete',
     'location_manage_others',
 
-    //Review
+    // Review
     'review_manage_others',
 
     // Other System Permissions
 
     'system_log_view',
     'theme_manage',
-
 
     // Social
     'social_manage_forum',
@@ -113,13 +107,11 @@ return [
     'vendor_payout_view',
     'vendor_payout_manage',
 
-
     // Popup
     'popup_view',
     'popup_create',
     'popup_update',
     'popup_delete',
 
-
-    'media_manage_others'
+    'media_manage_others',
 ];

@@ -19,22 +19,26 @@ class FolderController extends FrontendController
         $this->mediaFolder = $mediaFolder;
     }
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $folders = $this->mediaFolder::query();
-        if($s = $request->query('parent_id')){
-            $folders->where('parent_id',$s);
-        }else{
-            $folders->where('parent_id',0);
+        if ($s = $request->query('parent_id')) {
+            $folders->where('parent_id', $s);
+        } else {
+            $folders->where('parent_id', 0);
         }
         $folders->orderBy('name', 'asc');
+
         // return FolderResource::collection($folders->paginate(100));
         return FolderResource::collection($folders->paginate(10000));
     }
-    public function store(Request $request){
+
+    public function store(Request $request)
+    {
         $id = $request->input('id');
         // if(!$id){
-            $folder = new MediaFolder();
-            $folder->user_id = auth()->id();
+        $folder = new MediaFolder;
+        $folder->user_id = auth()->id();
         // }else{
         //     $folder = MediaFolder::ofMine()->find($id);
         //     if(!$folder){
@@ -43,39 +47,39 @@ class FolderController extends FrontendController
         // }
 
         $request->validate([
-            'name'=>[
-                    'required',
-                    Rule::unique('media_folders')->where(function ($query) use($request) {
-                        return $query->where('name', $request->input('name'))
-                            ->where('parent_id', $request->input('parent_id',0))
-                            ->where('id','!=', $request->input('id',0));
-                    }),
-                ]
-        ],[
-            'name.unique'=>__("Folder name exists, please select new one")
+            'name' => [
+                'required',
+                Rule::unique('media_folders')->where(function ($query) use ($request) {
+                    return $query->where('name', $request->input('name'))
+                        ->where('parent_id', $request->input('parent_id', 0))
+                        ->where('id', '!=', $request->input('id', 0));
+                }),
+            ],
+        ], [
+            'name.unique' => __('Folder name exists, please select new one'),
         ]);
 
         $folder->name = $request->input('name');
-        $folder->parent_id = $request->input('parent_id',0);
+        $folder->parent_id = $request->input('parent_id', 0);
 
         $folder->save();
 
-        return $this->sendSuccess(['data'=>new FolderResource($folder)]);
+        return $this->sendSuccess(['data' => new FolderResource($folder)]);
     }
 
-    public function delete(Request $request){
+    public function delete(Request $request)
+    {
         $request->validate([
-            'id'=>'required'
+            'id' => 'required',
         ]);
 
         $id = $request->input('id');
         // $folder = MediaFolder::ofMine()->find($id);
         $folder = MediaFolder::find($id);
-    
 
         MediaFile::query()->inFolder($folder->id)->delete();
         $folder->delete();
 
-        return $this->sendSuccess(__("Folder deleted"));
+        return $this->sendSuccess(__('Folder deleted'));
     }
 }

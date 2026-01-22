@@ -2,7 +2,6 @@
 
 namespace Modules\Popup\Models;
 
-
 use App\BaseModel;
 
 class PopupTranslation extends BaseModel
@@ -11,9 +10,6 @@ class PopupTranslation extends BaseModel
 
     protected $fillable = [
         'content',
-        'title'
+        'title',
     ];
-
-
-
 }

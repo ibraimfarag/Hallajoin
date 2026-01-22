@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\Admin\Crud\Components;
-
 
 class PanelComponent extends BaseComponent
 {

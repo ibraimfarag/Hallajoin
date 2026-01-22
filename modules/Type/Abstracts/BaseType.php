@@ -10,13 +10,14 @@ use Modules\Type\Interfaces\IPostType;
 
 abstract class BaseType implements IPostType
 {
-
     public string $id;
 
     public $model;
 
     protected bool $hasAuthor = true;
+
     protected bool $hasTranslation = true;
+
     protected bool $hasMap = true;
 
     protected bool $hasAttribute = true;
@@ -28,55 +29,60 @@ abstract class BaseType implements IPostType
         return app()->make($this->model);
     }
 
-    protected function getLabels():array {
+    protected function getLabels(): array
+    {
         return [];
     }
 
-    /**
-     * @param $key
-     * @return string
-     */
-    public function label($key):string{
+    public function label($key): string
+    {
         return $this->getLabels()[$key];
     }
 
-    public function adminAction($action):array {
+    public function adminAction($action): array
+    {
         return $this->adminActions()[$action];
     }
 
-    protected function adminActions():array{
+    protected function adminActions(): array
+    {
         return [
-            AdminAction::VIEW =>[
-                ActionProp::PERMISSION=>''
+            AdminAction::VIEW => [
+                ActionProp::PERMISSION => '',
             ],
-            AdminAction::EDIT =>[
-                ActionProp::PERMISSION=>''
+            AdminAction::EDIT => [
+                ActionProp::PERMISSION => '',
             ],
         ];
     }
 
-    public function hasAuthor():bool {
+    public function hasAuthor(): bool
+    {
         return $this->hasAuthor;
     }
 
-    public function hasTranslation():bool {
+    public function hasTranslation(): bool
+    {
         return $this->hasTranslation;
     }
 
-
-    public function hasAttribute():bool {
+    public function hasAttribute(): bool
+    {
         return $this->hasAttribute;
     }
 
-    public function hasMap():bool {
+    public function hasMap(): bool
+    {
         return $this->hasMap;
     }
 
-    public function getRoutePrefix():string {
-        return config($this->id.'.route_prefix',$this->id);
+    public function getRoutePrefix(): string
+    {
+        return config($this->id.'.route_prefix', $this->id);
     }
 
-    public function getName():string {
+    public function getName(): string
+    {
 
         return $this->label(Label::NAME);
     }

@@ -1,11 +1,13 @@
 <?php
+
 namespace Modules\Dashboard;
+
 use Modules\ModuleServiceProvider;
 
 class ModuleProvider extends ModuleServiceProvider
 {
-    public function boot(){
-    }
+    public function boot() {}
+
     /**
      * Register bindings in the container.
      *
@@ -24,5 +26,4 @@ class ModuleProvider extends ModuleServiceProvider
         return [
         ];
     }
-
 }

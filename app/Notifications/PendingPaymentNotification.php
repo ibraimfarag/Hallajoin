@@ -44,7 +44,7 @@ class PendingPaymentNotification extends Notification
     {
         return (new MailMessage)
             ->line('You have a pending order waiting for payment.')
-            ->action('Complete Payment', url('/payment/checkout/' . $this->paymentId))
+            ->action('Complete Payment', url('/payment/checkout/'.$this->paymentId))
             ->line('Thank you for using our application!');
     }
 
@@ -60,7 +60,7 @@ class PendingPaymentNotification extends Notification
                 'count' => $this->itemsCount,
                 'amount' => number_format($this->totalAmount, 2),
             ]),
-            'link' => url('/payment/checkout/' . $this->paymentId),
+            'link' => url('/payment/checkout/'.$this->paymentId),
             'type' => 'pending_payment',
             'payment_id' => $this->paymentId,
             'amount' => $this->totalAmount,

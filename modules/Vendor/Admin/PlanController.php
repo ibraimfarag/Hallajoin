@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Vendor\Admin;
 
 use Illuminate\Http\Request;
@@ -17,57 +18,60 @@ class PlanController extends AdminController
     public function index(Request $request)
     {
         $query = new VendorPlan;
-        if (!empty($request->name)) {
-            $query = VendorPlan::where('name', 'LIKE', '%' . $request->name . '%');
+        if (! empty($request->name)) {
+            $query = VendorPlan::where('name', 'LIKE', '%'.$request->name.'%');
         }
         $plans = $query->orderBy('name', 'asc');
         $data = [
-            'rows'        => $plans->with("author")->paginate(20),
+            'rows' => $plans->with('author')->paginate(20),
             'breadcrumbs' => [
                 [
                     'name' => __('Vendor Plans'),
-                    'url'  => route('vendor.admin.plan.index')
+                    'url' => route('vendor.admin.plan.index'),
                 ],
                 [
-                    'name'  => __('All'),
-                    'class' => 'active'
+                    'name' => __('All'),
+                    'class' => 'active',
                 ],
-            ]
+            ],
         ];
+
         return view('Vendor::admin.plan.index', $data);
     }
 
     public function create(Request $request)
     {
-        if (!empty($request->input())) {
+        if (! empty($request->input())) {
             $row = new VendorPlan($request->input());
             if ($row->save()) {
-                if (!empty($request->services_options)) {
+                if (! empty($request->services_options)) {
                     foreach ($request->services_options as $service) {
                         $row->meta()->save(new VendorPlanMeta($service));
                     }
                 }
+
                 return redirect(route('vendor.admin.plan.index'))->with('success', __('Plan created'));
             }
         } else {
-            $row = new VendorPlan();
+            $row = new VendorPlan;
             $row->fill([
                 'status' => 'publish',
             ]);
         }
         $data = [
-            'row'         => $row,
+            'row' => $row,
             'breadcrumbs' => [
                 [
                     'name' => __('Vendor Plans'),
-                    'url'  => route('vendor.admin.plan.index')
+                    'url' => route('vendor.admin.plan.index'),
                 ],
                 [
-                    'name'  => __('Add Plan'),
-                    'class' => 'active'
+                    'name' => __('Add Plan'),
+                    'class' => 'active',
                 ],
-            ]
+            ],
         ];
+
         return view('Vendor::admin.plan.detail', $data);
     }
 
@@ -77,38 +81,40 @@ class PlanController extends AdminController
         if (empty($row)) {
             return redirect(route('vendor.admin.plan.index'));
         }
-        if (!empty($request->input())) {
+        if (! empty($request->input())) {
             $row->fill($request->input());
             if ($row->save()) {
                 foreach ($request->services_options as $service) {
                     $meta = $row->meta()->where('post_type', $service['post_type'])->first();
                     if (empty($meta)) {
-                        $meta = new VendorPlanMeta();
+                        $meta = new VendorPlanMeta;
                         $meta->vendor_plan_id = $row->id;
                     }
                     $meta->post_type = $service['post_type'];
                     $meta->maximum_create = $service['maximum_create'] ?? 0;
-                    $meta->commission = !empty($service['commission']) ? $service['commission'] : $row->base_commission;
+                    $meta->commission = ! empty($service['commission']) ? $service['commission'] : $row->base_commission;
                     $meta->enable = $service['enable'] ?? 0;
                     $meta->auto_publish = $service['auto_publish'] ?? 0;
                     $meta->save();
                 }
+
                 return redirect(route('vendor.admin.plan.index'))->with('success', __('Vendor plan updated'));
             }
         }
         $data = [
-            'row'         => $row,
+            'row' => $row,
             'breadcrumbs' => [
                 [
                     'name' => __('Vendor Plans'),
-                    'url'  => route('vendor.admin.plan.index')
+                    'url' => route('vendor.admin.plan.index'),
                 ],
                 [
-                    'name'  => __('Edit Page'),
-                    'class' => 'active'
+                    'name' => __('Edit Page'),
+                    'class' => 'active',
                 ],
-            ]
+            ],
         ];
+
         return view('Vendor::admin.plan.detail', $data);
     }
 
@@ -117,11 +123,12 @@ class PlanController extends AdminController
         $q = $request->query('q');
         $query = VendorPlan::select('id', 'name as text');
         if ($q) {
-            $query->where('title', 'like', '%' . $q . '%');
+            $query->where('title', 'like', '%'.$q.'%');
         }
         $res = $query->orderBy('id', 'desc')->limit(20)->get();
+
         return response()->json([
-            'results' => $res
+            'results' => $res,
         ]);
     }
 
@@ -135,28 +142,29 @@ class PlanController extends AdminController
         if (empty($action)) {
             return redirect()->back()->with('error', __('No Action is selected!'));
         }
-        if ($action == "delete") {
+        if ($action == 'delete') {
             foreach ($ids as $id) {
-                $query = VendorPlan::where("id", $id);
-                if (!$this->hasPermission('page_manage_others')) {
-                    $query->where("create_user", Auth::id());
+                $query = VendorPlan::where('id', $id);
+                if (! $this->hasPermission('page_manage_others')) {
+                    $query->where('create_user', Auth::id());
                     $this->checkPermission('page_delete');
                 }
                 $query->first();
-                if(!empty($query)){
+                if (! empty($query)) {
                     $query->delete();
                 }
             }
         } else {
             foreach ($ids as $id) {
-                $query = VendorPlan::where("id", $id);
-                if (!$this->hasPermission('page_manage_others')) {
-                    $query->where("create_user", Auth::id());
+                $query = VendorPlan::where('id', $id);
+                if (! $this->hasPermission('page_manage_others')) {
+                    $query->where('create_user', Auth::id());
                     $this->checkPermission('page_update');
                 }
                 $query->update(['status' => $action]);
             }
         }
+
         return redirect()->back()->with('success', __('Update success!'));
     }
 }

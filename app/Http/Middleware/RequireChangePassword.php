@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Middleware;
-
 
 class RequireChangePassword
 {
@@ -16,28 +14,30 @@ class RequireChangePassword
         '*/change-password/store',
         '*/change-password',
         '/logout',
-        '/auth/logout'
+        '/auth/logout',
     ];
+
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
-     * @param  string|null $guard
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string|null  $guard
      * @return mixed
      */
     public function handle($request, \Closure $next, $guard = null)
     {
-        if(strpos($request->path(), 'install') === false and $user = $request->user() and $user->need_update_pw and !$this->inExceptArray($request) and !config('bc.disable_require_change_pw')){
-            if($request->expectsJson()){
+        if (strpos($request->path(), 'install') === false and $user = $request->user() and $user->need_update_pw and ! $this->inExceptArray($request) and ! config('bc.disable_require_change_pw')) {
+            if ($request->expectsJson()) {
                 return response()->json([
-                    'status'=>0,
-                    'message'=>__("For security, please change your password to continue"),
-                    'code'=>"need_update_pw"
+                    'status' => 0,
+                    'message' => __('For security, please change your password to continue'),
+                    'code' => 'need_update_pw',
                 ]);
             }
-            return redirect(route('user.change_password',['need_update_pw'=>1]))->with('warning',__("For security, please change your password to continue"));
+
+            return redirect(route('user.change_password', ['need_update_pw' => 1]))->with('warning', __('For security, please change your password to continue'));
         }
+
         return $next($request);
     }
 

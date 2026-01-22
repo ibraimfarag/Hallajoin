@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\Flight\Imports;
-
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -14,7 +12,7 @@ use Maatwebsite\Excel\Concerns\WithUpsertColumns;
 use Maatwebsite\Excel\Concerns\WithUpserts;
 use Modules\Flight\Models\Airport;
 
-class AirportImportIATA implements WithChunkReading,ToModel,ShouldQueue,WithHeadingRow,WithBatchInserts,WithUpserts,WithUpsertColumns
+class AirportImportIATA implements ShouldQueue, ToModel, WithBatchInserts, WithChunkReading, WithHeadingRow, WithUpsertColumns, WithUpserts
 {
     use Importable;
 
@@ -26,19 +24,21 @@ class AirportImportIATA implements WithChunkReading,ToModel,ShouldQueue,WithHead
             'map_lat' => $row['latitude_deg'],
             'map_lng' => $row['longitude_deg'],
             'address' => $row['municipality'],
-            'country'=>$row['iso_country'],
-            'status'=>'draft'
+            'country' => $row['iso_country'],
+            'status' => 'draft',
         ];
-        $a =  new Airport();
-        $a->fillByAttr(array_keys($data),$data);
+        $a = new Airport;
+        $a->fillByAttr(array_keys($data), $data);
+
         return $a;
     }
+
     /**
      * @return array
      */
     public function upsertColumns()
     {
-        return ['name', 'map_lat','map_lng','address','country'];
+        return ['name', 'map_lat', 'map_lng', 'address', 'country'];
     }
 
     /**

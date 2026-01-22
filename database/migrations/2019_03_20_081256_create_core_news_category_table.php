@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateCoreNewsCategoryTable extends Migration
 {
@@ -13,7 +13,7 @@ class CreateCoreNewsCategoryTable extends Migration
      */
     public function up()
     {
-        if(!Schema::hasTable('core_news_category')) {
+        if (! Schema::hasTable('core_news_category')) {
             Schema::create('core_news_category', function (Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->string('name', 255)->nullable();

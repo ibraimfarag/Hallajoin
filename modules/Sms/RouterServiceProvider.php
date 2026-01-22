@@ -2,8 +2,8 @@
 
 namespace Modules\Sms;
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class RouterServiceProvider extends ServiceProvider
 {
@@ -35,13 +35,13 @@ class RouterServiceProvider extends ServiceProvider
      */
     public function map()
     {
-	    $this->mapApiRoutes();
+        $this->mapApiRoutes();
 
-	    $this->mapWebRoutes();
+        $this->mapWebRoutes();
 
-	    $this->mapAdminRoutes();
+        $this->mapAdminRoutes();
 
-	    $this->mapLanguageRoutes();
+        $this->mapLanguageRoutes();
 
     }
 
@@ -56,7 +56,7 @@ class RouterServiceProvider extends ServiceProvider
     {
         Route::middleware('web')
             ->namespace($this->moduleNamespace)
-            ->group(__DIR__ . '/Routes/web.php');
+            ->group(__DIR__.'/Routes/web.php');
     }
 
     /**
@@ -68,11 +68,12 @@ class RouterServiceProvider extends ServiceProvider
      */
     protected function mapAdminRoutes()
     {
-        Route::middleware(['web','dashboard'])
+        Route::middleware(['web', 'dashboard'])
             ->namespace($this->adminModuleNamespace)
             ->prefix(config('admin.admin_route_prefix').'/module/sms')
-            ->group(__DIR__ . '/Routes/admin.php');
+            ->group(__DIR__.'/Routes/admin.php');
     }
+
     /**
      * Define the "lang" routes for the application.
      *
@@ -85,7 +86,7 @@ class RouterServiceProvider extends ServiceProvider
         Route::middleware('web')
             ->namespace($this->moduleNamespace)
             ->prefix(app()->getLocale())
-            ->group(__DIR__ . '/Routes/language.php');
+            ->group(__DIR__.'/Routes/language.php');
     }
 
     /**
@@ -100,6 +101,6 @@ class RouterServiceProvider extends ServiceProvider
         Route::prefix('api')
             ->middleware('api')
             ->namespace($this->moduleNamespace)
-            ->group(__DIR__ . '/Routes/api.php');
+            ->group(__DIR__.'/Routes/api.php');
     }
 }

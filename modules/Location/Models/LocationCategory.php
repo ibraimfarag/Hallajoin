@@ -1,53 +1,65 @@
 <?php
+
 namespace Modules\Location\Models;
 
 use App\BaseModel;
-use Kalnoy\Nestedset\NodeTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Kalnoy\Nestedset\NodeTrait;
 
 class LocationCategory extends BaseModel
 {
-    use SoftDeletes;
     use NodeTrait;
+    use SoftDeletes;
+
     protected $table = 'location_category';
+
     protected $fillable = [
         'name',
         'content',
         'slug',
         'icon_class',
         'status',
-        'parent_id'
+        'parent_id',
     ];
-    protected $slugField     = 'slug';
+
+    protected $slugField = 'slug';
+
     protected $slugFromField = 'name';
 
     public static function getModelName()
     {
-        return __("Location Category");
+        return __('Location Category');
     }
 
     public static function searchForMenu($q = false)
     {
         $query = static::select('id', 'name');
         if (strlen($q)) {
-            $query->where('name', 'like', "%" . $q . "%");
+            $query->where('name', 'like', '%'.$q.'%');
         }
         $a = $query->orderBy('id', 'desc')->limit(10)->get();
+
         return $a;
     }
-    public function getDetailUrl(){
-        return url(app_get_locale(false, false, '/') . config('tour.tour_route_prefix').'?cat_id[]='.$this->id);
+
+    public function getDetailUrl()
+    {
+        return url(app_get_locale(false, false, '/').config('tour.tour_route_prefix').'?cat_id[]='.$this->id);
     }
 
-    public function dataForApi(){
+    public function dataForApi()
+    {
         $translation = $this->translate();
+
         return [
-            'id'=>$this->id,
-            'name'=>$translation->name,
-            'slug'=>$this->slug,
+            'id' => $this->id,
+            'name' => $translation->name,
+            'slug' => $this->slug,
         ];
     }
-    public function location_category_translations(){
-        return $this->hasOne(LocationCategoryTranslation::class,'origin_id')->where('locale',app()->getLocale());
+
+    public function location_category_translations()
+    {
+        return $this->hasOne(LocationCategoryTranslation::class, 'origin_id')->where('locale', app()->getLocale());
     }
 }

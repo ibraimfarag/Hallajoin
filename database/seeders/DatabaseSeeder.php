@@ -1,5 +1,7 @@
 <?php
+
 namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Modules\Theme\ThemeManager;
@@ -14,9 +16,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $active_theme = ThemeManager::current();
-        $theme_seeder = '\\Themes\\'.ucfirst($active_theme)."\\Database\\Seeders\\DatabaseSeeder";
-        if(class_exists($theme_seeder)){
+        $theme_seeder = '\\Themes\\'.ucfirst($active_theme).'\\Database\\Seeders\\DatabaseSeeder';
+        if (class_exists($theme_seeder)) {
             $this->call($theme_seeder);
+
             return;
         }
 

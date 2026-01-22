@@ -1,5 +1,6 @@
 <?php
-namespace  Modules\User;
+
+namespace Modules\User;
 
 use Modules\Core\Abstracts\BaseSettingsClass;
 
@@ -9,11 +10,11 @@ class SettingClass extends BaseSettingsClass
     {
         return [
             [
-                'id'   => 'user',
-                'title' => __("User Settings"),
-                'position'=>50,
-                'view'=>"User::admin.settings.user",
-                "keys"=>[
+                'id' => 'user',
+                'title' => __('User Settings'),
+                'position' => 50,
+                'view' => 'User::admin.settings.user',
+                'keys' => [
                     'user_enable_login_recaptcha',
                     'user_enable_register_recaptcha',
                     'enable_mail_user_registered',
@@ -40,19 +41,19 @@ class SettingClass extends BaseSettingsClass
                     'user_permanently_delete_content_email_to_admin',
 
                     'user_disable_register',
-                    'user_role'
+                    'user_role',
 
                 ],
-                'html_keys'=>[
+                'html_keys' => [
 
-                ]
+                ],
             ],
             [
-                'id'   => 'user_plans',
-                'title' => __("User Plans Settings"),
-                'position'=>51,
-                'view'=>"User::admin.settings.plan",
-                "keys"=>[
+                'id' => 'user_plans',
+                'title' => __('User Plans Settings'),
+                'position' => 51,
+                'view' => 'User::admin.settings.plan',
+                'keys' => [
                     'user_plans_enable',
 
                     'user_plans_page_title',
@@ -76,10 +77,10 @@ class SettingClass extends BaseSettingsClass
                     'plan_update_payment_user_subject',
                     'plan_update_payment_user_content',
                 ],
-                'html_keys'=>[
+                'html_keys' => [
 
-                ]
-            ]
+                ],
+            ],
         ];
     }
 }

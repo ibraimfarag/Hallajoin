@@ -222,7 +222,34 @@ jQuery(function ($) {
             }
         })
     });
-
+    // Initialize owl carousel for bravo-list-locations (Destinations section)
+    $(".bravo-list-locations").each(function () {
+        $(this).find(".owl-carousel").owlCarousel({
+            items: 4,
+            loop: true,
+            margin: 20,
+            nav: true,
+            dots: true,
+            autoplay: true,
+            autoplayTimeout: 4000,
+            autoplayHoverPause: true,
+            // navText: ['<i class="fa fa-chevron-left"></i>', '<i class="fa fa-chevron-right"></i>'],
+            responsive: {
+                0: {
+                    items: 1
+                },
+                576: {
+                    items: 2
+                },
+                768: {
+                    items: 3
+                },
+                1000: {
+                    items: 4
+                }
+            }
+        })
+    });
     $(".bravo-client-feedback").each(function () {
         $(this).find(".owl-carousel").owlCarousel({
             items: 1,
